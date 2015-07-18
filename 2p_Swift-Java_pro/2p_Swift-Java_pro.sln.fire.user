@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ActiveConfiguration</key>
+	<string>Release</string>
+	<key>DebugPaneActiveTab</key>
+	<real>0.0</real>
+	<key>FolderExpanded_2p_Swift-Java_pro_/Users/albertoSita/Documents/2p_Swift-Java_pro/2p_Swift-Java_pro.elements---References</key>
+	<true/>
+	<key>FolderExpanded_2p_Swift-Java_pro_file:///Users/albertoSita/Documents/2p_Swift-Java_pro/2p_Swift-Java_pro.elements_file:///Users/albertoSita/Documents/2p_Swift-Java_pro/</key>
+	<true/>
+	<key>LastBuildStatusLabel</key>
+	<string>Last build was successful</string>
+	<key>NavigationPaneActiveTab</key>
+	<real>0.0</real>
+	<key>Properties</key>
+	<dict/>
+	<key>SelectedNode</key>
+	<string>file:///Users/albertoSita/Documents/2p_Swift-Java_pro/2p_Swift-Java_pro.elements_fake://fake/rt.jar</string>
+	<key>ViewMetaData</key>
+	<dict>
+		<key>file:///Users/albertoSita/Documents/2p_Swift-Java_pro/2p_Swift-Java_pro.elements_file:///Users/albertoSita/Documents/2p_Swift-Java_pro/Program.swift</key>
+		<dict>
+			<key>CursorX</key>
+			<integer>5</integer>
+			<key>CursorY</key>
+			<integer>134</integer>
+			<key>ScrollX</key>
+			<real>0.0</real>
+			<key>ScrollY</key>
+			<real>0.0</real>
+			<key>SelectionCursorUndecided</key>
+			<true/>
+			<key>SelectionEndColumn</key>
+			<integer>-1</integer>
+			<key>SelectionEndLine</key>
+			<integer>-1</integer>
+			<key>SelectionIsLinear</key>
+			<true/>
+			<key>SelectionStartColumn</key>
+			<integer>-1</integer>
+			<key>SelectionStartLine</key>
+			<integer>-1</integer>
+		</dict>
+	</dict>
+	<key>Window_Fullscreen</key>
+	<false/>
+	<key>Window_Height</key>
+	<real>713</real>
+	<key>Window_Width</key>
+	<real>912</real>
+	<key>Window_X</key>
+	<real>43</real>
+	<key>Window_Y</key>
+	<real>80</real>
+</dict>
+</plist>

@@ -1,0 +1,6 @@
+/Users/albertoSita/Documents/2p_Swift-Java_pro/obj/Release/.NETFramework,Version=v4.0.AssemblyAttribute.pas
+/Users/albertoSita/Documents/2p_Swift-Java_pro/bin/Release/2p_Swift-Java_pro.jar
+/Users/albertoSita/Documents/2p_Swift-Java_pro/obj/Release/2p_Swift-Java_pro.jar
+/Users/albertoSita/Documents/2p_Swift-Java_pro/bin/Release/swift.jar
+/Users/albertoSita/Documents/2p_Swift-Java_pro/bin/Release/com.remobjects.elements.rtl.jar
+/Users/albertoSita/Documents/2p_Swift-Java_pro/bin/Release/tuprolog.jar

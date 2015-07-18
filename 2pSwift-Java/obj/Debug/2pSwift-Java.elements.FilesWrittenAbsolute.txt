@@ -1,0 +1,6 @@
+/Users/albertoSita/Desktop/2pSwift-Java/obj/Debug/.NETFramework,Version=v4.0.AssemblyAttribute.pas
+/Users/albertoSita/Desktop/2pSwift-Java/bin/Debug/2pSwift-Java.jar
+/Users/albertoSita/Desktop/2pSwift-Java/obj/Debug/2pSwift-Java.jar
+/Users/albertoSita/Desktop/2pSwift-Java/bin/Debug/swift.jar
+/Users/albertoSita/Desktop/2pSwift-Java/bin/Debug/com.remobjects.elements.rtl.jar
+/Users/albertoSita/Desktop/2pSwift-Java/bin/Debug/tuprolog.jar
