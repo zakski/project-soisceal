@@ -54,7 +54,7 @@ public class JavaLibraryTestCase extends TestCase {
 		Prolog engine = new Prolog();
 		OOLibrary lib = (OOLibrary) engine.getLibrary("com.szadowsz.gospel.core.lib.OOLibrary");
 		String theory = "demo(C) :- \n" +
-				"java_object('com.szadowsz.gospel.core.TestCounter', [], C), \n" +
+				"java_object('com.szadowsz.gospel.util.TestCounter', [], C), \n" +
 				"C <- update, \n" +
 				"C <- update. \n";			
 		engine.setTheory(new Theory(theory));

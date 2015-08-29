@@ -29,7 +29,7 @@ public class ISOIOLibraryTestCase {
     {
         try
         {
-            engine = new Prolog(new String[] {"alice.gospel.lib.BasicLibrary","alice.gospel.lib.ISOIOLibrary"});
+            engine = new Prolog(new String[] {"com.szadowsz.gospel.core.lib.BasicLibrary","com.szadowsz.gospel.core.lib.ISOIOLibrary"});
 
             File file = new File(".");
             writePath = file.getCanonicalPath()

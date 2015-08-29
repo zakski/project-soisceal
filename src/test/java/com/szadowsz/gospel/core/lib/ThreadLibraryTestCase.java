@@ -28,17 +28,17 @@ public class ThreadLibraryTestCase extends TestCase {
 	String theory;
 	
 	@Before
-	public void before() {
+	public void setUp() {
 		try {
 			engine = new Prolog();
-			engine.loadLibrary("alice.gospel.lib.ThreadLibrary");
+			engine.loadLibrary("com.szadowsz.gospel.core.lib.ThreadLibrary");
 		} catch (InvalidLibraryException e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Test method for {@link ThreadLibrary#thread_id_1(alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#thread_id_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -52,7 +52,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link ThreadLibrary#thread_create_2(alice.gospel.Term, alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#thread_create_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws MalformedGoalException 
 	 * @throws InvalidTheoryException 
 	 */
@@ -72,7 +72,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 	
 	/**
-	 * Test method for {@link ThreadLibrary#thread_next_sol_1(alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#thread_next_sol_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -100,7 +100,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link ThreadLibrary#thread_join_2(alice.gospel.Term, alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#thread_join_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -125,7 +125,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link ThreadLibrary#thread_read_2(alice.gospel.Term, alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#thread_read_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -156,7 +156,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link ThreadLibrary#thread_has_next_1(alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#thread_has_next_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -182,7 +182,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	
 
 	/**
-	 * Test method for {@link ThreadLibrary#thread_detach_1(alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#thread_detach_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 */
@@ -197,7 +197,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link ThreadLibrary#thread_sleep_1(alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#thread_sleep_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 */
@@ -212,7 +212,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link ThreadLibrary#thread_send_msg_2(alice.gospel.Term, alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#thread_send_msg_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
 	 * @throws InvalidTheoryException 
@@ -245,7 +245,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link ThreadLibrary#thread_get_msg_2(alice.gospel.Term, alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#thread_get_msg_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -266,7 +266,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link ThreadLibrary#thread_peek_msg_2(alice.gospel.Term, alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#thread_peek_msg_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -304,7 +304,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link ThreadLibrary#thread_wait_msg_2(alice.gospel.Term, alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#thread_wait_msg_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -345,7 +345,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * Il metodo peek non riesce a prelevare la soluzione perch il messaggio stato rimosso
 	 * 
-	 * Test method for {@link ThreadLibrary#thread_remove_msg_2(alice.gospel.Term, alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#thread_remove_msg_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 */
@@ -364,7 +364,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * start(X) -> prelevo la soluzione, poi distruggo la coda.
 	 * start2(X) -> distruggo la coda, poi prelevo la soluzione.
-	 * Test method for {@link ThreadLibrary#message_queue_destroy_1(alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#message_queue_destroy_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 */
@@ -385,7 +385,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link ThreadLibrary#msg_queue_size_2(alice.gospel.Term, alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#msg_queue_size_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -409,7 +409,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link ThreadLibrary#mutex_destroy_1(alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#mutex_destroy_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 */
@@ -443,7 +443,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link ThreadLibrary#mutex_trylock_1(alice.gospel.Term)}.
+	 * Test method for {@link ThreadLibrary#mutex_trylock_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 */
