@@ -23,7 +23,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="tuProlog" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8">

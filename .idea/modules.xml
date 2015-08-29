@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/examples/examples.iml" filepath="$PROJECT_DIR$/examples/examples.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tuProlog.iml" filepath="$PROJECT_DIR$/tuProlog.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gospel.iml" filepath="$PROJECT_DIR$/gospel.iml" />
     </modules>
   </component>
 </project>
