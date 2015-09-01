@@ -10,27 +10,28 @@ import com.szadowsz.gospel.core.theory.Theory;
 import com.szadowsz.gospel.util.exception.lib.InvalidLibraryException;
 import com.szadowsz.gospel.util.exception.solve.MalformedGoalException;
 import com.szadowsz.gospel.util.exception.solve.NoSolutionException;
-import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * @author Eleonora Cau
  *
  */
 
-public class SocketLibTestCase extends TestCase {
+public class SocketLibTestCase {
 	
 	Prolog engine = null;
 	String theory;
 	
 	
 	@Before
-	public void before() throws InvalidLibraryException, MalformedGoalException, NoSolutionException, UnknownVarException {
+	public void setup() throws InvalidLibraryException, MalformedGoalException, NoSolutionException, UnknownVarException {
 		try {
 			engine = new Prolog();
-			engine.loadLibrary("alice.gospel.lib.SocketLibrary");
-			engine.loadLibrary("alice.gospel.lib.ThreadLibrary");
+			engine.loadLibrary("com.szadowsz.gospel.core.lib.SocketLibrary");
+			engine.loadLibrary("com.szadowsz.gospel.core.lib.ThreadLibrary");
 		} catch (InvalidLibraryException e) {
 			e.printStackTrace();
 		}

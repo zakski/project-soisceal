@@ -204,7 +204,7 @@ public abstract class Library implements Serializable, IPrimitives {
                 
                 int type;
                 if (returnTypeName.equals("boolean")) type = PrimitiveInfo.PREDICATE();
-                else if (returnTypeName.equals("com.szadowsz.gospel.core.core.data.Term")) type = PrimitiveInfo.FUNCTOR();
+                else if (returnTypeName.equals("com.szadowsz.gospel.core.data.Term")) type = PrimitiveInfo.FUNCTOR();
                 else if (returnTypeName.equals("void")) type = PrimitiveInfo.DIRECTIVE();
                 else continue;
                 
