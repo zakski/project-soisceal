@@ -22,6 +22,7 @@ package com.szadowsz.gospel.util.lib;
 
 import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.data.numeric.Int;
+import com.szadowsz.gospel.core.data.numeric.Number;
 
 public class TestLibrary extends StringLibrary {
 	private static final long serialVersionUID = 1L;

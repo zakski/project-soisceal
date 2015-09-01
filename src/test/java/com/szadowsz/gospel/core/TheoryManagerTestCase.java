@@ -36,7 +36,7 @@ public class TheoryManagerTestCase extends TestCase {
 		engine.addWarningListener(warningListener);
 		engine.setTheory(new Theory(theory));
 		assertTrue(warningListener.warning.indexOf("load_library/1") > 0);
-		assertTrue(warningListener.warning.indexOf("InvalidLibraryException") > 0);
+		assertTrue(warningListener.warning.indexOf("Not Found.") > 0);
 	}
 
 	public void testAssertNotBacktrackable() throws PrologException, MalformedGoalException {
