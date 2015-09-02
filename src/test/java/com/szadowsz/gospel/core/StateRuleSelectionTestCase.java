@@ -3,12 +3,12 @@ package com.szadowsz.gospel.core;
 import com.szadowsz.gospel.core.exception.interpreter.InvalidTheoryException;
 import com.szadowsz.gospel.core.theory.Theory;
 import com.szadowsz.gospel.util.event.TestWarningListener;
-import com.szadowsz.gospel.util.exception.solve.MalformedGoalException;
+import com.szadowsz.gospel.util.exception.solution.InvalidSolutionException;
 import junit.framework.TestCase;
 
 public class StateRuleSelectionTestCase extends TestCase {
 	
-	public void testUnknownPredicateInQuery() throws MalformedGoalException {
+	public void testUnknownPredicateInQuery() throws InvalidSolutionException {
 		Prolog engine = new Prolog();
 		TestWarningListener warningListener = new TestWarningListener();
 		engine.addWarningListener(warningListener);
@@ -18,7 +18,7 @@ public class StateRuleSelectionTestCase extends TestCase {
 		assertTrue(warningListener.warning.indexOf("is unknown") > 0);
 	}
 	
-	public void testUnknownPredicateInTheory() throws InvalidTheoryException, MalformedGoalException {
+	public void testUnknownPredicateInTheory() throws InvalidTheoryException, InvalidSolutionException {
 		Prolog engine = new Prolog();
 		TestWarningListener warningListener = new TestWarningListener();
 		engine.addWarningListener(warningListener);

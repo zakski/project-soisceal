@@ -10,9 +10,7 @@ import com.szadowsz.gospel.core.theory.TheoryManager;
 import com.szadowsz.gospel.core.theory.clause.ClauseInfo;
 import com.szadowsz.gospel.util.event.TestOutputListener;
 import com.szadowsz.gospel.util.event.TestWarningListener;
-import com.szadowsz.gospel.util.exception.solve.MalformedGoalException;
-import com.szadowsz.gospel.util.exception.solve.NoMoreSolutionsException;
-import com.szadowsz.gospel.util.exception.solve.NoSolutionException;
+import com.szadowsz.gospel.util.exception.solution.InvalidSolutionException;
 import junit.framework.TestCase;
 
 import java.util.List;
@@ -39,7 +37,7 @@ public class TheoryManagerTestCase extends TestCase {
 		assertTrue(warningListener.warning.indexOf("Not Found.") > 0);
 	}
 
-	public void testAssertNotBacktrackable() throws PrologException, MalformedGoalException {
+	public void testAssertNotBacktrackable() throws PrologException, InvalidSolutionException {
 		Prolog engine = new Prolog();
 		Solution firstSolution = engine.solve("assertz(a(z)).");
 		assertTrue(firstSolution.isSuccess());
@@ -61,7 +59,7 @@ public class TheoryManagerTestCase extends TestCase {
 		assertEquals(0, testClauses.size());
 	}
 
-	public void testAbolish2() throws InvalidTheoryException, MalformedGoalException {
+	public void testAbolish2() throws InvalidTheoryException, InvalidSolutionException {
 		Prolog engine = new Prolog();
 		engine.setTheory(new Theory("fact(new).\n" +
 									"fact(other).\n"));
@@ -73,7 +71,7 @@ public class TheoryManagerTestCase extends TestCase {
 	}
 	
 	// Based on the bugs 65 and 66 on sourceforge
-	public void testRetractall() throws MalformedGoalException, NoSolutionException, NoMoreSolutionsException {
+	public void testRetractall() throws InvalidSolutionException {
 		Prolog engine = new Prolog();
 		Solution info = engine.solve("assert(takes(s1,c2)), assert(takes(s1,c3)).");
 		assertTrue(info.isSuccess());
@@ -96,7 +94,7 @@ public class TheoryManagerTestCase extends TestCase {
 	// TODO test retractall: ClauseDatabase#get(f/a) should return an
 	// empty list
 	
-	public void testRetract() throws InvalidTheoryException, MalformedGoalException {
+	public void testRetract() throws InvalidTheoryException, InvalidSolutionException {
 		Prolog engine = new Prolog();
 		TestOutputListener listener = new TestOutputListener();
 		engine.addOutputListener(listener);

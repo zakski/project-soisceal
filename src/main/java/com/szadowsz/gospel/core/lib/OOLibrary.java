@@ -26,8 +26,11 @@ import com.szadowsz.gospel.core.data.numeric.*;
 import com.szadowsz.gospel.core.data.numeric.Long;
 import com.szadowsz.gospel.core.data.numeric.Number;
 import com.szadowsz.gospel.core.exception.JVMException;
-import com.szadowsz.gospel.core.exception.interpreter.InvalidObjectIdException;
 import com.szadowsz.gospel.util.*;
+import com.szadowsz.gospel.util.classloader.AbstractDynamicClassLoader;
+import com.szadowsz.gospel.util.classloader.AndroidDynamicClassLoader;
+import com.szadowsz.gospel.util.classloader.JavaDynamicClassLoader;
+import com.szadowsz.gospel.util.exception.lib.InvalidObjectIdException;
 import com.szadowsz.gospel.util.proxyGenerator.Generator;
 import scala.collection.Iterator;
 

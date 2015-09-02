@@ -17,6 +17,8 @@
  */
 package com.szadowsz.gospel.core.theory
 
+import com.szadowsz.gospel.util.exception.data.{TermParsingException, InvalidTermException}
+
 import java.io.{DataOutputStream, IOException, OutputStream}
 import java.{util => ju}
 
@@ -24,7 +26,7 @@ import com.szadowsz.gospel.core.Prolog
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.subgoal.tree.SubGoalLeaf
-import com.szadowsz.gospel.core.exception.interpreter.{InvalidTermException, InvalidTheoryException}
+import com.szadowsz.gospel.core.exception.interpreter.InvalidTheoryException
 import com.szadowsz.gospel.core.theory.clause.{ClauseDatabase, ClauseInfo, FamilyClausesList}
 import com.szadowsz.gospel.util.Tools
 
@@ -215,8 +217,8 @@ class TheoryManager(vm: Prolog) extends Serializable {
           if (!runDirective(d)) assertZ(d, dynamicTheory, libName, true)
         }
       } catch {
-        case e: InvalidTermException => {
-          throw new InvalidTheoryException(e.getMessage, clause, e.line, e.pos)
+        case e: TermParsingException => {
+          throw new InvalidTheoryException(e.getMessage, clause, e.getLine, e.getColumn)
         }
       }
       if (libName == null)

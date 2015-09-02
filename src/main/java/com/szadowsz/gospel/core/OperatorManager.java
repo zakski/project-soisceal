@@ -17,7 +17,6 @@
  */
 package com.szadowsz.gospel.core;
 
-import com.szadowsz.gospel.core.interfaces.IOperatorManager;
 
 import java.io.Serializable;
 import java.util.*;
@@ -28,7 +27,7 @@ import java.util.*;
  * @see Operator
  */
 @SuppressWarnings("serial")
-/*Castagna 06/2911*/public/**/ class OperatorManager implements /*Castagna 06/2011*/IOperatorManager,/**/Serializable {
+public class OperatorManager implements Serializable {
 	private static final long serialVersionUID = 1L;
     /**
 	 * current known operators
@@ -85,7 +84,7 @@ import java.util.*;
      * 16/05/2011		 
      * Clone operation added		 
      */		 
-    public IOperatorManager clone() {		 
+    public OperatorManager clone() {
     	OperatorManager om = new OperatorManager();		 
     	om.operatorList = (OperatorRegister)this.operatorList.clone();		 
     	return om;		 

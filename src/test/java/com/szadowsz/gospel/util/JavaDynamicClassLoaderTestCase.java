@@ -1,6 +1,6 @@
 package com.szadowsz.gospel.util;
 
-import com.szadowsz.gospel.util.JavaDynamicClassLoader;
+import com.szadowsz.gospel.util.classloader.JavaDynamicClassLoader;
 import org.junit.Test;
 
 import java.io.File;

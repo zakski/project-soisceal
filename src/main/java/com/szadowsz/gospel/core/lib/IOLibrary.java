@@ -22,8 +22,9 @@ import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.data.Var;
 import com.szadowsz.gospel.core.data.numeric.Int;
 import com.szadowsz.gospel.core.exception.PrologException;
-import com.szadowsz.gospel.core.exception.interpreter.InvalidTermException;
 import com.szadowsz.gospel.util.Tools;
+import com.szadowsz.gospel.util.exception.data.InvalidTermException;
+import com.szadowsz.gospel.util.exception.data.TermParsingException;
 
 import java.io.*;
 import java.util.Random;
@@ -366,10 +367,10 @@ public class IOLibrary extends Library {
         } while (true);
         try {
             unify(arg0, getEngine().toTerm(st));
-        } catch (InvalidTermException e) {
+        } catch (TermParsingException e) {
             /*Castagna 06/2011*/
         	//throw PrologException.syntax_error(engine.getEngineManager(), -1, -1, new Struct(st));
-        	throw PrologException.syntax_error(engine.getEngineManager(),-1, e.line(), e.pos(), new Struct(st));
+        	throw PrologException.syntax_error(engine.getEngineManager(),-1, e.getLine(), e.getColumn(), new Struct(st));
         	/**/
         }
         return true;

@@ -1,4 +1,4 @@
-package com.szadowsz.gospel.util;
+package com.szadowsz.gospel.util.classloader;
 
 import java.net.URL;
 

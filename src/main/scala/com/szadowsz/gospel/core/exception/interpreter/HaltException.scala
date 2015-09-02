@@ -16,6 +16,8 @@
  */
 package com.szadowsz.gospel.core.exception.interpreter
 
+import com.szadowsz.gospel.util.exception.InterpreterException
+
 /**
  * This exception is raised when an halt code is requested
  * and no halt predicate has been issued

@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2007 aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2015  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,24 +15,18 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.szadowsz.gospel.core.exception.interpreter
+package com.szadowsz.gospel.util.exception.data
+
+import com.szadowsz.gospel.util.exception.InterpreterException
 
 /**
+ * This exception means that an attempt was made to create an invalid Prolog term.
  *
+ * @author Zakski : 16/05/2015.
  *
- * This exception means that a method has been passed an argument
- * containing an invalid Prolog term.
- *
- * @see Theory
- *
+ * @param message the reason for the term being rejected
  */
 @SerialVersionUID(1L)
-class InvalidTermException(message: String, l: Int, p: Int) extends IllegalArgumentException(message) {
-  val line = l;
-  val pos = p;
-  /*Castagna 06/2011*/
+class InvalidTermException(message: String) extends IllegalArgumentException(message)/* TODO InterpreterException(message)*/  {
 
-  def this(message: String) {
-    this(message, -1, -1)
-  }
 }

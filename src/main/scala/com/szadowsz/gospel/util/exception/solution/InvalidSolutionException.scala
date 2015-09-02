@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2015  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,18 +15,15 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.szadowsz.gospel.core.exception.interpreter
+package com.szadowsz.gospel.util.exception.solution
+
+import com.szadowsz.gospel.util.exception.InterpreterException
 
 /**
- * This exception is raised when a not valid identifier is used
- * to register an object in the JavaLibrary
+ * Base Exception for issues with providing a solution.
  *
- * @see OOLibrary
- *
- *
- *
- *
+ * @author Zakski : 15/05/2015.
  */
-@SerialVersionUID(1L)
-class InvalidObjectIdException extends InterpreterException {
+class InvalidSolutionException(message : String) extends InterpreterException(message) {
+
 }

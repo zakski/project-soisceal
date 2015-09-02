@@ -6,7 +6,7 @@ import com.szadowsz.gospel.core.event.OutputListener;
 import com.szadowsz.gospel.core.event.io.OutputEvent;
 import com.szadowsz.gospel.core.exception.interpreter.InvalidTheoryException;
 import com.szadowsz.gospel.core.theory.Theory;
-import com.szadowsz.gospel.util.exception.solve.MalformedGoalException;
+import com.szadowsz.gospel.util.exception.solution.InvalidSolutionException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -55,7 +55,7 @@ public class ISOIOLibraryTestCase {
     }
 
 	@Test
-	public void test_open() throws MalformedGoalException, InvalidTheoryException
+	public void test_open() throws InvalidSolutionException, InvalidTheoryException
 	{
 		// Apertura di un file esistente
 		info = engine.solve("open('" + writePath +"','write',X,[alias('editor'), type(text)]).");
@@ -85,7 +85,7 @@ public class ISOIOLibraryTestCase {
 	}
 
 	@Test
-	public void test_2() throws InvalidTheoryException, MalformedGoalException, IOException
+	public void test_2() throws InvalidTheoryException, InvalidSolutionException, IOException
 	{
 		String dataToWrite = "B";
 		String theory = "test2:-" +
@@ -99,7 +99,7 @@ public class ISOIOLibraryTestCase {
 	}
 
 	@Test
-	public void test_3() throws InvalidTheoryException, MalformedGoalException, IOException
+	public void test_3() throws InvalidTheoryException, InvalidSolutionException, IOException
 	{
 		String dataToWrite1 = "term.";
 		String dataToWrite2 = "ciao.";
@@ -118,7 +118,7 @@ public class ISOIOLibraryTestCase {
 	}
 
 	@Test
-	public void test_4() throws InvalidTheoryException, MalformedGoalException, IOException
+	public void test_4() throws InvalidTheoryException, InvalidSolutionException, IOException
 	{
 		String dataToWrite = "term.";
 		String theory = "test4:-" +
@@ -133,7 +133,7 @@ public class ISOIOLibraryTestCase {
 	}
 
 	@Test
-	public void test_5() throws InvalidTheoryException, MalformedGoalException, IOException
+	public void test_5() throws InvalidTheoryException, InvalidSolutionException, IOException
 	{
 		final String dataToRead = "ciao";
 		// Per beccare l'output
@@ -162,7 +162,7 @@ public class ISOIOLibraryTestCase {
 	}
 
 	@Test
-	public void test_6() throws InvalidTheoryException, MalformedGoalException, IOException
+	public void test_6() throws InvalidTheoryException, InvalidSolutionException, IOException
 	{
 		final String[] dataToRead = { "c", "\n", "iao" };
 		// Per beccare l'output
@@ -197,7 +197,7 @@ public class ISOIOLibraryTestCase {
 	}
 
 	@Test
-	public void test_7() throws InvalidTheoryException, MalformedGoalException, IOException
+	public void test_7() throws InvalidTheoryException, InvalidSolutionException, IOException
 	{
 		final String dataToRead = "c";
 		// Per beccare l'output
@@ -222,7 +222,7 @@ public class ISOIOLibraryTestCase {
 	}
 	
 	@Test
-	public void test_8() throws InvalidTheoryException, MalformedGoalException, IOException
+	public void test_8() throws InvalidTheoryException, InvalidSolutionException, IOException
 	{
 		final int dataToRead = 51;
 		// Per beccare l'output
@@ -251,7 +251,7 @@ public class ISOIOLibraryTestCase {
 	}
 
 	@Test
-	public void test_9() throws InvalidTheoryException, MalformedGoalException, IOException
+	public void test_9() throws InvalidTheoryException, InvalidSolutionException, IOException
 	{
 		int dataToWrite = 51;
 
@@ -267,7 +267,7 @@ public class ISOIOLibraryTestCase {
 	}
 
 	@Test
-	public void test_10() throws InvalidTheoryException, MalformedGoalException, IOException
+	public void test_10() throws InvalidTheoryException, InvalidSolutionException, IOException
 	{
 		final int[] dataToRead = { 99, 105, 105 }; // 'c', 'i', 'i'
 

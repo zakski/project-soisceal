@@ -16,26 +16,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package com.szadowsz.gospel.core.lib;
+
 import com.szadowsz.gospel.core.theory.Theory;
 
 /**
  * Library built from Prolog theory.
- * 
+ *
  */
 public class TheoryLibrary extends Library {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     private Theory th;
     private String name;
-    
+
     public TheoryLibrary(String name, Theory theory){
         this.th = theory;
         this.name = name;
     }
-    
+
     public String getTheory(){
         return th.toString();
     }
-    
+
     public String getName(){
         return name;
     }

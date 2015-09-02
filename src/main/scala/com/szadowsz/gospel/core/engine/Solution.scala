@@ -1,11 +1,12 @@
 package com.szadowsz.gospel.core.engine
 
+import com.szadowsz.gospel.util.exception.data.UnknownVarException
+import com.szadowsz.gospel.util.exception.solution.NoSolutionException
+
 import java.{util => ju}
 
 import com.szadowsz.gospel.core
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
-import com.szadowsz.gospel.core.exception.interpreter.UnknownVarException
-import com.szadowsz.gospel.util.exception.solve.NoSolutionException
 
 import scala.collection.JavaConverters._
 

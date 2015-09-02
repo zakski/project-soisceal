@@ -16,7 +16,7 @@ import com.szadowsz.gospel.core.event.logging.WarningEvent
 import com.szadowsz.gospel.core.exception.interpreter.InvalidTheoryException
 import com.szadowsz.gospel.core.theory.{Theory, TheoryManager}
 import com.szadowsz.gospel.core.Prolog
-import com.szadowsz.gospel.util.exception.lib.{InvalidLibraryException, LibraryLoadException, LibraryNotFoundException}
+import com.szadowsz.gospel.util.exception.lib.{LibraryBindException, InvalidLibraryException, LibraryLoadException, LibraryNotFoundException}
 
 /**
  * @author Alex Benini
@@ -280,7 +280,7 @@ class LibraryManager(vm: Prolog) {
       return lib
     }
     catch {
-      case ex: InvalidTheoryException => throw new InvalidLibraryException(lib.getName, ex.line, ex.pos,ex.getCause)
+      case ex: InvalidTheoryException => throw new LibraryBindException(lib.getName, ex.line, ex.pos,ex.getCause)
       case ex: Exception => { throw new LibraryLoadException(lib.getName, ex)
       }
     }

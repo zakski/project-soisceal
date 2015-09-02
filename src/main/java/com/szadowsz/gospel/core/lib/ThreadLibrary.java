@@ -11,8 +11,9 @@ import com.szadowsz.gospel.core.data.numeric.Int;
 import com.szadowsz.gospel.core.engine.EngineManager;
 import com.szadowsz.gospel.core.engine.Solution;
 import com.szadowsz.gospel.core.exception.PrologException;
-import com.szadowsz.gospel.core.exception.interpreter.InvalidTermException;
-import com.szadowsz.gospel.util.exception.solve.NoSolutionException;
+import com.szadowsz.gospel.util.exception.data.InvalidTermException;
+import com.szadowsz.gospel.util.exception.data.TermParsingException;
+import com.szadowsz.gospel.util.exception.solution.NoSolutionException;
 
 
 public class ThreadLibrary extends Library {
@@ -54,8 +55,8 @@ public class ThreadLibrary extends Library {
 		}
 		try{
 			unify (result, status);
-		} catch (InvalidTermException e) {
-			throw PrologException.syntax_error(engine.getEngineManager(),-1, e.line(), e.pos(), result);
+		} catch (TermParsingException e) {
+			throw PrologException.syntax_error(engine.getEngineManager(),-1, e.getLine(), e.getColumn(), result);
 		}
 		return true;
 	}
@@ -76,8 +77,8 @@ public class ThreadLibrary extends Library {
 		}
 		try{
 			unify (result, status);
-		} catch (InvalidTermException e) {
-			throw PrologException.syntax_error(engine.getEngineManager(),-1, e.line(), e.pos(), result);// TODO fix scala/java
+		} catch (TermParsingException e) {
+			throw PrologException.syntax_error(engine.getEngineManager(),-1, e.getLine(), e.getColumn(), result);// TODO fix scala/java
 		}
 		return true;
 	}

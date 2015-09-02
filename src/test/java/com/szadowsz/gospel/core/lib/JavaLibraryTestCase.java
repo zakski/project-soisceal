@@ -5,13 +5,12 @@ import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.numeric.Number;
 import com.szadowsz.gospel.core.engine.Solution;
 import com.szadowsz.gospel.core.exception.PrologException;
-import com.szadowsz.gospel.core.exception.interpreter.InvalidObjectIdException;
 import com.szadowsz.gospel.core.exception.interpreter.InvalidTheoryException;
-import com.szadowsz.gospel.core.exception.interpreter.UnknownVarException;
 import com.szadowsz.gospel.core.theory.Theory;
 import com.szadowsz.gospel.util.TestCounter;
-import com.szadowsz.gospel.util.exception.solve.MalformedGoalException;
-import com.szadowsz.gospel.util.exception.solve.NoSolutionException;
+import com.szadowsz.gospel.util.exception.data.UnknownVarException;
+import com.szadowsz.gospel.util.exception.lib.InvalidObjectIdException;
+import com.szadowsz.gospel.util.exception.solution.InvalidSolutionException;
 import junit.framework.TestCase;
 
 import java.io.File;
@@ -50,7 +49,7 @@ public class JavaLibraryTestCase extends TestCase {
 		assertFalse(goal.isSuccess());
 	}
 
-	public void testDynamicObjectsRetrival() throws PrologException, InvalidObjectIdException, InvalidTheoryException, MalformedGoalException, NoSolutionException {
+	public void testDynamicObjectsRetrival() throws PrologException, InvalidObjectIdException, InvalidTheoryException, InvalidSolutionException {
 		Prolog engine = new Prolog();
 		OOLibrary lib = (OOLibrary) engine.getLibrary("com.szadowsz.gospel.core.lib.OOLibrary");
 		String theory = "demo(C) :- \n" +
@@ -65,7 +64,7 @@ public class JavaLibraryTestCase extends TestCase {
 	}
 
 	
-	public void test_java_object() throws PrologException, IOException, NoSolutionException, MalformedGoalException, InvalidTheoryException {
+	public void test_java_object() throws PrologException, IOException, InvalidSolutionException, InvalidTheoryException {
 		// Testing URLClassLoader with a paths' array
 		setPath(true);
 		theory = "demo(C) :- \n" +
@@ -92,7 +91,7 @@ public class JavaLibraryTestCase extends TestCase {
 	}
 	
 
-	public void test_java_object_2() throws PrologException, IOException, MalformedGoalException, InvalidTheoryException, NoSolutionException {
+	public void test_java_object_2() throws PrologException, IOException, InvalidSolutionException, InvalidTheoryException {
 		setPath(true);
 		theory = "demo_hierarchy(Gear) :- \n"
 					+ "set_classpath([" + paths + "]), \n" 
@@ -106,7 +105,7 @@ public class JavaLibraryTestCase extends TestCase {
 		assertEquals(8, result2.intValue());
 	}
 	
-	public void test_invalid_path_java_object() throws PrologException, IOException, InvalidTheoryException, MalformedGoalException {
+	public void test_invalid_path_java_object() throws PrologException, IOException, InvalidTheoryException, InvalidSolutionException {
 		//Testing incorrect path
 		setPath(false);
 		theory = "demo(Res) :- \n" +
@@ -120,7 +119,7 @@ public class JavaLibraryTestCase extends TestCase {
 		assertEquals(true, info.isHalted());
 	}
 
-	public void test_java_call_3() throws PrologException, IOException, MalformedGoalException, InvalidTheoryException, NoSolutionException {
+	public void test_java_call_3() throws PrologException, IOException, InvalidSolutionException, InvalidTheoryException {
 		//Testing java_call_3 using URLClassLoader 
 		setPath(true); 
 		theory = "demo(Value) :- set_classpath([" + paths + "]), class('TestStaticClass') <- echo('Message') returns Value.";
@@ -147,7 +146,7 @@ public class JavaLibraryTestCase extends TestCase {
 		
 	}
 
-	public void test_invalid_path_java_call_4() throws PrologException, IOException, MalformedGoalException, InvalidTheoryException {
+	public void test_invalid_path_java_call_4() throws PrologException, IOException, InvalidSolutionException, InvalidTheoryException {
 		//Testing java_call_4 with invalid path
 		setPath(false);
 		theory = "demo(Value) :- set_classpath([" + paths + "]), class('TestStaticClass') <- echo('Message') returns Value.";
@@ -156,7 +155,7 @@ public class JavaLibraryTestCase extends TestCase {
 		assertEquals(true, info.isHalted());
 	}
 
-	public void test_java_array() throws PrologException, IOException, MalformedGoalException, InvalidTheoryException, NoSolutionException {
+	public void test_java_array() throws PrologException, IOException, InvalidSolutionException, InvalidTheoryException {
 		//Testing java_array_length using URLClassLoader 
 		setPath(true);
 		theory =  "demo(Size) :- set_classpath([" + paths + "]), java_object('Counter', [], MyCounter), \n"
@@ -185,7 +184,7 @@ public class JavaLibraryTestCase extends TestCase {
 		assertEquals(1, resultInt2.intValue());
 	}
 
-	public void test_set_classpath() throws PrologException, IOException, MalformedGoalException, InvalidTheoryException, NoSolutionException {
+	public void test_set_classpath() throws PrologException, IOException, InvalidSolutionException, InvalidTheoryException {
 		//Testing java_array_length using URLClassLoader 
 		setPath(true);
 		
@@ -201,7 +200,7 @@ public class JavaLibraryTestCase extends TestCase {
 		assertEquals(10, resultInt.intValue());
 	}
 	
-	public void test_get_classpath() throws PrologException, IOException, MalformedGoalException, InvalidTheoryException, UnknownVarException, NoSolutionException {
+	public void test_get_classpath() throws PrologException, IOException, InvalidSolutionException, InvalidTheoryException, UnknownVarException {
 		//Testing get_classpath using DynamicURLClassLoader with not URLs added
 		theory =  "demo(P) :- get_classpath(P).";
 		engine.setTheory(new Theory(theory));
@@ -229,7 +228,7 @@ public class JavaLibraryTestCase extends TestCase {
 //		assertEquals(true, info.isSuccess());
 	}
 	
-	public void test_register_1() throws PrologException, IOException, MalformedGoalException, InvalidTheoryException, UnknownVarException, NoSolutionException {
+	public void test_register_1() throws PrologException, IOException, InvalidSolutionException, InvalidTheoryException, UnknownVarException {
 		setPath(true);
 		theory = "demo(Obj) :- \n" +
 				"set_classpath([" + paths + "]), \n" +
@@ -258,7 +257,7 @@ public class JavaLibraryTestCase extends TestCase {
 	}
 	
 	
-	public void test_unregister_1() throws PrologException, IOException, MalformedGoalException, InvalidTheoryException, UnknownVarException, NoSolutionException, InvalidObjectIdException {
+	public void test_unregister_1() throws PrologException, IOException, InvalidSolutionException, InvalidTheoryException, UnknownVarException, InvalidObjectIdException {
 		// Test invalid object_id unregistration
 		theory = "demo(Obj1) :- unregister(Obj1).";
 		engine.setTheory(new Theory(theory));
@@ -281,7 +280,7 @@ public class JavaLibraryTestCase extends TestCase {
 		assertNull(obj);
 	}
 	
-	public void test_java_catch() throws PrologException, IOException, MalformedGoalException, InvalidTheoryException {
+	public void test_java_catch() throws PrologException, IOException, InvalidSolutionException, InvalidTheoryException {
 		setPath(true);
 		theory = "goal :- set_classpath([" + paths + "]), java_object('TestStaticClass', [], Obj), Obj <- testMyException. \n"
 				+"demo(StackTrace) :- java_catch(goal, [('java.lang.IllegalArgumentException'( \n"
@@ -293,7 +292,7 @@ public class JavaLibraryTestCase extends TestCase {
 		assertEquals(true, info.isSuccess());
 	}
 	
-	public void test_interface() throws PrologException, IOException, InvalidTheoryException, MalformedGoalException {
+	public void test_interface() throws PrologException, IOException, InvalidTheoryException, InvalidSolutionException {
 		setPath(true);
 		theory = "goal1 :- set_classpath([" + paths + "])," +
 				"java_object('Pippo', [], Obj), class('Pluto') <- method(Obj).";

@@ -20,7 +20,6 @@ package com.szadowsz.gospel.core.lib;
 import com.szadowsz.gospel.core.Prolog;
 import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.Term;
-import com.szadowsz.gospel.core.interfaces.IPrimitives;
 import com.szadowsz.gospel.core.lib.PrimitiveInfo;
 
 import java.io.Serializable;
@@ -48,7 +47,7 @@ import java.util.Map;
  * </ul>
  * <p>
  */
-public abstract class Library implements Serializable, IPrimitives {
+public abstract class Library implements Serializable {
 	private static final long serialVersionUID = 1L;
     /**
 	 * prolog core which loaded the library

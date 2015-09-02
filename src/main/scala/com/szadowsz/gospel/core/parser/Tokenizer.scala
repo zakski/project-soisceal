@@ -17,11 +17,12 @@
  */
 package com.szadowsz.gospel.core.parser
 
+import com.szadowsz.gospel.util.exception.data.InvalidTermException
+
 import java.io._
 import java.util.{Arrays, LinkedList}
 
 import com.szadowsz.gospel.core.Parser
-import com.szadowsz.gospel.core.exception.interpreter.InvalidTermException
 
 /**
  * BNF for tuProlog

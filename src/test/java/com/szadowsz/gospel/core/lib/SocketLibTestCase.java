@@ -5,11 +5,11 @@ import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.engine.Solution;
 import com.szadowsz.gospel.core.exception.interpreter.InvalidTheoryException;
-import com.szadowsz.gospel.core.exception.interpreter.UnknownVarException;
 import com.szadowsz.gospel.core.theory.Theory;
+import com.szadowsz.gospel.util.exception.data.UnknownVarException;
 import com.szadowsz.gospel.util.exception.lib.InvalidLibraryException;
-import com.szadowsz.gospel.util.exception.solve.MalformedGoalException;
-import com.szadowsz.gospel.util.exception.solve.NoSolutionException;
+import com.szadowsz.gospel.util.exception.solution.MalformedGoalException;
+import com.szadowsz.gospel.util.exception.solution.NoSolutionException;
 import org.junit.Before;
 import org.junit.Test;
 

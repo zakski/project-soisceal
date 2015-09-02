@@ -2,7 +2,7 @@ package com.szadowsz.gospel.core.data.numeric;
 
 import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.Var;
-import com.szadowsz.gospel.core.exception.interpreter.InvalidTermException;
+import com.szadowsz.gospel.util.exception.data.InvalidTermException;
 import junit.framework.TestCase;
 
 public class DoubleTestCase extends TestCase {

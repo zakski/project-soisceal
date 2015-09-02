@@ -17,6 +17,8 @@
  */
 package com.szadowsz.gospel.core.exception.interpreter
 
+import com.szadowsz.gospel.util.exception.InterpreterException
+
 /**
  * TODO REWRITE THIS CLASS TO TAKE SCALA CONSTRUCTOR LIMITATIONS PROPERLY INTO ACCOUNT
  *

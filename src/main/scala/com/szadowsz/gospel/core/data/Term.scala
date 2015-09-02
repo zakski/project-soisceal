@@ -17,11 +17,12 @@
  */
 package com.szadowsz.gospel.core.data
 
+import com.szadowsz.gospel.util.exception.data.InvalidTermException
+
 import java.io.Serializable
 import java.{util => ju}
 
 import com.szadowsz.gospel.core.engine.EngineManager
-import com.szadowsz.gospel.core.exception.interpreter.InvalidTermException
 import com.szadowsz.gospel.core.{OperatorManager, Parser, Prolog}
 import com.szadowsz.gospel.util.OneWayList
 

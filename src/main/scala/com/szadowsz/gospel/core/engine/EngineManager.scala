@@ -1,5 +1,7 @@
 package com.szadowsz.gospel.core.engine
 
+import com.szadowsz.gospel.util.exception.solution.NoMoreSolutionsException
+
 import java.util.concurrent.locks.ReentrantLock
 import java.util.{ArrayList, Hashtable, Iterator, LinkedHashMap, Set}
 
@@ -8,7 +10,6 @@ import com.szadowsz.gospel.core.data.util.TermQueue
 import com.szadowsz.gospel.core.data.{Term, Var, numeric}
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.subgoal.tree.SubGoalTree
-import com.szadowsz.gospel.util.exception.solve.NoMoreSolutionsException
 
 @SerialVersionUID(1L)
 class EngineManager(m: Prolog) extends java.io.Serializable {

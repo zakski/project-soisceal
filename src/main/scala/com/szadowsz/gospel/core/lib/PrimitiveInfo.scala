@@ -20,7 +20,6 @@ package com.szadowsz.gospel.core.lib
 import java.lang.reflect.{InvocationTargetException, Method}
 
 import com.szadowsz.gospel.core.data.{Struct, Term}
-import com.szadowsz.gospel.core.interfaces.IPrimitives
 import com.szadowsz.gospel.util.InspectionUtils
 
 /**
@@ -46,7 +45,7 @@ class PrimitiveInfo(theType: Int, key: String, lib: Library, m: Method, arity: I
   /**
    * lib object where the builtin is defined
    */
-  private val source: IPrimitives = lib
+  private val source: Library = lib
   /**
    * for optimization purposes
    */
@@ -82,7 +81,7 @@ class PrimitiveInfo(theType: Int, key: String, lib: Library, m: Method, arity: I
      _type
   }
 
-  def getSource: IPrimitives = {
+  def getSource: Library = {
      source
   }
 

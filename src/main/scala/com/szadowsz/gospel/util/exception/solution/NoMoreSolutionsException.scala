@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2015  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,16 +15,14 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.szadowsz.gospel.core.exception.interpreter
+package com.szadowsz.gospel.util.exception.solution
 
 /**
- * Base class for tuProlog exceptions. Used
- * also for representing generic 2P exceptions.
+ * This exception means that alternative solutions were asked for, but there are no more available.
+ *
+ * @author Zakski : 31/08/2015.
  */
-class InterpreterException(st : String) extends Exception(st) {
+@SerialVersionUID(1L)
+class NoMoreSolutionsException extends InvalidSolutionException("No More Solutions Available") {
 
-   def this() {this("")}
-
-   def this(theCause : Throwable){this("")}
-   
 }

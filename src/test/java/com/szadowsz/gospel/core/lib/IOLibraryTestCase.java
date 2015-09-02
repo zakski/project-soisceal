@@ -2,7 +2,7 @@ package com.szadowsz.gospel.core.lib;
 
 import com.szadowsz.gospel.core.Prolog;
 import com.szadowsz.gospel.util.event.TestOutputListener;
-import com.szadowsz.gospel.util.exception.solve.MalformedGoalException;
+import com.szadowsz.gospel.util.exception.solution.InvalidSolutionException;
 import junit.framework.TestCase;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class IOLibraryTestCase extends TestCase {
 		assertEquals(0, primitives.get(PrimitiveInfo.FUNCTOR()).size());
 	}
 	
-	public void testTab1() throws MalformedGoalException {
+	public void testTab1() throws InvalidSolutionException {
 		Prolog engine = new Prolog();
 		TestOutputListener l = new TestOutputListener();
 		engine.addOutputListener(l);

@@ -14,14 +14,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.szadowsz.gospel.core.exception.interpreter
+package com.szadowsz.gospel.util.exception.data
 
-/**
- * TODO WRITE DESCRIPTION AS ORIGINAL WAS COPY_PASTED FROM MALFORMED_GOAL_EXCEPTION
- *
- *
- *
- */
+import com.szadowsz.gospel.util.exception.InterpreterException
+
 @SerialVersionUID(1L)
 class UnknownVarException extends InterpreterException {
 

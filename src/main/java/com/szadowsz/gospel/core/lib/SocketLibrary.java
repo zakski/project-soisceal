@@ -10,7 +10,6 @@ import com.szadowsz.gospel.core.data.socket.Client_Socket;
 import com.szadowsz.gospel.core.data.socket.Datagram_Socket;
 import com.szadowsz.gospel.core.data.socket.Server_Socket;
 import com.szadowsz.gospel.core.exception.PrologException;
-import com.szadowsz.gospel.core.interfaces.ISocketLib;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -21,10 +20,6 @@ import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
 import java.util.regex.Pattern;
 
-//import alice.gospel.MalformedGoalException;
-//import alice.gospel.NoSolutionException;
-//import alice.gospel.Solution;
-
 /**
  * 
  * @author Mirco Bordoni
@@ -33,7 +28,7 @@ import java.util.regex.Pattern;
  *
  */
 
-public class SocketLibrary extends Library implements ISocketLib {
+public class SocketLibrary extends Library {
 	private static final long serialVersionUID = 1L;
 	private String addrRegex;
 	private LinkedList<ThreadReader> readers;			// Active readers
@@ -146,7 +141,6 @@ public boolean udp_socket_close_1(Term Socket) throws PrologException {
 }
 
 //udp receive data
-@Override
 public boolean udp_receive(Term Socket, Term Data, Struct AddressFrom,
 		Struct Options) throws PrologException {
 	if (!(Socket.getTerm() instanceof Var)) {

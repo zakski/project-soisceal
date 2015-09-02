@@ -21,15 +21,14 @@ import java.lang.reflect.InvocationTargetException
 import java.util._
 
 import com.szadowsz.gospel.core.data.{Struct, Term}
-import com.szadowsz.gospel.core.interfaces.{IPrimitiveManager, IPrimitives}
 import com.szadowsz.gospel.core.{BuiltIn, Prolog}
 
 /**
  * Administration of primitive predicates
  * @author Alex Benini
  */
-class PrimitiveManager(vm: Prolog) extends IPrimitiveManager {
-  private val libHashMap = Collections.synchronizedMap(new IdentityHashMap[IPrimitives, List[PrimitiveInfo]])
+class PrimitiveManager(vm: Prolog) {
+  private val libHashMap = Collections.synchronizedMap(new IdentityHashMap[Library, List[PrimitiveInfo]])
   private val directiveHashMap = Collections.synchronizedMap(new HashMap[String, PrimitiveInfo])
   private val predicateHashMap = Collections.synchronizedMap(new HashMap[String, PrimitiveInfo])
   private val functorHashMap = Collections.synchronizedMap(new HashMap[String, PrimitiveInfo])
@@ -41,7 +40,7 @@ class PrimitiveManager(vm: Prolog) extends IPrimitiveManager {
     createPrimitiveInfo(new BuiltIn(vm))
   }
 
-  private[gospel] def createPrimitiveInfo(src: IPrimitives) {
+  private[gospel] def createPrimitiveInfo(src: Library) {
     val prims: Map[Integer, List[PrimitiveInfo]] = src.getPrimitives
     var it: Iterator[PrimitiveInfo] = prims.get(PrimitiveInfo.DIRECTIVE).iterator
     while (it.hasNext) {
@@ -64,7 +63,7 @@ class PrimitiveManager(vm: Prolog) extends IPrimitiveManager {
     libHashMap.put(src, primOfLib)
   }
 
-  private[gospel] def deletePrimitiveInfo(src: IPrimitives) {
+  private[gospel] def deletePrimitiveInfo(src: Library) {
     val it: Iterator[PrimitiveInfo] = libHashMap.remove(src).iterator
     while (it.hasNext) {
       val k: String = it.next.invalidate

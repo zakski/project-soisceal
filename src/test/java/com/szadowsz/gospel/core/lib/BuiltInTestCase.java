@@ -4,7 +4,7 @@ import com.szadowsz.gospel.core.Prolog;
 import com.szadowsz.gospel.core.engine.Solution;
 import com.szadowsz.gospel.core.exception.interpreter.InvalidTheoryException;
 import com.szadowsz.gospel.core.theory.Theory;
-import com.szadowsz.gospel.util.exception.solve.MalformedGoalException;
+import com.szadowsz.gospel.util.exception.solution.InvalidSolutionException;
 import junit.framework.TestCase;
 
 public class BuiltInTestCase extends TestCase {
@@ -32,7 +32,7 @@ public class BuiltInTestCase extends TestCase {
 //	}
 	
 	//Based on the bug #59 Grouping conjunctions in () changes result on sourceforge
-	public void testGroupingConjunctions() throws InvalidTheoryException, MalformedGoalException {
+	public void testGroupingConjunctions() throws InvalidTheoryException, InvalidSolutionException {
 		Prolog engine = new Prolog();
 		engine.setTheory(new Theory("g1. g2."));
 		Solution info = engine.solve("(g1, g2), (g3, g4).");

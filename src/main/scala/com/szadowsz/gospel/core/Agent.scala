@@ -17,12 +17,13 @@
  */
 package com.szadowsz.gospel.core
 
+import com.szadowsz.gospel.core.theory.Theory
+
 import java.io.InputStream
 import java.util.concurrent.Callable
 
 import com.szadowsz.gospel.core.engine.Solution
 import com.szadowsz.gospel.core.event.OutputListener
-import com.szadowsz.gospel.core.theory.Theory
 import com.szadowsz.gospel.util.LoggerCategory
 import org.slf4j.LoggerFactory
 

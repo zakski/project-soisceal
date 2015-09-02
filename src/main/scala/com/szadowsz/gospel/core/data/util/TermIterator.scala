@@ -19,7 +19,7 @@ package com.szadowsz.gospel.core.data.util
 
 import com.szadowsz.gospel.core.Parser
 import com.szadowsz.gospel.core.data.Term
-import com.szadowsz.gospel.core.exception.interpreter.InvalidTermException
+import com.szadowsz.gospel.util.exception.data.InvalidTermException
 
 /**
  * This class represents an iterator of terms from Prolog text embedded

@@ -17,9 +17,9 @@
  */
 package com.szadowsz.gospel.core.data
 
-import java.{util => ju}
+import com.szadowsz.gospel.util.exception.data.InvalidTermException
 
-import com.szadowsz.gospel.core.exception.interpreter.InvalidTermException
+import java.{util => ju}
 
 import scala.collection.JavaConverters._
 

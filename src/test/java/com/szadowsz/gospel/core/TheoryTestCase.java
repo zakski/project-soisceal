@@ -4,7 +4,7 @@ import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.exception.interpreter.InvalidTheoryException;
 import com.szadowsz.gospel.core.theory.Theory;
-import com.szadowsz.gospel.util.exception.solve.MalformedGoalException;
+import com.szadowsz.gospel.util.exception.solution.InvalidSolutionException;
 import junit.framework.TestCase;
 
 public class TheoryTestCase extends TestCase {
@@ -16,7 +16,7 @@ public class TheoryTestCase extends TestCase {
 		assertEquals(theory.toString(), new Theory(after).toString());
 	}
 	
-	public void testAppendClauseLists() throws InvalidTheoryException, MalformedGoalException {
+	public void testAppendClauseLists() throws InvalidTheoryException, InvalidSolutionException {
 		Term[] clauseList = new Term[] {new Struct("p"), new Struct("q"), new Struct("r")};
 		Term[] otherClauseList = new Term[] {new Struct("a"), new Struct("b"), new Struct("c")};
 		Theory theory = new Theory(new Struct(clauseList));

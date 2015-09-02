@@ -17,6 +17,9 @@
  */
 package com.szadowsz.gospel.core
 
+import com.szadowsz.gospel.util.exception.data.InvalidTermException
+import com.szadowsz.gospel.util.exception.solution.{NoMoreSolutionsException, MalformedGoalException}
+
 import java.{util => ju}
 
 import com.szadowsz.gospel.core.data.{Struct, Term}
@@ -26,21 +29,19 @@ import com.szadowsz.gospel.core.event._
 import com.szadowsz.gospel.core.event.interpreter.{LibraryEvent, QueryEvent, TheoryEvent}
 import com.szadowsz.gospel.core.event.io.OutputEvent
 import com.szadowsz.gospel.core.event.logging.{ExceptionEvent, SpyEvent, WarningEvent}
-import com.szadowsz.gospel.core.exception.interpreter.{InvalidTermException, InvalidTheoryException}
+import com.szadowsz.gospel.core.exception.interpreter.InvalidTheoryException
 import com.szadowsz.gospel.core.flag.FlagManager
-import com.szadowsz.gospel.core.interfaces.IProlog
 import com.szadowsz.gospel.core.lib.{Library, LibraryManager, PrimitiveManager}
 import com.szadowsz.gospel.core.theory.{Theory, TheoryManager}
 import com.szadowsz.gospel.util.VersionInfo
 import com.szadowsz.gospel.util.exception.lib.InvalidLibraryException
-import com.szadowsz.gospel.util.exception.solve.{MalformedGoalException, NoMoreSolutionsException}
 
 object Prolog {
   /**
    * Gets the current version of the tuProlog system
    */
   def getVersion: String = {
-     VersionInfo.getEngineVersion
+    VersionInfo.getEngineVersion
   }
 }
 
@@ -51,7 +52,7 @@ object Prolog {
  *
  */
 @SerialVersionUID(1L)
-class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
+class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   /*  manager of current theory */
   private val _theoryManager: TheoryManager = new TheoryManager(this)
 
@@ -226,7 +227,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
     else {
       directory = absolutePathList.get(absolutePathList.size - 1)
     }
-     directory
+    directory
   }
 
   /**
@@ -273,11 +274,11 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    */
   def getTheory: Theory = {
     try {
-       new Theory(_theoryManager.getTheory(true))
+      new Theory(_theoryManager.getTheory(true))
     }
     catch {
       case ex: Exception => {
-         null
+        null
       }
     }
   }
@@ -288,7 +289,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    * @return theory
    */
   def getLastConsultedTheory: Theory = {
-     _theoryManager.getLastConsultedTheory
+    _theoryManager.getLastConsultedTheory
   }
 
   /**
@@ -316,7 +317,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    */
   @throws(classOf[InvalidLibraryException])
   def loadLibrary(className: String): Library = {
-     _libraryManager.loadLibrary(className)
+    _libraryManager.loadLibrary(className)
   }
 
   /**
@@ -332,7 +333,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    */
   @throws(classOf[InvalidLibraryException])
   def loadLibrary(className: String, paths: Array[String]): Library = {
-     _libraryManager.loadLibrary(className, paths)
+    _libraryManager.loadLibrary(className, paths)
   }
 
   /**
@@ -355,7 +356,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    * @return the list of the library names
    */
   def getCurrentLibraries: Array[String] = {
-     _libraryManager.getCurrentLibraries
+    _libraryManager.getCurrentLibraries
   }
 
   /**
@@ -377,15 +378,15 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    *         not found
    */
   def getLibrary(name: String): Library = {
-     _libraryManager.getLibrary(name)
+    _libraryManager.getLibrary(name)
   }
 
   protected def getLibraryPredicate(name: String, nArgs: Int): Library = {
-     _primitiveManager.getLibraryPredicate(name, nArgs)
+    _primitiveManager.getLibraryPredicate(name, nArgs)
   }
 
   protected def getLibraryFunctor(name: String, nArgs: Int): Library = {
-     _primitiveManager.getLibraryFunctor(name, nArgs)
+    _primitiveManager.getLibraryFunctor(name, nArgs)
   }
 
   /**
@@ -394,7 +395,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    * @return the list of the operators
    */
   def getCurrentOperatorList: ju.List[Operator] = {
-     _opManager.getOperators
+    _opManager.getOperators
   }
 
   /**
@@ -409,7 +410,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
     val sinfo: Solution = _engineManager.solve(g)
     val ev: QueryEvent = new QueryEvent(this, sinfo)
     notifyNewQueryResultAvailable(ev)
-     sinfo
+    sinfo
   }
 
   /**
@@ -424,7 +425,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
     try {
       val p: Parser = new Parser(_opManager, st)
       val t: Term = p.nextTerm(true)
-       solve(t)
+      solve(t)
     }
     catch {
       case ex: InvalidTermException => {
@@ -446,7 +447,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
       val sinfo: Solution = _engineManager.solveNext
       val ev: QueryEvent = new QueryEvent(this, sinfo)
       notifyNewQueryResultAvailable(ev)
-       sinfo
+      sinfo
     }
     else throw new NoMoreSolutionsException
   }
@@ -473,7 +474,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    */
   def hasOpenAlternatives: Boolean = {
     val b: Boolean = _engineManager.hasOpenAlternatives
-     b
+    b
   }
 
   /**
@@ -482,7 +483,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    * @return true if the demonstration was stopped
    */
   def isHalted: Boolean = {
-     _engineManager.isHalted
+    _engineManager.isHalted
   }
 
   /**
@@ -493,7 +494,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    * @return true if the unification was successful
    */
   def `match`(t0: Term, t1: Term): Boolean = {
-     t0.matches(t1)
+    t0.matches(t1)
   }
 
   /**
@@ -504,7 +505,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    * @return true if the unification was successful
    */
   def unify(t0: Term, t1: Term): Boolean = {
-     t0.unify(this, t1)
+    t0.unify(this, t1)
   }
 
   /**
@@ -526,7 +527,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    */
   @throws(classOf[InvalidTermException])
   def toTerm(st: String): Term = {
-     Parser.parseSingleTerm(st, _opManager)
+    Parser.parseSingleTerm(st, _opManager)
   }
 
   /**
@@ -537,14 +538,14 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    * @return the string representing the term
    */
   def toString(term: Term): String = {
-     (term.toStringAsArgY(_opManager, OperatorManager.OP_HIGH))
+    (term.toStringAsArgY(_opManager, OperatorManager.OP_HIGH))
   }
 
   /**
    * Defines a new flag
    */
   def defineFlag(name: String, valueList: Struct, defValue: Term, modifiable: Boolean, libName: String): Boolean = {
-     _flagManager.defineFlag(name, valueList, defValue, modifiable, libName)
+    _flagManager.defineFlag(name, valueList, defValue, modifiable, libName)
   }
 
   /**
@@ -560,7 +561,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    * @return  true if the engine emits spy information
    */
   def isSpy: Boolean = {
-     _spy
+    _spy
   }
 
   /**
@@ -602,7 +603,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    * @return  true if the engine emits warning information
    */
   def isWarning: Boolean = {
-     _warning
+    _warning
   }
 
   /**
@@ -634,7 +635,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    * @return  true if the engine emits exception information
    */
   def isException: Boolean = {
-     _exception
+    _exception
   }
 
   /**
@@ -812,7 +813,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    * Gets a copy of current listener list to output events
    */
   def getOutputListenerList: ju.List[OutputListener] = {
-     new ju.ArrayList[OutputListener](_outputListeners)
+    new ju.ArrayList[OutputListener](_outputListeners)
   }
 
   /**
@@ -820,7 +821,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    *
    */
   def getWarningListenerList: ju.List[WarningListener] = {
-     new ju.ArrayList[WarningListener](_warningListeners)
+    new ju.ArrayList[WarningListener](_warningListeners)
   }
 
   /**
@@ -828,7 +829,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    *
    */
   def getExceptionListenerList: ju.List[ExceptionListener] = {
-     new ju.ArrayList[ExceptionListener](_exceptionListeners)
+    new ju.ArrayList[ExceptionListener](_exceptionListeners)
   }
 
   /**
@@ -836,7 +837,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    *
    */
   def getSpyListenerList: ju.List[SpyListener] = {
-     new ju.ArrayList[SpyListener](_spyListeners)
+    new ju.ArrayList[SpyListener](_spyListeners)
   }
 
   /**
@@ -844,7 +845,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    *
    */
   def getTheoryListenerList: ju.List[TheoryListener] = {
-     new ju.ArrayList[TheoryListener](_theoryListeners)
+    new ju.ArrayList[TheoryListener](_theoryListeners)
   }
 
   /**
@@ -852,7 +853,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    *
    */
   def getLibraryListenerList: ju.List[LibraryListener] = {
-     new ju.ArrayList[LibraryListener](_libraryListeners)
+    new ju.ArrayList[LibraryListener](_libraryListeners)
   }
 
   /**
@@ -860,7 +861,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
    *
    */
   def getQueryListenerList: ju.List[QueryListener] = {
-     new ju.ArrayList[QueryListener](_queryListeners)
+    new ju.ArrayList[QueryListener](_queryListeners)
   }
 
   /**
@@ -990,13 +991,13 @@ class Prolog(spy: Boolean, warning: Boolean) extends IProlog with Serializable {
     try {
       val p: Parser = new Parser(_opManager, st)
       val t: Term = p.nextTerm(true)
-       t
+      t
     }
     catch {
       case e: InvalidTermException => {
         val s: String = "null"
         val t: Term = Term.createTerm(s)
-         t
+        t
       }
     }
   }

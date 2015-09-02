@@ -3,7 +3,7 @@ package com.szadowsz.gospel.util.exception.lib
 /**
  * Created by zszadowski on 15/05/2015.
  */
-class LibraryLoadException(className : String, ex : Throwable) extends InvalidLibraryException(className,ex) {
+class LibraryLoadException(libName : String, cause : Throwable) extends InvalidLibraryException(libName,cause) {
 
 
   override def getMessage() = "Library \"" + _libraryName + "\" Failed to Load."

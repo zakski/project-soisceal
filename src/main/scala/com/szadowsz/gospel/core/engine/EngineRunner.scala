@@ -4,6 +4,8 @@
  */
 package com.szadowsz.gospel.core.engine
 
+import com.szadowsz.gospel.util.exception.solution.NoMoreSolutionsException
+
 import java.util.concurrent.locks.{Condition, Lock, ReentrantLock}
 import java.{util => ju}
 
@@ -16,7 +18,6 @@ import com.szadowsz.gospel.core.engine.subgoal.tree.SubGoalTree
 import com.szadowsz.gospel.core.lib.{LibraryManager, PrimitiveManager}
 import com.szadowsz.gospel.core.theory.TheoryManager
 import com.szadowsz.gospel.core.theory.clause.ClauseInfo
-import com.szadowsz.gospel.util.exception.solve.NoMoreSolutionsException
 
 /**
  * @author Alex Benini

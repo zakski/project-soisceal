@@ -1,4 +1,6 @@
-package com.szadowsz.gospel.util;
+package com.szadowsz.gospel.util.classloader;
+
+import com.szadowsz.gospel.util.classloader.AbstractDynamicClassLoader;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

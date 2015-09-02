@@ -1,4 +1,4 @@
-/* tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
+/* tuProlog - Copyright (C) 2001-2015  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -14,17 +14,14 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package com.szadowsz.gospel.util.exception.solve
-
-import com.szadowsz.gospel.core.exception.interpreter.InterpreterException
+package com.szadowsz.gospel.util.exception.solution
 
 /**
- * This exception means that a not well formed goal has been specified.
+ * This exception means that a solution was asked for, but none exist.
  *
- *
- *
+ * @author Zakski : 31/08/2015.
  */
 @SerialVersionUID(1L)
-class MalformedGoalException extends InterpreterException {
+class NoSolutionException extends InvalidSolutionException("No Solution Available") {
 
 }

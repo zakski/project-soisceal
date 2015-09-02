@@ -8,8 +8,7 @@ import com.szadowsz.gospel.core.engine.Solution;
 import com.szadowsz.gospel.core.exception.interpreter.InvalidTheoryException;
 import com.szadowsz.gospel.core.theory.Theory;
 import com.szadowsz.gospel.util.exception.lib.InvalidLibraryException;
-import com.szadowsz.gospel.util.exception.solve.MalformedGoalException;
-import com.szadowsz.gospel.util.exception.solve.NoSolutionException;
+import com.szadowsz.gospel.util.exception.solution.InvalidSolutionException;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,11 +39,11 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * Test method for {@link ThreadLibrary#thread_id_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 * @throws NoSolutionException 
 	 */
 	@Test
-	public void testThread_id_1() throws InvalidTheoryException, MalformedGoalException, NoSolutionException {
+	public void testThread_id_1() throws InvalidTheoryException, InvalidSolutionException {
 		Solution sinfo = engine.solve("thread_id(ID).");	//unifica ad ID l'identificativo del thread corrente (Root)
 		assertTrue(sinfo.isSuccess());
 		Term id = sinfo.getVarValue("ID");
@@ -53,11 +52,11 @@ public class ThreadLibraryTestCase extends TestCase {
 
 	/**
 	 * Test method for {@link ThreadLibrary#thread_create_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 * @throws InvalidTheoryException 
 	 */
 	@Test
-	public void testThread_create_2() throws MalformedGoalException, InvalidTheoryException {
+	public void testThread_create_2() throws InvalidSolutionException, InvalidTheoryException {
 		theory = "genitore(bob,a).\n" +
 		"genitore(bob,b).\n" +
 		"genitore(bob,c).\n" +
@@ -74,11 +73,11 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * Test method for {@link ThreadLibrary#thread_next_sol_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 * @throws NoSolutionException 
 	 */
 	@Test
-	public void testThread_next_sol_1() throws InvalidTheoryException, MalformedGoalException, NoSolutionException {
+	public void testThread_next_sol_1() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "start(X) :- thread_create(ID, genitore(bob,X)),  loop(1,5,1,ID),  thread_read(ID, X).\n"+
 		"loop(I, To, Inc, ThreadId) :- Inc >= 0, I > To, !.\n"+
 		"loop(I, To, Inc, ThreadId) :- Inc < 0,  I < To, !.\n"+
@@ -102,11 +101,11 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * Test method for {@link ThreadLibrary#thread_join_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 * @throws NoSolutionException 
 	 */
 	@Test
-	public void testThread_join_2() throws InvalidTheoryException, MalformedGoalException, NoSolutionException {
+	public void testThread_join_2() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "genitore(bob,a).\n" +
 		"genitore(b,b).";
 		engine.setTheory(new Theory(theory));
@@ -127,11 +126,11 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * Test method for {@link ThreadLibrary#thread_read_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 * @throws NoSolutionException 
 	 */
 	@Test
-	public void testThread_read_2() throws InvalidTheoryException, MalformedGoalException, NoSolutionException {
+	public void testThread_read_2() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "genitore(bob,a).\n" +
 		"genitore(b,b).\n" +
 		"genitore(bob,f).\n" +
@@ -158,11 +157,11 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * Test method for {@link ThreadLibrary#thread_has_next_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 * @throws NoSolutionException 
 	 */
 	@Test
-	public void testThread_has_next_1() throws InvalidTheoryException, MalformedGoalException, NoSolutionException {
+	public void testThread_has_next_1() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "start(X) :- thread_create(ID, X), thread_execute(ID), lettura(ID,X).\n" +
 		"lettura(ID, X):- thread_join(ID, X).\n" +
 		"thread_execute(ID) :- thread_read(ID,A), thread_has_next(ID), !, thread_next_sol(ID). \n" +
@@ -184,10 +183,10 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * Test method for {@link ThreadLibrary#thread_detach_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 */
 	@Test
-	public void testThread_detach_1() throws InvalidTheoryException, MalformedGoalException {
+	public void testThread_detach_1() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "genitore(bob,a).\n" +
 				"genitore(bob,b).";
 		engine.setTheory(new Theory(theory));
@@ -199,10 +198,10 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * Test method for {@link ThreadLibrary#thread_sleep_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 */
 	@Test
-	public void testThread_sleep_1() throws InvalidTheoryException, MalformedGoalException {
+	public void testThread_sleep_1() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "genitore(bob,a).\n" +
 		"genitore(bob,b).";
 		engine.setTheory(new Theory(theory));
@@ -213,12 +212,12 @@ public class ThreadLibraryTestCase extends TestCase {
 
 	/**
 	 * Test method for {@link ThreadLibrary#thread_send_msg_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 * @throws NoSolutionException 
 	 * @throws InvalidTheoryException 
 	 */
 	@Test
-	public void testThread_send_msg_2() throws MalformedGoalException, NoSolutionException, InvalidTheoryException {
+	public void testThread_send_msg_2() throws InvalidSolutionException, InvalidTheoryException {
 		theory = "start(X) :- msg_queue_create('CODA'), thread_create(ID, thread1(X)), invio('CODA', 'messaggio molto importante'), lettura(ID,X).\n" +
 		"thread1(X) :- thread_wait_msg('CODA', a(X)). \n " +
 		"invio(ID, M):- thread_send_msg(ID, a(M)). \n" +		//Versione con 'CODA'
@@ -247,11 +246,11 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * Test method for {@link ThreadLibrary#thread_get_msg_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 * @throws NoSolutionException 
 	 */
 	@Test
-	public void testThread_get_msg_2() throws InvalidTheoryException, MalformedGoalException, NoSolutionException {
+	public void testThread_get_msg_2() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "start(X) :- msg_queue_create('CODA'), thread_create(ID, thread1(X)), thread_sleep(500), invio('CODA', 'messaggio molto importante'), lettura(ID,X).\n" +
 		"thread1(X) :- thread_get_msg('CODA', a(X)). \n " +
 		"invio(ID, M):- thread_send_msg(ID, a(M)). \n" +		//Versione con 'CODA'
@@ -268,11 +267,11 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * Test method for {@link ThreadLibrary#thread_peek_msg_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 * @throws NoSolutionException 
 	 */
 	@Test
-	public void testThread_peek_msg_2() throws InvalidTheoryException, MalformedGoalException, NoSolutionException {
+	public void testThread_peek_msg_2() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "start(X) :- msg_queue_create('CODA'), thread_create(ID, thread1(X)), thread_sleep(500), invio('CODA', 'messaggio molto importante'), lettura(ID,X).\n" +
 		"thread1(X) :- thread_peek_msg('CODA', a(X)). \n " +
 		"invio(ID, M):- thread_send_msg(ID, a(M)). \n" +		//Versione con 'CODA'
@@ -306,11 +305,11 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * Test method for {@link ThreadLibrary#thread_wait_msg_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 * @throws NoSolutionException 
 	 */
 	@Test
-	public void testThread_wait_msg_2() throws InvalidTheoryException, MalformedGoalException, NoSolutionException {
+	public void testThread_wait_msg_2() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "start(X) :- msg_queue_create('CODA'), thread_create(ID, thread1(X)), thread_sleep(500), invio('CODA', 'messaggio molto importante'), lettura(ID,X).\n" +
 		"thread1(X) :- thread_wait_msg('CODA', a(X)). \n " +
 		"invio(ID, M):- thread_send_msg(ID, a(M)). \n" +		//Versione con 'CODA'
@@ -347,10 +346,10 @@ public class ThreadLibraryTestCase extends TestCase {
 	 * 
 	 * Test method for {@link ThreadLibrary#thread_remove_msg_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 */
 	@Test
-	public void testThread_remove_msg_2() throws InvalidTheoryException, MalformedGoalException {
+	public void testThread_remove_msg_2() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "start(X) :- msg_queue_create('CODA'),  invio('CODA', 'messaggio molto importante'), thread_create(ID, thread1(X)), thread_sleep(50), thread_peek_message(ID, X).\n" +
 		"thread1(X) :- thread_remove_msg('CODA', a(X)). \n " +
 		"invio(ID, M):- thread_send_msg(ID, a(M)). \n" +		//Versione con 'CODA'
@@ -366,10 +365,10 @@ public class ThreadLibraryTestCase extends TestCase {
 	 * start2(X) -> distruggo la coda, poi prelevo la soluzione.
 	 * Test method for {@link ThreadLibrary#message_queue_destroy_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 */
 	@Test
-	public void testMsg_queue_destroy_1() throws InvalidTheoryException, MalformedGoalException {
+	public void testMsg_queue_destroy_1() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "start(X) :- msg_queue_create('CODA'), thread_create(ID, thread1(X)), invio('CODA', 'messaggio molto importante'), lettura(ID,X), msg_queue_destroy('CODA').\n" +
 		"start2(X) :- msg_queue_create('CODA'), invio('CODA', 'messaggio molto importante'), msg_queue_destroy('CODA'), thread_create(ID, thread1(X)),  lettura(ID,X).\n" +
 		"thread1(X) :- thread_wait_msg('CODA', a(X)). \n " +
@@ -387,11 +386,11 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * Test method for {@link ThreadLibrary#msg_queue_size_2(com.szadowsz.gospel.core.Term, com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 * @throws NoSolutionException 
 	 */
 	@Test
-	public void testMsg_queue_size_2() throws InvalidTheoryException, MalformedGoalException, NoSolutionException {
+	public void testMsg_queue_size_2() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "start(X, S) :- msg_queue_create('CODA'), thread_create(ID, thread1(X)), loop(1,5,1,invio('CODA', 'messaggio molto importante')), lettura(ID,X), msg_queue_size('CODA', S).\n" +
 		"loop(I, To, Inc, Action) :- Inc >= 0, I > To, !.\n"+
 		"loop(I, To, Inc, Action) :- Inc < 0,  I < To, !.\n"+
@@ -411,10 +410,10 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * Test method for {@link ThreadLibrary#mutex_destroy_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 */
 	@Test
-	public void testMutex_destroy_1() throws InvalidTheoryException, MalformedGoalException {
+	public void testMutex_destroy_1() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "start(M, X) :- mutex_create(M), mutex_lock(M), thread_create(ID, thread1(M)), thread_sleep(500), message_queue_create('CODA'), invio('CODA', 'messaggio molto importante'), lettura(ID, X). \n" +
 		"thread1(M) :- mutex_destroy(M). \n" +
 		"invio(Q, M):- thread_send_msg(Q, a(M)), mutex_unlock('mutex'). \n" +
@@ -428,10 +427,10 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * 
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 */
 	@Test
-	public void testMutex_lock_unlock_1() throws InvalidTheoryException, MalformedGoalException {
+	public void testMutex_lock_unlock_1() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "start(X) :- mutex_lock('mutex'), thread_create(ID, thread1(X)), msg_queue_create('CODA'), invio('CODA', 'messaggio molto importante'), lettura(ID,X). \n" +
 		"thread1(X) :- mutex_lock('mutex'), thread_peek_msg('CODA', a(X)), mutex_unlock('mutex'). \n" +
 		"invio(Q, M):- thread_send_msg(Q, a(M)), mutex_unlock('mutex'). \n" +
@@ -445,10 +444,10 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * Test method for {@link ThreadLibrary#mutex_trylock_1(com.szadowsz.gospel.core.Term)}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 */
 	@Test
-	public void testMutex_trylock_1() throws InvalidTheoryException, MalformedGoalException {
+	public void testMutex_trylock_1() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "start(X) :- mutex_lock('mutex'), thread_create(ID, thread1(X)), message_queue_create('CODA'), invio('CODA', 'messaggio molto importante'), lettura(ID,X). \n" +
 		"thread1(X) :- mutex_trylock('mutex'), thread_peek_msg('CODA', a(X)), mutex_unlock('mutex'). \n" +
 		"invio(Q, M):- thread_send_msg(Q, a(M)). \n" +
@@ -462,11 +461,11 @@ public class ThreadLibraryTestCase extends TestCase {
 	/**
 	 * Test method for {@link ThreadLibrary#mutex_unlock_all_0()}.
 	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
+	 * @throws InvalidSolutionException 
 	 */
 	
 	@Test
-	public void testMutex_unlock_all_0() throws InvalidTheoryException, MalformedGoalException {
+	public void testMutex_unlock_all_0() throws InvalidTheoryException, InvalidSolutionException {
 		theory = "start(X) :- thread_create(ID, thread1(X)), mutex_lock('mutex1'). \n" +
 		"thread1(X, M1, M2) :- mutex_lock('mutex1'), mutex_lock('mutex2'), mutex_unlock_all." ;
 		engine.setTheory(new Theory(theory));
@@ -476,7 +475,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 	
 	@Test
-    public void testFattoriale() throws InvalidTheoryException, MalformedGoalException, NoSolutionException{
+    public void testFattoriale() throws InvalidTheoryException, InvalidSolutionException{
             theory = "start(N,X,M,Y):- thread_create(ID, fact1(N,X)), thread_join(ID, fact1(N,X)),thread_create(ID2, fact1(M,Y)), thread_join(ID2, fact1(M,Y)).\n" +
                             "fact1(0,1):-!.\n" +
                             "fact1(N,X):-M is N-1,fact1(M,Y),X is Y*N.";
@@ -493,7 +492,7 @@ public class ThreadLibraryTestCase extends TestCase {
     }
 	
 	@Test
-	public void testMutex1() throws InvalidTheoryException, MalformedGoalException, NoSolutionException{
+	public void testMutex1() throws InvalidTheoryException, InvalidSolutionException{
 		theory = "start(X) :- thread_create(ID, genitore(bob,X)), mutex_lock('mutex'), thread_create(ID2, lettura(ID,X)), loop(1,3,1,ID),  mutex_unlock('mutex').\n" +
 		"genitore(bob,c).\n" +
 		"genitore(bob,gdh).\n" +
@@ -508,7 +507,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 	
 	@Test
-	public void testMutex2() throws InvalidTheoryException, MalformedGoalException, NoSolutionException{
+	public void testMutex2() throws InvalidTheoryException, InvalidSolutionException{
 		theory = "start :- thread_create(ID1, figlio(bob,X)), mutex_lock('mutex')," +
 				"thread_create(ID2, lettura(ID1,X)), loop(1,5,1,ID1),  mutex_unlock('mutex').\n" +
 				"loop(I, To, Inc, ThreadId) :- Inc >= 0, I > To, !.\n" +
@@ -528,7 +527,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 	
 	@Test
-	public void testMutex3() throws InvalidTheoryException, MalformedGoalException, NoSolutionException{
+	public void testMutex3() throws InvalidTheoryException, InvalidSolutionException{
 		theory = "start :- thread_create(ID1, figlio(bob,X))," +
 				"loop(1,5,1,ID1), thread_create(ID2, lettura(ID1,X)).\n" +
 				"loop(I, To, Inc, ThreadId) :- Inc >= 0, I > To, !.\n" +
@@ -546,7 +545,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 	
 	@Test
-	public void concurrentTest1() throws InvalidTheoryException, MalformedGoalException, NoSolutionException{
+	public void concurrentTest1() throws InvalidTheoryException, InvalidSolutionException{
 		theory= "bubble(L1,L2) :- bubble(L1,0,L2).\n" +
 				"bubble(L1,0,L2) :- sweep(L1,0,L2).\n" +
 				"bubble(L1,0,L2) :- sweep(L1,1,LTMP),bubble(LTMP,0,L2).\n" +
@@ -577,7 +576,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 	
 	@Test
-	public void concurrentTest2() throws InvalidTheoryException, MalformedGoalException, NoSolutionException{
+	public void concurrentTest2() throws InvalidTheoryException, InvalidSolutionException{
 		theory= "coppie(L,C,DX,SX):-thread_create(ID1, coppieDX(L,C,DX)), thread_create(ID2, coppieSX(L,C,SX)).\n" +
 		
 				"coppieDX([],_,[]).\n " +
@@ -596,7 +595,7 @@ public class ThreadLibraryTestCase extends TestCase {
 	}
 	
 	@Test
-	public void concurrentTest3() throws InvalidTheoryException, MalformedGoalException, NoSolutionException{
+	public void concurrentTest3() throws InvalidTheoryException, InvalidSolutionException{
 		theory="study(L_stud, L_exams, N,Num) :- thread_create(ID, loop(1, N, 1, L_stud, L_exams)), length(L_exams,Num). \n"+
 				
 				"length([],0).\n"+
