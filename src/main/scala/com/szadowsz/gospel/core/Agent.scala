@@ -17,7 +17,7 @@
  */
 package com.szadowsz.gospel.core
 
-import com.szadowsz.gospel.core.theory.Theory
+import com.szadowsz.gospel.core.db.theory.Theory
 
 import java.io.InputStream
 import java.util.concurrent.Callable

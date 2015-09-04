@@ -18,4 +18,6 @@ class TermParsingException(message: String, line: Int, offset: Int)
   override protected val _line: Int = line
 
   override protected val _column: Int = offset
+
+  override def getMessage:String = message
 }

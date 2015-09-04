@@ -3,7 +3,7 @@ package com.szadowsz.gospel.core.lib;
 import com.szadowsz.gospel.core.Prolog;
 import com.szadowsz.gospel.core.data.numeric.Int;
 import com.szadowsz.gospel.core.engine.Solution;
-import com.szadowsz.gospel.core.exception.PrologException;
+import com.szadowsz.gospel.util.exception.engine.PrologException;
 import com.szadowsz.gospel.util.event.TestOutputListener;
 import com.szadowsz.gospel.util.exception.lib.InvalidLibraryException;
 import com.szadowsz.gospel.util.exception.solution.InvalidSolutionException;

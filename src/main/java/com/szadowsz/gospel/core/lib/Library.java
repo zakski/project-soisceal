@@ -20,7 +20,10 @@ package com.szadowsz.gospel.core.lib;
 import com.szadowsz.gospel.core.Prolog;
 import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.Term;
-import com.szadowsz.gospel.core.lib.PrimitiveInfo;
+import com.szadowsz.gospel.core.db.primitive.PrimitiveInfo;
+import com.szadowsz.gospel.util.LoggerCategory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,7 +51,9 @@ import java.util.Map;
  * <p>
  */
 public abstract class Library implements Serializable {
-	private static final long serialVersionUID = 1L;
+    protected Logger _logger = LoggerFactory.getLogger(LoggerCategory.LIB());
+
+    private static final long serialVersionUID = 1L;
     /**
 	 * prolog core which loaded the library
 	 */
@@ -127,7 +132,7 @@ public abstract class Library implements Serializable {
      * is deployed and altered.
      */
     protected boolean match(Term a0,Term a1) {
-        return engine.match(a0,a1);
+        return engine.isMatch(a0, a1);
     }
     
     

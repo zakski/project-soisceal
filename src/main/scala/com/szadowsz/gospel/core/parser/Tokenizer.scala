@@ -22,7 +22,6 @@ import com.szadowsz.gospel.util.exception.data.InvalidTermException
 import java.io._
 import java.util.{Arrays, LinkedList}
 
-import com.szadowsz.gospel.core.Parser
 
 /**
  * BNF for tuProlog

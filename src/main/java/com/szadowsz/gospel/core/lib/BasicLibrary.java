@@ -18,15 +18,15 @@
 package com.szadowsz.gospel.core.lib;
 
 import com.szadowsz.gospel.core.Agent;
-import com.szadowsz.gospel.core.Operator;
+import com.szadowsz.gospel.core.operation.Operator;
 import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.data.Var;
 import com.szadowsz.gospel.core.data.numeric.Double;
 import com.szadowsz.gospel.core.data.numeric.Int;
-import com.szadowsz.gospel.core.exception.PrologException;
-import com.szadowsz.gospel.core.exception.interpreter.InvalidTheoryException;
-import com.szadowsz.gospel.core.theory.Theory;
+import com.szadowsz.gospel.util.exception.engine.PrologException;
+import com.szadowsz.gospel.util.exception.theory.InvalidTheoryException;
+import com.szadowsz.gospel.core.db.theory.Theory;
 import com.szadowsz.gospel.util.Tools;
 import scala.collection.Iterator;
 
@@ -227,18 +227,6 @@ public class BasicLibrary extends Library {
 
 	public boolean notrace_0() {
 		return nospy_0();
-	}
-
-	/**/
-
-	public boolean warning_0() {
-		getEngine().setWarning(true);
-		return true;
-	}
-
-	public boolean nowarning_0() {
-		getEngine().setWarning(false);
-		return true;
 	}
 
 	//

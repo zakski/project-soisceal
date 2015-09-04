@@ -4,14 +4,14 @@ package com.szadowsz.gospel.core.lib;
  * @author: Sara Sabioni
  */
 
-import com.szadowsz.gospel.core.Operator;
+import com.szadowsz.gospel.core.operation.Operator;
 import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.data.Var;
 import com.szadowsz.gospel.core.data.numeric.Int;
 import com.szadowsz.gospel.core.data.numeric.Long;
 import com.szadowsz.gospel.core.data.numeric.Number;
-import com.szadowsz.gospel.core.exception.PrologException;
+import com.szadowsz.gospel.util.exception.engine.PrologException;
 import com.szadowsz.gospel.util.Tools;
 import com.szadowsz.gospel.util.exception.lib.InvalidLibraryException;
 import scala.collection.Iterator;

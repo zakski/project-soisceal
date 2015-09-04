@@ -17,8 +17,8 @@
  */
 package com.szadowsz.gospel.core.data.util
 
-import com.szadowsz.gospel.core.Parser
 import com.szadowsz.gospel.core.data.Term
+import com.szadowsz.gospel.core.parser.Parser
 import com.szadowsz.gospel.util.exception.data.InvalidTermException
 
 /**

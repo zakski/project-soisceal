@@ -32,7 +32,7 @@ class BacktrackState(runner : EngineRunner) extends State(runner,"Back") {
     if (curChoice == null) {
       e.nextState = runner.END_FALSE
       val goal = e.context.currentGoal
-      runner.warn("The predicate " + goal.getPredicateIndicator + " is unknown.")
+      _logger.warn("The predicate TODO is unknown.",goal.getPredicateIndicator)
       return false
     }
     true

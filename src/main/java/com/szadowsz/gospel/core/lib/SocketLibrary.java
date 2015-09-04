@@ -9,7 +9,7 @@ import com.szadowsz.gospel.core.data.socket.AbstractSocket;
 import com.szadowsz.gospel.core.data.socket.Client_Socket;
 import com.szadowsz.gospel.core.data.socket.Datagram_Socket;
 import com.szadowsz.gospel.core.data.socket.Server_Socket;
-import com.szadowsz.gospel.core.exception.PrologException;
+import com.szadowsz.gospel.util.exception.engine.PrologException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

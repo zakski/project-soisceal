@@ -2,10 +2,10 @@ package com.szadowsz.gospel.core;
 
 import com.szadowsz.gospel.core.event.SpyListener;
 import com.szadowsz.gospel.core.event.logging.SpyEvent;
-import com.szadowsz.gospel.core.exception.interpreter.InvalidTheoryException;
+import com.szadowsz.gospel.util.exception.theory.InvalidTheoryException;
 import com.szadowsz.gospel.core.lib.Library;
 import com.szadowsz.gospel.core.lib.OOLibrary;
-import com.szadowsz.gospel.core.theory.Theory;
+import com.szadowsz.gospel.core.db.theory.Theory;
 import com.szadowsz.gospel.util.event.TestPrologEventAdapter;
 import com.szadowsz.gospel.util.exception.lib.InvalidLibraryException;
 import com.szadowsz.gospel.util.lib.StringLibrary;
@@ -77,18 +77,6 @@ public class PrologTestCase extends TestCase {
         engine.addSpyListener(listener1);
         engine.addSpyListener(listener2);
         assertEquals(2, engine.getSpyListenerList().size());
-    }
-
-    public void testLibraryListener() throws InvalidLibraryException {
-        Prolog engine = new Prolog(new String[]{});
-        engine.loadLibrary("com.szadowsz.gospel.core.lib.BasicLibrary");
-        engine.loadLibrary("com.szadowsz.gospel.core.lib.IOLibrary");
-        TestPrologEventAdapter a = new TestPrologEventAdapter();
-        engine.addLibraryListener(a);
-        engine.loadLibrary("com.szadowsz.gospel.core.lib.OOLibrary");
-        assertEquals("com.szadowsz.gospel.core.lib.OOLibrary", a.firstMessage);
-        engine.unloadLibrary("com.szadowsz.gospel.core.lib.OOLibrary");
-        assertEquals("com.szadowsz.gospel.core.lib.OOLibrary", a.firstMessage);
     }
 
     public void testTheoryListener() throws InvalidTheoryException {

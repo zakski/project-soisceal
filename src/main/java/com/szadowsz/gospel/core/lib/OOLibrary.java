@@ -25,13 +25,14 @@ import com.szadowsz.gospel.core.data.numeric.Float;
 import com.szadowsz.gospel.core.data.numeric.*;
 import com.szadowsz.gospel.core.data.numeric.Long;
 import com.szadowsz.gospel.core.data.numeric.Number;
-import com.szadowsz.gospel.core.exception.JVMException;
+import com.szadowsz.gospel.util.exception.engine.JVMException;
 import com.szadowsz.gospel.util.*;
 import com.szadowsz.gospel.util.classloader.AbstractDynamicClassLoader;
 import com.szadowsz.gospel.util.classloader.AndroidDynamicClassLoader;
 import com.szadowsz.gospel.util.classloader.JavaDynamicClassLoader;
 import com.szadowsz.gospel.util.exception.lib.InvalidObjectIdException;
 import com.szadowsz.gospel.util.proxyGenerator.Generator;
+
 import scala.collection.Iterator;
 
 import java.io.File;
@@ -231,9 +232,8 @@ public class OOLibrary extends Library {
                 Object[] args_value = args.getValues();
                 Constructor<?> co = lookupConstructor(cl, args.getTypes(),args_value);
                 if (co == null) {
-                    getEngine().warn("Constructor not found: class " + clName);
-                    throw new JVMException(new NoSuchMethodException(
-                            "Constructor not found: class " + clName));
+                   _logger.warn("Constructor not found: class TODO",clName);
+                    throw new JVMException(new NoSuchMethodException("Constructor not found: class " + clName));
                 }
 
                 Object obj = co.newInstance(args_value);
@@ -242,21 +242,19 @@ public class OOLibrary extends Library {
                 else
                     throw new JVMException(new Exception());
             } catch (ClassNotFoundException ex) {
-                getEngine().warn("Java class not found: " + clName);
+               _logger.warn("Java class not found: TODO",clName);
                 throw new JVMException(ex);
             } catch (InvocationTargetException ex) {
-                getEngine().warn("Invalid constructor arguments.");
+               _logger.warn("Invalid constructor arguments.");
                 throw new JVMException(ex);
             } catch (NoSuchMethodException ex) {
-                getEngine().warn("Constructor not found: " + args.getTypes());
+               _logger.warn("Constructor not found: TODO",args.getTypes());
                 throw new JVMException(ex);
             } catch (InstantiationException ex) {
-                getEngine().warn(
-                        "Objects of class " + clName
-                                + " cannot be instantiated");
+               _logger.warn("Objects of class TODO cannot be instantiated",clName);
                 throw new JVMException(ex);
             } catch (IllegalArgumentException ex) {
-                getEngine().warn("Illegal constructor arguments  " + args);
+               _logger.warn("Illegal constructor arguments  TODO",args);
                 throw new JVMException(ex);
             }
         } catch (Exception ex) {
@@ -378,9 +376,7 @@ public class OOLibrary extends Library {
                 file.write(text);
                 file.close();
             } catch (IOException ex) {
-                getEngine().warn("Compilation of java sources failed");
-                getEngine().warn(
-                        "(creation of " + fullClassPath + ".java fail failed)");
+               _logger.warn("Compilation of java sources failed: Creation of TODO.java failed",fullClassPath);
                 throw new JVMException(ex);
             }
             String cmd = "javac " + cp + " " + fullClassPath + ".java";
@@ -389,14 +385,11 @@ public class OOLibrary extends Library {
                 Process jc = Runtime.getRuntime().exec(cmd);
                 int res = jc.waitFor();
                 if (res != 0) {
-                    getEngine().warn("Compilation of java sources failed");
-                    getEngine().warn(
-                            "(java compiler (javac) has stopped with errors)");
+                   _logger.warn("Compilation of java sources failed: java compiler (javac) has stopped with errors");
                     throw new IOException("Compilation of java sources failed");
                 }
             } catch (IOException ex) {
-                getEngine().warn("Compilation of java sources failed");
-                getEngine().warn("(java compiler (javac) invocation failed)");
+               _logger.warn("Compilation of java sources failed: java compiler (javac) invocation failed");
                 throw new JVMException(ex);
             }
             try 
@@ -423,10 +416,7 @@ public class OOLibrary extends Library {
                 else
                     throw new JVMException(new Exception());
             } catch (ClassNotFoundException ex) {
-                getEngine().warn("Compilation of java sources failed");
-                getEngine().warn(
-                        "(Java Class compiled, but not created: "
-                                + fullClassName + " )");
+               _logger.warn("Compilation of java sources failed: Java Class compiled, but not created: TODO",fullClassName);
                 throw new JVMException(ex);
             }
         } catch (Exception ex) {
@@ -489,12 +479,12 @@ public class OOLibrary extends Library {
 						m.setAccessible(true);
 						res = m.invoke(obj, args_values);
 					} catch (IllegalAccessException ex) {
-						getEngine().warn("Method invocation failed: " + methodName+ "( signature: " + args + " )");
+						_logger.warn("Method invocation failed: TODO ( signature: TODO )",methodName,args);
 						throw new JVMException(ex);
 					}
 				} else {
-					getEngine().warn("Method not found: " + methodName + "( signature: "+ args + " )");
-					throw new JVMException(new NoSuchMethodException("Method not found: " + methodName + "( signature: "+ args + " )"));
+                    _logger.warn("Method not found: TODO ( signature: TODO )", methodName, args);
+     				throw new JVMException(new NoSuchMethodException("Method not found: " + methodName + "( signature: "+ args + " )"));
 				}
 			} else {
 				if (objId.isCompound()) {
@@ -512,8 +502,8 @@ public class OOLibrary extends Library {
 						} catch (ClassNotFoundException ex) {
 							// if not found even as a class id -> consider as a
 							// String object value
-							getEngine().warn("Unknown class.");
-							throw new JVMException(ex);
+							_logger.warn("Unknown class.");
+                            throw new JVMException(ex);
 						}
 					}
 					else {
@@ -535,24 +525,16 @@ public class OOLibrary extends Library {
 			else
 				throw new JVMException(new Exception());
 		} catch (InvocationTargetException ex) {
-			getEngine().warn(
-					"Method failed: " + methodName + " - ( signature: " + args
-					+ " ) - Original Exception: "
-					+ ex.getTargetException());
+			_logger.warn("Method failed: " + methodName + " - ( signature: " + args + " )",ex.getTargetException());
 			throw new JVMException(new IllegalArgumentException());
 		} catch (NoSuchMethodException ex) {
-			getEngine().warn(
-					"Method not found: " + methodName + " - ( signature: "
-							+ args + " )");
-			throw new JVMException(ex);
+            _logger.warn("Method not found: TODO ( signature: TODO )", methodName, args);
+            throw new JVMException(ex);
 		} catch (IllegalArgumentException ex) {
-			getEngine().warn(
-					"Invalid arguments " + args + " - ( method: " + methodName
-					+ " )");
-			throw new JVMException(ex);
+            _logger.warn("Invalid arguments: TODO ( method: TODO )", args, methodName);
+          	throw new JVMException(ex);
 		} catch (Exception ex) {
-			getEngine()
-			.warn("Generic error in method invocation " + methodName);
+            _logger.warn("Generic error in method invocation TODO", methodName);
 			throw new JVMException(ex);
 		}
 	}
@@ -577,7 +559,7 @@ public class OOLibrary extends Library {
         	return true;
     	}catch(IllegalArgumentException e)
         {
-        	getEngine().warn("Illegal list of paths " + paths);
+            _logger.warn("Illegal list of paths: TODO", paths);
             throw new JVMException(e);
         }
         catch (Exception e) {
@@ -621,7 +603,7 @@ public class OOLibrary extends Library {
         	return unify(paths, pathTerm);
     	}catch(IllegalArgumentException e)
         {
-        	getEngine().warn("Illegal list of paths " + paths);
+            _logger.warn("Illegal list of paths: TODO", paths);
             throw new JVMException(e);
         }
         catch (Exception e) {
@@ -651,16 +633,10 @@ public class OOLibrary extends Library {
             		try {
                         cl = Class.forName(clName, true, dynamicLoader);
                     } catch (ClassNotFoundException ex) {
-                        getEngine().warn("Java class not found: " + clName);
+                       _logger.warn("Java class not found: " + clName);
                         return false;
                     } catch (Exception ex) {
-                        getEngine().warn(
-                                "Static field "
-                                        + fieldName
-                                        + " not found in class "
-                                        + Tools
-                                                .removeApices(((Struct) objId)
-                                                        .getArg(0).toString()));
+                        _logger.warn("Static field TODO not found in class TODO", fieldName, Tools.removeApices(((Struct) objId).getArg(0).toString()));
                         return false;
                     }
             	}
@@ -704,8 +680,7 @@ public class OOLibrary extends Library {
             }
             return true;
         } catch (NoSuchFieldException ex) {
-            getEngine().warn(
-                    "Field " + fieldName + " not found in class " + objId);
+           _logger.warn("Field TODO not found in class TODO",fieldName,objId);
             return false;
         } catch (Exception ex) {
             return false;
@@ -733,16 +708,10 @@ public class OOLibrary extends Library {
             		try {
                         cl = Class.forName(clName, true, dynamicLoader);
                     } catch (ClassNotFoundException ex) {
-                        getEngine().warn("Java class not found: " + clName);
+                       _logger.warn("Java class not found: TODO", clName);
                         return false;
                     } catch (Exception ex) {
-                        getEngine().warn(
-                                "Static field "
-                                        + fieldName
-                                        + " not found in class "
-                                        + Tools
-                                                .removeApices(((Struct) objId)
-                                                        .getArg(0).toString()));
+                       _logger.warn("Static field TODO not found in class TODO", fieldName, Tools.removeApices(((Struct) objId).getArg(0).toString()));
                         return false;
                     }
             	}
@@ -778,11 +747,10 @@ public class OOLibrary extends Library {
             }
             
         } catch (NoSuchFieldException ex) {
-            getEngine().warn(
-                    "Field " + fieldName + " not found in class " + objId);
+            _logger.warn("Field TODO not found in class TODO",fieldName,objId);
             return false;
         } catch (Exception ex) {
-            getEngine().warn("Generic error in accessing the field");
+           _logger.warn("Generic error in accessing the field");
             return false;
         }
     }
@@ -1221,8 +1189,7 @@ public class OOLibrary extends Library {
                         try {
                             types[i] = Class.forName(castTo_name, true, dynamicLoader);
                         } catch (ClassNotFoundException ex) {
-                            getEngine().warn(
-                                    "Java class not found: " + castTo_name);
+                            _logger.warn("Java class not found: TODO",castTo_name);
                             return false;
                         }
                     }
@@ -1248,8 +1215,7 @@ public class OOLibrary extends Library {
                         try {
                             types[i] = Class.forName(castTo_name, true, dynamicLoader);
                         } catch (ClassNotFoundException ex) {
-                            getEngine().warn(
-                                    "Java class not found: " + castTo_name);
+                            _logger.warn("Java class not found: TODO", castTo_name);
                             return false;
                         }
                     }
@@ -1280,8 +1246,7 @@ public class OOLibrary extends Library {
                 }
             }
         } catch (Exception ex) {
-            getEngine().warn(
-                    "Casting " + castWhat + " to " + castTo + " failed");
+            _logger.warn("Casting TODO to TODO failed",castWhat,castTo);
             return false;
         }
         return true;
@@ -1402,7 +1367,7 @@ public class OOLibrary extends Library {
         	return register((Struct)id, obj);
         }catch(InvalidObjectIdException e)
         {
-        	getEngine().warn("Illegal object id " + id.toString());
+        	_logger.warn("Illegal object id TODO", id.toString());
             throw new JVMException(e);
         }
     }
@@ -1427,7 +1392,7 @@ public class OOLibrary extends Library {
         	return unregister((Struct)id);
         }catch(InvalidObjectIdException e)
         {
-        	getEngine().warn("Illegal object id " + id.toString());
+            _logger.warn("Illegal object id TODO",id.toString());
             throw new JVMException(e);
         }
     }

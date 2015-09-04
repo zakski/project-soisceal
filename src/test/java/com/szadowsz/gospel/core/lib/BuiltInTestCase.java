@@ -2,8 +2,8 @@ package com.szadowsz.gospel.core.lib;
 
 import com.szadowsz.gospel.core.Prolog;
 import com.szadowsz.gospel.core.engine.Solution;
-import com.szadowsz.gospel.core.exception.interpreter.InvalidTheoryException;
-import com.szadowsz.gospel.core.theory.Theory;
+import com.szadowsz.gospel.util.exception.theory.InvalidTheoryException;
+import com.szadowsz.gospel.core.db.theory.Theory;
 import com.szadowsz.gospel.util.exception.solution.InvalidSolutionException;
 import junit.framework.TestCase;
 

@@ -34,6 +34,7 @@ public class Tools extends Object {
             is.read(info);
             return new String(info);
         } catch (Exception ex){
+
         }
         // resource not found among system resources: try as a file
         try {

@@ -1,7 +1,6 @@
 package com.szadowsz.gospel.core.parser;
 
-import com.szadowsz.gospel.core.DefaultOperatorManager;
-import com.szadowsz.gospel.core.Parser;
+import com.szadowsz.gospel.core.operation.DefaultOperatorManager;
 import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.Var;
 import com.szadowsz.gospel.core.data.numeric.Int;

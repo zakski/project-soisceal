@@ -4,7 +4,7 @@ import com.szadowsz.gospel.core.Prolog;
 import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.numeric.Int;
 import com.szadowsz.gospel.core.engine.Solution;
-import com.szadowsz.gospel.core.theory.Theory;
+import com.szadowsz.gospel.core.db.theory.Theory;
 import junit.framework.TestCase;
 
 /**

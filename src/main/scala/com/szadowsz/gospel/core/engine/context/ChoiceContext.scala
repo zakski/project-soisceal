@@ -17,7 +17,7 @@
  */
 package com.szadowsz.gospel.core.engine.context
 
-import com.szadowsz.gospel.core.theory.clause.ClauseStore
+import com.szadowsz.gospel.core.engine.clause.ClauseStore
 
 /**
  * Class to represent a decision point in the Prolog Demonstration where we possibly could process alternatives.

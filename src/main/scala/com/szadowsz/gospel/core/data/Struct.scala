@@ -17,13 +17,13 @@
  */
 package com.szadowsz.gospel.core.data
 
+import com.szadowsz.gospel.core.db.primitive.PrimitiveInfo
+import com.szadowsz.gospel.core.operation.OperatorManager
+import com.szadowsz.gospel.core.parser.Parser
 import com.szadowsz.gospel.util.exception.data.InvalidTermException
 
 import java.{util => ju}
-
-import com.szadowsz.gospel.core.{OperatorManager, Parser}
 import com.szadowsz.gospel.core.data.util.StructIterator
-import com.szadowsz.gospel.core.lib.PrimitiveInfo
 
 import scala.collection.Iterable
 import scala.collection.JavaConverters._

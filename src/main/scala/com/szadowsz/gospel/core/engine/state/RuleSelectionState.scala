@@ -17,12 +17,13 @@
  */
 package com.szadowsz.gospel.core.engine.state
 
+import com.szadowsz.gospel.core.engine.clause.ClauseStore
+
 import java.util.{ArrayList, List}
 
 import com.szadowsz.gospel.core.data.{Struct, Var}
 import com.szadowsz.gospel.core.engine.context.{ChoiceContext, ExecutionContext}
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
-import com.szadowsz.gospel.core.theory.clause.ClauseStore
 import com.szadowsz.gospel.util.OneWayList
 
 /**

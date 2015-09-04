@@ -10,8 +10,7 @@ import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.data.numeric.Int;
 import com.szadowsz.gospel.core.engine.EngineManager;
 import com.szadowsz.gospel.core.engine.Solution;
-import com.szadowsz.gospel.core.exception.PrologException;
-import com.szadowsz.gospel.util.exception.data.InvalidTermException;
+import com.szadowsz.gospel.util.exception.engine.PrologException;
 import com.szadowsz.gospel.util.exception.data.TermParsingException;
 import com.szadowsz.gospel.util.exception.solution.NoSolutionException;
 

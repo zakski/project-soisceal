@@ -1,6 +1,6 @@
 package com.szadowsz.gospel.core.rbtree;
 
-import com.szadowsz.gospel.core.theory.clause.ClauseInfo;
+import com.szadowsz.gospel.core.engine.clause.ClauseInfo;
 
 import java.util.LinkedList;
 

@@ -5,6 +5,8 @@ package com.szadowsz.gospel.util
  */
 object LoggerCategory {
 
+  val PROLOG = "prolog"
+
   val AGENT = "prolog.agent"
 
   val DB = "prolog.database"

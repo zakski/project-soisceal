@@ -22,7 +22,7 @@ import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.data.Var;
 import com.szadowsz.gospel.core.data.numeric.Double;
 import com.szadowsz.gospel.core.data.numeric.Int;
-import com.szadowsz.gospel.core.exception.PrologException;
+import com.szadowsz.gospel.util.exception.engine.PrologException;
 
 /**
  * This class represents a tuProlog library providing most of the built-ins

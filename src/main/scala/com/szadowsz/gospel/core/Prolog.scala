@@ -17,8 +17,15 @@
  */
 package com.szadowsz.gospel.core
 
+import com.szadowsz.gospel.core.db.LibraryManager
+import com.szadowsz.gospel.core.db.primitive.PrimitiveManager
+import com.szadowsz.gospel.core.db.theory.{TheoryManager, Theory}
+import com.szadowsz.gospel.core.operation.{OperatorManager, Operator}
+import com.szadowsz.gospel.core.parser.Parser
 import com.szadowsz.gospel.util.exception.data.InvalidTermException
 import com.szadowsz.gospel.util.exception.solution.{NoMoreSolutionsException, MalformedGoalException}
+import com.szadowsz.gospel.util.exception.theory.InvalidTheoryException
+import org.slf4j.LoggerFactory
 
 import java.{util => ju}
 
@@ -28,12 +35,10 @@ import com.szadowsz.gospel.core.engine.{Engine, EngineManager, Solution}
 import com.szadowsz.gospel.core.event._
 import com.szadowsz.gospel.core.event.interpreter.{LibraryEvent, QueryEvent, TheoryEvent}
 import com.szadowsz.gospel.core.event.io.OutputEvent
-import com.szadowsz.gospel.core.event.logging.{ExceptionEvent, SpyEvent, WarningEvent}
-import com.szadowsz.gospel.core.exception.interpreter.InvalidTheoryException
+import com.szadowsz.gospel.core.event.logging.{SpyEvent}
 import com.szadowsz.gospel.core.flag.FlagManager
-import com.szadowsz.gospel.core.lib.{Library, LibraryManager, PrimitiveManager}
-import com.szadowsz.gospel.core.theory.{Theory, TheoryManager}
-import com.szadowsz.gospel.util.VersionInfo
+import com.szadowsz.gospel.core.lib.Library
+import com.szadowsz.gospel.util.{LoggerCategory, VersionInfo}
 import com.szadowsz.gospel.util.exception.lib.InvalidLibraryException
 
 object Prolog {
@@ -53,6 +58,8 @@ object Prolog {
  */
 @SerialVersionUID(1L)
 class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
+  private val _logger = LoggerFactory.getLogger(LoggerCategory.PROLOG)
+
   /*  manager of current theory */
   private val _theoryManager: TheoryManager = new TheoryManager(this)
 
@@ -74,29 +81,14 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   /*  if spying activated  */
   private var _spy: Boolean = spy
 
-  /*  if warning activated */
-  private var _warning: Boolean = warning
-
-  /* if exception activated */
-  private var _exception: Boolean = true
-
   /* listeners registrated for virtual machine output events */
   private val _outputListeners = new ju.ArrayList[OutputListener]
 
   /* listeners registrated for virtual machine internal events */
   private val _spyListeners = new ju.ArrayList[SpyListener]
 
-  /* listeners registrated for virtual machine state change events */
-  private val _warningListeners = new ju.ArrayList[WarningListener]
-
-  /* listeners registrated for virtual machine state exception events */
-  private val _exceptionListeners = new ju.ArrayList[ExceptionListener]
-
   /* listeners to theory events */
   private val _theoryListeners = new ju.ArrayList[TheoryListener]
-
-  /* listeners to library events */
-  private val _libraryListeners = new ju.ArrayList[LibraryListener]
 
   /* listeners to query events */
   private val _queryListeners = new ju.ArrayList[QueryListener]
@@ -104,6 +96,36 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   /* path history for including documents */
   private var absolutePathList: ju.ArrayList[String]  = new ju.ArrayList[String]
   private var lastPath: String = null
+
+
+  /**
+   * Checks if the demonstration process was stopped by an halt command.
+   *
+   * @return true if the demonstration was stopped
+   */
+  def isHalted: Boolean = _engineManager.isHalted
+
+
+  /**
+   * Tests Unification between two terms using the current demonstration context.
+   *
+   * @param t0 first term to be unified
+   * @param t1 second term to be unified
+   * @return true if the unification was successful, false otherwise
+   */
+  def isMatch(t0: Term, t1: Term): Boolean = t0.matches(t1)
+
+
+  /**
+   * Unifies two terms using current demonstration context.
+   *
+   * @param t0 first term to be unified
+   * @param t1 second term to be unified
+   * @return true if the unification was successful, false otherwise
+   */
+  def unify(t0: Term, t1: Term): Boolean = t0.unify(this, t1)
+
+
 
   /**
    * Builds a prolog engine with default libraries loaded.
@@ -321,22 +343,6 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   * Loads a library.
-   *
-   * If a library with the same name is already present,
-   * a warning event is notified and the request is ignored.
-   *
-   * @param className name of the Java class containing the library to be loaded
-   * @param paths The path where is contained the library.
-   * @return the reference to the Library just loaded
-   * @throws InvalidLibraryException if name is not a valid library
-   */
-  @throws(classOf[InvalidLibraryException])
-  def loadLibrary(className: String, paths: Array[String]): Library = {
-    _libraryManager.loadLibrary(className, paths)
-  }
-
-  /**
    * Loads a specific instance of a library
    *
    * If a library with the same name is already present,
@@ -378,7 +384,7 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
    *         not found
    */
   def getLibrary(name: String): Library = {
-    _libraryManager.getLibrary(name)
+    _libraryManager.getLibrary(name).orNull
   }
 
   protected def getLibraryPredicate(name: String, nArgs: Int): Library = {
@@ -478,37 +484,6 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   * Checks if the demonstration process was stopped by an halt command.
-   *
-   * @return true if the demonstration was stopped
-   */
-  def isHalted: Boolean = {
-    _engineManager.isHalted
-  }
-
-  /**
-   * Unifies two terms using current demonstration context.
-   *
-   * @param t0 first term to be unified
-   * @param t1 second term to be unified
-   * @return true if the unification was successful
-   */
-  def `match`(t0: Term, t1: Term): Boolean = {
-    t0.matches(t1)
-  }
-
-  /**
-   * Unifies two terms using current demonstration context.
-   *
-   * @param t0 first term to be unified
-   * @param t1 second term to be unified
-   * @return true if the unification was successful
-   */
-  def unify(t0: Term, t1: Term): Boolean = {
-    t0.unify(this, t1)
-  }
-
-  /**
    * Identify functors
    *
    * @param term term to identify
@@ -591,62 +566,6 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   * Switches on/off the notification of warning information events
-   * @param state  - true for enabling warning information notification
-   */
-  def setWarning(state: Boolean) {
-    _warning = state
-  }
-
-  /**
-   * Checks if warning information are notified
-   * @return  true if the engine emits warning information
-   */
-  def isWarning: Boolean = {
-    _warning
-  }
-
-  /**
-   * Notifies a warn information event
-   *
-   *
-   * @param m the warning message
-   */
-  def warn(m: String) {
-    if (_warning) {
-      notifyWarning(new WarningEvent(this, m))
-    }
-  }
-
-  /**
-   * Notifies a exception information event
-   *
-   *
-   * @param m the exception message
-   */
-  def exception(m: String) {
-    if (_exception) {
-      notifyException(new ExceptionEvent(this, m))
-    }
-  }
-
-  /**
-   * Checks if exception information are notified
-   * @return  true if the engine emits exception information
-   */
-  def isException: Boolean = {
-    _exception
-  }
-
-  /**
-   * Switches on/off the notification of exception information events
-   * @param state  - true for enabling exception information notification
-   */
-  def setException(state: Boolean) {
-    _exception = state
-  }
-
-  /**
    * Produces an output information event
    *
    * @param m the output string
@@ -674,15 +593,6 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   * Adds a listener to library events
-   *
-   * @param l the listener
-   */
-  def addLibraryListener(l: LibraryListener) {
-    _libraryListeners.add(l)
-  }
-
-  /**
    * Adds a listener to theory events
    *
    * @param l the listener
@@ -698,24 +608,6 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
    */
   def addSpyListener(l: SpyListener) {
     _spyListeners.add(l)
-  }
-
-  /**
-   * Adds a listener to warning events
-   *
-   * @param l the listener
-   */
-  def addWarningListener(l: WarningListener) {
-    _warningListeners.add(l)
-  }
-
-  /**
-   * Adds a listener to exception events
-   *
-   * @param l the listener
-   */
-  def addExceptionListener(l: ExceptionListener) {
-    _exceptionListeners.add(l)
   }
 
   /**
@@ -744,15 +636,6 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   * Removes a listener to library events
-   *
-   * @param l the listener
-   */
-  def removeLibraryListener(l: LibraryListener) {
-    _libraryListeners.remove(l)
-  }
-
-  /**
    * Removes a listener to query events
    *
    * @param l the listener
@@ -778,59 +661,12 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   * Removes a listener to warning events
-   *
-   * @param l the listener
-   */
-  def removeWarningListener(l: WarningListener) {
-    _warningListeners.remove(l)
-  }
-
-  /**
-   * Removes all warning event listeners
-   */
-  def removeAllWarningListeners {
-    _warningListeners.clear
-  }
-
-  /**
-   * Removes a listener to exception events
-   *
-   * @param l the listener
-   */
-  def removeExceptionListener(l: ExceptionListener) {
-    _exceptionListeners.remove(l)
-  }
-
-  /**
-   * Removes all exception event listeners
-   */
-  def removeAllExceptionListeners {
-    _exceptionListeners.clear
-  }
-
-  /**
    * Gets a copy of current listener list to output events
    */
   def getOutputListenerList: ju.List[OutputListener] = {
     new ju.ArrayList[OutputListener](_outputListeners)
   }
 
-  /**
-   * Gets a copy of current listener list to warning events
-   *
-   */
-  def getWarningListenerList: ju.List[WarningListener] = {
-    new ju.ArrayList[WarningListener](_warningListeners)
-  }
-
-  /**
-   * Gets a copy of current listener list to exception events
-   *
-   */
-  def getExceptionListenerList: ju.List[ExceptionListener] = {
-    new ju.ArrayList[ExceptionListener](_exceptionListeners)
-  }
 
   /**
    * Gets a copy of current listener list to spy events
@@ -846,14 +682,6 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
    */
   def getTheoryListenerList: ju.List[TheoryListener] = {
     new ju.ArrayList[TheoryListener](_theoryListeners)
-  }
-
-  /**
-   * Gets a copy of current listener list to library events
-   *
-   */
-  def getLibraryListenerList: ju.List[LibraryListener] = {
-    new ju.ArrayList[LibraryListener](_libraryListeners)
   }
 
   /**
@@ -889,30 +717,6 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   * Notifies a warning information event
-   *
-   * @param e the event
-   */
-  protected[core] def notifyWarning(e: WarningEvent) {
-    import scala.collection.JavaConversions._
-    for (wl <- _warningListeners) {
-      wl.onWarning(e)
-    }
-  }
-
-  /**
-   * Notifies a exception information event
-   *
-   * @param e the event
-   */
-  protected def notifyException(e: ExceptionEvent) {
-    import scala.collection.JavaConversions._
-    for (el <- _exceptionListeners) {
-      el.onException(e)
-    }
-  }
-
-  /**
    * Notifies a new theory set or updated event
    *
    * @param e the event
@@ -921,30 +725,6 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
     import scala.collection.JavaConversions._
     for (tl <- _theoryListeners) {
       tl.theoryChanged(e)
-    }
-  }
-
-  /**
-   * Notifies a library loaded event
-   *
-   * @param e the event
-   */
-  protected[core] def notifyLoadedLibrary(e: LibraryEvent) {
-    import scala.collection.JavaConversions._
-    for (ll <- _libraryListeners) {
-      ll.libraryLoaded(e)
-    }
-  }
-
-  /**
-   * Notifies a library unloaded event
-   *
-   * @param e the event
-   */
-  protected[core] def notifyUnloadedLibrary(e: LibraryEvent) {
-    import scala.collection.JavaConversions._
-    for (ll <- _libraryListeners) {
-      ll.libraryUnloaded(e)
     }
   }
 

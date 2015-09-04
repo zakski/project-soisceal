@@ -17,12 +17,13 @@
  */
 package com.szadowsz.gospel.core.engine
 
+import com.szadowsz.gospel.core.engine.clause.ClauseStore
+
 import java.util._
 
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.engine.context.{ChoiceContext, ExecutionContext, GoalContext}
 import com.szadowsz.gospel.core.engine.state.State
-import com.szadowsz.gospel.core.theory.clause.ClauseStore
 import com.szadowsz.gospel.util.LoggerCategory
 import org.slf4j.LoggerFactory
 

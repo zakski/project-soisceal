@@ -4,6 +4,10 @@
  */
 package com.szadowsz.gospel.core.engine
 
+import com.szadowsz.gospel.core.engine.clause.ClauseInfo
+import com.szadowsz.gospel.core.db.LibraryManager
+import com.szadowsz.gospel.core.db.primitive.PrimitiveManager
+import com.szadowsz.gospel.core.db.theory.TheoryManager
 import com.szadowsz.gospel.util.exception.solution.NoMoreSolutionsException
 
 import java.util.concurrent.locks.{Condition, Lock, ReentrantLock}
@@ -15,9 +19,6 @@ import com.szadowsz.gospel.core.data.util.TermQueue
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.state._
 import com.szadowsz.gospel.core.engine.subgoal.tree.SubGoalTree
-import com.szadowsz.gospel.core.lib.{LibraryManager, PrimitiveManager}
-import com.szadowsz.gospel.core.theory.TheoryManager
-import com.szadowsz.gospel.core.theory.clause.ClauseInfo
 
 /**
  * @author Alex Benini
@@ -87,14 +88,6 @@ class EngineRunner(vm: Prolog, id: scala.Int) extends java.io.Serializable with 
 
   private[gospel] def spy(action: String, env: Engine) {
     mediator.spy(action, env)
-  }
-
-  private[gospel] def warn(message: String) {
-    mediator.warn(message)
-  }
-
-  private[gospel] def exception(message: String) {
-    mediator.exception(message)
   }
 
   def detach {

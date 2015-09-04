@@ -17,8 +17,6 @@
  */
 package com.szadowsz.gospel.util.exception.data
 
-import com.szadowsz.gospel.util.exception.InterpreterException
-
 /**
  * This exception means that an attempt was made to create an invalid Prolog term.
  *
@@ -27,6 +25,4 @@ import com.szadowsz.gospel.util.exception.InterpreterException
  * @param message the reason for the term being rejected
  */
 @SerialVersionUID(1L)
-class InvalidTermException(message: String) extends IllegalArgumentException(message)/* TODO InterpreterException(message)*/  {
-
-}
+class InvalidTermException(message: String) extends IllegalArgumentException(message) {}

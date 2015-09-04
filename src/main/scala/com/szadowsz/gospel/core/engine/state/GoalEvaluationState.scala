@@ -18,10 +18,9 @@
 package com.szadowsz.gospel.core.engine.state
 
 import com.szadowsz.gospel.core.data.Struct
+import com.szadowsz.gospel.core.db.primitive.PrimitiveInfo
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
-import com.szadowsz.gospel.core.exception.interpreter.HaltException
-import com.szadowsz.gospel.core.exception.{JVMException, PrologException}
-import com.szadowsz.gospel.core.lib.PrimitiveInfo
+import com.szadowsz.gospel.util.exception.engine.{PrologException, JVMException, HaltException}
 
 /**
  * @author Alex Benini
@@ -36,14 +35,14 @@ class GoalEvaluationState(runner: EngineRunner) extends State(runner,"Eval"){
   private def handlePrologException(error: PrologException, theEngine: Engine): Unit = {
     // Replace the goals that the error occurred in with the subgoal throw/1
     theEngine.context.currentGoal = new Struct("throw", error.getError()) // TODO handle string
-    theEngine.manager.exception(error.toString())
+    _logger.error("handling prolog exception thrown from prolog",error)
     theEngine.nextState = runner.EXCEPTION // because of this move to the exception state
   }
 
   private def handleJVMException(error: JVMException, theEngine: Engine): Unit = {
     // Replace the goals that the error occurred in with the subgoal java_throw/1
     theEngine.context.currentGoal = new Struct("java_throw", error.getException()) // TODO handle string
-    theEngine.manager.exception(error.getException().toString)
+    _logger.error("handling java exception thrown from prolog",error)
     theEngine.nextState = runner.EXCEPTION // because of this move to the exception state
   }
 

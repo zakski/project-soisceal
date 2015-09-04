@@ -17,7 +17,7 @@
  */
 package com.szadowsz.gospel.core.lib;
 
-import com.szadowsz.gospel.core.theory.Theory;
+import com.szadowsz.gospel.core.db.theory.Theory;
 
 /**
  * Library built from Prolog theory.

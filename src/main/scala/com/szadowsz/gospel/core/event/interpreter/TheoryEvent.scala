@@ -17,7 +17,7 @@
 package com.szadowsz.gospel.core.event.interpreter
 
 import com.szadowsz.gospel.core.Prolog
-import com.szadowsz.gospel.core.theory.Theory
+import com.szadowsz.gospel.core.db.theory.Theory
 
 /**
  * This class represents events occurring in theory management.
