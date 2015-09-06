@@ -8,27 +8,16 @@ import com.szadowsz.gospel.core.Prolog
 import com.szadowsz.gospel.core.data.Term
 import com.szadowsz.gospel.core.db.primitive.PrimitiveManager
 import com.szadowsz.gospel.core.db.theory.{Theory, TheoryManager}
-import com.szadowsz.gospel.core.event.interpreter.LibraryEvent
 import com.szadowsz.gospel.core.lib.Library
 import com.szadowsz.gospel.util.LoggerCategory
 import com.szadowsz.gospel.util.exception.lib.{InvalidLibraryException, LibraryLoadException, LibraryNotFoundException}
 import com.szadowsz.gospel.util.exception.theory.InvalidTheoryException
 import org.slf4j.LoggerFactory
 
-import java.io.File
-import java.net.{MalformedURLException, URL, URLClassLoader}
-
 /**
  * @author Alex Benini
  *
  */
-object LibraryManager {
-  private def getClassResource(klass: Class[_]): URL = {
-    if (klass == null) return null
-    return klass.getClassLoader.getResource(klass.getName.replace('.', '/') + ".class")
-  }
-}
-
 class LibraryManager(wam: Prolog) {
   private lazy val _logger = LoggerFactory.getLogger(LoggerCategory.DB)
 
@@ -96,6 +85,32 @@ class LibraryManager(wam: Prolog) {
     lib
   }
 
+
+  /**
+   * Loads a specific instance of a library.
+   *
+   * If a library of the same class is already present, a warning event is
+   * notified. Then, the current instance of that library is discarded, and
+   * the new instance gets loaded.
+   *
+   * @param lib the (Java class) name of the library to be loaded
+   * @throws com.szadowsz.gospel.util.exception.lib.InvalidLibraryException if name is not a valid library
+   * @return the library object now loaded in the interpreter
+   */
+  @throws(classOf[InvalidLibraryException])
+  def loadLibrary(lib: Library): Library = {
+    val name: String = lib.getName
+    val alib: Library = getLibrary(name).orNull
+    if (alib != null) {
+      _logger.info("Library " + lib.getName + " already loaded.")
+      unloadLibrary(name)
+      _logger.info("Old Instance of {} removed.",lib.getName)
+    }
+    bindLibrary(lib)
+    _logger.info("Loaded Library {}",lib)
+    lib
+  }
+
   /**
    * Unloads a previously loaded library
    *
@@ -115,7 +130,7 @@ class LibraryManager(wam: Prolog) {
       throw new LibraryNotFoundException(className)
     }
     _theoryManager.removeLibraryTheory(className)
-    _theoryManager.rebindPrimitives
+    _theoryManager.rebind
   }
 
   /**
@@ -143,37 +158,13 @@ class LibraryManager(wam: Prolog) {
       }
       // in current theory there could be predicates and functors
       // which become builtins after lib loading
-      _theoryManager.rebindPrimitives
+      _theoryManager.rebind
       lib
     }
     catch {
       case ex: InvalidTheoryException => throw new InvalidLibraryException(lib.getName, ex.getCause)
       case ex: Exception => throw new LibraryLoadException(lib.getName, ex)
     }
-  }
-
-  /**
-   * Loads a specific instance of a library.
-   *
-   * If a library of the same class is already present, a warning event is
-   * notified. Then, the current instance of that library is discarded, and
-   * the new instance gets loaded.
-   *
-   * @param lib the (Java class) name of the library to be loaded
-   * @throws InvalidLibraryException
-	 * if name is not a valid library
-   */
-  @throws(classOf[InvalidLibraryException])
-  def loadLibrary(lib: Library): Library = {
-    val name: String = lib.getName
-    val alib: Library = getLibrary(name).orNull
-    if (alib != null) {
-      _logger.info("Library " + lib.getName + " already loaded.")
-      unloadLibrary(name)
-    }
-    bindLibrary(lib)
-    _logger.info("Loaded Library " + lib)
-    lib
   }
 
   /**

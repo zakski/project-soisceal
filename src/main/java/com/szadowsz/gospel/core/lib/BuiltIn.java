@@ -124,7 +124,7 @@ public class BuiltIn extends Library {
 					 }
 				 }
 			 }
-			 theoryManager.assertA((Struct) arg0, true, null, false);
+			 theoryManager.assertA((Struct) arg0, true, null);
 			 return true;
 		 }
 		 if (arg0 instanceof Var)
@@ -150,7 +150,7 @@ public class BuiltIn extends Library {
 					 }
 				 }
 			 }
-			 theoryManager.assertZ((Struct) arg0, true, null, false);
+			 theoryManager.assertZ((Struct) arg0, true, null);
 			 return true;
 		 }
 		 if (arg0 instanceof Var)
