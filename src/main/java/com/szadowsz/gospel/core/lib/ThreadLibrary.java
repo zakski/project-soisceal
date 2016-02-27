@@ -40,7 +40,7 @@ public class ThreadLibrary extends Library {
 	unificando il goal risolto a result. Il thread viene eliminato dal sistema*/
 	public boolean thread_join_2(Term id, Term result) throws PrologException{
 		id = id.getTerm();
-		if (!(id instanceof Int)) 
+		if (!(id instanceof Int))
 			throw PrologException.type_error(engine.getEngineManager(), 1,
                     "integer", id);
 		Solution res = engineManager.join(((Int)id).intValue());
@@ -62,7 +62,7 @@ public class ThreadLibrary extends Library {
 		
 	public boolean thread_read_2(Term id, Term result) throws PrologException{
 		id=id.getTerm();
-		if (!(id instanceof Int)) 
+		if (!(id instanceof Int))
 			throw PrologException.type_error(engine.getEngineManager(), 1,
                     "integer", id);
 		Solution res=engineManager.read( ((Int)id).intValue());
@@ -84,7 +84,7 @@ public class ThreadLibrary extends Library {
 	
 	public boolean thread_has_next_1(Term id) throws PrologException{
 		id=id.getTerm();
-		if (!(id instanceof Int)) 
+		if (!(id instanceof Int))
 			throw PrologException.type_error(engine.getEngineManager(), 1,
                     "integer", id);
 		return engineManager.hasNext(((Int)id).intValue());
@@ -93,7 +93,7 @@ public class ThreadLibrary extends Library {
 	
 	public boolean thread_next_sol_1(Term id) throws PrologException{
 		id=id.getTerm();
-		if (!(id instanceof Int)) 
+		if (!(id instanceof Int))
 			throw PrologException.type_error(engine.getEngineManager(), 1,
                     "integer", id);
 		return engineManager.nextSolution(((Int)id).intValue());
@@ -101,7 +101,7 @@ public class ThreadLibrary extends Library {
 	
 	public boolean thread_detach_1 (Term id) throws PrologException{
 		id=id.getTerm();
-		if (!(id instanceof Int)) 
+		if (!(id instanceof Int))
 			throw PrologException.type_error(engine.getEngineManager(), 1,
                     "integer", id);
 		engineManager.detach(((Int)id).intValue());
@@ -110,7 +110,7 @@ public class ThreadLibrary extends Library {
 	
 	public boolean thread_sleep_1(Term millisecs) throws PrologException{
 		millisecs=millisecs.getTerm();
-		if (!(millisecs instanceof Int)) 
+		if (!(millisecs instanceof Int))
 			throw PrologException.type_error(engine.getEngineManager(), 1,
                     "integer", millisecs);
 		long time=((Int)millisecs).intValue();
@@ -125,8 +125,8 @@ public class ThreadLibrary extends Library {
 	
 	public boolean thread_send_msg_2(Term id, Term msg) throws PrologException{
 		id=id.getTerm();
-		if (id instanceof Int) 
-			return engineManager.sendMsg(((Int)id).intValue(), msg);	
+		if (id instanceof Int)
+			return engineManager.sendMsg(((Int)id).intValue(), msg);
 		if (!id.isAtomic() || !id.isAtom()) 
 			throw PrologException.type_error(engine.getEngineManager(), 1,
                     "atom, atomic or integer", id);
@@ -135,7 +135,7 @@ public class ThreadLibrary extends Library {
 	
 	public  boolean  thread_get_msg_2(Term id, Term msg) throws PrologException{
 		id=id.getTerm();
-		if (id instanceof Int) 
+		if (id instanceof Int)
 			return engineManager.getMsg(((Int)id).intValue(), msg);
 		if (!id.isAtom() || !id.isAtomic()) 
 			throw PrologException.type_error(engine.getEngineManager(), 1,
@@ -145,7 +145,7 @@ public class ThreadLibrary extends Library {
 	
 	public  boolean  thread_peek_msg_2(Term id, Term msg) throws PrologException{
 		id=id.getTerm();
-		if (id instanceof Int) 
+		if (id instanceof Int)
 			return engineManager.peekMsg(((Int)id).intValue(), msg);
 		if (!id.isAtom() || !id.isAtomic()) 
 			throw PrologException.type_error(engine.getEngineManager(), 1,
@@ -165,7 +165,7 @@ public class ThreadLibrary extends Library {
 
 	public  boolean  thread_remove_msg_2(Term id, Term msg) throws PrologException{
 		id=id.getTerm();
-		if (id instanceof Int) 
+		if (id instanceof Int)
 			return engineManager.removeMsg(((Int)id).intValue(), msg);
 		if (!id.isAtom() || !id.isAtomic()) 
 			throw PrologException.type_error(engine.getEngineManager(), 1,
@@ -193,7 +193,7 @@ public class ThreadLibrary extends Library {
 	public boolean msg_queue_size_2(Term id, Term n) throws PrologException{
 		id=id.getTerm();
 		int size;
-		if (id instanceof Int) 
+		if (id instanceof Int)
 			size=engineManager.queueSize(((Int)id).intValue());
 		else{
 			if (!id.isAtom() || !id.isAtomic())

@@ -21,6 +21,17 @@ import java.{util => ju}
 
 import com.szadowsz.gospel.core.data.{Term, Var}
 
+object Number {
+
+  def apply(input: Any): Number = {
+    input match {
+      case i : scala.Int => new Int(i)
+      case f : scala.Float => new Double(f)
+      case d : scala.Double => new Double(d)
+    }
+  }
+}
+
 /**
  *
  * Number abstract class represents numbers prolog data type

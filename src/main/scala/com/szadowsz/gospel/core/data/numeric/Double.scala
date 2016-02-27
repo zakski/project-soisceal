@@ -83,7 +83,7 @@ class Double(v: scala.Double) extends Number {
   override def isEqual(theTerm : Term): Boolean = {
     val t = theTerm.getTerm
     t match {
-      case num : Number => num.isReal && _value == num.doubleValue
+      case num : Number => _value == num.doubleValue
       case _ => false
     }
   }
