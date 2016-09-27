@@ -1,0 +1,52 @@
+Classi che secondo me possono rimanere inalterate (a meno che non si stravolga la struttura alla base di 2p):
+
+- AbstractLibraryManager
+- AndroidLibraryManager
+- DotNetLibraryManager
+- JavaLibraryManager
+- BuiltIn
+- Double
+- Float
+- Int
+- Long
+- Number
+- Operator
+- Token
+- DefaultOperatorManager
+- AbstractSubGoalTree
+- DefaultSubGoalId
+- (la modellazione delle socket come term -> AbstractSocket, Client_Socket, Datagram_Socket, Server_Socket)
+
+Bisogna decidere come trattare i Thread e tutte le altre funzionalità che arricchiscono 2p non solo dal lato prolog ma anche 
+aggiungendo funzionalità java o altre -> esempio le socket aggiungono la possibilità di comunicare via rete etc -> come si
+inseriscono queste funzionalità in un approccio middleware based???? <-
+
+Possibile considerare il core dell'engine come un componente? Il container potrebbe essere il middleware. -> passare da una architettura obj-oriented
+ad una component-container oriented. -> qui potrei ottenere ancora più flessibilità.
+
+Per quanto riguarda i thread -> non sarebbe meglio avere una astrazione pulita e rendere altamente configurabile il motore in 
+modo da avere un engineManager "tailored" allo scopo del motore Prolog? -> esempio: su un sensore forse ne posso fare anche
+a meno del multithread, mentre su una macchina general purpose mi fa molto comodo
+
+Qua si apre il punto 2 -> sarebbe bello poter assemblare le parti di 2p con estrema flessibilità così da customizzare al massimo 
+l'engine per il suo scopo -> ovviamente il principio di malleabilità DEVE essere rispettato! (vedi sopra componente-container)
+
+- interfacce per il library manager controllate e secondo me ok
+
+- Scorporata la classe agent e assorbita da Prolog -> chiedere se la soluzione può andare
+
+- Rinominate le classi di lancio per l'app ios -> dire che questa parte ha due funzionalità -> una estende il motore 2p in modo 
+custom con 2 lib usabili solo per ios -> iOSAppLibrary solo per funzionalità tel -> iOSInstallerLibrary serve per il deploy.
+
+- Si potrebbe riprogettare LPaaS con l'interfaccia generale che sarà stabilita e usare applicarion.backgroundthread per metterci un componente
+in ascolto (quindi senza limitarsi agli URL)
+
+- package con le exception ed eliminati i package per corba tcp rmi perchè non rilevanti in questo momento
+
+- Classe Prolog e pattern facade -> ok come concetto ma secondo me fare direttamente una new dei manager può essere riduttivo ->
+vedi "problema" di modellazione del supporto multithread e Engine manager -> se si introducesse una entità "wizard" che configurasse
+l'engine?? (da valutare secondo me perchè una cosa è estendere con predicati prolog, una cosa è invece aggiungere funzionalità,
+tipo il multithreading, socket, telefono etc...)
+
+PROSSIMAMENTE -> analizzare classe var e tutto pattern state
+
