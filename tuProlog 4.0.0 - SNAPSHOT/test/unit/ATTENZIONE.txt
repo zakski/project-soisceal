@@ -1,3 +1,0 @@
-//Alberto
-molti test falliscono in quanto è stato ridefinito il metodo isEquals di var. Ora il metodo controlla l'uguaglianza
-di obj java. Quindi non va bene usarlo nei test per controllare che due strutture siano lessicograficamente uguali!

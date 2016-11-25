@@ -1,7 +1,0 @@
-//Alberto
-
-RoboVM_SDK is a hidden directory in this Eclipse project. No plug-ins are required
-
-See -> http://robovm.mobidevelop.com or https://github.com/MobiDevelop/robovm
-
-(The directory LPaas ObjC Clients contains the Xcode project of the ObjC App + Apple Watch app)
