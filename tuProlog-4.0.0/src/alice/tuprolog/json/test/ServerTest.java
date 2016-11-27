@@ -7,12 +7,13 @@ import alice.tuprolog.Prolog;
 
 import java.io.*;
 
+//Alberto
 public class ServerTest extends Thread {
 	private ServerSocket serverSocket;
 
 	public ServerTest(int port) throws IOException {
 		serverSocket = new ServerSocket(port);
-		serverSocket.setSoTimeout(600000);
+		serverSocket.setSoTimeout(60000);
 	}
 
 	public void run() {
@@ -25,7 +26,7 @@ public class ServerTest extends Thread {
 				DataInputStream in = new DataInputStream(server.getInputStream());
          
 				String state = in.readUTF();
-		
+				//System.out.println(state);
 				Prolog prolog = Prolog.fromJSON(state);
 				
 				DataOutputStream out = new DataOutputStream(server.getOutputStream());
@@ -52,7 +53,7 @@ public class ServerTest extends Thread {
 		try {
 			Thread t = new ServerTest(port);
 			t.start();
-		} catch(IOException e) {
+		}catch(IOException e) {
 			e.printStackTrace();
 		}
 	}

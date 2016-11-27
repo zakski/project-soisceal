@@ -30,16 +30,16 @@ public class MainTestJSON {
 			System.out.println("?- "+test);
 			System.out.println(p1.solve(test).toString());
 			System.out.println();
-			System.out.println();
-			System.out.println("?- "+"unload_library('alice.tuprolog.lib.ISOLibrary').");
-			System.out.println(p1.solve("unload_library('alice.tuprolog.lib.ISOLibrary').").toString());
-			System.out.println();
-			System.out.println("?- pippo(a).\n");
-			System.out.println(p1.solve("pippo(a).").toString());
 			System.out.println("?- "+test2);
 			System.out.println(p1.solve(test2).toString());
 			System.out.println();
 			System.out.println(p1.solveNext().toString());
+			/*System.out.println();
+			System.out.println("?- "+"unload_library('alice.tuprolog.lib.ISOLibrary').");
+			System.out.println(p1.solve("unload_library('alice.tuprolog.lib.ISOLibrary').").toString());
+			System.out.println();
+			System.out.println("?- pippo(a).");
+			System.out.println(p1.solve("pippo(a).").toString());*/
 		}
 		
 		catch (MalformedGoalException | NoMoreSolutionException e1) {
@@ -76,7 +76,7 @@ public class MainTestJSON {
 	    Prolog p2 = Prolog.fromJSON(s);
 	    
 	    try {
-	    	System.out.println("?- "+test2+" (next sol on new engine!)");
+	    	System.out.println("?- "+test2+" next sol on new engine!");
 	    	System.out.println(p2.solveNext().toString());
 	    	System.out.println();
 	    	System.out.println("?- "+test);

@@ -254,40 +254,37 @@ public class Prolog implements IProlog, Serializable
 	}
 	
 	//Alberto
-		public static Prolog fromJSON(String jsonString) {
-			SerializableEngineState brain = JSONSerializerManager.fromJSON(jsonString, SerializableEngineState.class);
-			Prolog p = null;
-			try {
-				p = new Prolog(brain.getLibraries());
-			} catch (InvalidLibraryException e) {
-				e.printStackTrace();
-			}
-			p.theoryManager.reloadKnowledgeBase(brain);
-			int i = 0;
-			int n = brain.getNumberAskedResults();
-			if(brain.hasOpenAlternatives()){
-				p.solve(brain.getQuery());
-				while(i<n){
-					try {
-						p.solveNext();
-					} catch (NoMoreSolutionException e) {
-						e.printStackTrace();
-					}
-					i++;
-				}
-			}
-			return p;
+	public static Prolog fromJSON(String jsonString) {
+		SerializableEngineState brain = JSONSerializerManager.fromJSON(jsonString, SerializableEngineState.class);
+		Prolog p = null;
+		try {
+			p = new Prolog(brain.getLibraries());
+		} catch (InvalidLibraryException e) {
+			e.printStackTrace();
 		}
+		p.theoryManager.reloadKnowledgeBase(brain);
+		int i = 0;
+		int n = brain.getNumberAskedResults();
+		if(brain.hasOpenAlternatives()){
+			p.solve(brain.getQuery());
+			while(i<n){
+				try {
+					p.solveNext();
+				} catch (NoMoreSolutionException e) {}
+				i++;
+			}
+		}
+		return p;
+	}
 		
-		//Alberto
-		public String toJSON(){
-		    SerializableEngineState brain = new SerializableEngineState();
-		    this.theoryManager.serializeKnowledgeBase(brain);
-		    this.engineManager.serializeQueryState(brain);
-		    brain.setLibraries(this.getCurrentLibraries());
-		    return JSONSerializerManager.toJSON(brain);
-		}
-
+	//Alberto
+	public String toJSON(){
+		SerializableEngineState brain = new SerializableEngineState();
+		this.theoryManager.serializeKnowledgeBase(brain);
+		this.engineManager.serializeQueryState(brain);
+		return JSONSerializerManager.toJSON(brain);
+	}
+	
 	/**
 	 * Gets the component managing flags
 	 */
