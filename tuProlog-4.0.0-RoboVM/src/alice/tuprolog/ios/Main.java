@@ -66,7 +66,7 @@ public class Main extends UIApplicationDelegateAdapter
 			tuProlog = new Prolog();
 		
 		//debug test JSON on iOS - server class
-		//alice.tuprolog.json.test.ServerTest.main(null);
+		alice.tuprolog.json.test.ServerTest.main(null);
 		
 		return tuProlog;
 	}
