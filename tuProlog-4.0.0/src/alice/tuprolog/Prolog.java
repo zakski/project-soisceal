@@ -263,6 +263,10 @@ public class Prolog implements IProlog, Serializable
 			e.printStackTrace();
 		}
 		p.theoryManager.reloadKnowledgeBase(brain);
+		
+		//qui posso sfruttare l'info brain brain.getSerializationTimestamp() -> per il timestamp di serializzazione
+		//della teoria logica
+		
 		int i = 0;
 		int n = brain.getNumberAskedResults();
 		if(brain.hasOpenAlternatives()){
