@@ -22,6 +22,7 @@ import java.io.*;
 import java.util.Iterator;
 
 import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.json.JSONSerializerManager;
 
 /**
  * This class represents prolog theory which can be provided
@@ -135,4 +136,14 @@ public class Theory implements Serializable {
     public String toString() {
         return theory != null ? theory : clauseList.toString();
     }
+    
+    //Alberto
+  	public String toJSON(){
+  		return JSONSerializerManager.toJSON(this);
+  	}
+  	
+  	//Alberto
+  	public static Theory fromJSON(String jsonString){
+  		return JSONSerializerManager.fromJSON(jsonString, Theory.class);	
+  	}
 }

@@ -29,6 +29,9 @@ import java.util.List;
 public class Float extends Number {
 	
 	private static final long serialVersionUID = 1L;
+	
+	@SuppressWarnings("unused")
+	private String type = "Float";
     
 	private float value;
     

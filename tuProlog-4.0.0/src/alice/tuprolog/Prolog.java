@@ -37,8 +37,10 @@ import alice.tuprolog.interfaces.event.QueryListener;
 import alice.tuprolog.interfaces.event.SpyListener;
 import alice.tuprolog.interfaces.event.TheoryListener;
 import alice.tuprolog.interfaces.event.WarningListener;
+import alice.tuprolog.json.AbstractEngineState;
+import alice.tuprolog.json.FullEngineState;
 import alice.tuprolog.json.JSONSerializerManager;
-import alice.tuprolog.json.SerializableEngineState;
+import alice.tuprolog.json.ReducedEngineState;
 import alice.util.Tools;
 
 /**
@@ -50,6 +52,9 @@ import alice.util.Tools;
 public class Prolog implements IProlog, Serializable
 {
 	private static final long serialVersionUID = 1L;
+	
+	public static final boolean INCLUDE_KB_IN_SERIALIZATION = true;
+	public static final boolean EXCLUDE_KB_IN_SERIALIZATION = false;
 	
 	/*  manager of current theory */
 	private TheoryManager theoryManager;
@@ -254,19 +259,31 @@ public class Prolog implements IProlog, Serializable
 	}
 	
 	//Alberto
+	public static AbstractEngineState getEngineStateFromJSON(String jsonString){
+		AbstractEngineState brain = null;
+		if(jsonString.contains("FullEngineState")){
+			brain = JSONSerializerManager.fromJSON(jsonString, FullEngineState.class);
+		} else if(jsonString.contains("ReducedEngineState")){
+			brain = JSONSerializerManager.fromJSON(jsonString, ReducedEngineState.class);
+		}
+		return brain;
+	}
+		
+	//Alberto
 	public static Prolog fromJSON(String jsonString) {
-		SerializableEngineState brain = JSONSerializerManager.fromJSON(jsonString, SerializableEngineState.class);
+		AbstractEngineState brain = null;
 		Prolog p = null;
+		if(jsonString.contains("FullEngineState")){
+			brain = JSONSerializerManager.fromJSON(jsonString, FullEngineState.class);
+		} else
+			return p;
 		try {
-			p = new Prolog(brain.getLibraries());
+			p = new Prolog(((FullEngineState) brain).getLibraries());
 		} catch (InvalidLibraryException e) {
 			e.printStackTrace();
 		}
-		p.theoryManager.reloadKnowledgeBase(brain);
-		
-		//qui posso sfruttare l'info brain brain.getSerializationTimestamp() -> per il timestamp di serializzazione
-		//della teoria logica
-		
+		p.theoryManager.reloadKnowledgeBase((FullEngineState) brain);
+			
 		int i = 0;
 		int n = brain.getNumberAskedResults();
 		if(brain.hasOpenAlternatives()){
@@ -282,12 +299,17 @@ public class Prolog implements IProlog, Serializable
 	}
 		
 	//Alberto
-	public String toJSON(){
-		SerializableEngineState brain = new SerializableEngineState();
+	public String toJSON(boolean alsoKB){
+		AbstractEngineState brain = null;
+		if(alsoKB)
+			brain = new FullEngineState();
+		else
+			brain = new ReducedEngineState();
 		this.theoryManager.serializeKnowledgeBase(brain);
 		this.engineManager.serializeQueryState(brain);
 		return JSONSerializerManager.toJSON(brain);
 	}
+
 	
 	/**
 	 * Gets the component managing flags

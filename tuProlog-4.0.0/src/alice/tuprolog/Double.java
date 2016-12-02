@@ -29,6 +29,9 @@ public class Double extends Number {
 	
 	private static final long serialVersionUID = 1L;
 	
+	@SuppressWarnings("unused")
+	private String type = "Double";
+	
     private double value;
     
     public Double(double v) {
