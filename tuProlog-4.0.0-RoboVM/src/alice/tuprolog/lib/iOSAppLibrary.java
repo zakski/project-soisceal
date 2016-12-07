@@ -96,8 +96,8 @@ public class iOSAppLibrary extends Library
 
 		DispatchQueue.getMainQueue().async(new Runnable() 
 		{
-			@SuppressWarnings("deprecation")
 			@Override
+			@SuppressWarnings("deprecation")
 		    public void run() 
 		    {
 		        UIApplication.getSharedApplication().openURL(iOSAppLibrary.URL);

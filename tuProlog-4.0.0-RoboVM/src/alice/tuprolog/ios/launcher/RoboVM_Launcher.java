@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import alice.tuprolog.ios.Main;
-import alice.tuprolog.ios.annotations.iOS_Deploy;
+import alice.tuprolog.ios.annotations.iOS_RoboVM_Deploy;
 
 public class RoboVM_Launcher 
 {
@@ -44,7 +44,7 @@ public class RoboVM_Launcher
 	private static void compileIOSApp() 
 	{
 	    Class<Main> main = Main.class;
-	    iOS_Deploy ios_deploy = (iOS_Deploy) main.getAnnotation(iOS_Deploy.class);	
+	    iOS_RoboVM_Deploy ios_deploy = (iOS_RoboVM_Deploy) main.getAnnotation(iOS_RoboVM_Deploy.class);	
 	    String arch = ios_deploy.forArch();	
 	    String command = "./.RoboVM_SDK/bin/robovm -config ./.RoboVM_SDK/robovm-config/robovm.xml -arch "+arch+" -cp ./.RoboVM_SDK/lib/robovm-objc.jar:./.RoboVM_SDK/lib/robovm-cocoatouch.jar:./bin/:"+RoboVM_Launcher.PROJECT_DEPENDENCY+":./lib/gson-2.6.2.jar: -verbose -run";
 	    launchCompilation(command);

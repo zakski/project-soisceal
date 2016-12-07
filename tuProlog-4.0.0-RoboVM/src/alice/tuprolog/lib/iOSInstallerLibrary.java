@@ -3,7 +3,7 @@ package alice.tuprolog.lib;
 import alice.tuprolog.Library;
 import alice.tuprolog.Term;
 
-public class iOSInstallerLibrary extends Library
+public class iOSInstallerLibrary extends Library //Experimental!
 {
 	
 	/**
@@ -13,7 +13,7 @@ public class iOSInstallerLibrary extends Library
 	
 	private static final long serialVersionUID = 1L;
 	
-	public boolean tuPrologOniPhone_2(Term type, Term device)
+	public boolean tuPrologOniPhoneWithRoboVM_2(Term type, Term device)
 	{
 		if(!type.toString().equals("simulator") && !type.toString().equals("install"))
 		{

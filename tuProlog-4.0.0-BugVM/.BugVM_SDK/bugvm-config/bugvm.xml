@@ -1,0 +1,17 @@
+<config>
+    <executableName>Main</executableName>
+    <mainClass>alice.tuprolog.ios.Main</mainClass>
+    <forceLinkClasses>
+        <pattern>alice.tuprolog.*</pattern>
+  		<pattern>alice.tuprolog.lib.*</pattern>
+        <pattern>alice.tuprolog.json.*</pattern>
+    </forceLinkClasses>
+    <os>ios</os>  
+    <target>ios</target>
+    <iosInfoPList>Info.plist.xml</iosInfoPList>
+    <resources>
+        <resource>
+            <directory>.././resources</directory>
+        </resource>
+    </resources>
+</config>

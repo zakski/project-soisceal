@@ -1,11 +1,8 @@
 package alice.tuprolog.ios.launcher;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-
-import alice.tuprolog.Prolog;
 
 public class Shell_Launcher 
 {
@@ -92,8 +89,6 @@ public class Shell_Launcher
 			System.out.println("\nParams not valid!\n");
 		}
 		
-		check_RoboVM_SDK();
-		
 		PrintWriter writer = null;
 		try
 		{
@@ -110,8 +105,8 @@ public class Shell_Launcher
 		}
 		else
 		{
+			System.out.println("\n!! WARNING: Simulator will open on iPhone 5 !!\n");
 			writer.println("./.RoboVM_SDK/bin/robovm -config ./.RoboVM_SDK/robovm-config/robovm.xml -arch x86 -cp ./.RoboVM_SDK/lib/robovm-objc.jar:./.RoboVM_SDK/lib/robovm-cocoatouch.jar:./bin/:"+RoboVM_Launcher.PROJECT_DEPENDENCY+":./lib/gson-2.6.2.jar: -verbose -run");
-			System.out.println("\n!! WARNING: tuProlog "+Prolog.getVersion()+" only supports simulatior for architecture x86 !!\n");
 		}
 		writer.close();
 		
@@ -122,66 +117,6 @@ public class Shell_Launcher
 		catch (InterruptedException e) 
 		{
 			e.printStackTrace();
-		}
-	}
-
-	private static void check_RoboVM_SDK() 
-	{
-		File RoboVM_SDK = new File("./.RoboVM_SDK");
-		
-		if(!RoboVM_SDK.exists() || !RoboVM_SDK.isDirectory() || !RoboVM_SDK.canExecute())
-		{
-			System.out.println("./.RoboVM_SDK corrupted or missing!");
-			System.exit(-1);
-		}
-		
-		File bin_robovm = new File("./.RoboVM_SDK/bin/robovm");
-		if(!bin_robovm.exists() || !bin_robovm.canExecute())
-		{
-			System.out.println("File script ./.RoboVM_SDK/bin/robovm corrupted or missing");
-			System.exit(-2);
-		}
-		
-		File bin_ios_sim = new File("./.RoboVM_SDK/bin/simlauncher");
-		if(!bin_ios_sim.exists() || !bin_ios_sim.canExecute())
-		{
-			System.out.println("File script ./.RoboVM_SDK/bin/simlauncher corrupted or missing");
-			System.exit(-3);
-		}
-		
-		File cacerts = new File("./.RoboVM_SDK/lib/robovm-cacerts-full.jar");
-		if(!cacerts.exists() || !cacerts.canRead())
-		{
-			System.out.println("Jar file ./.RoboVM_SDK/lib/robovm-cacerts-full.jar corrupted or missing");
-			System.exit(-4);
-		}
-		
-		File cocoatouch = new File("./.RoboVM_SDK/lib/robovm-cocoatouch.jar");
-		if(!cocoatouch.exists() || !cocoatouch.canRead())
-		{
-			System.out.println("Jar file ./.RoboVM_SDK/lib/robovm-cocoatouch.jar corrupted or missing");
-			System.exit(-5);
-		}
-		
-		File distcompiler = new File("./.RoboVM_SDK/lib/robovm-dist-compiler.jar");
-		if(!distcompiler.exists() || !distcompiler.canRead())
-		{
-			System.out.println("Jar file ./.RoboVM_SDK/lib/robovm-dist-compiler.jar corrupted or missing");
-			System.exit(-6);
-		}
-		
-		File objc = new File("./.RoboVM_SDK/lib/robovm-objc.jar");
-		if(!objc.exists() || !objc.canRead())
-		{
-			System.out.println("Jar file ./.RoboVM_SDK/lib/robovm-objc.jar corrupted or missing");
-			System.exit(-7);
-		}
-		
-		File rt = new File("./.RoboVM_SDK/lib/robovm-rt.jar");
-		if(!rt.exists() || !rt.canRead())
-		{
-			System.out.println("Jar file ./.RoboVM_SDK/lib/robovm-rt.jar corrupted or missing");
-			System.exit(-8);
 		}
 	}
 }

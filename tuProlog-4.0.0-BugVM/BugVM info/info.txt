@@ -1,0 +1,5 @@
+//Alberto
+
+BugVM_SDK is a hidden directory in this Eclipse project.
+
+See -> https://github.com/bugvm/bugvm/releases or https://bugvm.com

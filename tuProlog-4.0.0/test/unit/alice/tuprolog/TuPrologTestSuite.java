@@ -23,7 +23,6 @@ import org.junit.runners.Suite.SuiteClasses;
 				ParserTestCase.class,
 				SpyEventTestCase.class, 
 				VarTestCase.class, 
-				TestVarIsEqual.class, 
 				JavaDynamicClassLoaderTestCase.class,
 				ISOIOLibraryTestCase.class,
 				ThreadLibraryTestCase.class

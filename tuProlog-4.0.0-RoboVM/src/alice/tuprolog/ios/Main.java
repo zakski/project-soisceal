@@ -10,9 +10,9 @@ import org.robovm.apple.uikit.UIScreen;
 import org.robovm.apple.uikit.UIWindow;
 
 import alice.tuprolog.Prolog;
-import alice.tuprolog.ios.annotations.iOS_Deploy;
+import alice.tuprolog.ios.annotations.iOS_RoboVM_Deploy;
 
-@iOS_Deploy(forArch = "x86")
+@iOS_RoboVM_Deploy(forArch = "x86")
 public class Main extends UIApplicationDelegateAdapter 
 {
 	

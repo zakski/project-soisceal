@@ -50,7 +50,7 @@ public class IOSViewController extends UIViewController
     private final Prolog tuProlog;
 	private SolveInfo info;
 	private String result;
-	private String incipit = "tuProlog Mobile - " + Prolog.getVersion();
+	private String incipit = "tuProlog Mobile (RoboVM) - " + Prolog.getVersion();
 	
 	private I_URL_Parser url_parser = null;
 	
