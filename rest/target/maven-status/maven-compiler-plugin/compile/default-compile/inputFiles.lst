@@ -1,0 +1,11 @@
+C:\Users\Andrea\workspace-ee\rest\src\main\java\it\unibo\alice\tuprolog\ws\persistence\PrologConfiguration.java
+C:\Users\Andrea\workspace-ee\rest\src\main\java\it\unibo\alice\tuprolog\ws\rest\RestConfigurationService.java
+C:\Users\Andrea\workspace-ee\rest\src\main\java\it\unibo\alice\tuprolog\ws\core\PrologEngine.java
+C:\Users\Andrea\workspace-ee\rest\src\main\java\it\unibo\alice\tuprolog\ws\core\StatelessEngine.java
+C:\Users\Andrea\workspace-ee\rest\src\main\java\it\unibo\alice\tuprolog\ws\rest\RestTuPrologService.java
+C:\Users\Andrea\workspace-ee\rest\src\main\java\it\unibo\alice\tuprolog\ws\persistence\StorageService.java
+C:\Users\Andrea\workspace-ee\rest\src\main\java\it\unibo\alice\tuprolog\ws\security\SecurityManager.java
+C:\Users\Andrea\workspace-ee\rest\src\main\java\it\unibo\alice\tuprolog\ws\core\StartupOperations.java
+C:\Users\Andrea\workspace-ee\rest\src\main\java\it\unibo\alice\tuprolog\ws\core\PrologSolution.java
+C:\Users\Andrea\workspace-ee\rest\src\main\java\it\unibo\alice\tuprolog\ws\core\AuthCheckInterceptor.java
+C:\Users\Andrea\workspace-ee\rest\src\main\java\it\unibo\alice\tuprolog\ws\core\RequiresAuth.java
