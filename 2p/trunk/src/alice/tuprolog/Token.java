@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package alice.tuprolog;
+
 import java.io.Serializable;
 
 /**
@@ -25,9 +26,12 @@ import java.io.Serializable;
  *
  */
 class Token implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
+	
     // token textual representation
     String seq;
+    
     // token type and attribute
     int type;
     

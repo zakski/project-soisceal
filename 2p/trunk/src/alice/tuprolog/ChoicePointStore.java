@@ -3,9 +3,7 @@ package alice.tuprolog;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ChoicePointStore {
-    
     
     private ChoicePointContext pointer;
     
@@ -66,22 +64,9 @@ public class ChoicePointStore {
         existChoicePoint();
     }
     
-    /**
-     * Cut at defined depth (toDepth)
-     */
-//    void cut(int toDepth) {
-//        while (pointer != null && pointer.executionContext.depth >= toDepth) {
-//            pointer = pointer.prevChoicePointContext;
-//        }
-//    }
-    
     public String toString(){
         return pointer + "\n";
     }
-    
-    /*
-     * Methods for spyListeners
-     */
     
     public List<ChoicePointContext> getChoicePoints() {
         ArrayList<ChoicePointContext> l = new ArrayList<ChoicePointContext>();

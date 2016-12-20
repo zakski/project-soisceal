@@ -178,7 +178,6 @@ class FamilyClausesIndex<K extends Comparable<? super K>>
         if(res == null){
             return varsClauses;
         }
-
         return res;
     }
 }

@@ -4,15 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.ByteArrayInputStream;
-
-
-
-
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import alice.tuprolog.event.ReadEvent;
-import alice.tuprolog.event.ReadListener;
+import alice.tuprolog.interfaces.event.ReadListener;
 import alice.tuprolog.lib.UserContextInputStream;
 
 /**
@@ -21,6 +17,7 @@ import alice.tuprolog.lib.UserContextInputStream;
  * to be inserted inside the ConsoleDialog
  * 
  */
+
 public class InputDialog extends JPanel{
 
 	private static final long serialVersionUID = 1L;

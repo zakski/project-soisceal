@@ -25,6 +25,10 @@ import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import alice.tuprolog.exceptions.InvalidLibraryException;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.interfaces.ILibraryManager;
+
 /**
  * Library of built-in predicates
  * 
@@ -32,10 +36,12 @@ import java.util.List;
  */
  
 public class BuiltIn extends Library {
+	
 	private static final long serialVersionUID = 1L;
+	
 	private EngineManager engineManager;
 	private TheoryManager theoryManager;
-	private LibraryManager libraryManager;
+	private ILibraryManager libraryManager;
 	private FlagManager flagManager;
 	private PrimitiveManager primitiveManager;
 	private OperatorManager operatorManager;
@@ -64,10 +70,6 @@ public class BuiltIn extends Library {
 				 { "load_library", "$load_library", "directive" } };
 	 }
 
-	 /*
-	  * PREDICATES
-	  */
-
 	 public boolean fail_0() {
 		 return false;
 	 }
@@ -76,18 +78,10 @@ public class BuiltIn extends Library {
 		 return true;
 	 }
 
-	 /*Castagna 06/2011*/
-	 /*
-	public boolean halt_0() throws HaltException {
-		throw new HaltException();
-	}
-	  */
-
 	 public boolean halt_0() {
 		 System.exit(0);
 		 return true;
 	 }
-	 /**/
 
 	 public boolean cut_0() {
 		 engineManager.cut();
@@ -184,19 +178,6 @@ public class BuiltIn extends Library {
 		 return theoryManager.abolish((Struct) arg0);
 	 }
 
-	 /*Castagna 06/2011*/	
-	 /*
-	public boolean halt_1(Term arg0) throws HaltException, PrologError {
-		if (arg0 instanceof Int)
-			throw new HaltException(((Int) arg0).intValue());
-		if (arg0 instanceof Var)
-			throw PrologError.instantiation_error(engineManager, 1);
-		else {
-			throw PrologError.type_error(engineManager, 1, "integer", arg0);
-		}
-	}
-	  */
-
 	 public boolean halt_1(Term arg0) throws PrologError {
 		 if (arg0 instanceof Int)
 			 System.exit(((Int) arg0).intValue());
@@ -206,7 +187,6 @@ public class BuiltIn extends Library {
 			 throw PrologError.type_error(engineManager, 1, "integer", arg0);
 		 }
 	 }
-	 /**/
 
 	 /*
 	  * loads a tuprolog library, given its java class name
@@ -268,6 +248,7 @@ public class BuiltIn extends Library {
 	        }
 	        return args;
 	 }
+	 
 	 /*
 	  * unloads a tuprolog library, given its java class name
 	  */
@@ -376,7 +357,6 @@ public class BuiltIn extends Library {
 		 // errore durante la valutazione
 		 if (t instanceof ArithmeticException) {
 			 ArithmeticException cause = (ArithmeticException) t;
-			 //            System.out.println(cause.getMessage());
 			 if (cause.getMessage().equals("/ by zero"))
 				 throw PrologError.evaluation_error(engineManager, 2, "zero_divisor");
 		 }
@@ -401,7 +381,6 @@ public class BuiltIn extends Library {
 		 return unify(arg0, arg1);
 	 }
 
-	 // \=
 	 public boolean deunify_2(Term arg0, Term arg1) {
 		 return !unify(arg0, arg1);
 	 }
@@ -420,7 +399,6 @@ public class BuiltIn extends Library {
 		 throw PrologError.type_error(engineManager, 1, "struct", arg0);
 	 }
 
-	 // $fromlist
 	 public boolean $fromlist_2(Term arg0, Term arg1) throws PrologError {
 		 // get the compound representation of the list
 		 // provided as arg1, and unify it with arg0
@@ -433,7 +411,6 @@ public class BuiltIn extends Library {
 		 }
 		 Term val1 = ((Struct) arg1).fromList();
 		 if (val1 == null)
-			 //throw PrologError.type_error(engineManager, 2, "list", arg1);
 			 return false;
 		 return (unify(arg0, val1));
 	 }
@@ -445,8 +422,7 @@ public class BuiltIn extends Library {
 		 int id = engineManager.getEnv().nDemoSteps;
 		 return unify(arg1, arg0.copy(new IdentityHashMap<Var,Var>(), id));
 	 }
-
-	 // $append
+	 
 	 public boolean $append_2(Term arg0, Term arg1) throws PrologError {
 		 // append arg0 to arg1
 		 arg0 = arg0.getTerm();
@@ -460,7 +436,6 @@ public class BuiltIn extends Library {
 		 return true;
 	 }
 
-	 // $find
 	 public boolean $find_2(Term arg0, Term arg1) throws PrologError {
 		 // look for clauses whose head unifies whith arg0 and enqueue them to
 		 // list arg1
@@ -468,7 +443,7 @@ public class BuiltIn extends Library {
 		 arg1 = arg1.getTerm();
 		 if (arg0 instanceof Var)
 			 throw PrologError.instantiation_error(engineManager, 1);
-		 if (/* !arg0 instanceof Struct || */!arg1.isList())
+		 if (!arg1.isList())
 			 throw PrologError.type_error(engineManager, 2, "list", arg1);
 		 List<ClauseInfo> l = null;
 		 try {
@@ -586,7 +561,7 @@ public class BuiltIn extends Library {
 						 .equals(Term.FALSE))) {
 			 // TODO libName che futuro deve avere?? --------------------
 			 String libName = "";
-			 // ------------
+			
 			 flagManager.defineFlag(flagName.toString(), (Struct) flagSet,
 					 flagDefault, flagModifiable.equals(Term.TRUE), libName);
 		 }
@@ -617,5 +592,4 @@ public class BuiltIn extends Library {
 		 engine.addTheory(new Theory(new FileInputStream(path)));
          engine.popDirectoryFromList();
 	 }
-
 }

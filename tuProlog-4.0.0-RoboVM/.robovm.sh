@@ -1,1 +1,0 @@
-./.RoboVM_SDK/bin/robovm -config ./.RoboVM_SDK/robovm-config/robovm.xml -arch x86 -cp ./.RoboVM_SDK/lib/robovm-objc.jar:./.RoboVM_SDK/lib/robovm-cocoatouch.jar:./bin/:../tuProlog-4.0.0/bin/:./lib/gson-2.6.2.jar: -verbose -run

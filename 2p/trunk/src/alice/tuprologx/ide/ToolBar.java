@@ -10,12 +10,11 @@ import java.awt.event.*;
 import java.awt.BorderLayout;
 import java.net.URL;
 
-import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.Term;
 import alice.tuprolog.Theory;
 import alice.tuprologx.spyframe.SpyFrame;
-
 
 public class ToolBar extends JPanel
 {

@@ -1,6 +1,5 @@
 package alice.tuprolog;
 
-
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -28,7 +27,6 @@ public class TermQueue {
 		}while (block);
 		return false;
 	}
-	
 	
 	private synchronized boolean search(Term t, Prolog engine, boolean remove){
 		boolean found=false;
@@ -70,6 +68,7 @@ public class TermQueue {
 	public synchronized int size(){
 		return queue.size();
 	}
+	
 	public synchronized void clear(){
 		queue.clear();
 	}

@@ -21,6 +21,7 @@ import java.util.*;
 
 import alice.tuprolog.exceptions.NoSolutionException;
 import alice.tuprolog.exceptions.UnknownVarException;
+import alice.tuprolog.json.JSONSerializerManager;
 
 
 /**
@@ -195,4 +196,14 @@ public class SolveInfo implements Serializable {
             return "no.";
         }
     }  
+    
+    //Alberto
+  	public String toJSON(){
+  		return JSONSerializerManager.toJSON(this);
+  	}
+  	
+  	//Alberto
+  	public static SolveInfo fromJSON(String jsonString){
+  		return JSONSerializerManager.fromJSON(jsonString, SolveInfo.class);	
+  	}
 }

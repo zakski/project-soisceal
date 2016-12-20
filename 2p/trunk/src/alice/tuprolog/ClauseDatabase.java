@@ -15,6 +15,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
 
 import alice.util.ReadOnlyLinkedList;
@@ -28,8 +29,10 @@ import java.util.*;
  * Reviewed by Paolo Contessi
  */
 
-class ClauseDatabase extends HashMap<String,FamilyClausesList> implements Iterable<ClauseInfo> {
+public class ClauseDatabase extends HashMap<String,FamilyClausesList> implements Iterable<ClauseInfo> {
+	
 	private static final long serialVersionUID = 1L;
+	
 	void addFirst(String key, ClauseInfo d) {
 		FamilyClausesList family = get(key);
 		if (family == null)
@@ -85,7 +88,6 @@ class ClauseDatabase extends HashMap<String,FamilyClausesList> implements Iterab
 	private static class CompleteIterator implements Iterator<ClauseInfo> {
 		Iterator<FamilyClausesList> values;
 		Iterator<ClauseInfo> workingList;
-		//private boolean busy = false;
 
 		public CompleteIterator(ClauseDatabase clauseDatabase) {
 			values = clauseDatabase.values().iterator();

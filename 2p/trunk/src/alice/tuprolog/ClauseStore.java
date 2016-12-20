@@ -10,7 +10,6 @@ import alice.util.OneWayList;
  */
 public class ClauseStore {
     
-    
     private OneWayList<ClauseInfo> clauses;
     private Term goal;
     private List<Var> vars;
@@ -21,7 +20,6 @@ public class ClauseStore {
         this.vars = vars;
         clauses = null;
     }
-    
     
     /**
      * Carica una famiglia di clausole
@@ -39,7 +37,6 @@ public class ClauseStore {
         return clauseStore;
     }
     
-    
     /**
      * Restituisce la clausola da caricare
      */
@@ -54,11 +51,9 @@ public class ClauseStore {
         return clause;
     }
     
-    
     public boolean haveAlternatives() {
         return haveAlternatives;
     }
-    
     
     /**
      * Verify if there is a term in compatibleGoals compatible with goal. 
@@ -72,7 +67,6 @@ public class ClauseStore {
         reunify(vars, saveUnifications);
         return found;
     }
-    
     
     /**
      * Salva le unificazioni delle variabili da deunificare
@@ -92,7 +86,6 @@ public class ClauseStore {
         return saveUnifications;
     }
     
-    
     /**
      * Restore previous unifications into variables.
      * @param varsToReunify
@@ -111,7 +104,6 @@ public class ClauseStore {
         }
     }
     
-    
     /**
      * Verify if a clause exists that is compatible with goal.
      * As a side effect, clauses that are not compatible get
@@ -129,17 +121,11 @@ public class ClauseStore {
         return false;
     }
     
-    
     public String toString() {
         return "clauses: "+clauses+"\n"+
         "goal: "+goal+"\n"+
         "vars: "+vars+"\n";
     }
-    
-    
-    /*
-     * Methods for spyListeners
-     */
     
     public List<ClauseInfo> getClauses() {
         ArrayList<ClauseInfo> l = new ArrayList<ClauseInfo>();
@@ -158,6 +144,4 @@ public class ClauseStore {
     public List<Var> getVarsForMatch() {
         return vars;
     }
-    
-    
 }

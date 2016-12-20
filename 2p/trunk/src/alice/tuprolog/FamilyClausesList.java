@@ -19,13 +19,13 @@ import java.util.ListIterator;
  * @see LinkedList
  */
 class FamilyClausesList extends LinkedList<ClauseInfo> {
+	
 	private static final long serialVersionUID = 1L;
+	
 	private FamilyClausesIndex<Number> numCompClausesIndex;
 	private FamilyClausesIndex<String> constantCompClausesIndex;
 	private FamilyClausesIndex<String> structCompClausesIndex;
 	private LinkedList<ClauseInfo> listCompClausesList;
-
-	//private LinkedList<ClauseInfo> clausesList;
 
 	public FamilyClausesList(){
 		super();
@@ -367,7 +367,6 @@ class FamilyClausesList extends LinkedList<ClauseInfo> {
 
 		public void set(ClauseInfo o) {
 			it.set(o);
-			//throw new UnsupportedOperationException("Not supported.");
 		}
 
 		public void add(ClauseInfo o) {
@@ -378,64 +377,5 @@ class FamilyClausesList extends LinkedList<ClauseInfo> {
 		public ListIterator<ClauseInfo> getIt(){
 			return this;
 		}    
-
-
 	}
-
-	// Short test about the new implementation of the ListItr
-	// Alessandro Montanari - alessandro.montanar5@studio.unibo.it
-	@SuppressWarnings("unused")
-	private static class ListItrTest{
-
-		private static FamilyClausesList clauseList = new FamilyClausesList();
-
-		public static void main(String[] args) {
-			ClauseInfo first = new ClauseInfo(new Struct(new Struct("First"),new Struct("First")),"First Element");
-			ClauseInfo second = new ClauseInfo(new Struct(new Struct("Second"),new Struct("Second")),"Second Element");
-			ClauseInfo third = new ClauseInfo(new Struct(new Struct("Third"),new Struct("Third")),"Third Element");
-			ClauseInfo fourth = new ClauseInfo(new Struct(new Struct("Fourth"),new Struct("Fourth")),"Fourth Element");
-
-			clauseList.add(first);
-			clauseList.add(second);
-			clauseList.add(third);
-			clauseList.add(fourth);
-			
-			// clauseList = [First, Second, Third, Fourh]
-			
-			ListIterator<ClauseInfo> allClauses = clauseList.listIterator();
-			// Get the first object and remove it
-			allClauses.next();
-			allClauses.remove();
-			if(clauseList.contains(first))
-			{
-				System.out.println("Error!");
-				System.exit(-1);
-			}
-
-			// First object removed
-			// clauseList = [Second, Third, Fourh]
-
-			// Get the second object
-			allClauses.next();
-			// Get the third object
-			allClauses.next();
-			// Get the third object
-			allClauses.previous();
-			// Get the second object and remove it
-			allClauses.previous();
-			allClauses.remove();
-			if(clauseList.contains(second))
-			{
-				System.out.println("Error!");
-				System.exit(-2);
-			}
-			
-			// clauseList = [Third, Fourh]
-
-			System.out.println("Ok!!!");
-		}
-	}
-
 }
-
-

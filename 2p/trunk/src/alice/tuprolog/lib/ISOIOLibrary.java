@@ -1,14 +1,12 @@
 package alice.tuprolog.lib;
 
-/**
- * @author: Sara Sabioni
- */
+import java.util.*;
 
 import alice.tuprolog.*;
-import alice.tuprolog.Number;
 import alice.tuprolog.Long;
+import alice.tuprolog.Number;
+import alice.tuprolog.exceptions.InvalidLibraryException;
 
-import java.util.*;
 import java.io.*;
 
 /**
@@ -20,8 +18,11 @@ import java.io.*;
  */
 
 public class ISOIOLibrary extends Library{
+	
 	private static final long serialVersionUID = 1L;
+	
     protected final int files = 1000; //numero casuale abbastanza alto per evitare eccezioni sulle dimensioni delle hashtable
+   
     protected Hashtable<InputStream, Hashtable<String, Term>> inputStreams = new Hashtable<InputStream,Hashtable<String,Term>>(files);
     protected Hashtable<OutputStream, Hashtable<String, Term>> outputStreams = new Hashtable<OutputStream,Hashtable<String,Term>>(files);
     
@@ -320,7 +321,6 @@ public class ISOIOLibrary extends Library{
     
     public boolean close_2(Term stream_or_alias, Term closeOptions)throws PrologError{
         initLibrary();
-        //Struct result = null;
         OutputStream out = null;
         InputStream in = null;
         
@@ -416,7 +416,6 @@ public class ISOIOLibrary extends Library{
     
     public boolean close_1(Term stream_or_alias)throws PrologError{
         initLibrary();
-        //Struct result = null;
         OutputStream out = null;
         InputStream in = null;
         
@@ -661,7 +660,6 @@ public class ISOIOLibrary extends Library{
                 inputStreams.put(buffer, entry);
                 
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
                 throw PrologError.system_error(new Struct("An error has occurred in method 'set_stream_position'."));
             }
@@ -884,7 +882,6 @@ public class ISOIOLibrary extends Library{
             try {
                 inputStream.reset();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                     e.printStackTrace();
                 PrologError.system_error(new Struct("An error has occurred in peek_char_1."));
             }
@@ -977,7 +974,6 @@ public class ISOIOLibrary extends Library{
             try {
                 inputStream.reset();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
                 PrologError.system_error(new Struct("An error has occurred in peek_code_1."));
             }
@@ -999,7 +995,6 @@ public class ISOIOLibrary extends Library{
         try {
             stream2 = new FileInputStream(file_name);
         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             PrologError.system_error(new Struct("File not found."));
         }
@@ -1277,16 +1272,9 @@ public class ISOIOLibrary extends Library{
     }
     
     public boolean put_byte_1(Term out_byte)throws PrologError{
-//        //richiamo il metodo di IOLibrary che lavora sullo stream corrente
-//        //la posso utilizzare cosi' com'e' in quanto presenta gia' tutti i controlli sul parametro arg richiesti
-//        initLibrary();
-//        out_byte = out_byte.getTerm();
-//        return IOLib.put_1(out_byte);
-        
         initLibrary();
         Struct stream_or_alias = new Struct(outputStream.toString());
         return put_byte_2(stream_or_alias, out_byte);
-        
     }
     
     public boolean put_byte_2(Term stream_or_alias, Term out_byte)throws PrologError{

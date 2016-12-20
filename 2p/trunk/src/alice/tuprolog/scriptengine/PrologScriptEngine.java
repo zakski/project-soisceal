@@ -19,21 +19,21 @@ import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import javax.script.SimpleScriptContext;
 
-import alice.tuprolog.InvalidTheoryException;
-import alice.tuprolog.MalformedGoalException;
-import alice.tuprolog.NoMoreSolutionException;
-import alice.tuprolog.NoSolutionException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.SolveInfo;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Theory;
 import alice.tuprolog.Var;
 import alice.tuprolog.event.ExceptionEvent;
-import alice.tuprolog.event.ExceptionListener;
 import alice.tuprolog.event.OutputEvent;
-import alice.tuprolog.event.OutputListener;
+import alice.tuprolog.exceptions.InvalidObjectIdException;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.exceptions.MalformedGoalException;
+import alice.tuprolog.exceptions.NoMoreSolutionException;
+import alice.tuprolog.exceptions.NoSolutionException;
+import alice.tuprolog.interfaces.event.ExceptionListener;
+import alice.tuprolog.interfaces.event.OutputListener;
 import alice.tuprolog.lib.IOLibrary;
-import alice.tuprolog.lib.InvalidObjectIdException;
 import alice.tuprolog.lib.OOLibrary;
 import alice.util.InputStreamAdapter;
 

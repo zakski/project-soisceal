@@ -23,7 +23,9 @@ import java.util.*;
  * This class represents a prolog Flag
  */
 class Flag implements java.io.Serializable {
+	
 	private static final long serialVersionUID = 1L;
+	
     private String name;
     private Struct valueList;
     private Term   value;
@@ -50,7 +52,6 @@ class Flag implements java.io.Serializable {
     }
     
     protected Flag() {}
-    
     
     /**
      * Gets a deep copy of the flag
@@ -139,5 +140,4 @@ class Flag implements java.io.Serializable {
     public String getLibraryName() {
         return libraryName;
     }
-    
 }

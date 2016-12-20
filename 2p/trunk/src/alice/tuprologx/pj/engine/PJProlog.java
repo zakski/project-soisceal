@@ -61,15 +61,15 @@ public class PJProlog /*extends alice.tuprolog.Prolog*/ {
         return new PrologSolution<G,S>(retValue);
     }
 
-    public void setTheory(Theory theory) throws alice.tuprolog.InvalidTheoryException {
+    public void setTheory(Theory theory) throws alice.tuprolog.exceptions.InvalidTheoryException {
         engine.setTheory(new alice.tuprolog.Theory(theory.marshal()));
     }
 
-    public void addTheory(Theory theory) throws alice.tuprolog.InvalidTheoryException {
+    public void addTheory(Theory theory) throws alice.tuprolog.exceptions.InvalidTheoryException {
         engine.addTheory(new alice.tuprolog.Theory(theory.marshal()));
     }
     
-    public Theory getTheory() throws alice.tuprolog.InvalidTheoryException {
+    public Theory getTheory() throws alice.tuprolog.exceptions.InvalidTheoryException {
         return Theory.unmarshal(engine.getTheory());
     }
         
@@ -107,7 +107,7 @@ public class PJProlog /*extends alice.tuprolog.Prolog*/ {
                 try {
                     next = new PrologSolution<G,S>(engine.solveNext());                    
                 }
-                catch (alice.tuprolog.NoMoreSolutionException e) {
+                catch (alice.tuprolog.exceptions.NoMoreSolutionException e) {
                     next = null;
                 }
             }

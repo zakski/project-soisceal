@@ -1,8 +1,9 @@
 package alice.tuprologx.runtime.corba;
 
-import alice.tuprolog.*;
-
 import  java.io.*;
+
+import alice.tuprolog.*;
+import alice.tuprolog.exceptions.InvalidLibraryException;
 
 
 @SuppressWarnings("serial")

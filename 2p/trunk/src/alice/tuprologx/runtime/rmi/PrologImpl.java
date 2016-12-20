@@ -1,9 +1,14 @@
 package alice.tuprologx.runtime.rmi;
-import alice.tuprolog.*;
 import  java.io.*;
 
 import java.rmi.*;
 import java.rmi.server.UnicastRemoteObject;
+
+import alice.tuprolog.*;
+import alice.tuprolog.exceptions.InvalidLibraryException;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.exceptions.MalformedGoalException;
+import alice.tuprolog.exceptions.NoMoreSolutionException;
 
 @SuppressWarnings("serial")
 public class PrologImpl extends UnicastRemoteObject

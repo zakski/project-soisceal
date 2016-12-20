@@ -19,6 +19,10 @@ package alice.tuprolog;
 import java.io.*;
 import java.util.*;
 
+import alice.tuprolog.exceptions.NoSolutionException;
+import alice.tuprolog.exceptions.UnknownVarException;
+import alice.tuprolog.json.JSONSerializerManager;
+
 
 /**
  *
@@ -28,7 +32,8 @@ import java.util.*;
  * 
  * @author Alex Benini
  */
-public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
+public class SolveInfo implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
     /*
      * possible values returned by step functions
@@ -45,16 +50,10 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
     private Term query;
     private Struct goal;
     private List<Var>   bindings;
-    private String setOfSolution;
     
-    
-    /**
-     * 
-     */
     SolveInfo(Term initGoal){
         query = initGoal;
         isSuccess = false;
-        setOfSolution=null;
     }
     
     /**
@@ -70,10 +69,7 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
         bindings = resultVars;
         endState = resultDemo;
         isSuccess = (endState > FALSE);
-        setOfSolution=null;
     }
-    
-    
     
     /**
 	 * Checks if the solve request was successful
@@ -83,7 +79,6 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
         return isSuccess;
     }
     
-    
     /**
      * Checks if the solve request was halted
      *
@@ -92,8 +87,7 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
     public boolean isHalted() {
         return (endState == HALT);
     }
-    
-    
+      
     /**
      * Checks if the solve request was halted
      *
@@ -102,8 +96,7 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
     public boolean hasOpenAlternatives() {
         return (endState == TRUE_CP);
     }
-    
-    
+      
     /**
 	 * Gets the query
 	 * @return  the query
@@ -111,14 +104,6 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
     public Term getQuery() {
         return query;
     }
-    
-    public String getSetOfSolution() {
-        return setOfSolution;
-    }
-    public void setSetOfSolution(String s) {
-        setOfSolution=s;
-    }
-    
     
     /**
      *  Gets the solution of the request
@@ -133,8 +118,7 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
             throw new NoSolutionException();
         }
     }
-    
-    
+      
     /**
      * Gets the list of the variables in the solution.
      * @return the array of variables.
@@ -206,14 +190,20 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
             }
             return st.toString().trim();
         } else {
-        	/*Castagna 06/2011*/
         	if(endState == EngineRunner.HALT)
         		return ("halt.");
         	else
-        	/**/
             return "no.";
         }
-    }
+    }  
     
-    
+    //Alberto
+  	public String toJSON(){
+  		return JSONSerializerManager.toJSON(this);
+  	}
+  	
+  	//Alberto
+  	public static SolveInfo fromJSON(String jsonString){
+  		return JSONSerializerManager.fromJSON(jsonString, SolveInfo.class);	
+  	}
 }

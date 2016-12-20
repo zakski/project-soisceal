@@ -22,7 +22,7 @@ import org.fife.ui.autocomplete.DefaultCompletionProvider;
 import org.fife.ui.autocomplete.TemplateCompletion;
 
 import alice.tuprolog.event.TheoryEvent;
-import alice.tuprolog.event.TheoryListener;
+import alice.tuprolog.interfaces.event.TheoryListener;
 
 class CompletionUtils{
 

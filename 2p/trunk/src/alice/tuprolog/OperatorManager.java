@@ -15,6 +15,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
 
 import java.io.Serializable;
@@ -32,7 +33,8 @@ import alice.tuprolog.interfaces.IOperatorManager;
  * @see Operator
  */
 @SuppressWarnings("serial")
-/*Castagna 06/2911*/public/**/ class OperatorManager implements /*Castagna 06/2011*/IOperatorManager,/**/Serializable {
+public class OperatorManager implements IOperatorManager, Serializable {
+	
 	private static final long serialVersionUID = 1L;
     /**
 	 * current known operators
@@ -84,7 +86,7 @@ import alice.tuprolog.interfaces.IOperatorManager;
         return new LinkedList<Operator>(operatorList);
     }
     
-/*Castagna 06/2011*/     
+    /*Castagna 06/2011*/     
     /* Francesco Fabbri		 
      * 16/05/2011		 
      * Clone operation added		 
@@ -94,7 +96,7 @@ import alice.tuprolog.interfaces.IOperatorManager;
     	om.operatorList = (OperatorRegister)this.operatorList.clone();		 
     	return om;		 
     }
-/**/    
+
     /**
      * Register for operators
      * Cashes operator by name+type description.
@@ -136,7 +138,5 @@ import alice.tuprolog.interfaces.IOperatorManager;
         	}		 
         	return or;
         }
-        /**/
-    }
-    
+    }  
 }

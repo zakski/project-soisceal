@@ -15,7 +15,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
+
 import java.io.Serializable;
 
 /**
@@ -40,7 +42,7 @@ final public class Operator implements Serializable {
 	 */
     public int prio;
     
-/*Castagna 06/2011*/public/**/ Operator(String name_,String type_,int prio_) {
+    public Operator(String name_,String type_,int prio_) {
         name = name_;
         type = type_;
         prio = prio_;

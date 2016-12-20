@@ -15,9 +15,14 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
-import    java.io.*;
+
+import java.io.*;
 import java.util.Iterator;
+
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.json.JSONSerializerManager;
 
 /**
  * This class represents prolog theory which can be provided
@@ -30,7 +35,9 @@ import java.util.Iterator;
  *
  */
 public class Theory implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
+	
     private String theory;
     private Struct clauseList;
 
@@ -129,6 +136,14 @@ public class Theory implements Serializable {
     public String toString() {
         return theory != null ? theory : clauseList.toString();
     }
-
-
+    
+    //Alberto
+  	public String toJSON(){
+  		return JSONSerializerManager.toJSON(this);
+  	}
+  	
+  	//Alberto
+  	public static Theory fromJSON(String jsonString){
+  		return JSONSerializerManager.fromJSON(jsonString, Theory.class);	
+  	}
 }

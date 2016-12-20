@@ -1,12 +1,13 @@
 package alice.tuprologx.spyframe;
 
 
-import alice.tuprolog.Struct;
-import alice.tuprolog.Term;
-import alice.tuprolog.Var;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import alice.tuprolog.Struct;
+import alice.tuprolog.Term;
+import alice.tuprolog.Var;
 
 /** GUI-Window containing a TermComponent that displays a prolog term.
  * Displaying should be a side effect of a corresponding prolog predicate

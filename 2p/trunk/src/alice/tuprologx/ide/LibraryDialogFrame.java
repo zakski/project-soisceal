@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import alice.tuprolog.event.LibraryEvent;
-import alice.tuprolog.event.LibraryListener;
-import alice.tuprolog.InvalidLibraryException;
+import alice.tuprolog.exceptions.InvalidLibraryException;
+import alice.tuprolog.interfaces.event.LibraryListener;
 
 public class LibraryDialogFrame extends GenericFrame implements LibraryListener
 {
@@ -506,7 +506,7 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
         onClose();
     }
 
-    /** @see alice.tuprolog.event.LibraryListener#libraryLoaded(alice.tuprolog.event.LibraryEvent) */
+    /** @see alice.tuprolog.interfaces.event.LibraryListener#libraryLoaded(alice.tuprolog.event.LibraryEvent) */
     public void libraryLoaded(LibraryEvent event)
     {
         String libraryName = event.getLibraryName();
@@ -514,7 +514,7 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
         {
             try
             {
-            	alice.tuprolog.LibraryManager mainLibraryManager = libraryManager.getEngine().getLibraryManager();
+            	alice.tuprolog.interfaces.ILibraryManager mainLibraryManager = libraryManager.getEngine().getLibraryManager();
             	if(mainLibraryManager.isExternalLibrary(libraryName))
             	{
             		URL url = mainLibraryManager.getExternalLibraryURL(libraryName);
@@ -547,7 +547,7 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
         displayLibraryManagerStatus();
     }
 
-    /** @see alice.tuprolog.event.LibraryListener#libraryUnloaded(alice.tuprolog.event.LibraryEvent) */
+    /** @see alice.tuprolog.interfaces.event.LibraryListener#libraryUnloaded(alice.tuprolog.event.LibraryEvent) */
     public void libraryUnloaded(LibraryEvent event)
     {
         librariesDisplayPanel.removeAll();

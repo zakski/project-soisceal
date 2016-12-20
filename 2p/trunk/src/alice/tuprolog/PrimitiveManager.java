@@ -15,19 +15,21 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 import alice.tuprolog.interfaces.IPrimitiveManager;
+import alice.tuprolog.interfaces.IPrimitives;
 
 
 /**
  * Administration of primitive predicates
  * @author Alex Benini
  */
-public class PrimitiveManager /*Castagna 06/2011*/implements IPrimitiveManager/**/{
+public class PrimitiveManager implements IPrimitiveManager{
     
     private Map<IPrimitives,List<PrimitiveInfo>> libHashMap;
     private Map<String,PrimitiveInfo> directiveHashMap;
@@ -71,7 +73,6 @@ public class PrimitiveManager /*Castagna 06/2011*/implements IPrimitiveManager/*
         libHashMap.put(src,primOfLib);
     }
     
-    
     void deletePrimitiveInfo(IPrimitives src) {
         Iterator<PrimitiveInfo> it = libHashMap.remove(src).iterator();
         while(it.hasNext()) {
@@ -81,7 +82,6 @@ public class PrimitiveManager /*Castagna 06/2011*/implements IPrimitiveManager/*
             functorHashMap.remove(k);
         }
     }
-    
     
     /**
      * Identifies the term passed as argument.
@@ -130,7 +130,7 @@ public class PrimitiveManager /*Castagna 06/2011*/implements IPrimitiveManager/*
         
         int arity = t.getArity();
         String name = t.getName();
-        //------------------------------------------
+        
         if (name.equals(",") || name.equals("':-'") || name.equals(":-")) {
             for (int c = 0; c < arity; c++) {
                 identify( t.getArg(c), PrimitiveInfo.PREDICATE);
@@ -139,29 +139,23 @@ public class PrimitiveManager /*Castagna 06/2011*/implements IPrimitiveManager/*
             for (int c = 0; c < arity; c++) {
                 identify( t.getArg(c), PrimitiveInfo.FUNCTOR);
             }                        
-        }
-        //------------------------------------------
-        //log.debug("Identification "+t);    
+        }  
         PrimitiveInfo prim = null;
         String key = name + "/" + arity;
         
         switch (typeOfPrimitive) {
         case PrimitiveInfo.DIRECTIVE :
             prim = (PrimitiveInfo)directiveHashMap.get(key);                
-            //log.debug("Assign predicate "+prim+" to "+t);
             break;
         case PrimitiveInfo.PREDICATE :
             prim = (PrimitiveInfo)predicateHashMap.get(key);                
-            //log.debug("Assign predicate "+prim+" to "+t);
             break;
         case PrimitiveInfo.FUNCTOR :
             prim = (PrimitiveInfo)functorHashMap.get(key);
-            //log.debug("Assign functor "+prim+" to "+t);
             break;
         }
         t.setPrimitive(prim);
     }
-    
     
     Library getLibraryDirective(String name, int nArgs) {
         try {
@@ -187,9 +181,7 @@ public class PrimitiveManager /*Castagna 06/2011*/implements IPrimitiveManager/*
         }
     }
     
-    /*Castagna 06/2011*/
     public boolean containsTerm(String name, int nArgs) {
 		return (functorHashMap.containsKey(name + "/" + nArgs) || predicateHashMap.containsKey(name + "/" + nArgs));
 	}
-    /**/
 }

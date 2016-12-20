@@ -15,7 +15,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
+
 import java.util.*;
 
 /**
@@ -92,7 +94,6 @@ public class ClauseInfo {
         }
         parent.addChild(body);
     }
-    
     
     /**
      * Gets the string representation
@@ -189,17 +190,13 @@ public class ClauseInfo {
         }
     }
     
-    
     Struct getHeadCopy() {
         return headCopy;
     }
     
-    
     SubGoalTree getBodyCopy() {
         return bodyCopy;
     }
-    
-    
     
     /**
      * Gets the string representation with default operator representation
@@ -222,36 +219,6 @@ public class ClauseInfo {
             return t.toString();
         }
     }
-    
-    /*commented by Roberta Calegari fixed following issue 20 Christian Lemke suggestion
-     * static private String indentPredicatesAsArgX(Term t,OperatorManager op,int p) {
-        if (t instanceof Struct) {
-            Struct co=(Struct)t;
-            if (co.getName().equals(",")) {
-                return co.getArg(0).toStringAsArgX(op,p)+",\n\t"+
-                "("+indentPredicatesAsArgX(co.getArg(1),op,p)+")";
-            } else {
-                return t.toStringAsArgX(op,p);
-            }
-        } else {
-            return t.toStringAsArgX(op,p);
-        }
-        
-    }
-    
-    static private String indentPredicatesAsArgY(Term t,OperatorManager op,int p) {
-        if (t instanceof Struct) {
-            Struct co=(Struct)t;
-            if (co.getName().equals(",")) {
-                return co.getArg(0).toStringAsArgY(op,p)+",\n\t"+
-                "("+indentPredicatesAsArgY(co.getArg(1),op,p)+")";
-            } else {
-                return t.toStringAsArgY(op,p);
-            }
-        } else {
-            return t.toStringAsArgY(op,p);
-        }
-    }*/
     
     static private String indentPredicatesAsArgX(Term t,OperatorManager op,int p) {
         if (t instanceof Struct) {
@@ -293,6 +260,4 @@ public class ClauseInfo {
            return t.toStringAsArgY(op,p);
         }
     }
-    
-    
 }

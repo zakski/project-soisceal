@@ -452,37 +452,4 @@ public class RBTree<K extends Comparable<? super K>,V>
             printHelper(n.left, indent + INDENT_STEP);
         }
     }
-
-//    public static void main(String[] args) {
-//        RBTree<String,ClauseInfo> r;
-//        RBTree<Number,ClauseInfo> r2;
-//
-//        RBTree<Integer,Integer> t = new RBTree<Integer,Integer>();
-//        t.print();
-//
-//        java.util.Random gen = new java.util.Random();
-//
-//        for (int i = 0; i < 5000; i++) {
-//            int x = gen.nextInt(10000);
-//            int y = gen.nextInt(10000);
-//
-//            t.print();
-//            System.out.println("Inserting " + x + " -> " + y);
-//            System.out.println();
-//
-//            t.insert(x, y);
-//            assert t.lookup(x).equals(y);
-//        }
-//        for (int i = 0; i < 60000; i++) {
-//            int x = gen.nextInt(10000);
-//
-//            t.print();
-//            System.out.println("Deleting key " + x);
-//            System.out.println();
-//
-//            t.delete(x);
-//        }
-//    }
-
 }
-

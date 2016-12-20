@@ -7,13 +7,13 @@ package alice.tuprolog.lib;
 
 import alice.tuprolog.EngineManager;
 import alice.tuprolog.Int;
-import alice.tuprolog.InvalidTermException;
 import alice.tuprolog.Library;
-import alice.tuprolog.NoSolutionException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.PrologError;
 import alice.tuprolog.SolveInfo;
 import alice.tuprolog.Term;
+import alice.tuprolog.exceptions.InvalidTermException;
+import alice.tuprolog.exceptions.NoSolutionException;
 
 
 

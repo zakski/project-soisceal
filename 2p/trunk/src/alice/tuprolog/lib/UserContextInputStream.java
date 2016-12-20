@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import alice.tuprolog.event.ReadEvent;
-import alice.tuprolog.event.ReadListener;
+import alice.tuprolog.interfaces.event.ReadListener;
 
 
 public class UserContextInputStream extends InputStream {

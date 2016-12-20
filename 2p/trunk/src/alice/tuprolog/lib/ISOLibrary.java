@@ -447,10 +447,6 @@ public class ISOLibrary extends Library {
                 + "number_codes(Number,List):-catch(number_codes0(Number,List), Error, false).\n"
                 + "number_codes0(Number,List):-nonvar(Number),!,num_atom(Number,Struct),atom_codes(Struct,List).\n"
                 + "number_codes0(Number,List):-atom_codes(Struct,List),num_atom(Number,Struct).\n";
-        //
-        // ISO default
-        // "current_prolog_flag(changeable_flags,[ char_conversion(on,off), debug(on,off), undefined_predicate(error,fail,warning),double_quotes(chars,codes,atom) ]).\n"+
-        // "current_prolog_flag(changeable_flags,[]).\n                                                              "+
 
     }
 

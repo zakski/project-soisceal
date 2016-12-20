@@ -1,5 +1,6 @@
 package alice.tuprolog;
 
+import alice.tuprolog.interfaces.SubGoalId;
 
 public class SubGoalStore {
 
@@ -15,14 +16,10 @@ public class SubGoalStore {
         curSGId = null;
     }
 
-    /**
-     *
-     */
     public boolean load(SubGoalTree subGoals) {
         commaStruct = subGoals;
         goals=commaStruct.copy();
         return true;
-
     }
 
     /**
@@ -87,12 +84,9 @@ public class SubGoalStore {
 
     public String toString() {
         return "goals: " + goals + " "
-                + "index: " + index;
+             + "index: " + index;
     }
 
-    /*
-     * Methods for spyListeners
-     */
     public SubGoalTree getSubGoals() {
         return goals;
     }
@@ -100,9 +94,11 @@ public class SubGoalStore {
     public int getIndexNextSubGoal() {
         return index;
     }
+    
     public boolean getFetched(){
         return fetched;
     }
+    
     public DefaultSubGoalId getCurSGId() {
         return curSGId;
     }

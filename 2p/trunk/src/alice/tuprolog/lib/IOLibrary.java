@@ -17,10 +17,12 @@
  */
 package alice.tuprolog.lib;
 
+import java.util.*;
+
 import alice.tuprolog.*;
 import alice.tuprolog.Number;
+import alice.tuprolog.exceptions.InvalidTermException;
 
-import java.util.*;
 import java.io.*;
 
 /**
@@ -362,10 +364,7 @@ public class IOLibrary extends Library {
         try {
             unify(arg0, getEngine().toTerm(st));
         } catch (InvalidTermException e) {
-            /*Castagna 06/2011*/
-        	//throw PrologError.syntax_error(engine.getEngineManager(), -1, -1, new Struct(st));
         	throw PrologError.syntax_error(engine.getEngineManager(),-1, e.line, e.pos, new Struct(st));
-        	/**/
         }
         return true;
     }

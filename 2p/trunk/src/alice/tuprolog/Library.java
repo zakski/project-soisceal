@@ -15,11 +15,13 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
 
 import java.io.Serializable;
 import java.util.*;
 
+import alice.tuprolog.interfaces.IPrimitives;
 
 /**
  *
@@ -40,6 +42,7 @@ import java.util.*;
  * <p>
  */
 public abstract class Library implements Serializable, IPrimitives {
+	
 	private static final long serialVersionUID = 1L;
     /**
 	 * prolog core which loaded the library
@@ -122,7 +125,6 @@ public abstract class Library implements Serializable, IPrimitives {
         return engine.match(a0,a1);
     }
     
-    
     /**
      * Evaluates an expression. Returns null value if the argument
      * is not an evaluable expression
@@ -151,7 +153,6 @@ public abstract class Library implements Serializable, IPrimitives {
         }
         return null;
     }
-    
     
     /**
      * method invoked by prolog engine when library is
@@ -184,7 +185,6 @@ public abstract class Library implements Serializable, IPrimitives {
             mapPrimitives.put(PrimitiveInfo.DIRECTIVE,new ArrayList<PrimitiveInfo>());
             mapPrimitives.put(PrimitiveInfo.FUNCTOR,new ArrayList<PrimitiveInfo>());
             mapPrimitives.put(PrimitiveInfo.PREDICATE,new ArrayList<PrimitiveInfo>());
-            //{new ArrayList<PrimitiveInfo>(), new ArrayList<PrimitiveInfo>(), new ArrayList<PrimitiveInfo>()};
             
             for (int i = 0; i < mlist.length; i++) {
                 String name = mlist[i].getName();
@@ -241,59 +241,5 @@ public abstract class Library implements Serializable, IPrimitives {
         } catch (Exception ex) {
             return null;
         }
-    }
-    
-    
-    /**
-     * Gets the method linked to a builtin (null value if
-     * the builtin has not any linked service)
-     */
-    /*    public Method getLinkedMethod(Struct s){
-     //System.out.println("get linked for "+s);         
-      
-      int arity = s.getArity();
-      String name = s.getName()+"_"+arity; 
-      
-      // NOT found, Try with synonims
-       Method m = findMethod(name,arity);    
-       if (m!=null){
-       return m;
-       }
-       
-       // try with synonims
-        if (opMappingCached!=null){
-        String rawName=s.getName();
-        for (int j=0; j<opMappingCached.length; j++){
-        String[] map=opMappingCached[j];
-        if (map[0].equals(rawName)){
-        return findMethod(map[1]+"_"+s.getArity(),s.getArity());
-        }
-        }
-        }
-        return null;
-        }
-        
-        private Method findMethod(String name, int arity){
-        Method[] mlist = this.getClass().getMethods();
-        for (int i=0; i<mlist.length; i++){
-        if (mlist[i].getName().equals(name)){
-        Class[] parms=mlist[i].getParameterTypes();
-        if (parms.length==arity){
-        boolean valid=true;
-        for (int j=0; j<parms.length; j++){
-        if (!Term.class.isAssignableFrom(parms[j])){
-        valid=false;
-        }
-        }
-        if (valid){
-        return mlist[i];
-        }
-        }
-        }
-        }
-        return null;
-        }
-        */
-    
-    
+    } 
 }

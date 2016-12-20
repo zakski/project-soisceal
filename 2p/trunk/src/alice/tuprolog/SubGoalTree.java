@@ -1,15 +1,13 @@
 package alice.tuprolog;
-import java.util.*;
 
+import java.util.*;
 
 public class SubGoalTree extends AbstractSubGoalTree implements Iterable<AbstractSubGoalTree> {
     
     private ArrayList<AbstractSubGoalTree> terms;
-        //private LinkedList terms;
     
     public SubGoalTree() {
         terms = new ArrayList<AbstractSubGoalTree>();
-                //terms = new LinkedList();
     }
 
         public SubGoalTree(ArrayList<AbstractSubGoalTree> terms) {
@@ -40,6 +38,7 @@ public class SubGoalTree extends AbstractSubGoalTree implements Iterable<Abstrac
     }
     
     public boolean isLeaf() { return false; }
+    
     public boolean isRoot() { return true; }
     
     public String toString() {
@@ -61,6 +60,7 @@ public class SubGoalTree extends AbstractSubGoalTree implements Iterable<Abstrac
             return false;
         }
     }
+    
     public SubGoalTree copy(){
         return new SubGoalTree(terms);
     }

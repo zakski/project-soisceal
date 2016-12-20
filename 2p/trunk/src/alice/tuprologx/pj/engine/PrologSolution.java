@@ -9,8 +9,9 @@
 
 package alice.tuprologx.pj.engine;
 
+import alice.tuprolog.exceptions.UnknownVarException;
 import alice.tuprologx.pj.model.*;
-import alice.tuprolog.UnknownVarException;
+
 import java.util.List;
 import java.util.Vector;
 
@@ -27,13 +28,13 @@ public class PrologSolution<Q extends Term<?>, S extends Term<?>> /*implements I
         _solveInfo = si;
     }
 
-    public <Z extends Term<?>> Z getVarValue(String varName) throws alice.tuprolog.NoSolutionException {
+    public <Z extends Term<?>> Z getVarValue(String varName) throws alice.tuprolog.exceptions.NoSolutionException {
         alice.tuprolog.Term retValue;        
         retValue = _solveInfo.getVarValue(varName);
         return Term.<Z>unmarshal(retValue);
     }
 
-    public <Z extends Term<?>> Z getTerm(String varName) throws alice.tuprolog.NoSolutionException, UnknownVarException {
+    public <Z extends Term<?>> Z getTerm(String varName) throws alice.tuprolog.exceptions.NoSolutionException, UnknownVarException {
         alice.tuprolog.Term retValue;                
         retValue = _solveInfo.getTerm(varName);
         return Term.<Z>unmarshal(retValue);
@@ -51,7 +52,7 @@ public class PrologSolution<Q extends Term<?>, S extends Term<?>> /*implements I
         return _solveInfo.hasOpenAlternatives();
     }
 
-    public S getSolution() throws alice.tuprolog.NoSolutionException {
+    public S getSolution() throws alice.tuprolog.exceptions.NoSolutionException {
         alice.tuprolog.Term retValue;        
         retValue = _solveInfo.getSolution();
         return Term.<S>unmarshal(retValue);
@@ -63,7 +64,7 @@ public class PrologSolution<Q extends Term<?>, S extends Term<?>> /*implements I
         return Term.<Q>unmarshal(retValue);
     }
 
-    public List<Term<?>> getBindingVars() throws alice.tuprolog.NoSolutionException {
+    public List<Term<?>> getBindingVars() throws alice.tuprolog.exceptions.NoSolutionException {
         List<alice.tuprolog.Var> retValue;        
         retValue = _solveInfo.getBindingVars();
         Vector<Term<?>> bindings = new Vector<Term<?>>();

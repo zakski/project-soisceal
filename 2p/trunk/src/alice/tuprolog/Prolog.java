@@ -15,102 +15,181 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
 
 import java.util.*;
 import java.io.*;
-
 import alice.tuprolog.event.*;
+import alice.tuprolog.exceptions.InvalidLibraryException;
+import alice.tuprolog.exceptions.InvalidTermException;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.exceptions.MalformedGoalException;
+import alice.tuprolog.exceptions.NoMoreSolutionException;
+import alice.tuprolog.factories.DefaultLibrariesSet;
+import alice.tuprolog.factories.LibraryManagerFactory;
+import alice.tuprolog.interfaces.ILibraryManager;
 import alice.tuprolog.interfaces.IProlog;
-//import alice.tuprologx.ide.ToolBar;
-
-
+import alice.tuprolog.interfaces.event.ExceptionListener;
+import alice.tuprolog.interfaces.event.LibraryListener;
+import alice.tuprolog.interfaces.event.OutputListener;
+import alice.tuprolog.interfaces.event.QueryListener;
+import alice.tuprolog.interfaces.event.SpyListener;
+import alice.tuprolog.interfaces.event.TheoryListener;
+import alice.tuprolog.interfaces.event.WarningListener;
+import alice.tuprolog.json.AbstractEngineState;
+import alice.tuprolog.json.FullEngineState;
+import alice.tuprolog.json.JSONSerializerManager;
+import alice.tuprolog.json.ReducedEngineState;
+import alice.util.Tools;
 
 /**
  *
  * The Prolog class represents a tuProlog engine.
  *
  */
-public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 
+public class Prolog implements IProlog, Serializable
+{
 	private static final long serialVersionUID = 1L;
+	
+	public static final boolean INCLUDE_KB_IN_SERIALIZATION = true;
+	public static final boolean EXCLUDE_KB_IN_SERIALIZATION = false;
+	
 	/*  manager of current theory */
 	private TheoryManager theoryManager;
+	
 	/*  component managing primitive  */
-	private PrimitiveManager primitiveManager;    
+	private PrimitiveManager primitiveManager;
+	
 	/* component managing operators */
-	private OperatorManager opManager;    
+	private OperatorManager opManager; 
+	
 	/* component managing flags */
 	private FlagManager flagManager;
+	
 	/* component managing libraries */
-	private LibraryManager libraryManager;
+	private ILibraryManager libraryManager;
+	
 	/* component managing engine */
 	private EngineManager engineManager;
 
 	/*  spying activated ?  */
-	private boolean spy;  
+	private boolean spy;
+	
 	/*  warning activated ?  */
 	private boolean warning;
+	
 	/* listeners registrated for virtual machine output events */
-	/*Castagna 06/2011*/	
-	/* exception activated ? */
 	private boolean exception;
-	/**/
+
 	private ArrayList<OutputListener> outputListeners;
+	
 	/* listeners registrated for virtual machine internal events */
 	private ArrayList<SpyListener> spyListeners;
+	
 	/* listeners registrated for virtual machine state change events */
 	private ArrayList<WarningListener> warningListeners;
+	
 	/*Castagna 06/2011*/	
 	/* listeners registrated for virtual machine state exception events */
 	private ArrayList<ExceptionListener> exceptionListeners;
-	/**/
 
 	/* listeners to theory events */
 	private ArrayList<TheoryListener> theoryListeners;
+	
 	/* listeners to library events */
 	private ArrayList<LibraryListener> libraryListeners;
+	
 	/* listeners to query events */
 	private ArrayList<QueryListener> queryListeners;
 
     /* path history for including documents */
     private ArrayList<String> absolutePathList;
+    
     private String lastPath;
+    
+    private String theoryText;
+    private InputStream theoryInputStream;
+    private String goalText;
+    
+    private OutputListener defaultOutputListener = new OutputListener()
+    {
+        public void onOutput(OutputEvent ev) 
+        {
+            System.out.print(ev.getMsg());
+        }
+    };
 
-
-	/**
-	 * Builds a prolog engine with default libraries loaded.
-	 *
-	 * The default libraries are BasicLibrary, ISOLibrary,
-	 * IOLibrary, and  JavaLibrary
-	 */
-	public Prolog() {
+    //Alberto
+	private boolean canSpawn = false;
+    
+	//Alberto
+    public Prolog(String theory)
+    {
+    	this(false,true);
+		this.defaultLibraryConfiguration();
+        theoryText = theory;
+        this.addOutputListener(defaultOutputListener);
+        this.canSpawn = true;
+    }
+    
+    //Alberto
+    public Prolog(String theory, String goal)
+    {
+    	this(false,true);
+		this.defaultLibraryConfiguration();
+        theoryText = theory;
+        goalText = goal;
+        this.addOutputListener(defaultOutputListener);
+        this.canSpawn = true;
+    }
+    
+    //Alberto
+    public Prolog(InputStream is)
+    {
+    	this(false,true);
+		this.defaultLibraryConfiguration();
+        theoryInputStream = is;
+        this.addOutputListener(defaultOutputListener);
+        this.canSpawn = true;
+    }
+    
+    //Alberto
+    public Prolog(InputStream is, String goal)
+    {
+    	this(false,true);
+		this.defaultLibraryConfiguration();
+        theoryInputStream = is;
+        goalText = goal;
+        this.addOutputListener(defaultOutputListener);
+        this.canSpawn = true;
+    }
+    
+	public Prolog()
+	{
 		this(false,true);
-		try {
-			loadLibrary("alice.tuprolog.lib.BasicLibrary");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		try {
-			loadLibrary("alice.tuprolog.lib.ISOLibrary");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		try {
-			loadLibrary("alice.tuprolog.lib.IOLibrary");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		try {
-			if (System.getProperty("java.vm.name").equals("IKVM.NET"))
-				loadLibrary("OOLibrary.OOLibrary, OOLibrary");
-			else
-				loadLibrary("alice.tuprolog.lib.OOLibrary");
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		this.defaultLibraryConfiguration();
+		this.canSpawn = false;
+	}
+	
+	private void defaultLibraryConfiguration()
+	{
+		//Alberto
+		String[] defaultLibrariesSet = DefaultLibrariesSet.getDefaultLibrariesSetForCurrentPlatform();
+		
+		for(int i=0; i<defaultLibrariesSet.length; i++)
+		{
+			try
+			{
+				loadLibrary(defaultLibrariesSet[i]);
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
 		}
 	}
-
 
 	/**
 	 * Builds a tuProlog engine with loaded
@@ -118,15 +197,21 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @param libs the (class) name of the libraries to be loaded
 	 */
-	public Prolog(String[] libs) throws InvalidLibraryException {
+	
+	public Prolog(String[] libs) throws InvalidLibraryException 
+	{
 		this(false,true);
-		if (libs != null) {
-			for (int i = 0; i < libs.length; i++) {
+		
+		if (libs != null) 
+		{
+			for (int i = 0; i < libs.length; i++) 
+			{
 				loadLibrary(libs[i]);
 			}
 		}
+		
+		this.canSpawn = false;
 	}
-
 
 	/**
 	 * Initialize basic engine structures.
@@ -134,18 +219,21 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @param spy spying activated
 	 * @param warning warning activated
 	 */
-	private Prolog(boolean spy, boolean warning) {
+	
+	private Prolog(boolean spy, boolean warning)
+	{
 		outputListeners = new ArrayList<OutputListener>();
 		spyListeners = new ArrayList<SpyListener>();
 		warningListeners = new ArrayList<WarningListener>();
+		
 		/*Castagna 06/2011*/		
 		exceptionListeners = new ArrayList<ExceptionListener>();
-		/**/
 		this.spy = spy;
 		this.warning = warning;
+		
 		/*Castagna 06/2011*/
 		exception = true;
-		/**/
+		
 		theoryListeners = new ArrayList<TheoryListener>();
 		queryListeners = new ArrayList<QueryListener>();
 		libraryListeners = new ArrayList<LibraryListener>();
@@ -153,14 +241,15 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 		initializeManagers();
 	}
 
-
-	private void initializeManagers() {
+	private void initializeManagers() 
+	{
 		flagManager      = new FlagManager();
-		libraryManager   = new LibraryManager();        
+		libraryManager   = LibraryManagerFactory.getLibraryManagerForCurrentPlatform();       
 		opManager        = new OperatorManager();
 		theoryManager    = new TheoryManager();
 		primitiveManager = new PrimitiveManager();
 		engineManager    = new EngineManager();
+		
 		//config managers
 		theoryManager.initialize(this);
 		libraryManager.initialize(this);
@@ -168,62 +257,131 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 		primitiveManager.initialize(this);
 		engineManager.initialize(this);
 	}
+	
+	//Alberto
+	public static AbstractEngineState getEngineStateFromJSON(String jsonString){
+		AbstractEngineState brain = null;
+		if(jsonString.contains("FullEngineState")){
+			brain = JSONSerializerManager.fromJSON(jsonString, FullEngineState.class);
+		} else if(jsonString.contains("ReducedEngineState")){
+			brain = JSONSerializerManager.fromJSON(jsonString, ReducedEngineState.class);
+		}
+		return brain;
+	}
+		
+	//Alberto
+	public static Prolog fromJSON(String jsonString) {
+		AbstractEngineState brain = null;
+		Prolog p = null;
+		if(jsonString.contains("FullEngineState")){
+			brain = JSONSerializerManager.fromJSON(jsonString, FullEngineState.class);
+		} else
+			return p;
+		try {
+			p = new Prolog(((FullEngineState) brain).getLibraries());
+		} catch (InvalidLibraryException e) {
+			e.printStackTrace();
+		}
+		p.theoryManager.reloadKnowledgeBase((FullEngineState) brain);
+			
+		int i = 0;
+		int n = brain.getNumberAskedResults();
+		if(brain.hasOpenAlternatives()){
+			p.solve(brain.getQuery());
+			while(i<n){
+				try {
+					p.solveNext();
+				} catch (NoMoreSolutionException e) {}
+				i++;
+			}
+		}
+		return p;
+	}
+		
+	//Alberto
+	public String toJSON(boolean alsoKB){
+		AbstractEngineState brain = null;
+		if(alsoKB)
+			brain = new FullEngineState();
+		else
+			brain = new ReducedEngineState();
+		this.theoryManager.serializeKnowledgeBase(brain);
+		this.engineManager.serializeQueryState(brain);
+		return JSONSerializerManager.toJSON(brain);
+	}
 
-
+	
 	/**
 	 * Gets the component managing flags
 	 */
-	public FlagManager getFlagManager() {
+	
+	public FlagManager getFlagManager()
+	{
 		return flagManager;
 	}
 
 	/**
 	 * Gets the component managing theory
 	 */
-	public TheoryManager getTheoryManager() {
+	
+	public TheoryManager getTheoryManager() 
+	{
 		return theoryManager;
 	}
 
 	/**
 	 * Gets the component managing primitives
 	 */
-	public PrimitiveManager getPrimitiveManager() {
+	
+	public PrimitiveManager getPrimitiveManager()
+	{
 		return primitiveManager;
 	}
 
 	/**
 	 * Gets the component managing libraries
 	 */
-	public LibraryManager getLibraryManager() {
+	
+	public ILibraryManager getLibraryManager() 
+	{
 		return libraryManager;
 	}
 
 	/** Gets the component managing operators */
-	public OperatorManager getOperatorManager() {
+	
+	public OperatorManager getOperatorManager() 
+	{
 		return opManager; 
 	}
 
 	/**
 	 * Gets the component managing engine
 	 */
-	public EngineManager getEngineManager() {
+	
+	public EngineManager getEngineManager() 
+	{
 		return engineManager; 
 	}
-
 
 	/**
 	 * Gets the current version of the tuProlog system
 	 */
-	public static String getVersion() {
+	
+	public static String getVersion() 
+	{
 		return alice.util.VersionInfo.getEngineVersion();
 	}
 
     /**
      * Gets the last Element of the path list
      */
-    public String getCurrentDirectory() {
+	
+    public String getCurrentDirectory() 
+    {
         String directory = "";
-        if(absolutePathList.isEmpty()) {
+        
+        if(absolutePathList.isEmpty()) 
+        {
         	if(this.lastPath!=null)
         	{
         		directory = this.lastPath;
@@ -232,7 +390,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
         	{
         		directory = System.getProperty("user.dir");
         	}
-        } else {
+        } 
+        else
+        {
             directory = absolutePathList.get(absolutePathList.size()-1);
         }
 
@@ -242,13 +402,12 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
     /**
      * Sets the last Element of the path list
      */
-    public void setCurrentDirectory(String s) {
+    
+    public void setCurrentDirectory(String s)
+    {
         this.lastPath=s;    
     }
 
-    
-    
-    
 	// theory management interface
 
 	/**
@@ -258,11 +417,12 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @throws InvalidTheoryException if the new theory is not valid
 	 * @see Theory
 	 */
-	public void setTheory(Theory th) throws InvalidTheoryException {	//no syn
+    
+	public void setTheory(Theory th) throws InvalidTheoryException 
+	{   //no syn
 		theoryManager.clear();
 		addTheory(th);
 	}
-
 
 	/**
 	 * Adds (appends) a theory
@@ -271,7 +431,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @throws InvalidTheoryException if the new theory is not valid
 	 * @see Theory
 	 */
-	public void addTheory(Theory th) throws InvalidTheoryException {	//no syn
+	
+	public void addTheory(Theory th) throws InvalidTheoryException 
+	{	//no syn
 		Theory oldTh = getTheory();
 		theoryManager.consult(th, true, null);
 		theoryManager.solveTheoryGoal();
@@ -285,36 +447,45 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @return current(dynamic) theory
 	 */
-	public Theory getTheory() {	//no syn
-		try {
+	
+	public Theory getTheory() 
+	{	//no syn
+		try 
+		{
 			return new Theory(theoryManager.getTheory(true));
-		} catch (Exception ex){
+		} 
+		catch (Exception ex)
+		{
 			return null;
 		}
 	}
-
 
 	/**
 	 * Gets last consulted theory, with the original textual format
 	 *  
 	 * @return theory
 	 */
-	public Theory getLastConsultedTheory() {	//no syn
+	
+	public Theory getLastConsultedTheory()
+	{	//no syn
 		return theoryManager.getLastConsultedTheory();
 	}
-
 
 	/**
 	 * Clears current theory
 	 */
-	public void clearTheory() {	//no syn
-		try {
+	
+	public void clearTheory() 
+	{	//no syn
+		try
+		{
 			setTheory(new Theory());
-		} catch (InvalidTheoryException e) {
+		} 
+		catch (InvalidTheoryException e) 
+		{
 			// this should never happen
 		}
 	}
-
 
 	// libraries management interface
 
@@ -328,7 +499,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @return the reference to the Library just loaded
 	 * @throws InvalidLibraryException if name is not a valid library
 	 */
-	public Library loadLibrary(String className) throws InvalidLibraryException {	//no syn
+	
+	public Library loadLibrary(String className) throws InvalidLibraryException
+	{	//no syn
 		return libraryManager.loadLibrary(className);
 	}
 	
@@ -343,10 +516,11 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @return the reference to the Library just loaded
 	 * @throws InvalidLibraryException if name is not a valid library
 	 */
-	public Library loadLibrary(String className, String[] paths) throws InvalidLibraryException {	//no syn
+	
+	public Library loadLibrary(String className, String[] paths) throws InvalidLibraryException 
+	{	//no syn
 		return libraryManager.loadLibrary(className, paths);
 	}
-
 
 	/**
 	 * Loads a specific instance of a library
@@ -357,20 +531,22 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @param lib the (Java class) name of the library to be loaded
 	 * @throws InvalidLibraryException if name is not a valid library
 	 */
-	public void loadLibrary(Library lib) throws InvalidLibraryException {	//no syn
+	
+	public void loadLibrary(Library lib) throws InvalidLibraryException
+	{	//no syn
 		libraryManager.loadLibrary(lib);
 	}
-
 
 	/**
 	 * Gets the list of current libraries loaded
 	 *
 	 * @return the list of the library names
 	 */
-	public String[] getCurrentLibraries() {		//no syn
+	
+	public String[] getCurrentLibraries() 
+	{   //no syn
 		return libraryManager.getCurrentLibraries();
 	}
-
 
 	/**
 	 * Unloads a previously loaded library
@@ -378,10 +554,11 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @param name of the library to be unloaded
 	 * @throws InvalidLibraryException if name is not a valid loaded library
 	 */
-	public void unloadLibrary(String name) throws InvalidLibraryException {		//no syn
+	
+	public void unloadLibrary(String name) throws InvalidLibraryException
+	{   //no syn
 		libraryManager.unloadLibrary(name);
 	}
-
 
 	/**
 	 * Gets the reference to a loaded library
@@ -390,21 +567,21 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @return the reference to the library loaded, null if the library is
 	 *         not found
 	 */
-	public Library getLibrary(String name) {	//no syn
+	
+	public Library getLibrary(String name) 
+	{	//no syn
 		return libraryManager.getLibrary(name);
 	}
 
-
-	protected Library getLibraryPredicate(String name, int nArgs) {		//no syn
+	protected Library getLibraryPredicate(String name, int nArgs) 
+	{   //no syn
 		return primitiveManager.getLibraryPredicate(name,nArgs);
 	}
 
-
-	protected Library getLibraryFunctor(String name, int nArgs) {		//no syn
+	protected Library getLibraryFunctor(String name, int nArgs)
+	{   //no syn
 		return primitiveManager.getLibraryFunctor(name,nArgs);
 	}
-
-
 
 	// operators management
 
@@ -413,10 +590,11 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 *  @return the list of the operators
 	 */
-	public java.util.List<Operator> getCurrentOperatorList() {	//no syn
+	
+	public java.util.List<Operator> getCurrentOperatorList() 
+	{	//no syn
 		return opManager.getOperators();
 	}
-
 
 	// solve interface
 
@@ -427,8 +605,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @return the result of the demonstration
 	 * @see SolveInfo
 	 **/
-	public SolveInfo solve(Term g) {
-		//System.out.println("ENGINE SOLVE #0: "+g);
+	
+	public SolveInfo solve(Term g) 
+	{
 		if (g == null) return null;
 		
 		SolveInfo sinfo = engineManager.solve(g);
@@ -437,7 +616,6 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 		notifyNewQueryResultAvailable(ev);
 
 		return sinfo;
-
 	}
 
 	/**
@@ -447,12 +625,18 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @return the result of the demonstration
 	 * @see SolveInfo
 	 **/
-	public SolveInfo solve(String st) throws MalformedGoalException {
-		try {
+	
+	public SolveInfo solve(String st) throws MalformedGoalException 
+	{
+		try 
+		{
 			Parser p = new Parser(opManager, st);
 			Term t = p.nextTerm(true);
 			return solve(t);
-		} catch (InvalidTermException ex) {
+		} 
+		catch (InvalidTermException ex)
+		{
+			System.out.println(ex.toString());
 			throw new MalformedGoalException();
 		}
 	}
@@ -464,30 +648,37 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @throws NoMoreSolutionException if no more solutions are present
 	 * @see SolveInfo
 	 **/
-	public SolveInfo solveNext() throws NoMoreSolutionException {
-		if (hasOpenAlternatives()) {
+	
+	public SolveInfo solveNext() throws NoMoreSolutionException 
+	{
+		if (hasOpenAlternatives())
+		{
 			SolveInfo sinfo = engineManager.solveNext();
 			QueryEvent ev = new QueryEvent(this,sinfo);
 			notifyNewQueryResultAvailable(ev);
 			return sinfo;
-		} else
+		}
+		else
 			throw new NoMoreSolutionException();
 	}
 
 	/**
 	 * Halts current solve computation
 	 */
-	public void solveHalt() {
+	
+	public void solveHalt()
+	{
 		engineManager.solveHalt();
 	}
 
 	/**
 	 * Accepts current solution
 	 */
-	public void solveEnd() {	//no syn
+	
+	public void solveEnd() 
+	{	//no syn
 		engineManager.solveEnd();
 	}
-
 
 	/**
 	 * Asks for the presence of open alternatives to be explored
@@ -495,7 +686,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @return true if open alternatives are present
 	 */
-	public boolean hasOpenAlternatives() {		//no syn
+	
+	public boolean hasOpenAlternatives()
+	{	//no syn
 		boolean b =  engineManager.hasOpenAlternatives();
 		return b;
 	}
@@ -505,7 +698,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * 
 	 * @return true if the demonstration was stopped
 	 */
-	public boolean isHalted() {		//no syn
+	
+	public boolean isHalted() 
+	{	//no syn
 		return engineManager.isHalted();
 	}
 
@@ -516,7 +711,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @param t1 second term to be unified
 	 * @return true if the unification was successful
 	 */
-	public boolean match(Term t0, Term t1) {	//no syn
+	
+	public boolean match(Term t0, Term t1) 
+	{	//no syn
 		return t0.match(t1);
 	}
 
@@ -527,7 +724,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @param t1 second term to be unified
 	 * @return true if the unification was successful
 	 */
-	public boolean unify(Term t0, Term t1) {	//no syn
+	
+	public boolean unify(Term t0, Term t1)
+	{	//no syn
 		return t0.unify(this,t1);
 	}
 
@@ -536,10 +735,11 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * 
 	 * @param term term to identify
 	 */
-	public void identifyFunctor(Term term) {	//no syn
+	
+	public void identifyFunctor(Term term) 
+	{	//no syn
 		primitiveManager.identifyFunctor(term);
 	}
-
 
 	/**
 	 * Gets a term from a string, using the operators currently
@@ -549,7 +749,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @return the term parsed from the string
 	 * @throws InvalidTermException if the string does not represent a valid term
 	 */
-	public Term toTerm(String st) throws InvalidTermException {	//no syn
+	
+	public Term toTerm(String st) throws InvalidTermException 
+	{	//no syn
 		return Parser.parseSingleTerm(st, opManager);
 	}
 
@@ -560,26 +762,30 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @param term      the term to be represented as a string
 	 * @return the string representing the term
 	 */
-	public String toString(Term term) {		//no syn
+	
+	public String toString(Term term) 
+	{	//no syn
 		return (term.toStringAsArgY(opManager, OperatorManager.OP_HIGH));
 	}
-
 
 	/**
 	 * Defines a new flag
 	 */
-	public boolean defineFlag(String name, Struct valueList, Term defValue, boolean modifiable, String libName) {
+	
+	public boolean defineFlag(String name, Struct valueList, Term defValue, boolean modifiable, String libName)
+	{
 		return flagManager.defineFlag(name,valueList,defValue,modifiable,libName);
 	}
 
-
-	// spy interface ----------------------------------------------------------
+	// spy interface
 
 	/**
 	 * Switches on/off the notification of spy information events
 	 * @param state  - true for enabling the notification of spy event
 	 */
-	public synchronized void setSpy(boolean state) {
+	
+	public synchronized void setSpy(boolean state) 
+	{
 		spy = state;
 	}
 
@@ -587,16 +793,20 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * Checks the spy state of the engine
 	 * @return  true if the engine emits spy information
 	 */
-	public synchronized boolean isSpy() {
+	
+	public synchronized boolean isSpy() 
+	{
 		return spy;
 	}
-
 
 	/**
 	 * Notifies a spy information event
 	 */
-	protected synchronized void spy(String s) {
-		if (spy) {
+	
+	protected synchronized void spy(String s)
+	{
+		if (spy) 
+		{
 			notifySpy(new SpyEvent(this, s));
 		}
 	}
@@ -605,26 +815,31 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * Notifies a spy information event
 	 * @param s TODO
 	 */
-	protected synchronized void spy(String s, Engine e) {
-		//System.out.println("spy: "+i+"  "+s+"  "+g);
-		if (spy) {
+	
+	protected synchronized void spy(String s, Engine e)
+	{
+		if (spy)
+		{
 			ExecutionContext ctx = e.currentContext;
 			int i=0;
 			String g = "-";
-			if (ctx.fatherCtx != null){
+			if (ctx.fatherCtx != null)
+			{
 				i = ctx.depth-1;
 				g = ctx.fatherCtx.currentGoal.toString();
 			}
+			
 			notifySpy(new SpyEvent(this, e, "spy: " + i + "  " + s + "  " + g));
 		}
 	}
-
 
 	/**
 	 * Switches on/off the notification of warning information events
 	 * @param state  - true for enabling warning information notification
 	 */
-	public synchronized void setWarning(boolean state) {
+	
+	public synchronized void setWarning(boolean state)
+	{
 		warning = state;
 	}
 
@@ -632,7 +847,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * Checks if warning information are notified
 	 * @return  true if the engine emits warning information
 	 */
-	public synchronized boolean isWarning() {
+	
+	public synchronized boolean isWarning() 
+	{
 		return warning;
 	}
 
@@ -642,10 +859,12 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @param m the warning message
 	 */
-	public void warn(String m) {
-		if (warning){
+	
+	public void warn(String m) 
+	{
+		if (warning)
+		{
 			notifyWarning(new WarningEvent(this, m));
-			//log.warn(m);
 		}
 	}
 
@@ -656,39 +875,47 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @param m the exception message
 	 */
-	public void exception(String m) {
-		if (exception){
+	
+	public void exception(String m)
+	{
+		if (exception)
+		{
 			notifyException(new ExceptionEvent(this, m));
 		}
 	}
-	/**/
 
 	/*Castagna 06/2011*/
+	
 	/**
 	 * Checks if exception information are notified
 	 * @return  true if the engine emits exception information
 	 */
-	public synchronized boolean isException() {
+	
+	public synchronized boolean isException()
+	{
 		return exception;
 	}
-	/**/
 
 	/*Castagna 06/2011*/
+	
 	/**
 	 * Switches on/off the notification of exception information events
 	 * @param state  - true for enabling exception information notification
 	 */
-	public synchronized void setException(boolean state) {
+	
+	public synchronized void setException(boolean state)
+	{
 		exception = state;
 	}
-	/**/
 
 	/**
 	 * Produces an output information event
 	 *
 	 * @param m the output string
 	 */
-	public synchronized void stdOutput(String m) {
+	
+	public synchronized void stdOutput(String m) 
+	{
 		notifyOutput(new OutputEvent(this, m));
 	}
 
@@ -699,17 +926,19 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @param l the listener
 	 */
-	public synchronized void addOutputListener(OutputListener l) {
+	public synchronized void addOutputListener(OutputListener l) 
+	{
 		outputListeners.add(l);
 	}
-
 
 	/**
 	 * Adds a listener to theory events
 	 *
 	 * @param l the listener
 	 */
-	public synchronized void addTheoryListener(TheoryListener l) {
+	
+	public synchronized void addTheoryListener(TheoryListener l) 
+	{
 		theoryListeners.add(l);
 	}
 
@@ -718,7 +947,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @param l the listener
 	 */
-	public synchronized void addLibraryListener(LibraryListener l) {
+	
+	public synchronized void addLibraryListener(LibraryListener l)
+	{
 		libraryListeners.add(l);
 	}
 
@@ -727,7 +958,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @param l the listener
 	 */
-	public synchronized void addQueryListener(QueryListener l) {
+	
+	public synchronized void addQueryListener(QueryListener l) 
+	{
 		queryListeners.add(l);
 	}
 
@@ -736,7 +969,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @param l the listener
 	 */
-	public synchronized void addSpyListener(SpyListener l) {
+	
+	public synchronized void addSpyListener(SpyListener l) 
+	{
 		spyListeners.add(l);
 	}
 
@@ -745,34 +980,42 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @param l the listener
 	 */
-	public synchronized void addWarningListener(WarningListener l) {
+	
+	public synchronized void addWarningListener(WarningListener l)
+	{
 		warningListeners.add(l);
 	}
 
-	/*Castagna 06/2011*/	
+	/*Castagna 06/2011*/
+	
 	/**
 	 * Adds a listener to exception events
 	 *
 	 * @param l the listener
 	 */
-	public synchronized void addExceptionListener(ExceptionListener l) {
+	
+	public synchronized void addExceptionListener(ExceptionListener l)
+	{
 		exceptionListeners.add(l);
 	}
-	/**/
 
 	/**
 	 * Removes a listener to ouput events
 	 *
 	 * @param l the listener
 	 */
-	public synchronized void removeOutputListener(OutputListener l) {
+	
+	public synchronized void removeOutputListener(OutputListener l)
+	{
 		outputListeners.remove(l);
 	}
 
 	/**
 	 * Removes all output event listeners
 	 */
-	public synchronized void removeAllOutputListeners() {
+	
+	public synchronized void removeAllOutputListeners()
+	{
 		outputListeners.clear();
 	}
 
@@ -781,7 +1024,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @param l the listener
 	 */
-	public synchronized void removeTheoryListener(TheoryListener l) {
+	
+	public synchronized void removeTheoryListener(TheoryListener l)
+	{
 		theoryListeners.remove(l);
 	}
 
@@ -790,7 +1035,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @param l the listener
 	 */
-	public synchronized void removeLibraryListener(LibraryListener l) {
+	
+	public synchronized void removeLibraryListener(LibraryListener l) 
+	{
 		libraryListeners.remove(l);
 	}
 
@@ -799,24 +1046,29 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @param l the listener
 	 */
-	public synchronized void removeQueryListener(QueryListener l) {
+	
+	public synchronized void removeQueryListener(QueryListener l) 
+	{
 		queryListeners.remove(l);
 	}
-
 
 	/**
 	 * Removes a listener to spy events
 	 *
 	 * @param l the listener
 	 */
-	public synchronized void removeSpyListener(SpyListener l) {
+	
+	public synchronized void removeSpyListener(SpyListener l)
+	{
 		spyListeners.remove(l);
 	}
 
 	/**
 	 * Removes all spy event listeners
 	 */
-	public synchronized void removeAllSpyListeners() {
+	
+	public synchronized void removeAllSpyListeners()
+	{
 		spyListeners.clear();
 	}
 
@@ -825,41 +1077,50 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @param l the listener
 	 */
-	public synchronized void removeWarningListener(WarningListener l) {
+	
+	public synchronized void removeWarningListener(WarningListener l) 
+	{
 		warningListeners.remove(l);
 	}
 
 	/**
 	 * Removes all warning event listeners
 	 */
-	public synchronized void removeAllWarningListeners() {
+	public synchronized void removeAllWarningListeners()
+	{
 		warningListeners.clear();
 	}
 
 	/* Castagna 06/2011*/	
+	
 	/**
 	 * Removes a listener to exception events
 	 *
 	 * @param l the listener
 	 */
-	public synchronized void removeExceptionListener(ExceptionListener l) {
+	
+	public synchronized void removeExceptionListener(ExceptionListener l) 
+	{
 		exceptionListeners.remove(l);
-	}
-	/**/	
+	}	
 
-	/*Castagna 06/2011*/	
+	/*Castagna 06/2011*/
+	
 	/**
 	 * Removes all exception event listeners
 	 */
-	public synchronized void removeAllExceptionListeners() {
+	
+	public synchronized void removeAllExceptionListeners()
+	{
 		exceptionListeners.clear();
 	}
-	/**/
 
 	/**
 	 * Gets a copy of current listener list to output events
 	 */
-	public synchronized List<OutputListener> getOutputListenerList() {
+	
+	public synchronized List<OutputListener> getOutputListenerList() 
+	{
 		return new ArrayList<OutputListener>(outputListeners);
 	}
 
@@ -867,25 +1128,31 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * Gets a copy of current listener list to warning events
 	 *
 	 */
-	public synchronized List<WarningListener> getWarningListenerList() {
+	
+	public synchronized List<WarningListener> getWarningListenerList() 
+	{
 		return new ArrayList<WarningListener>(warningListeners);
 	}
 
 	/*Castagna 06/2011*/	
+	
 	/**
 	 * Gets a copy of current listener list to exception events
 	 *
 	 */
-	public synchronized List<ExceptionListener> getExceptionListenerList() {
+	
+	public synchronized List<ExceptionListener> getExceptionListenerList() 
+	{
 		return new ArrayList<ExceptionListener>(exceptionListeners);
 	}
-	/**/
 	
 	/**
 	 * Gets a copy of current listener list to spy events
 	 *
 	 */
-	public synchronized List<SpyListener> getSpyListenerList() {
+	
+	public synchronized List<SpyListener> getSpyListenerList() 
+	{
 		return new ArrayList<SpyListener>(spyListeners);
 	}
 
@@ -893,7 +1160,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * Gets a copy of current listener list to theory events
 	 * 
 	 */
-	public synchronized List<TheoryListener> getTheoryListenerList() {
+	
+	public synchronized List<TheoryListener> getTheoryListenerList() 
+	{
 		return new ArrayList<TheoryListener>(theoryListeners);
 	}
 
@@ -901,7 +1170,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * Gets a copy of current listener list to library events
 	 *
 	 */
-	public synchronized List<LibraryListener> getLibraryListenerList() {
+	
+	public synchronized List<LibraryListener> getLibraryListenerList() 
+	{
 		return new ArrayList<LibraryListener>(libraryListeners);
 	}
 
@@ -909,7 +1180,9 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * Gets a copy of current listener list to query events
 	 *
 	 */
-	public synchronized List<QueryListener> getQueryListenerList() {
+	
+	public synchronized List<QueryListener> getQueryListenerList() 
+	{
 		return new ArrayList<QueryListener>(queryListeners);
 	}
 
@@ -920,8 +1193,11 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @param e the event
 	 */
-	protected void notifyOutput(OutputEvent e) {
-		for(OutputListener ol:outputListeners){
+	
+	protected void notifyOutput(OutputEvent e) 
+	{
+		for(OutputListener ol:outputListeners)
+		{
 			ol.onOutput(e);
 		}
 	}
@@ -931,8 +1207,11 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @param e the event
 	 */
-	protected void notifySpy(SpyEvent e) {
-		for(SpyListener sl:spyListeners){
+	
+	protected void notifySpy(SpyEvent e)
+	{
+		for(SpyListener sl:spyListeners)
+		{
 			sl.onSpy(e);
 		}
 	}
@@ -942,24 +1221,30 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @param e the event
 	 */
-	protected void notifyWarning(WarningEvent e) {
-		for(WarningListener wl:warningListeners){
+	
+	protected void notifyWarning(WarningEvent e)
+	{
+		for(WarningListener wl:warningListeners)
+		{
 			wl.onWarning(e);
 		}
 	}
 
-	/*Castagna 06/2011*/	
+	/*Castagna 06/2011*/
+	
 	/**
 	 * Notifies a exception information event
 	 *
 	 * @param e the event
 	 */
-	protected void notifyException(ExceptionEvent e) {
-		for(ExceptionListener el:exceptionListeners){
+	
+	protected void notifyException(ExceptionEvent e)
+	{
+		for(ExceptionListener el:exceptionListeners)
+		{
 			el.onException(e);
 		}
 	}
-	/**/
 	
 	//
 
@@ -968,8 +1253,11 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * 
 	 * @param e the event
 	 */
-	protected void notifyChangedTheory(TheoryEvent e) {
-		for (TheoryListener tl : theoryListeners) {
+	
+	protected void notifyChangedTheory(TheoryEvent e)
+	{
+		for (TheoryListener tl : theoryListeners)
+		{
 			tl.theoryChanged(e);
 		}
 	}
@@ -979,8 +1267,11 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * 
 	 * @param e the event
 	 */
-	protected void notifyLoadedLibrary(LibraryEvent e) {
-		for(LibraryListener ll:libraryListeners){
+	
+	protected void notifyLoadedLibrary(LibraryEvent e)
+	{
+		for(LibraryListener ll:libraryListeners)
+		{
 			ll.libraryLoaded(e);
 		}
 	}
@@ -990,8 +1281,11 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * 
 	 * @param e the event
 	 */
-	protected void notifyUnloadedLibrary(LibraryEvent e) {
-		for(LibraryListener ll:libraryListeners){
+	
+	protected void notifyUnloadedLibrary(LibraryEvent e)
+	{
+		for(LibraryListener ll:libraryListeners)
+		{
 			ll.libraryUnloaded(e);
 		}
 	}
@@ -1001,18 +1295,22 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * 
 	 * @param e the event
 	 */
-	protected void notifyNewQueryResultAvailable(QueryEvent e) {
-		for(QueryListener ql:queryListeners){
+	
+	protected void notifyNewQueryResultAvailable(QueryEvent e) 
+	{
+		for(QueryListener ql:queryListeners)
+		{
 			ql.newQueryResultAvailable(e);
 		}
 	}
-
 
     /**
      * Append a new path to directory list
      *
      */
-    public void pushDirectoryToList(String path) {
+	
+    public void pushDirectoryToList(String path)
+    {
         absolutePathList.add(path);
     }
 
@@ -1020,32 +1318,107 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
      *
      * Retract an element from directory list
      */
-    public void popDirectoryFromList() {
-        if(!absolutePathList.isEmpty()) {
+    
+    public void popDirectoryFromList() 
+    {
+        if(!absolutePathList.isEmpty()) 
+        {
             absolutePathList.remove(absolutePathList.size()-1);
         }
     }
 
-     /**
-       *
-       * Reset directory list
-      */
-    public void resetDirectoryList(String path) {
+    public void resetDirectoryList(String path) 
+    {
         absolutePathList = new ArrayList<String>();
         absolutePathList.add(path);
     }
     
-    public Term termSolve(String st){
-		try{
+    public Term termSolve(String st)
+    {
+		try
+		{
 			Parser p = new Parser(opManager, st);
 			Term t = p.nextTerm(true);
 			return t;
-		}catch(InvalidTermException e)
+		}
+		catch(InvalidTermException e)
 		{
 			String s = "null";
 			Term t = Term.createTerm(s);
 			return t;
 		}
 	}
-
+    
+    final public void spawn()
+    {
+    	if(this.canSpawn)
+    		new PrologThread(this).run();
+    }
+    
+    private void body()
+    {
+    	try 
+        {
+            if (theoryText == null)
+            {
+                this.setTheory(new Theory(theoryInputStream));
+            } 
+            else 
+            {
+                this.setTheory(new Theory(theoryText));
+            }
+            if (goalText != null)
+            {
+                this.solve(goalText);
+            }
+        } 
+    	catch (Exception ex)
+    	{
+            System.err.println("invalid theory or goal.");
+            ex.printStackTrace();
+        }
+    }
+    
+    final class PrologThread extends Thread 
+    {
+        Prolog prolog;
+        
+        PrologThread(Prolog prolog)
+        {
+            this.prolog = prolog;
+        }
+        
+        final public void run()
+        {
+            prolog.body();
+        }
+    }
+    
+    public static void main(String args[])
+    {
+        if (args.length == 1 || args.length == 2)
+        {
+        	try 
+        	{
+                String text = Tools.loadText(args[0]);
+                if (args.length == 1)
+                {
+                    new Prolog(text).spawn();
+                } 
+                else 
+                {
+                    new Prolog(text,args[1]).spawn();
+                }
+            } 
+        	catch (Exception ex)
+        	{
+                System.err.println("invalid theory.");
+            }
+        } 
+        else 
+        {
+            System.err.println("args: <theory file> { goal }");
+            System.exit(-1);
+        }
+    }
 }

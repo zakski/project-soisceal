@@ -17,6 +17,9 @@
  */
 package alice.tuprolog.event;
 
+import alice.tuprolog.interfaces.event.LibraryListener;
+import alice.tuprolog.interfaces.event.QueryListener;
+import alice.tuprolog.interfaces.event.TheoryListener;
 
 /**
  * 

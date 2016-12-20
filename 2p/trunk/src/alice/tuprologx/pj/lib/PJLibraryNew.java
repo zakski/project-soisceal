@@ -22,14 +22,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
+import alice.tuprologx.pj.annotations.*;
 import alice.tuprolog.Int;
 import alice.tuprolog.Number;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 import alice.tuprolog.Var;
-
-import alice.tuprologx.pj.annotations.*;
-
+import alice.tuprolog.exceptions.InvalidObjectIdException;
 import alice.tuprolog.lib.*;
 
 

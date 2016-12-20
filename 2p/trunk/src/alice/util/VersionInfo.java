@@ -2,7 +2,7 @@ package alice.util;
 
 public class VersionInfo
 {
-	private static final String ENGINE_VERSION = "3.0";
+	private static final String ENGINE_VERSION = "4.0_beta";
 	private static final String JAVA_SPECIFIC_VERSION = "0";
 	private static final String NET_SPECIFIC_VERSION = "0";
 	
@@ -14,6 +14,7 @@ public class VersionInfo
 	public static String getPlatform()
 	{
 		String vmName = System.getProperty("java.vm.name");
+		
 		if(vmName.contains("Java")) //"Java HotSpot(TM) Client VM"
 			return "Java";
 		else if(vmName.equals("IKVM.NET"))
@@ -25,6 +26,7 @@ public class VersionInfo
 	public static String getSpecificVersion()
 	{
 		String vmName = System.getProperty("java.vm.name");
+		
 		if(vmName.contains("Java")) //"Java HotSpot(TM) Client VM"
 			return JAVA_SPECIFIC_VERSION;
 		else if(vmName.equals("IKVM.NET"))
@@ -37,7 +39,4 @@ public class VersionInfo
 	{
 		return getEngineVersion() + "." + getSpecificVersion();
 	}
-	
-	/* Ant Task Implementation (for the the build file */
-	
 }

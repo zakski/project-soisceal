@@ -2,6 +2,9 @@ package alice.tuprologx.spyframe;
 
 import alice.tuprolog.*;
 import alice.tuprolog.event.*;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.interfaces.event.SpyListener;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;

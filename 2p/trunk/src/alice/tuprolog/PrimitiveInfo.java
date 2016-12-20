@@ -19,6 +19,8 @@ package alice.tuprolog;
 
 import java.lang.reflect.*;
 
+import alice.tuprolog.interfaces.IPrimitives;
+
 
 /**
  * Primitive class
@@ -69,7 +71,6 @@ public class PrimitiveInfo {
         return key;
     }
     
-    
     public String getKey() {
         return primitive_key;
     }
@@ -95,7 +96,6 @@ public class PrimitiveInfo {
         return source;
     }
     
-    
     /**
      * evaluates the primitive as a directive
      * @throws InvocationTargetException 
@@ -109,7 +109,6 @@ public class PrimitiveInfo {
         method.invoke(source,primitive_args);
     }
     
-    
     /**
      * evaluates the primitive as a predicate
      * @throws Exception if invocation primitive failure
@@ -119,14 +118,11 @@ public class PrimitiveInfo {
             primitive_args[i] = g.getArg(i);
         }
         try {
-        	//System.out.println("PRIMITIVE INFO evalAsPredicate sto invocando metodo "+method.getName());
             return ((Boolean)method.invoke(source,primitive_args)).booleanValue();
         } catch (InvocationTargetException e) {
-            // throw new Exception(e.getCause());
             throw e.getCause();
         }
     }
-    
     
     /**
      * evaluates the primitive as a functor
@@ -142,8 +138,6 @@ public class PrimitiveInfo {
             throw ex.getCause();
         }
     }
-    
-    
     
     public String toString() {
         return "[ primitive: method "+method.getName()+" - "+primitive_args+" - N args: "+primitive_args.length+" - "+source.getClass().getName()+" ]\n";

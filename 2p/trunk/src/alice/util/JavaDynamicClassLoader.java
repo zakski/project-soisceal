@@ -63,9 +63,7 @@ public class JavaDynamicClassLoader extends AbstractDynamicClassLoader
 					result = super.loadClass(className);
 				}
 	            return result;  
-	    	} catch (Exception e) {
-//	    		e.printStackTrace();
-	    	}
+	    	} catch (Exception e){}
 	    }
 	    throw new ClassNotFoundException(className);
 	}  

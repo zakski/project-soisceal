@@ -117,5 +117,4 @@ class FlagManager {
         }
         return false;
     }
-
 }

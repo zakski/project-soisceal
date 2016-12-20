@@ -4,9 +4,9 @@ import alice.tuprolog.Library;
 import alice.tuprolog.SolveInfo;
 import alice.tuprolog.Term;
 import alice.tuprolog.Theory;
-import alice.tuprolog.event.ExceptionListener;
-import alice.tuprolog.event.OutputListener;
-import alice.tuprolog.event.SpyListener;
+import alice.tuprolog.interfaces.event.ExceptionListener;
+import alice.tuprolog.interfaces.event.OutputListener;
+import alice.tuprolog.interfaces.event.SpyListener;
 
 /**
  * @author  ale

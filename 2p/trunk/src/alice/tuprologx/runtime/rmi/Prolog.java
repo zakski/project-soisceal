@@ -1,5 +1,9 @@
 package alice.tuprologx.runtime.rmi;
 import alice.tuprolog.*;
+import alice.tuprolog.exceptions.InvalidLibraryException;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.exceptions.MalformedGoalException;
+import alice.tuprolog.exceptions.NoMoreSolutionException;
 
 /**
  * @author  ale

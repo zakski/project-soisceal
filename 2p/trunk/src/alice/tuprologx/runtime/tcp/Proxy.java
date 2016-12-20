@@ -1,7 +1,12 @@
 package alice.tuprologx.runtime.tcp;
-import alice.tuprolog.*;
 import  java.io.*;
 import  java.net.*;
+
+import alice.tuprolog.*;
+import alice.tuprolog.exceptions.InvalidLibraryException;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.exceptions.MalformedGoalException;
+import alice.tuprolog.exceptions.NoSolutionException;
 
 public class Proxy implements alice.tuprologx.runtime.tcp.Prolog {
 

@@ -15,9 +15,13 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
 
 import java.util.*;
+
+import alice.tuprolog.exceptions.InvalidTermException;
+import alice.tuprolog.interfaces.TermVisitor;
 
 /**
  *
@@ -31,6 +35,7 @@ import java.util.*;
  * Reviewed by Paolo Contessi: implements Comparable<Number>
  */
 public abstract class Number extends Term implements Comparable<Number> {
+	
 	private static final long serialVersionUID = 1L;
     
     /**
@@ -59,8 +64,6 @@ public abstract class Number extends Term implements Comparable<Number> {
     
     /** is this term a prolog real term? */
     public abstract boolean isReal();
-    
-    //
     
     /** is an int Integer number? 
      * @deprecated Use <tt>instanceof Int</tt> instead. */
@@ -108,8 +111,6 @@ public abstract class Number extends Term implements Comparable<Number> {
         return this;
     }
     
-    // checking type and properties of the Term
-    
     /** is this term a prolog numeric term? */
     final public boolean isNumber() {
         return true;
@@ -128,8 +129,6 @@ public abstract class Number extends Term implements Comparable<Number> {
     final public boolean isEmptyList() {
         return false;
     }
-    
-    //
     
     /** is this term a constant prolog term? */
     final public boolean isAtomic() {
@@ -156,15 +155,17 @@ public abstract class Number extends Term implements Comparable<Number> {
         return true;
     }
     
-    
-    //
-    
     /**
      * gets a copy of this term.
      */
     public Term copy(int idExecCtx) {
         return this;
     }
+    
+    @Override //Alberto
+    public Term copyAndRetainFreeVar(AbstractMap<Var,Var> vMap, int idExecCtx) {
+		return this;
+	}
     
     /**
      * gets a copy (with renamed variables) of the term.
@@ -176,6 +177,10 @@ public abstract class Number extends Term implements Comparable<Number> {
         return this;
     }
     
+    Term copyClone(AbstractMap<Var,Var> vMap, int idExecCtx) {
+        return this;
+    }
+    
     /**
      * gets a copy of the term.
      */
@@ -183,22 +188,17 @@ public abstract class Number extends Term implements Comparable<Number> {
         return this;
     }
     
-    
     long resolveTerm(long count) {
         return count;
     }
     
-    /**
-     *
-     */
     public void free() {}
     
     void restoreVariables() {}
     
-/*Castagna 06/2011*/
+    /*Castagna 06/2011*/
     @Override    
     public void accept(TermVisitor tv) {		 
     	tv.visit(this);		 
     }
-/**/
 }

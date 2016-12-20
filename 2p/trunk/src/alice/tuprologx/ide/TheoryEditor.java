@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
 
-import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.Theory;
 

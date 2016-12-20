@@ -15,10 +15,13 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import alice.tuprolog.exceptions.InvalidTermException;
 
 /**
  * This class represents an iterator of terms from Prolog text embedded
@@ -31,7 +34,9 @@ import java.util.NoSuchElementException;
  * of already produced terms.
  */
 class TermIterator implements Iterator<Term>, java.io.Serializable {
+	
 	private static final long serialVersionUID = 1L;
+	
     private Parser parser;
     private boolean hasNext;
     private Term next;

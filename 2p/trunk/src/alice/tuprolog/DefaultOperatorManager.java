@@ -15,6 +15,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
 
 /**
@@ -22,8 +23,11 @@ package alice.tuprolog;
  *  some standard operators defined
  *
  */
+
 class DefaultOperatorManager extends OperatorManager {
+	
 	private static final long serialVersionUID = 1L;
+	
     public DefaultOperatorManager() {
         opNew(":-", "xfx", 1200);
         opNew("-->", "xfx", 1200);
@@ -38,8 +42,6 @@ class DefaultOperatorManager extends OperatorManager {
         opNew("\\=", "xfx", 700);
         opNew("==", "xfx", 700);
         opNew("\\==", "xfx", 700);
-        //opNew("@==","xfx",700);
-        //opNew("@\\==","xfx",700);
         opNew("@>", "xfx", 700);
         opNew("@<", "xfx", 700);
         opNew("@=<", "xfx", 700);
@@ -52,8 +54,6 @@ class DefaultOperatorManager extends OperatorManager {
         opNew(">=", "xfx", 700);
         opNew("is", "xfx", 700);
         opNew("=..", "xfx", 700);
-        //opNew("?","xfx",600);
-        //opNew("@","xfx",550);
         opNew("+", "yfx", 500);
         opNew("-", "yfx", 500);
         opNew("/\\", "yfx", 500);

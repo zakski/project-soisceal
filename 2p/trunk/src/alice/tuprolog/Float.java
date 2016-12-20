@@ -17,7 +17,6 @@
  */
 package alice.tuprolog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,8 +27,13 @@ import java.util.List;
  *
  */
 public class Float extends Number {
+	
 	private static final long serialVersionUID = 1L;
-    private float value;
+	
+	@SuppressWarnings("unused")
+	private String type = "Float";
+    
+	private float value;
     
     public Float(float v) {
         value=v;
@@ -142,31 +146,6 @@ public class Float extends Number {
             return false;
         }
     }
-    public boolean isGreaterRelink(Term t, ArrayList<String> vorder) {
-        t = t.getTerm();
-        if (t instanceof Number) {
-            return value>((Number)t).floatValue();
-        } else if (t instanceof Struct) {
-            return false;
-        } else if (t instanceof Var) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * Returns true if this Float term is equal that the term provided.
-     * For number term argument, the int value is considered.
-     */
-    public boolean isEqual(Term t) {
-        t = t.getTerm();
-        if (t instanceof Number) {
-            return value == ( (Number) t ).floatValue();
-        } else {
-            return false;
-        }
-    }
     
     /**
      * Tries to unify a term with the provided term argument.
@@ -193,5 +172,4 @@ public class Float extends Number {
     public int compareTo(Number o) {
         return (new java.lang.Float(value)).compareTo(o.floatValue());
     }
-    
 }

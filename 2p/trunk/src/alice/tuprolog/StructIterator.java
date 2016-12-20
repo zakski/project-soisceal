@@ -15,6 +15,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
 
 import java.util.NoSuchElementException;
@@ -25,7 +26,9 @@ import java.util.NoSuchElementException;
  * @see Struct
  */
 class StructIterator implements java.util.Iterator<Term>, java.io.Serializable {
+	
 	private static final long serialVersionUID = 1L;
+	
     Struct list;
     
     StructIterator(Struct t) {
@@ -50,5 +53,4 @@ class StructIterator implements java.util.Iterator<Term>, java.io.Serializable {
     public void remove() {
         throw new UnsupportedOperationException();
     }
-    
 }

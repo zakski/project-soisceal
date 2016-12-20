@@ -38,8 +38,8 @@ import alice.tuprolog.Number;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 import alice.tuprolog.Var;
-
-import alice.tuprolog.lib.*;
+import alice.tuprolog.exceptions.InvalidObjectIdException;
+//import alice.tuprolog.lib.*;
 
 /**
  *

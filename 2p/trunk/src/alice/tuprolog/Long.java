@@ -15,9 +15,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,8 +28,13 @@ import java.util.List;
  *
  */
 public class Long extends Number {
-   private static final long serialVersionUID = 1L;
-   private long value;
+   
+	private static final long serialVersionUID = 1L;
+	
+	@SuppressWarnings("unused")
+	private String type = "Long";
+   
+	private long value;
     
     public Long(long v) {
         value = v;
@@ -142,31 +147,6 @@ public class Long extends Number {
             return false;
         }
     }
-    public boolean isGreaterRelink(Term t, ArrayList<String> vorder) {
-        t = t.getTerm();
-        if (t instanceof Number) {
-            return value > ( (Number) t ).longValue();
-        } else if (t instanceof Struct) {
-            return false;
-        } else if (t instanceof Var) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    /**
-     * Returns true if this integer term is equal that the term provided.
-     * For number term argument, the int value is considered.
-     */
-    public boolean isEqual(Term t) {
-        t = t.getTerm();
-        if (t instanceof Number) {
-            return value == ( (Number) t ).longValue();
-        } else {
-            return false;
-        }
-    }
     
     /**
      * Tries to unify a term with the provided term argument.
@@ -193,5 +173,4 @@ public class Long extends Number {
     public int compareTo(Number o) {
         return (new java.lang.Long(value)).compareTo(o.longValue());
     }
-    
 }

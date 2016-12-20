@@ -5,8 +5,9 @@
 
 package alice.tuprolog;
 
-import alice.util.OneWayList;
 import java.util.List;
+
+import alice.util.OneWayList;
 
 /**
  * ClausesFilter has the aim to reduce the number of clauses
@@ -27,6 +28,7 @@ import java.util.List;
  * @since 2.2
  */
 class ClausesFilter {
+	
     public static boolean OPTIMIZATION_ENABLED = true;
 
     /**
@@ -209,7 +211,6 @@ class ClausesFilter {
                 }
             }
         }
-
         return result;
     }
     
