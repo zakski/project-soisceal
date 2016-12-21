@@ -20,6 +20,7 @@ package alice.tuprolog;
 
 import java.io.Serializable;
 import java.util.AbstractMap;
+//import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Collection;
 import java.util.IdentityHashMap;
@@ -42,8 +43,10 @@ public abstract class Term implements Serializable {
 
     // true and false constants
     public static final Term TRUE  = new Struct("true");
-    public static final Term FALSE = new Struct("false");
+    public static final Term FALSE = new Struct("false");   
     
+    //boolean isCyclic = false; //Alberto -> da usare quando si supporteranno i termini ciclici
+     
     // checking type and properties of the Term
     
     /**
@@ -369,7 +372,7 @@ public abstract class Term implements Serializable {
 	public String toJSON(){
 		return JSONSerializerManager.toJSON(this);
 	}
-			
+		
 	//Alberto
 	public static Term fromJSON(String jsonString){
 		if(jsonString.contains("Var")) {

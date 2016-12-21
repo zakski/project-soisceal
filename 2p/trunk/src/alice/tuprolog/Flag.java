@@ -28,7 +28,7 @@ class Flag implements java.io.Serializable {
 	
     private String name;
     private Struct valueList;
-    private Term   value;
+    protected Term   value;
     private Term   defaultValue;
     private boolean modifiable;
     private String  libraryName;
