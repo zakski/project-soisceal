@@ -10,12 +10,12 @@
 
 			<echo>Compiling classes...</echo>
 			<!-- Elimina la precendente build -->
-			<delete dir="@{classes-dir}"/>
+			<!--<delete dir="@{classes-dir}"/> -->
 			<mkdir dir="@{classes-dir}"/>
 
 			<!-- Compila i file .java -->
 			<javac
-			fork="yes" executable="@{jdk-home}/bin/javac.exe"
+			fork="yes" executable="@{jdk-home}"
 			destdir="@{classes-dir}" debug="${javac.debug}"
 			deprecation="false" optimize="${javac.optimize}" 
 			failonerror="true" includeantruntime="false">
@@ -34,45 +34,47 @@
 		</sequential>
 	</macrodef>
 
-<!-- Compila i sorgenti dei test (?) -->
-<macrodef name="m-compile-java-tests">
-	<sequential>
-
-		
-		<!-- Elimina la precendente build -->
-		<delete includeemptydirs="true">
-			<fileset dir="${java.build.tests.dir}" includes="**/*"/>
-		</delete>
-
-		<!-- Crea un po' di directory dove inserire i file compilati -->
-		<mkdir dir="${java.build.tests.dir}"/>
-		<mkdir dir="${java.build.tests.dir}/unit"/>
-		<mkdir dir="${java.build.tests.dir}/concordion"/>
-		<mkdir dir="${java.build.tests.dir}/concordion/classes"/>
-		
-		<echo>Building unit tests...</echo>
-		<!-- Compila i file dei test unit -->
-		<javac
-		fork="yes" executable="${java.jdk.home}/bin/javac.exe"
-		destdir="${java.build.tests.dir}/unit" debug="${javac.debug}" 
-		deprecation="false" optimize="${javac.optimize}" failonerror="true" includeantruntime="false">
-			<src path="${java.test.dir}/unit"/>
-			<classpath refid="ant-classpath"/>
-			<classpath location="${java.build.classes.dir}"/>
-		</javac>
-		
-		<echo>Building concordion tests</echo>
-		<!-- Compila i file dei test concordion -->
-		<javac
-		fork="yes" executable="${java.jdk.home}/bin/javac.exe"
-		destdir="${java.build.tests.dir}/concordion/classes" debug="yes" 
-		deprecation="false" optimize="yes" failonerror="true" includeantruntime="no">
-			<src path="${java.test.dir}/concordiontests"/>
-			<src path="${java.src.dir}"/>
-			<classpath refid="compile-classpath"/>
-		</javac>
-	</sequential>
-</macrodef>
+	<!-- Compila i sorgenti dei test (?) -->
+	<macrodef name="m-compile-java-tests">
+		<sequential>
+	
+			
+			<!-- Elimina la precendente build -->
+			<!--
+			<delete includeemptydirs="true">
+				<fileset dir="${java.build.tests.dir}" includes="**/*"/>
+			</delete>
+			-->
+			
+			<!-- Crea un po' di directory dove inserire i file compilati -->
+			<mkdir dir="${java.build.tests.dir}"/>
+			<mkdir dir="${java.build.tests.dir}/unit"/>
+			<mkdir dir="${java.build.tests.dir}/concordion"/>
+			<mkdir dir="${java.build.tests.dir}/concordion/classes"/>
+			
+			<echo>Building unit tests...</echo>
+			<!-- Compila i file dei test unit -->
+			<javac
+			fork="yes" executable="${java.jdk.home}"
+			destdir="${java.build.tests.dir}/unit" debug="${javac.debug}" 
+			deprecation="false" optimize="${javac.optimize}" failonerror="true" includeantruntime="false">
+				<src path="${java.test.dir}/unit"/>
+				<classpath refid="ant-classpath"/>
+				<classpath location="${java.build.classes.dir}"/>
+			</javac>
+			
+			<echo>Building concordion tests</echo>
+			<!-- Compila i file dei test concordion -->
+			<javac
+			fork="yes" executable="${java.jdk.home}"
+			destdir="${java.build.tests.dir}/concordion/classes" debug="yes" 
+			deprecation="false" optimize="yes" failonerror="true" includeantruntime="no">
+				<src path="${java.test.dir}/concordiontests"/>
+				<src path="${java.src.dir}"/>
+				<classpath refid="compile-classpath"/>
+			</javac>
+		</sequential>
+	</macrodef>
 
 	<macrodef name="m-package-java-for-android">
 		<sequential>
@@ -162,8 +164,8 @@
 
 				<!-- JSR223 service -->
 				<service type="javax.script.ScriptEngineFactory" 
-	    			provider="alice.tuprolog.scriptengine.PrologScriptEngineFactory"/>
-
+	    			provider="alice.tuprolog.scriptengine.PrologScriptEngineFactory"/>			
+				<zipgroupfileset excludes="META-INF/*.SF" dir="${java.lib.dir}" includes="gson-2.6.2.jar"/>
 			</jar>
 
 			<!-- Crea il jar dei test -->
@@ -435,7 +437,11 @@
 	</target>
 
 	<target name="generate-javadoc" depends="init" description="Creates Javadocs">
-
+		
+		<!-- Crea la cartella javadoc se necessario -->
+		<mkdir dir="${java.doc.javadoc.dir}"/>
+		
+		<!-- Elimina i javadoc precedenti -->
 		<delete includeemptydirs="true">
 			<fileset dir="${java.doc.javadoc.dir}" includes="**/*"/>
 		</delete>
@@ -516,7 +522,6 @@
 			<batchtest todir="${java.build.tests.dir}/concordion/test-output">
 				<fileset dir="${java.test.dir}/concordiontests">
 					<include name="**/*Test.java" />
-					<include name="**/*General.java" />
 					<exclude name="**/Abstract*" />
 				</fileset>
 			</batchtest>
