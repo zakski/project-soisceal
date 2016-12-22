@@ -72,7 +72,7 @@ public class SecurityManager {
 		String usr = props.getProperty("configuration.admin.username");
 		String psw = props.getProperty("configuration.admin.password");
 		if (usr.equals(username)&&psw.equals(password))
-			return "configurator";
+			return props.getProperty("configuration.admin.role");
 		else
 			return null;
 	}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+	<element>
+		<name>peso_specifico</name>
+		<type>int</type>
+		<range>
+			<from>1026</from>
+			<to>1035</to>
+		</range>
+	</element>
+	<element>
+		<name>sodiuria</name>
+		<type>int</type>
+		<range>
+			<from>197</from>
+			<to>205</to>
+		</range>
+	</element>
+	<element>
+		<name>globuli_bianchi</name>
+		<type>boolean</type>
+	</element>
+	<element>
+		<name>sangue_feci</name>
+		<type>boolean</type>
+	</element>
+	<element>
+		<name>chetoni</name>
+		<type>boolean</type>
+	</element>
+	<element>
+		<name>glucosio</name>
+		<type>boolean</type>
+	</element>
+</data>

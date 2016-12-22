@@ -1,9 +1,11 @@
 it\unibo\alice\tuprolog\ws\persistence\PrologConfiguration.class
 it\unibo\alice\tuprolog\ws\persistence\StorageService.class
 it\unibo\alice\tuprolog\ws\core\AuthCheckInterceptor.class
+it\unibo\alice\tuprolog\ws\core\DataSupplier.class
 it\unibo\alice\tuprolog\ws\core\StatelessEngine.class
 it\unibo\alice\tuprolog\ws\rest\RestTuPrologService.class
 it\unibo\alice\tuprolog\ws\security\SecurityManager.class
+it\unibo\alice\tuprolog\ws\core\EngineState.class
 it\unibo\alice\tuprolog\ws\rest\RestConfigurationService.class
 it\unibo\alice\tuprolog\ws\core\PrologEngine.class
 it\unibo\alice\tuprolog\ws\core\RequiresAuth.class

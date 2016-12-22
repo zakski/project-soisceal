@@ -7,6 +7,8 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
+import com.google.gson.JsonObject;
+
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.MalformedGoalException;
 import alice.tuprolog.NoMoreSolutionException;
@@ -29,6 +31,11 @@ public class StatelessEngine {
 	
 	@EJB
 	private StorageService manager;
+	
+	@EJB
+	private EngineState engineState;
+	
+	private List<String> currentAssertions = new ArrayList<String>();
 	
     public StatelessEngine() {
 
@@ -68,6 +75,9 @@ public class StatelessEngine {
 			e.printStackTrace();
 			engine = new Prolog();
 		}
+		System.out.println("StatelessEngine/ refresh assertions");
+		refreshAssertions();
+		System.out.println("StatelessEngine/ assertions: "+currentAssertions);
 	}
 	
    
@@ -107,7 +117,7 @@ public class StatelessEngine {
 	public PrologSolution solveWithSession(String toSolve) throws MalformedGoalException {
 		loadConfiguration();
 		SolveInfo info = engine.solve(toSolve);
-		String state = engine.toJSON();
+		String state = engine.toJSON(Prolog.INCLUDE_KB_IN_SERIALIZATION);
 		return new PrologSolution(info, state);
 	}
 	
@@ -122,7 +132,7 @@ public class StatelessEngine {
 	public PrologSolution solveNext(String engineStateJson) throws NoMoreSolutionException {
 		engine = Prolog.fromJSON(engineStateJson);
 		SolveInfo info = engine.solveNext();
-		String state = engine.toJSON();
+		String state = engine.toJSON(Prolog.INCLUDE_KB_IN_SERIALIZATION);
 		return new PrologSolution(info, state);
 	}
 	
@@ -168,7 +178,7 @@ public class StatelessEngine {
 				solutionsToGo--;
 			}
 		}
-		String finalState = engine.toJSON();
+		String finalState = engine.toJSON(Prolog.INCLUDE_KB_IN_SERIALIZATION);
 		return new PrologSolution(lista, finalState);
 	}
 	
@@ -203,7 +213,7 @@ public class StatelessEngine {
 				lista.add(engine.solveNext());
 			}
 		}
-		String finalState = engine.toJSON();
+		String finalState = engine.toJSON(Prolog.INCLUDE_KB_IN_SERIALIZATION);
 		return new PrologSolution(lista, finalState);
 	}
 	
@@ -251,6 +261,29 @@ public class StatelessEngine {
 			lista.add(engine.solveNext());
 		}
 		return lista;
+	}
+	
+	private void refreshAssertions() {
+//		if(this.currentAssertions.equals(engineState.getCurrentAssertions()))
+//			return;
+		
+		currentAssertions.forEach(assertion -> {
+			try {
+				engine.solve("retract( ("+assertion+") ).");
+			} catch (MalformedGoalException e) {
+				e.printStackTrace();
+			}
+		});		
+		
+		currentAssertions = engineState.getCurrentAssertions();
+
+		currentAssertions.forEach(assertion -> {
+			try {
+				engine.solve("assert( ("+assertion+") ).");
+			} catch (MalformedGoalException e) {
+				e.printStackTrace();
+			}
+		});
 	}
     
 
