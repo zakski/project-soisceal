@@ -12,6 +12,8 @@ import javax.ws.rs.core.Response.Status;
 import org.jose4j.jwt.JwtClaims;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 
+import it.unibo.alice.tuprolog.ws.security.Role;
+
 /**
  * @author Andrea Muccioli
  *
@@ -34,7 +36,7 @@ public class AuthCheckInterceptor {
 	 */
 	@AroundInvoke
 	public Object checkAuth(InvocationContext ctx) throws Exception {
-		Annotation[] ann = ctx.getMethod().getAnnotationsByType(RequiresAuth.class);
+		RequiresAuth[] ann = ctx.getMethod().getAnnotationsByType(RequiresAuth.class);
 		if (ann.length > 0)
 		{
 			Annotation[][] a = ctx.getMethod().getParameterAnnotations();
@@ -56,7 +58,10 @@ public class AuthCheckInterceptor {
 			JwtClaims jwtClaims = null;
 			try {
 				jwtClaims = security.decryptAndVerifyToken(token);
-				if (!jwtClaims.getClaimValue("role").equals("configurator"))
+				
+				Role required = ann[0].roleRequired();
+				Role userRole = Role.valueOf(jwtClaims.getClaimValue("role").toString().toUpperCase());
+				if (required.compareTo(userRole) > 0)
 					return Response.status(Status.UNAUTHORIZED)
 							.entity(""+Status.UNAUTHORIZED.getStatusCode()+": user's role can't access this service").build();
 			} catch (InvalidJwtException e) {

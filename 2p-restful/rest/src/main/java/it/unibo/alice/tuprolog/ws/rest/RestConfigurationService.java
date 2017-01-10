@@ -38,6 +38,7 @@ import it.unibo.alice.tuprolog.ws.core.AuthCheckInterceptor;
 import it.unibo.alice.tuprolog.ws.core.RequiresAuth;
 import it.unibo.alice.tuprolog.ws.core.StatelessEngine;
 import it.unibo.alice.tuprolog.ws.persistence.StorageService;
+import it.unibo.alice.tuprolog.ws.security.Role;
 
 
 /**
@@ -469,7 +470,7 @@ public class RestConfigurationService {
 				.entity(""+Status.PRECONDITION_FAILED.getStatusCode()+": Password is missing!").build();
 		}
 		
-		String role = security.validate(username, password);
+		Role role = security.validate(username, password);
 		if (role == null)
 		{
 			return Response.status(Status.UNAUTHORIZED)

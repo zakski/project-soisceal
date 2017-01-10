@@ -110,7 +110,7 @@ public class RestTuPrologService {
 //	}
 	
 	/**
-	 * Get a XML representation of the service containing all the methods with their simpleName,
+	 * Gets a XML representation of the service containing all the methods with their simpleName,
 	 * the MIME types of what they consume and produce, the relative URL and the HTTP method
 	 * needed to invoke the respective REST service.
 	 * 

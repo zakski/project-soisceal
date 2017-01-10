@@ -9,5 +9,7 @@ it\unibo\alice\tuprolog\ws\core\EngineState.class
 it\unibo\alice\tuprolog\ws\rest\RestConfigurationService.class
 it\unibo\alice\tuprolog\ws\core\PrologEngine.class
 it\unibo\alice\tuprolog\ws\core\RequiresAuth.class
+it\unibo\alice\tuprolog\ws\persistence\User.class
 it\unibo\alice\tuprolog\ws\core\PrologSolution.class
 it\unibo\alice\tuprolog\ws\core\StartupOperations.class
+it\unibo\alice\tuprolog\ws\security\Role.class

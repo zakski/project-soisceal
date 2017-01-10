@@ -3,9 +3,12 @@ package it.unibo.alice.tuprolog.ws.core;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
@@ -18,6 +21,10 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
+import it.unibo.alice.tuprolog.ws.persistence.StorageService;
+import it.unibo.alice.tuprolog.ws.persistence.User;
+import it.unibo.alice.tuprolog.ws.security.Role;
+
 
 /**
  * @author Andrea Muccioli
@@ -28,35 +35,36 @@ import org.jdom2.input.SAXBuilder;
 @LocalBean
 public class StartupOperations {
 	
+	@EJB
+	private StorageService manager;
 
     public StartupOperations() {
     }
     
+    
     /**
-     * Loads the properties file from the deploy archive and bind it with the
-     * JNDI name "user/properties".
+     * Executes startup operations for the server application.
      */
     @PostConstruct
     private void initialize() {
-    	Properties p = readUserXMLConfiguration();
-    	System.out.println("Proprieta lette: "+p.toString());
-    	try {
-			new InitialContext().rebind("user/properties", p);
-			System.out.println("rebind ok");
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
+    	if (manager.getAllUsers().size() == 0)
+    	{
+    		List<User> list = readUserXMLConfiguration();
+    		System.out.println("Utenti letti: "+list.toString());
+    		list.forEach(user -> manager.addUser(user));
+    	}
     }
     
+    
     /**
-     * NOTE: This method is still incomplete.
-     * Reads user credentials from the XML configuration file "user_configuration.xml".
-     * Currently the method only reads the information of the the first declared user.
+     * Reads user credentials from the XML configuration file "user_configuration.xml",
+     * contained in the deployment archive, and creates a list of User based
+     * the information read.
      * 
-     * @return The Properties object containing the user information read from the
+     * @return A List of User containing the user information read from the
      * configuration file.
      */
-    private Properties readUserXMLConfiguration() {
+    private List<User> readUserXMLConfiguration() {
 		SAXBuilder builder = new SAXBuilder();
 		InputStream stream = this.getClass().getClassLoader().getResourceAsStream("user_configuration.xml");
 		Document doc;
@@ -70,14 +78,17 @@ public class StartupOperations {
 			return null;
 		}
 		
-		Element user = doc.getRootElement().getChild("user");
-    	Properties p = new Properties();
-    	p.put("configuration.admin.username", user.getChildText("username"));
-    	p.put("configuration.admin.password", user.getChildText("password"));
-    	p.put("configuration.admin.role", user.getChildText("role"));
-    	
-    	return p;
+		List<User> toReturn = new ArrayList<User>();
+		List<Element> users = doc.getRootElement().getChildren("user");
+		users.forEach(el -> {
+			String username = el.getChildText("username");
+			String password = el.getChildText("password");
+			String roleString = el.getChildText("role");
+			Role role = Role.valueOf(roleString.toUpperCase());
+			toReturn.add(new User(username, password, role));
+		});
 		
+		return toReturn;
     }
     
     

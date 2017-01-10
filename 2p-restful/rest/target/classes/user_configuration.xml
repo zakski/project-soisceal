@@ -2,7 +2,12 @@
 <users>
 	<user>
 		<username>admin</username>
-		<password>admin</password>
+		<password>Adm1n@</password>
+		<role>admin</role>
+	</user>
+	<user>
+		<username>configurator</username>
+		<password>C0nfigurator@</password>
 		<role>configurator</role>
 	</user>
 </users>

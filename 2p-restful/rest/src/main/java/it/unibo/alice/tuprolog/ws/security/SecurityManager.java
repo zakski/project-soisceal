@@ -7,6 +7,7 @@ import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.DependsOn;
+import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
@@ -26,6 +27,9 @@ import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.keys.EllipticCurves;
 import org.jose4j.lang.JoseException;
 
+import it.unibo.alice.tuprolog.ws.persistence.StorageService;
+import it.unibo.alice.tuprolog.ws.persistence.User;
+
 
 /**
  * @author Andrea Muccioli
@@ -36,8 +40,8 @@ import org.jose4j.lang.JoseException;
 @LocalBean
 public class SecurityManager {
 	
-	@Resource(name="user/properties")
-	Properties props;
+	@EJB
+	private StorageService manager;
 	
 	private EllipticCurveJsonWebKey ConfSigKey = null;
 	private EllipticCurveJsonWebKey ConfEncKey = null;
@@ -67,25 +71,38 @@ public class SecurityManager {
 	    }
     }
     
+
+    
+    /**
+     * Gets the role associated with the given username and password
+     * or null if the username and password aren't associated with
+     * any user.
+     * 
+     * @param username : the username of the user
+     * @param password : the password of the user
+     * @return the Role associated with the credentials or null
+     */
     @Lock(LockType.READ)
-	public String validate(String username, String password) {
-		String usr = props.getProperty("configuration.admin.username");
-		String psw = props.getProperty("configuration.admin.password");
-		if (usr.equals(username)&&psw.equals(password))
-			return props.getProperty("configuration.admin.role");
-		else
-			return null;
+	public Role validate(String username, String password) {
+    	User u = manager.getUser(username);
+    	if (u == null)
+    		return null;
+    	if (!password.equals(u.getPassword()))
+    		return null;
+    	return u.getRole();
 	}
+    
+    
     
     /**
      * Creates the claims for the authentication JWT.
      * 
      * @param username : the username of the user.
-     * @param role : the role of the user
+     * @param role : the Role of the user
      * @return the JwtClaims of the authentication JWT.
      */
     @Lock(LockType.READ)
-    public JwtClaims getConfigurationClaims(String username, String role) {
+    public JwtClaims getConfigurationClaims(String username, Role role) {
     	JwtClaims claims = new JwtClaims();
 		claims.setIssuer("it.unibo.alice.tuprolog");
 		claims.setExpirationTimeMinutesInTheFuture(10);
@@ -93,7 +110,7 @@ public class SecurityManager {
 		claims.setIssuedAtToNow();
 		claims.setNotBeforeMinutesInThePast(2);
 		claims.setSubject(username);
-		claims.setClaim("role", role);
+		claims.setClaim("role", role.name());
 		
 		return claims;
     }

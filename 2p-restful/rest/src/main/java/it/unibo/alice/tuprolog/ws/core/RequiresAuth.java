@@ -5,6 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import it.unibo.alice.tuprolog.ws.security.Role;
+
 /**
  * @author Andrea Muccioli
  *
@@ -12,5 +14,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface RequiresAuth {
-
+	public Role roleRequired() default Role.CONFIGURATOR;
 }
