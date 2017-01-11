@@ -1,10 +1,14 @@
 package it.unibo.alice.tuprolog.ws.rest;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URI;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -13,13 +17,17 @@ import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
 import org.jdom2.Document;
@@ -37,7 +45,9 @@ import alice.tuprolog.MalformedGoalException;
 import alice.tuprolog.NoMoreSolutionException;
 import alice.tuprolog.SolveInfo;
 import it.unibo.alice.tuprolog.ws.persistence.StorageService;
+import it.unibo.alice.tuprolog.ws.security.Role;
 import it.unibo.alice.tuprolog.ws.core.PrologSolution;
+import it.unibo.alice.tuprolog.ws.core.RequiresAuth;
 import it.unibo.alice.tuprolog.ws.core.StatelessEngine;
 
 /**
@@ -111,8 +121,8 @@ public class RestTuPrologService {
 	
 	/**
 	 * Gets a XML representation of the service containing all the methods with their simpleName,
-	 * the MIME types of what they consume and produce, the relative URL and the HTTP method
-	 * needed to invoke the respective REST service.
+	 * the MIME types of what they consume and produce, the relative URL,the HTTP method and, if present,
+	 * the query parameters needed to invoke the respective REST service.
 	 * 
 	 * @return the String containing the service representation as XML.
 	 */
@@ -140,20 +150,35 @@ public class RestTuPrologService {
 				String httpMethod = "";
 				Annotation[] annotations = cur.getAnnotations();
 				for (Annotation ann : annotations) {
-					String simpleName = ann.annotationType().getSimpleName();
-					if (simpleName.equals(GET.class.getSimpleName()) || simpleName.equals(POST.class.getSimpleName()) || simpleName.equals(DELETE.class.getSimpleName()))
-						httpMethod = simpleName;
-					else if (simpleName.equals(Produces.class.getSimpleName()))
+					if (ann instanceof GET || ann instanceof POST || ann instanceof DELETE || ann instanceof PUT)
+						httpMethod = ann.annotationType().getSimpleName();
+					else if (ann instanceof Produces)
 					{
 						produces = Arrays.toString(((Produces)ann).value());
 						
-					} else if (simpleName.equals(Consumes.class.getSimpleName()))
+					} else if (ann instanceof Consumes)
 					{
 						consumes = Arrays.toString(((Consumes)ann).value());
-					} else if (simpleName.equals(Path.class.getSimpleName()))
+					} else if (ann instanceof Path)
 					{
 						String thisPath = ((Path)ann).value();
 						url +=  "/" + thisPath;
+					}
+				}
+				
+				Hashtable<String, String> dictionary = new Hashtable<String, String>();
+				Annotation[][] a = cur.getParameterAnnotations();
+				for(int i = 0; i < a.length; i++) {
+					if (a[i].length > 0) {
+			            for (Annotation anno : a[i])
+			            {
+			            	if (anno instanceof QueryParam)
+			            	{
+			            		String queryParameterValue = cur.getParameters()[i].getName();
+			            		String queryParameterName = ((QueryParam)anno).value();
+			            		dictionary.put(queryParameterName, queryParameterValue);
+			            	}
+			            }
 					}
 				}
 				
@@ -161,6 +186,7 @@ public class RestTuPrologService {
 				Element name = new Element("Name");
 				Element http = new Element("HttpMethod");
 				Element methodUrl = new Element("URL");
+				Element queryParameters = new Element("QueryParams");
 				Element producesElement = new Element("Produces");
 				Element consumesElement = new Element("Consumes");
 				name.addContent(cur.getName());
@@ -171,6 +197,22 @@ public class RestTuPrologService {
 				methodElement.addContent(name);
 				methodElement.addContent(http);
 				methodElement.addContent(methodUrl);
+				
+				if (dictionary.size()>0)
+				{
+					dictionary.forEach((key, value) -> {
+						Element queryParam = new Element("Parameter");
+						Element queryName = new Element("Name");
+						Element queryValue = new Element("Value");
+						queryName.addContent(key.toString());
+						queryValue.addContent(value.toString());
+						queryParam.addContent(queryName);
+						queryParam.addContent(queryValue);
+						queryParameters.addContent(queryParam);
+					});
+				}
+				methodElement.addContent(queryParameters);
+				
 				methodElement.addContent(producesElement);
 				methodElement.addContent(consumesElement);
 				serviceMethods.addContent(methodElement);
@@ -211,6 +253,27 @@ public class RestTuPrologService {
 		Gson gson = new Gson();
 		String json = gson.toJson(manager.getConfiguration().getGoals());	
 		return Response.ok().entity(json).build();
+	}
+	
+	
+	/**
+	 * Redirects to the goal of the goals list with the name specified.
+	 * 
+	 * @param goalName : the query parameter that specifies the name of the goal to get.
+	 * @param uriInfo : 
+	 * @return redirects the client to an URL of type goalList/{index}
+	 */
+	@Path("goalList/byName")
+	@GET
+	public Response goalByName(@QueryParam("goal") String goalName, @Context UriInfo uriInfo) {
+		System.out.println("Ricevuta richiesta GET goalByName");
+		int index = manager.getConfiguration().getGoals().indexOf(goalName);
+		if (index < 0)
+			return Response.status(Status.PRECONDITION_FAILED)
+					.entity(""+Status.PRECONDITION_FAILED.getStatusCode()+": goal is not contained in goals list.").build();
+		String uriString = uriInfo.getBaseUri().toString() + "main/goalList/"+index;
+		URI location = URI.create(uriString);
+		return Response.seeOther(location).build();
 	}
 	
 	
@@ -605,6 +668,5 @@ public class RestTuPrologService {
 					.entity(""+Status.PRECONDITION_FAILED.getStatusCode()+": Only one of 'goal' or 'engine' properties must be set").build();
 		}
 	}
-	
 
 }

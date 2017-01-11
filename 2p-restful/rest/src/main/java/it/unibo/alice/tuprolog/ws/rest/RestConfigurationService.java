@@ -1,10 +1,15 @@
 package it.unibo.alice.tuprolog.ws.rest;
 
 
+import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
+import java.net.URI;
+import java.net.URLDecoder;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -15,13 +20,16 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.jdom2.Document;
@@ -59,63 +67,10 @@ public class RestConfigurationService {
 	@EJB
 	private StorageService manager;
 	
-//	@GET
-//	@Produces(MediaType.TEXT_PLAIN)
-//	public String getInfo() {
-//		StringBuilder sb = new StringBuilder();
-//		Class service = this.getClass();
-//		String classPath = ((Path)service.getAnnotation(Path.class)).value();
-//		sb.append(service.getSimpleName());
-//		sb.append("\n\n");
-//		sb.append("Methods:\n");
-//		Method[] methods = service.getDeclaredMethods();
-//		for (Method cur : methods) {
-//			if (Modifier.isPublic(cur.getModifiers()) && !Modifier.isStatic(cur.getModifiers()))
-//			{
-//				String produces = "";
-//				String consumes = "";
-//				String url = classPath;
-//				String httpMethod = "";
-//				boolean requireAuth = false;
-//				Annotation[] annotations = cur.getAnnotations();
-//				for (Annotation ann : annotations) {
-//					String simpleName = ann.annotationType().getSimpleName();
-//					if (simpleName.equals(GET.class.getSimpleName()) || simpleName.equals(POST.class.getSimpleName()) || simpleName.equals(DELETE.class.getSimpleName()))
-//						httpMethod = simpleName;
-//					else if (simpleName.equals(Produces.class.getSimpleName()))
-//					{
-//						produces = Arrays.toString(((Produces)ann).value());
-//						
-//					} else if (simpleName.equals(Consumes.class.getSimpleName()))
-//					{
-//						consumes = Arrays.toString(((Consumes)ann).value());
-//					} else if (simpleName.equals(Path.class.getSimpleName()))
-//					{
-//						String thisPath = ((Path)ann).value();
-//						url +=  "/" + thisPath;
-//					} else if (simpleName.equals(RequireAuth.class.getSimpleName()))
-//					{
-//						requireAuth = true;
-//					}
-//				}
-//				
-//				sb.append(cur.getName()+"\n");
-//				sb.append("\tHttp Method: "+httpMethod+"\n");
-//				sb.append("\tURL: "+url+"\n");
-//				sb.append("\tLogin Required: "+requireAuth+"\n");
-//				sb.append("\tProduces: "+produces+"\n");
-//				sb.append("\tConsumes: "+consumes+"\n");
-//			}
-//			
-//		}
-//
-//		return sb.toString();
-//	}
-	
 	/**
-	 * Get a XML representation of the service containing all the methods with their simpleName,
-	 * the MIME types of what they consume and produce, the relative URL and the HTTP method
-	 * needed to invoke the respective REST service, and if the method require a login or not.
+	 * Get a XML representation of the service containing all the methods with their simpleName, the
+	 * required authentication, the MIME types of what they consume and produce, the relative URL,
+	 * the HTTP method and, if present the query parameters needed to invoke the respective REST service.
 	 * 
 	 * @return the String containing the service representation as XML.
 	 */
@@ -142,45 +97,88 @@ public class RestConfigurationService {
 				String url = classPath;
 				String httpMethod = "";
 				boolean requireAuth = false;
+				Role roleRequired = null;
 				Annotation[] annotations = cur.getAnnotations();
 				for (Annotation ann : annotations) {
-					String simpleName = ann.annotationType().getSimpleName();
-					if (simpleName.equals(GET.class.getSimpleName()) || simpleName.equals(POST.class.getSimpleName()) || simpleName.equals(DELETE.class.getSimpleName()))
-						httpMethod = simpleName;
-					else if (simpleName.equals(Produces.class.getSimpleName()))
+					if (ann instanceof GET || ann instanceof POST || ann instanceof DELETE || ann instanceof PUT)
+						httpMethod = ann.annotationType().getSimpleName();
+					else if (ann instanceof Produces)
 					{
 						produces = Arrays.toString(((Produces)ann).value());
 						
-					} else if (simpleName.equals(Consumes.class.getSimpleName()))
+					} else if (ann instanceof Consumes)
 					{
 						consumes = Arrays.toString(((Consumes)ann).value());
-					} else if (simpleName.equals(Path.class.getSimpleName()))
+					} else if (ann instanceof Path)
 					{
 						String thisPath = ((Path)ann).value();
 						url +=  "/" + thisPath;
-					} else if (simpleName.equals(RequiresAuth.class.getSimpleName()))
+					} else if (ann instanceof RequiresAuth)
 					{
 						requireAuth = true;
+						roleRequired = ((RequiresAuth)ann).roleRequired();
 					}
 				}
+				
+				Hashtable<String, String> dictionary = new Hashtable<String, String>();
+				Annotation[][] a = cur.getParameterAnnotations();
+				for(int i = 0; i < a.length; i++) {
+					if (a[i].length > 0) {
+			            for (Annotation anno : a[i])
+			            {
+			            	if (anno instanceof QueryParam)
+			            	{
+			            		String queryParameterValue = cur.getParameters()[i].getName();
+			            		String queryParameterName = ((QueryParam)anno).value();
+			            		dictionary.put(queryParameterName, queryParameterValue);
+			            	}
+			            }
+					}
+				}
+
 				
 				Element methodElement = new Element("Method");
 				Element name = new Element("Name");
 				Element http = new Element("HttpMethod");
 				Element methodUrl = new Element("URL");
+				Element queryParameters = new Element("QueryParams");
+				Element authorization = new Element("Auth");
 				Element loginRequired = new Element("LoginRequired");
+				Element minRoleRequired = new Element("MinimumRoleRequired");
 				Element producesElement = new Element("Produces");
 				Element consumesElement = new Element("Consumes");
 				name.addContent(cur.getName());
 				http.addContent(httpMethod);
 				methodUrl.addContent(url);
 				loginRequired.addContent(""+requireAuth);
+				authorization.addContent(loginRequired);
+				if(requireAuth)
+				{
+					minRoleRequired.addContent(roleRequired.toString());
+					authorization.addContent(minRoleRequired);
+				}
 				producesElement.addContent(produces);
 				consumesElement.addContent(consumes);
 				methodElement.addContent(name);
 				methodElement.addContent(http);
 				methodElement.addContent(methodUrl);
-				methodElement.addContent(loginRequired);
+				
+				if (dictionary.size()>0)
+				{
+					dictionary.forEach((key, value) -> {
+						Element queryParam = new Element("Parameter");
+						Element queryName = new Element("Name");
+						Element queryValue = new Element("Value");
+						queryName.addContent(key.toString());
+						queryValue.addContent(value.toString());
+						queryParam.addContent(queryName);
+						queryParam.addContent(queryValue);
+						queryParameters.addContent(queryParam);
+					});
+				}
+				methodElement.addContent(queryParameters);
+				
+				methodElement.addContent(authorization);
 				methodElement.addContent(producesElement);
 				methodElement.addContent(consumesElement);
 				serviceMethods.addContent(methodElement);
@@ -237,10 +235,10 @@ public class RestConfigurationService {
 	 */
 	@Path("theory")
 	@RequiresAuth
-	@POST
+	@PUT
 	@Consumes(MediaType.TEXT_PLAIN)
 	public Response setTheory(String newTheory, @Context UriInfo uriInfo, @HeaderParam("token") String token) {
-		System.out.println("Ricevuta richiesta POST setTheory");
+		System.out.println("Ricevuta richiesta PUT setTheory");
 		manager.getConfiguration().setTheory(newTheory);
 //		engine.reloadConfiguration();
 		System.out.println("Request uri: " +uriInfo.getAbsolutePath());
@@ -257,7 +255,7 @@ public class RestConfigurationService {
 	 * @return a notModified response if the goal can't be added. A ok response if the goal has
 	 * been added successfully.
 	 */
-	@Path("goalList/add")
+	@Path("goalList")
 	@RequiresAuth
 	@POST
 	@Consumes(MediaType.TEXT_PLAIN)
@@ -273,23 +271,45 @@ public class RestConfigurationService {
 	/**
 	 * Removes the goal passed as argument from the current list of possible goals in the configuration.
 	 * 
-	 * @param toRemove : the String containing the goal to remove.
+	 * @param toRemove : the query parameter that specifies the name of the goal to remove.
 	 * @param token : The string representing the JWT signed and encrypted by the server. Needed
 	 * to authenticate and execute the method. It can be obtained with a successful login attempt.
 	 * @return a notModified response if the goal can't be removed. A ok response if the goal has
 	 * been removed successfully.
 	 */
-	@Path("goalList/remove")
+	@Path("goalList/byName")
 	@RequiresAuth
-	@POST
-	@Consumes(MediaType.TEXT_PLAIN)
-	public Response removeGoal(String toRemove, @HeaderParam("token") String token) {
-		System.out.println("Ricevuta richiesta POST removeGoal");
+	@DELETE
+	public Response removeGoal(@QueryParam("goal") String toRemove, @Context UriInfo uriInfo, @HeaderParam("token") String token) {
+		System.out.println("Ricevuta richiesta DELETE removeGoal");
 		if (!manager.getConfiguration().getGoals().contains(toRemove))
 			return Response.status(Status.NOT_MODIFIED)
 					.entity(""+Status.NOT_MODIFIED.getStatusCode()+": goal to remove is not contained in goals list.").build();
 		manager.getConfiguration().removeGoal(toRemove);
 		return Response.ok().build();
+	}
+	
+	/**
+	 * Redirects to the goal of the goals list with the name specified.
+	 * 
+	 * @param goalName : the query parameter that specifies the name of the goal to get.
+	 * @param uriInfo : 
+	 * @param token : The string representing the JWT signed and encrypted by the server. Needed
+	 * to authenticate and execute the method. It can be obtained with a successful login attempt.
+	 * @return redirects the client to an URL of type goalList/{index}
+	 */
+	@Path("goalList/byName")
+	@RequiresAuth
+	@GET
+	public Response goalByName(@QueryParam("goal") String goalName, @Context UriInfo uriInfo, @HeaderParam("token") String token) {
+		System.out.println("Ricevuta richiesta GET goalByName");
+		int index = manager.getConfiguration().getGoals().indexOf(goalName);
+		if (index < 0)
+			return Response.status(Status.PRECONDITION_FAILED)
+					.entity(""+Status.PRECONDITION_FAILED.getStatusCode()+": goal is not contained in goals list.").build();
+		String uriString = uriInfo.getBaseUri().toString() + "configuration/goalList/"+index;
+		URI location = URI.create(uriString);
+		return Response.seeOther(location).build();
 	}
 	
 	/**
@@ -356,7 +376,7 @@ public class RestConfigurationService {
 	@DELETE
 	@Produces(MediaType.TEXT_PLAIN)
 	public Response removeGoalAtIndex(@PathParam("n") String index, @HeaderParam("token") String token) {
-		System.out.println("Ricevuta richiesta GET getGoalAtIndex");
+		System.out.println("Ricevuta richiesta DELETE removeGoalAtIndex");
 		int i;
 		if (index!=null)
 		{
@@ -388,10 +408,10 @@ public class RestConfigurationService {
 	 */
 	@Path("goalList")
 	@RequiresAuth
-	@POST
+	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response setGoalList(String newGoalListAsJSON, @Context UriInfo uriInfo, @HeaderParam("token") String token) {
-		System.out.println("Ricevuta richiesta POST setGoalList");
+		System.out.println("Ricevuta richiesta PUT setGoalList");
 		Gson gson = new Gson();
 		try {
 			List<String> lista = (List<String>) gson.fromJson(newGoalListAsJSON, List.class);
@@ -432,7 +452,7 @@ public class RestConfigurationService {
 	 */
 	@Path("configuration")
 	@RequiresAuth
-	@POST
+	@PUT
 	@Consumes(MediaType.TEXT_PLAIN)
 	public Response setConfiguration(String configuration, @Context UriInfo uriInfo, @HeaderParam("token") String token) {
 		System.out.println("Ricevuta richiesta POST setConfiguration");

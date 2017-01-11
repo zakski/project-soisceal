@@ -37,7 +37,11 @@ public class StorageService {
 		if (existingConfig == null)
 		{
 			List<String> goals = new ArrayList<String>();
-			goals.add("goal1");
+//			goals.add("goal1");
+//			goals.add("goal2");
+//			goals.add("goals3");
+			
+			goals.add("assert( (sintomo(X) :- true + false) ).");
 			goals.add("goal2");
 			goals.add("goals3");
 			existingConfig = new PrologConfiguration("sono una teoria", "sono una configurazione", goals);
@@ -113,6 +117,12 @@ public class StorageService {
 		if (user == null)
 			return null;
 		return user.getRole();
+	}
+	
+	public List<User> getUsersWithRole(Role role) {
+		Query q = em.createQuery("SELECT u FROM User u WHERE u.role = :userRole")
+				.setParameter("userRole", role);
+		return (List<User>) q.getResultList();
 	}
 	
 

@@ -38,6 +38,10 @@ public class User implements Serializable {
 	 */
 	private static final String PASSWORD_REGEX = "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%,]).{6,20})";
 	
+	private static final String defaultAdminUsername = "admin";
+	private static final String defaultAdminPsw = "Adm1n@";
+	
+	
 	@Id
 	@Column(name="username")
 	private String username;
@@ -105,6 +109,10 @@ public class User implements Serializable {
 		Pattern pattern = Pattern.compile(PASSWORD_REGEX);
 		Matcher matcher = pattern.matcher(password);
 		return matcher.matches();
+	}
+	
+	public static User getDefaultAdmin() {
+		return new User(defaultAdminUsername, defaultAdminPsw, Role.ADMIN);
 	}
 	
 	@Override

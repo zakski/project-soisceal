@@ -47,12 +47,36 @@ public class StartupOperations {
      */
     @PostConstruct
     private void initialize() {
+    	//if the user database is empty, load users from configuration xml file
     	if (manager.getAllUsers().size() == 0)
     	{
     		List<User> list = readUserXMLConfiguration();
     		System.out.println("Utenti letti: "+list.toString());
     		list.forEach(user -> manager.addUser(user));
     	}
+    	//if no admin is set, add a default one, if default admin username is already taken, promote an existing user
+		if(manager.getUsersWithRole(Role.ADMIN).size() <= 0)
+		{
+			User admin = User.getDefaultAdmin();
+			if (manager.getUserRole(admin.getUsername()) != null)
+			{
+				Role r = Role.ADMIN;
+				boolean promoted = false;
+				while (((r = r.getRoleBelow()) != null) && !promoted)
+				{
+					List<User> list = manager.getUsersWithRole(r);
+					if (list.size() > 0)
+					{
+						list.get(0).setRole(Role.ADMIN);
+						promoted = true;
+						System.out.println("Promuovo ad admin di default: "+list.get(0));
+					}
+				}
+			} else {
+				System.out.println("Imposto admin di default: "+admin);
+				manager.addUser(admin);
+			}
+		}
     }
     
     

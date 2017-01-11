@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Optional;
 
@@ -135,7 +136,7 @@ public class ConfigurationRestClient {
 		HttpResponse response;
 		try {
 			theoryEntity = new StringEntity(toSet.toString());
-			HttpUriRequest request = RequestBuilder.post().setUri(createdURL).setEntity(theoryEntity)
+			HttpUriRequest request = RequestBuilder.put().setUri(createdURL).setEntity(theoryEntity)
 					.setHeader(tokenHeader).build();
 			response = client.execute(request);
 			int code = response.getStatusLine().getStatusCode();
@@ -169,7 +170,7 @@ public class ConfigurationRestClient {
 		HttpResponse response;
 		try {
 			goalListEntity = new StringEntity(json.toString());
-			HttpUriRequest request = RequestBuilder.post().setUri(createdURL).setEntity(goalListEntity)
+			HttpUriRequest request = RequestBuilder.put().setUri(createdURL).setEntity(goalListEntity)
 					.setHeader(contentJSONHeader).setHeader(tokenHeader).build();
 			response = client.execute(request);
 			int code = response.getStatusLine().getStatusCode();
@@ -272,16 +273,15 @@ public class ConfigurationRestClient {
 	
 	public void removeGoal(String goal) {
 		BasicHeader tokenHeader = new BasicHeader("token", authToken);
-		
-		String createdURL = urlRootService+getPathFromInfo("removeGoal");
-		StringEntity goalEntity;
+
+		String createdURL;
 		try {
-			goalEntity = new StringEntity(goal.toString());
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new IllegalStateException("Can't set goal as body of HTTP request. Unsupported encoding.");
+			createdURL = urlRootService+getPathFromInfo("removeGoal")+"?goal="+URLEncoder.encode(goal, "UTF-8");
+		} catch (UnsupportedEncodingException e1) {
+			throw new IllegalArgumentException("Can't encode goal!");
 		}
-		HttpUriRequest request = RequestBuilder.post().setUri(createdURL).setEntity(goalEntity)
+
+		HttpUriRequest request = RequestBuilder.delete().setUri(createdURL)
 				.setHeader(tokenHeader).build();
 		HttpResponse response;
 		try {
