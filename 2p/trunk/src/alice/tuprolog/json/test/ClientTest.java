@@ -2,22 +2,26 @@ package alice.tuprolog.json.test;
 
 import java.net.*;
 
+import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.exceptions.MalformedGoalException;
 import alice.tuprolog.exceptions.NoMoreSolutionException;
 import alice.tuprolog.Prolog;
+import alice.tuprolog.Theory;
 
 import java.io.*;
 
 //Alberto
 public class ClientTest {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InvalidTheoryException {
 		String serverName = "127.0.0.1";
 		int port = 40000;
 		Prolog prolog = new Prolog();
 		String query = "member(A, [1,2,3,4,5,6,7,8,9]).";
 		System.out.println("CLIENT: ?- "+query);
 		try {
+			prolog.addTheory(new Theory(":-flag(ciao, [on], on, true)."));
+			System.out.println(prolog.solve("flag_list(L).").toString());
 			System.out.println(prolog.solve(query).toString());
 			System.out.println(prolog.solveNext().toString());
 		} catch (MalformedGoalException | NoMoreSolutionException e1) {
