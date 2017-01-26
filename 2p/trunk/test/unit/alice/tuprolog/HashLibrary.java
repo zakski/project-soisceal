@@ -22,6 +22,9 @@ package alice.tuprolog;
 
 import java.util.*;
 
+import alice.tuprolog.Library;
+import alice.tuprolog.Term;
+
 public class HashLibrary extends Library {
 	private static final long serialVersionUID = 1L;
 

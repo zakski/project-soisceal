@@ -1,5 +1,9 @@
 package alice.tuprolog;
 
+import alice.tuprolog.Int;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.exceptions.PrologException;
 import junit.framework.TestCase;
 
 public class LibraryTestCase extends TestCase {

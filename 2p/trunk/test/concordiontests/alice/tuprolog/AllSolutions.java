@@ -6,6 +6,9 @@ import org.concordion.ext.EmbedExtension;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
+import alice.tuprolog.Term;
+import alice.tuprolog.exceptions.PrologException;
+
 /* Run this class as a JUnit test. */
 
 @RunWith(ConcordionRunner.class)

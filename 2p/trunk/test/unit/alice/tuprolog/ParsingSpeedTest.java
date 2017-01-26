@@ -1,5 +1,10 @@
 package alice.tuprolog;
 
+import alice.tuprolog.OperatorManager;
+import alice.tuprolog.Parser;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.exceptions.InvalidTermException;
+
 public class ParsingSpeedTest {
 	
 	public static void main(String[] args) throws InvalidTermException {

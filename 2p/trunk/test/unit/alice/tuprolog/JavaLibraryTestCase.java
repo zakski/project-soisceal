@@ -5,7 +5,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import alice.tuprolog.lib.InvalidObjectIdException;
+import alice.tuprolog.Library;
+import alice.tuprolog.PrimitiveInfo;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Theory;
+import alice.tuprolog.exceptions.InvalidObjectIdException;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.exceptions.PrologException;
 import alice.tuprolog.lib.OOLibrary;
 import junit.framework.TestCase;
 

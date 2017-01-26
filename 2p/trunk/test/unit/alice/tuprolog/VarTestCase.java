@@ -1,5 +1,6 @@
 package alice.tuprolog;
 
+import alice.tuprolog.Var;
 import junit.framework.TestCase;
 
 public class VarTestCase extends TestCase {

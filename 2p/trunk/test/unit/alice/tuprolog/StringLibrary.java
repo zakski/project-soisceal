@@ -20,6 +20,10 @@
  */
 package alice.tuprolog;
 
+import alice.tuprolog.Library;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Term;
+
 public class StringLibrary extends Library {
 	private static final long serialVersionUID = 1L;
 

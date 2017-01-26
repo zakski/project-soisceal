@@ -1,5 +1,10 @@
 package alice.tuprolog;
 
+import alice.tuprolog.Int;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Theory;
 import junit.framework.TestCase;
 
 /**

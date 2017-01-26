@@ -6,6 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({	BuiltInTestCase.class,
+				DoubleTestCase.class,
 				PrologTestCase.class, 
 				IntTestCase.class, 
 				IOLibraryTestCase.class, 
@@ -22,10 +23,8 @@ import org.junit.runners.Suite.SuiteClasses;
 				ParserTestCase.class,
 				SpyEventTestCase.class, 
 				VarTestCase.class, 
-				TestVarIsEqual.class, 
 				JavaDynamicClassLoaderTestCase.class,
 				ISOIOLibraryTestCase.class,
-				SocketLibTestCase.class,
 				ThreadLibraryTestCase.class
 })
 public class TuPrologTestSuite {}

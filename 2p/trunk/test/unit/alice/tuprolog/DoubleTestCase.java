@@ -1,5 +1,9 @@
 package alice.tuprolog;
 
+import alice.tuprolog.Int;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Var;
+import alice.tuprolog.exceptions.InvalidTermException;
 import junit.framework.TestCase;
 
 public class DoubleTestCase extends TestCase {

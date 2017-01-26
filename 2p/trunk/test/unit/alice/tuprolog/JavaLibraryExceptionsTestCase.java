@@ -2,6 +2,10 @@ package alice.tuprolog;
 
 import java.io.File;
 
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Term;
+import alice.tuprolog.Var;
 import junit.framework.TestCase;
 
 /**

@@ -1,5 +1,16 @@
 package alice.tuprolog;
 
+import alice.tuprolog.BuiltIn;
+import alice.tuprolog.Int;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Term;
+import alice.tuprolog.Theory;
+import alice.tuprolog.Var;
+import alice.tuprolog.exceptions.InvalidTermException;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.exceptions.MalformedGoalException;
 import junit.framework.TestCase;
 
 public class BuiltInTestCase extends TestCase {
@@ -21,9 +32,9 @@ public class BuiltInTestCase extends TestCase {
 		linked.setLink(new Struct("!"));
 		Term[] arguments = new Term[] { linked, new Var("Y") };
 		Term[] results = new Term[] { new Struct("!"), new Struct("call", new Var("Y")) };
-		assertEquals(new Struct(";", results), BuiltIn.convertTermToGoal(new Struct(";", arguments)));
-		assertEquals(new Struct(",", results), BuiltIn.convertTermToGoal(new Struct(",", arguments)));
-		assertEquals(new Struct("->", results), BuiltIn.convertTermToGoal(new Struct("->", arguments)));
+		assertEquals((new Struct(";", results)).toString(), BuiltIn.convertTermToGoal(new Struct(";", arguments)).toString());
+		assertEquals((new Struct(",", results)).toString(), BuiltIn.convertTermToGoal(new Struct(",", arguments)).toString());
+		assertEquals((new Struct("->", results)).toString(), BuiltIn.convertTermToGoal(new Struct("->", arguments)).toString());
 	}
 	
 	//Based on the bug #59 Grouping conjunctions in () changes result on sourceforge

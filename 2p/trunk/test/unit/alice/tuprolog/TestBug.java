@@ -6,8 +6,11 @@
  */
 package alice.tuprolog;
 
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Theory;
 import alice.tuprolog.event.SpyEvent;
-import alice.tuprolog.event.SpyListener;
+import alice.tuprolog.interfaces.event.SpyListener;
 
 /**
  * @author aricci
@@ -22,10 +25,11 @@ public class TestBug {
 
 	    
 	    String goal = "out('"+
-			"can_do(X).\n"+
-			"can_do(Y).\n"+
+			"can_do(X)."+
+			"can_do(Y)."+
 		"').";
 		
+	    System.out.println(goal);
 		new Prolog().solve(goal);
 		
 		String st =

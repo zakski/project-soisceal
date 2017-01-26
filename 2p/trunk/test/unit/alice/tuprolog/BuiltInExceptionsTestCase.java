@@ -1,5 +1,12 @@
 package alice.tuprolog;
 
+import alice.tuprolog.Double;
+import alice.tuprolog.Int;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Term;
+import alice.tuprolog.Var;
 import junit.framework.TestCase;
 
 /**
@@ -366,6 +373,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
+		//System.out.println(g);
 		assertTrue(g.isEqual(new Struct("$tolist", new Var("X"),
 				new Var("List"))));
 		Int argNo = (Int) info.getTerm("ArgNo");

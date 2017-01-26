@@ -20,7 +20,9 @@
  */
 package alice.tuprolog;
 
+import alice.tuprolog.Int;
 import alice.tuprolog.Number;
+import alice.tuprolog.Term;
 
 public class TestLibrary extends StringLibrary {
 	private static final long serialVersionUID = 1L;

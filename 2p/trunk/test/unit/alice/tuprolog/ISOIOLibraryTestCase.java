@@ -12,8 +12,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Theory;
 import alice.tuprolog.event.OutputEvent;
-import alice.tuprolog.event.OutputListener;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.exceptions.MalformedGoalException;
+import alice.tuprolog.interfaces.event.OutputListener;
 
 // Based on the work of Sara Sabioni
 public class ISOIOLibraryTestCase {

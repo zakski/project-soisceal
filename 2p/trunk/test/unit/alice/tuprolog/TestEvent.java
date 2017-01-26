@@ -4,6 +4,9 @@
  */
 package alice.tuprolog;
 
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Theory;
 import alice.tuprolog.event.LibraryEvent;
 import alice.tuprolog.event.PrologEventAdapter;
 import alice.tuprolog.event.QueryEvent;

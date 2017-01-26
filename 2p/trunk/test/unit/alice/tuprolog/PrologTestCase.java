@@ -1,11 +1,12 @@
 package alice.tuprolog;
 
-import alice.tuprolog.InvalidLibraryException;
 import alice.tuprolog.Library;
 import alice.tuprolog.Prolog;
+import alice.tuprolog.Theory;
 import alice.tuprolog.event.SpyEvent;
-import alice.tuprolog.event.SpyListener;
-
+import alice.tuprolog.exceptions.InvalidLibraryException;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.interfaces.event.SpyListener;
 import junit.framework.TestCase;
 
 public class PrologTestCase extends TestCase {
@@ -32,7 +33,7 @@ public class PrologTestCase extends TestCase {
 		assertNotNull(engine.getLibrary("alice.tuprolog.StringLibrary"));
 		Library javaLibrary = new alice.tuprolog.lib.OOLibrary();
 		engine.loadLibrary(javaLibrary);
-		assertSame(javaLibrary, engine.getLibrary("alice.tuprolog.lib.JavaLibrary"));
+		assertSame(javaLibrary, engine.getLibrary("alice.tuprolog.lib.OOLibrary"));
 	}
 	
 	public void testGetLibraryWithName() throws InvalidLibraryException {

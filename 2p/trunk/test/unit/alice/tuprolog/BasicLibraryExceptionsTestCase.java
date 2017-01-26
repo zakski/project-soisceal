@@ -1,5 +1,10 @@
 package alice.tuprolog;
 
+import alice.tuprolog.Int;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Var;
 import junit.framework.TestCase;
 
 /**
@@ -17,7 +22,8 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
-		assertTrue(g.isEqual(new Struct("set_theory", new Var("X"))));
+		Struct t = new Struct("set_theory", new Var("X"));
+		assertTrue(g.toString().equals(t.toString()));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 1);
 	}
@@ -101,11 +107,11 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
 	// verifico che agent(X) lancia un errore di instanziazione
 	public void test_agent_1_1() throws Exception {
 		Prolog engine = new Prolog();
-		String goal = "catch(agent(X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true).";
+		String goal = "catch(prologEngine(X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true).";
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
-		assertTrue(g.isEqual(new Struct("agent", new Var("X"))));
+		assertTrue(g.isEqual(new Struct("prologEngine", new Var("X"))));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 1);
 	}
@@ -113,11 +119,11 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
 	// verifico che agent(1) lancia un errore di tipo
 	public void test_agent_1_2() throws Exception {
 		Prolog engine = new Prolog();
-		String goal = "catch(agent(1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true).";
+		String goal = "catch(prologEngine(1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true).";
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
-		assertTrue(g.isEqual(new Struct("agent", new Int(1))));
+		assertTrue(g.isEqual(new Struct("prologEngine", new Int(1))));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 1);
 		Struct validType = (Struct) info.getTerm("ValidType");
@@ -129,12 +135,12 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
 	// verifico che agent(X, a) lancia un errore di instanziazione
 	public void test_agent_2_1() throws Exception {
 		Prolog engine = new Prolog();
-		String goal = "catch(agent(X, a), error(instantiation_error, instantiation_error(Goal, ArgNo)), true).";
+		String goal = "catch(prologEngine(X, a), error(instantiation_error, instantiation_error(Goal, ArgNo)), true).";
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
 		assertTrue(g
-				.isEqual(new Struct("agent", new Var("X"), new Struct("a"))));
+				.isEqual(new Struct("prologEngine", new Var("X"), new Struct("a"))));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 1);
 	}
@@ -142,12 +148,12 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
 	// verifico che agent(a, X) lancia un errore di instanziazione
 	public void test_agent_2_2() throws Exception {
 		Prolog engine = new Prolog();
-		String goal = "catch(agent(a, X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true).";
+		String goal = "catch(prologEngine(a, X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true).";
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
 		assertTrue(g
-				.isEqual(new Struct("agent", new Struct("a"), new Var("X"))));
+				.isEqual(new Struct("prologEngine", new Struct("a"), new Var("X"))));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 2);
 	}
@@ -155,11 +161,11 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
 	// verifico che agent(1, a) lancia un errore di tipo
 	public void test_agent_2_3() throws Exception {
 		Prolog engine = new Prolog();
-		String goal = "catch(agent(1, a), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true).";
+		String goal = "catch(prologEngine(1, a), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true).";
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
-		assertTrue(g.isEqual(new Struct("agent", new Int(1), new Struct("a"))));
+		assertTrue(g.isEqual(new Struct("prologEngine", new Int(1), new Struct("a"))));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 1);
 		Struct validType = (Struct) info.getTerm("ValidType");
@@ -171,11 +177,11 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
 	// verifico che agent(a, 1) lancia un errore di tipo
 	public void test_agent_2_4() throws Exception {
 		Prolog engine = new Prolog();
-		String goal = "catch(agent(a, 1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true).";
+		String goal = "catch(prologEngine(a, 1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true).";
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
-		assertTrue(g.isEqual(new Struct("agent", new Struct("a"), new Int(1))));
+		assertTrue(g.isEqual(new Struct("prologEngine", new Struct("a"), new Int(1))));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 2);
 		Struct validType = (Struct) info.getTerm("ValidType");
@@ -1055,6 +1061,7 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
+		//System.out.println(g);
 		assertTrue(g.isEqual(new Struct("all_solutions_predicates_guard",
 				new Struct("a"), new Var("X"), new Var("L"))));
 		Int argNo = (Int) info.getTerm("ArgNo");

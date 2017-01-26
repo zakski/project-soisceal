@@ -1,5 +1,11 @@
 package alice.tuprolog;
 
+import alice.tuprolog.DefaultOperatorManager;
+import alice.tuprolog.Int;
+import alice.tuprolog.Parser;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Var;
+import alice.tuprolog.exceptions.InvalidTermException;
 import junit.framework.TestCase;
 
 public class ParserTestCase extends TestCase {
@@ -48,7 +54,7 @@ public class ParserTestCase extends TestCase {
 		Parser p = new Parser("[p|Y]");
 		Struct result = new Struct(new Struct("p"), new Var("Y"));
 		result.resolveTerm();
-		assertEquals(result, p.nextTerm(false));
+		assertEquals(result.toString(), p.nextTerm(false).toString());
 	}
 	
 	public void testBraces() throws InvalidTermException {

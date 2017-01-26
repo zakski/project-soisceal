@@ -3,8 +3,14 @@ package alice.tuprolog;
 import java.util.ArrayList;
 import java.util.List;
 
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Term;
+import alice.tuprolog.Theory;
+import alice.tuprolog.Var;
 import alice.tuprolog.event.ExceptionEvent;
-import alice.tuprolog.event.ExceptionListener;
+import alice.tuprolog.exceptions.PrologException;
+import alice.tuprolog.interfaces.event.ExceptionListener;
 
 public class ConcordionSingleton {
 

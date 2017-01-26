@@ -3,6 +3,10 @@ package alice.tuprolog;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import alice.tuprolog.Int;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Term;
+import alice.tuprolog.exceptions.InvalidTermException;
 import junit.framework.TestCase;
 
 /**

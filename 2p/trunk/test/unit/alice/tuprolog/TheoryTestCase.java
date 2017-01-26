@@ -1,5 +1,11 @@
 package alice.tuprolog;
 
+import alice.tuprolog.Prolog;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Term;
+import alice.tuprolog.Theory;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.exceptions.MalformedGoalException;
 import junit.framework.TestCase;
 
 public class TheoryTestCase extends TestCase {

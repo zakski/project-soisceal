@@ -3,6 +3,10 @@ package alice.tuprolog;
 import java.util.List;
 import java.util.Map;
 
+import alice.tuprolog.Library;
+import alice.tuprolog.PrimitiveInfo;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.exceptions.MalformedGoalException;
 import alice.tuprolog.lib.IOLibrary;
 import junit.framework.TestCase;
 

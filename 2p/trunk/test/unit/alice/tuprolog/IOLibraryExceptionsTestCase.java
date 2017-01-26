@@ -3,6 +3,12 @@ package alice.tuprolog;
 import java.io.File;
 import java.io.PrintWriter;
 
+import alice.tuprolog.Int;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Term;
+import alice.tuprolog.Var;
 import junit.framework.TestCase;
 
 /**
