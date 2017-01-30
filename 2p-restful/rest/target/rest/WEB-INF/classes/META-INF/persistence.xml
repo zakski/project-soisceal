@@ -9,7 +9,12 @@
     <jta-data-source>jdbc/__default</jta-data-source>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
+    	<property name="eclipselink.ddl-generation" value="create-or-extend-tables" />
+    <!--
+    	Property used for testing purposes. Drops all tables and creates them all again at each startup.
+    	
         <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+    -->
     </properties>
   </persistence-unit>
 </persistence>

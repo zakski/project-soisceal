@@ -5,16 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
-import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -27,6 +23,9 @@ import it.unibo.alice.tuprolog.ws.security.Role;
 
 
 /**
+ * This component initializes the server, it executes at startup and
+ * is used to load configurations from the deployment archive, setup users, etc...
+ * 
  * @author Andrea Muccioli
  *
  */
@@ -77,12 +76,18 @@ public class StartupOperations {
 				manager.addUser(admin);
 			}
 		}
+		//if no configuration is set, add a default empty one
+		if(manager.getConfiguration() == null)
+		{
+			manager.resetConfiguration();
+		}
+		
     }
     
     
     /**
      * Reads user credentials from the XML configuration file "user_configuration.xml",
-     * contained in the deployment archive, and creates a list of User based
+     * contained in the deployment archive, and creates a list of User based on
      * the information read.
      * 
      * @return A List of User containing the user information read from the

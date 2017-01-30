@@ -1,13 +1,10 @@
 package it.unibo.alice.tuprolog.ws.rest;
 
 
-import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Parameter;
 import java.net.URI;
-import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
@@ -29,7 +26,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
 import org.jdom2.Document;
@@ -50,6 +46,11 @@ import it.unibo.alice.tuprolog.ws.security.Role;
 
 
 /**
+ * This is the component that implements the configuration part of the server's user interface. 
+ * As such, it contains methods to access and/or modify the configuration of the server.</br>
+ * The majority of the methods require authentication, and therefore a login method is provided.</br>
+ * All the public methods are exposed to the client as RESTful web services.
+ * 
  * @author Andrea Muccioli
  *
  */
@@ -68,7 +69,7 @@ public class RestConfigurationService {
 	private StorageService manager;
 	
 	/**
-	 * Get a XML representation of the service containing all the methods with their simpleName, the
+	 * Gets a XML representation of the service containing all the methods with their simpleName, the
 	 * required authentication, the MIME types of what they consume and produce, the relative URL,
 	 * the HTTP method and, if present the query parameters needed to invoke the respective REST service.
 	 * 
@@ -301,8 +302,8 @@ public class RestConfigurationService {
 	@Path("goalList/byName")
 	@RequiresAuth
 	@GET
-	public Response goalByName(@QueryParam("goal") String goalName, @Context UriInfo uriInfo, @HeaderParam("token") String token) {
-		System.out.println("Ricevuta richiesta GET goalByName");
+	public Response getGoalByName(@QueryParam("goal") String goalName, @Context UriInfo uriInfo, @HeaderParam("token") String token) {
+		System.out.println("Ricevuta richiesta GET getGoalByName");
 		int index = manager.getConfiguration().getGoals().indexOf(goalName);
 		if (index < 0)
 			return Response.status(Status.PRECONDITION_FAILED)

@@ -1,11 +1,9 @@
 package it.unibo.alice.tuprolog.ws.rest;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URI;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -17,7 +15,6 @@ import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -45,12 +42,17 @@ import alice.tuprolog.MalformedGoalException;
 import alice.tuprolog.NoMoreSolutionException;
 import alice.tuprolog.SolveInfo;
 import it.unibo.alice.tuprolog.ws.persistence.StorageService;
-import it.unibo.alice.tuprolog.ws.security.Role;
 import it.unibo.alice.tuprolog.ws.core.PrologSolution;
-import it.unibo.alice.tuprolog.ws.core.RequiresAuth;
 import it.unibo.alice.tuprolog.ws.core.StatelessEngine;
 
 /**
+ * This is the component that implements the public part of the server's user interface. 
+ * As such, it contains methods to access some of the the configurations of the server and,
+ * more important, methods to request the resolution (with or without session state support)
+ * of a goal from the goalList.</br>
+ * The methods don't require any authentication, and therefore no login method is provided.</br>
+ * All the public methods are exposed to the client as RESTful web services.
+ * 
  * @author Andrea Muccioli
  *
  */
@@ -71,53 +73,6 @@ public class RestTuPrologService {
 	private void setup() {
 		
 	}
-
-//	@GET
-//	@Produces(MediaType.TEXT_PLAIN)
-//	public String getInfo() {
-//		StringBuilder sb = new StringBuilder();
-//		Class service = this.getClass();
-//		String classPath = ((Path)service.getAnnotation(Path.class)).value();
-//		sb.append(service.getSimpleName());
-//		sb.append("\n\n");
-//		sb.append("Methods:\n");
-//		Method[] methods = service.getDeclaredMethods();
-//		for (Method cur : methods) {
-//			if (Modifier.isPublic(cur.getModifiers()) && !Modifier.isStatic(cur.getModifiers()))
-//			{
-//				String produces = "";
-//				String consumes = "";
-//				String url = classPath;
-//				String httpMethod = "";
-//				Annotation[] annotations = cur.getAnnotations();
-//				for (Annotation ann : annotations) {
-//					String simpleName = ann.annotationType().getSimpleName();
-//					if (simpleName.equals("GET") || simpleName.equals("POST"))
-//						httpMethod = simpleName;
-//					else if (simpleName.equals("Produces"))
-//					{
-//						produces = Arrays.toString(((Produces)ann).value());
-//						
-//					} else if (simpleName.equals("Consumes"))
-//					{
-//						consumes = Arrays.toString(((Consumes)ann).value());
-//					} else if (simpleName.equals("Path"))
-//					{
-//						String thisPath = ((Path)ann).value();
-//						url +=  "/" + thisPath;
-//					}
-//				}
-//				
-//				sb.append(cur.getName());
-//				sb.append("\n");
-//				sb.append("\tHttp Method: "+httpMethod+"\n");
-//				sb.append("\tURL: "+url+"\n");
-//				sb.append("\tProduces: "+produces+"\n");
-//				sb.append("\tConsumes: "+consumes+"\n");
-//			}
-//		}
-//		return sb.toString();
-//	}
 	
 	/**
 	 * Gets a XML representation of the service containing all the methods with their simpleName,
@@ -265,8 +220,8 @@ public class RestTuPrologService {
 	 */
 	@Path("goalList/byName")
 	@GET
-	public Response goalByName(@QueryParam("goal") String goalName, @Context UriInfo uriInfo) {
-		System.out.println("Ricevuta richiesta GET goalByName");
+	public Response getGoalByName(@QueryParam("goal") String goalName, @Context UriInfo uriInfo) {
+		System.out.println("Ricevuta richiesta GET getGoalByName");
 		int index = manager.getConfiguration().getGoals().indexOf(goalName);
 		if (index < 0)
 			return Response.status(Status.PRECONDITION_FAILED)
@@ -340,8 +295,8 @@ public class RestTuPrologService {
 	
 	/**
 	 * Gets the first n solutions using the goal provided. If less than n
-	 * solutions are possible, all the possible solutions will be returned.
-	 * If n is null all the solutions will be returned.
+	 * solutions are possible, all the possible solutions will be returned.</br>
+	 * If n is null all the solutions will be returned.</br>
 	 * This method doesn't supply session state.
 	 * 
 	 * @param goal : the goal needs to be part of the current goals list.
@@ -406,11 +361,11 @@ public class RestTuPrologService {
 	
 	/**
 	 * Gets one solution using the goal and the engine state provided. It returns
-	 * the first possible solution.
+	 * the first possible solution.</br>
 	 * The goal is provided as property of the JSON Object with property name "goal",
-	 * and the engine state as property of the same JSON Object with property name "engine".
-	 * At the first invocation with session, the goal must be provided and the state must not.
-	 * At following invocations with session, the state must be provided and the state must not.
+	 * and the engine state as property of the same JSON Object with property name "engine".</br>
+	 * At the first invocation with session, the goal must be provided and the state must not.</br>
+	 * At following invocations with session, the state must be provided and the state must not.</br>
 	 * This method supply session state. Consequent invocations of getSolution/s with session
 	 * take account of the previous results.
 	 * 
@@ -517,12 +472,12 @@ public class RestTuPrologService {
 	/**
 	 * Gets n solutions using the goal and the engine state provided. It returns
 	 * the first possible n solutions, if less than n solutions are possible, all
-	 * the possible solutions will be returned.
-	 * If n is null, all the solutions will be returned.
+	 * the possible solutions will be returned.</br>
+	 * If n is null, all the solutions will be returned.</br>
 	 * The goal is provided as property of the JSON Object with property name "goal",
-	 * and the engine state as property of the same JSON Object with property name "engine".
-	 * At the first invocation with session, the goal must be provided and the state must not.
-	 * At following invocations with session, the state must be provided and the state must not.
+	 * and the engine state as property of the same JSON Object with property name "engine".</br>
+	 * At the first invocation with session, the goal must be provided and the state must not.</br>
+	 * At following invocations with session, the state must be provided and the state must not.</br>
 	 * This method supply session state. Consequent invocations of getSolution/s with session
 	 * take account of the previous results.
 	 * 

@@ -14,6 +14,13 @@ import javax.persistence.Table;
 import com.google.gson.Gson;
 
 /**
+ * This entity specifies how the application persists the set configuration.
+ * The class contains the needed getters and setters to access the fields.</br>
+ * Currently the only properties that affects the behaviour of the server are
+ * "theory" and "goals"; "configuration" is a placeholder for future uses, and
+ * "configurationId" is needed for the data source, but the server actually
+ * supports a single configuration (with configurationId = 1).
+ * 
  * @author Andrea Muccioli
  *
  */
@@ -24,9 +31,14 @@ public class PrologConfiguration implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(name="id")
-	private String id;
+	@Column(name="configurationId")
+	private String configurationId;
 	
+	/**
+	 * NOTE: the max length of the theory configured is 2000 characters.</br>
+	 * The max length of a VARCHAR field in Apache Derby (where this property
+	 * is mapped) is 32672 characters. Change the value for different needs.
+	 */
 	@Column(name = "theory", length=2000)
 	private String theory;
 	
@@ -38,14 +50,14 @@ public class PrologConfiguration implements Serializable {
 	private List<String> goals;
 	
 	public PrologConfiguration() {
-		id = "1";
+		configurationId = "1";
 		theory = "";
 		configuration = "";
 		goals = new ArrayList<String>();
 	}
 	
 	public PrologConfiguration(String theory, String configuration, List<String> goals) {
-		id = "1";
+		configurationId = "1";
 		this.theory = theory;
 		this.configuration = configuration;
 		this.goals = goals;

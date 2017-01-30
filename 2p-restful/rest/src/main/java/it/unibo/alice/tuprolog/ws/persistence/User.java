@@ -10,6 +10,12 @@ import it.unibo.alice.tuprolog.ws.security.Role;
 
 
 /**
+ * This entity specifies how the application persists the users' information.
+ * The class contains the needed getters and setters to access the fields and
+ * methods to check the validity of usernames and passwords matching them
+ * against set regular expressions. The class can also generate a default
+ * admin User with the specific method.</br>
+ * 
  * @author Andrea Muccioli
  *
  */
@@ -22,6 +28,8 @@ public class User implements Serializable {
 	
 	
 	/**
+	 * Regular expression used to test the validity of usernames.</br></br>
+	 * 
 	 * Matches strings between 5 and 15 characters that can only contain lowercase
 	 * characters, digits, and the symbols '_' and '-'.
 	 */
@@ -29,10 +37,12 @@ public class User implements Serializable {
 	
 	
 	/**
-	 * (?=.*\\d)	--> must contain at least one digit from 0-9
-	 * (?=.*[a-z])	--> must contain at least one lowercase character
-	 * (?=.*[A-Z])	--> must contain at least one uppercase character
-	 * (?=.*[@#$%,])	--> must contain at least one symbol in the list "@#$%,"
+	 * Regular expression uset to test the validity of passwords.</br></br>
+	 * 
+	 * (?=.*\\d)	--> must contain at least one digit from 0-9</br>
+	 * (?=.*[a-z])	--> must contain at least one lowercase character</br>
+	 * (?=.*[A-Z])	--> must contain at least one uppercase character</br>
+	 * (?=.*[@#$%,])	--> must contain at least one symbol in the list "@#$%,"</br>
 	 * .{6,20}	--> matches anything that satisfies the previous conditions and whose length is between 6 and 20 characters
 	 * 
 	 */
@@ -99,18 +109,38 @@ public class User implements Serializable {
 	}
 	
 	
+	/**
+	 * Checks the validity of the username matching it
+	 * against the set regular expression.
+	 * 
+	 * @param username : the username to validate
+	 * @return true if valid, false if not.
+	 */
 	public static boolean validateUsername(String username) {
 		Pattern pattern = Pattern.compile(USERNAME_REGEX);
 		Matcher matcher = pattern.matcher(username);
 		return matcher.matches();
 	}
 	
+	/**
+	 * Checks the validity of the password matching it
+	 * against the set regular expression.
+	 * 
+	 * @param password : the password to validate
+	 * @return true if valid, false if not.
+	 */
 	public static boolean validatePassword(String password) {
 		Pattern pattern = Pattern.compile(PASSWORD_REGEX);
 		Matcher matcher = pattern.matcher(password);
 		return matcher.matches();
 	}
 	
+	/**
+	 * Creates a default admin User, using the set defaultAdminUsername
+	 * and defaultAdminPsw.
+	 * 
+	 * @return the created default admin User.
+	 */
 	public static User getDefaultAdmin() {
 		return new User(defaultAdminUsername, defaultAdminPsw, Role.ADMIN);
 	}

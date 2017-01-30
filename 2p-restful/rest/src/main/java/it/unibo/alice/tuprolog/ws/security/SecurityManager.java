@@ -2,10 +2,8 @@ package it.unibo.alice.tuprolog.ws.security;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.Properties;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.ejb.DependsOn;
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -32,6 +30,11 @@ import it.unibo.alice.tuprolog.ws.persistence.User;
 
 
 /**
+ * This component is the main access point, for all the other components of the application,
+ * to request security-related operations. This component stores the signing and encryption keys
+ * for the engine state and the authentication token, and provides methods to simplify the operations
+ * of signature, encryption, verification and decryption of the JwtClaims and engine state.
+ * 
  * @author Andrea Muccioli
  *
  */
@@ -204,6 +207,7 @@ public class SecurityManager {
     }
     
     
+        
     /**
      * Encrypts the payload using the provided public key and algorithm.
      * 
@@ -279,6 +283,17 @@ public class SecurityManager {
     		return jws.getPayload();
     	else
     		throw new IllegalArgumentException("Signature is not valid");
+    }
+    
+    /**
+     * Generates new keys for the signing and encryption of the engine state.
+     * 
+     * @throws JoseException
+     */
+    @Lock(LockType.WRITE)
+    public void regenerateEngineKeys() throws JoseException {
+		EngineSigKey = EcJwkGenerator.generateJwk(EllipticCurves.P256);
+		EngineEncKey = EcJwkGenerator.generateJwk(EllipticCurves.P256);
     }
 
 }

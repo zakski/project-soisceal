@@ -16,55 +16,31 @@ import org.jdom2.input.SAXBuilder;
 
 import com.google.gson.JsonObject;
 
+/**
+ * This component is meant to offer functionalities to fetch data from 
+ * a generic source with a pull behavior.</br></br>
+ * 
+ * Note: currently implemented to work with random generated test data.
+ * 
+ * @author Andrea Muccioli
+ *
+ */
 @Stateless
 @LocalBean
 public class DataSupplier {
 	
-//	public List<JsonObject> getData()
-//	{
-//		List<JsonObject> lista = new ArrayList<JsonObject>();
-//		Random r = new Random();
-//		JsonObject obj = new JsonObject();
-//		obj.addProperty("name", "peso_specifico");
-//		obj.addProperty("type", "int");
-//		obj.addProperty("value", r.nextInt(10)+1027);
-//		lista.add(obj);
-//		
-//		JsonObject obj2 = new JsonObject();
-//		obj2.addProperty("name", "sodiuria");
-//		obj2.addProperty("type", "int");
-//		obj2.addProperty("value", r.nextInt(10)+203);
-//		lista.add(obj2);
-//		
-//		JsonObject obj3 = new JsonObject();
-//		obj3.addProperty("name", "globuli_bianchi");
-//		obj3.addProperty("type", "boolean");
-//		obj3.addProperty("value", r.nextBoolean());
-//		lista.add(obj3);
-//		
-//		JsonObject obj4 = new JsonObject();
-//		obj4.addProperty("name", "sangue_feci");
-//		obj4.addProperty("type", "boolean");
-//		obj4.addProperty("value", r.nextBoolean());
-//		lista.add(obj4);
-//		
-//		JsonObject obj5 = new JsonObject();
-//		obj5.addProperty("name", "chetoni");
-//		obj5.addProperty("type", "boolean");
-//		obj5.addProperty("value", r.nextBoolean());
-//		lista.add(obj5);
-//		
-//		JsonObject obj6 = new JsonObject();
-//		obj6.addProperty("name", "glucosio");
-//		obj6.addProperty("type", "boolean");
-//		obj6.addProperty("value", true);
-//		lista.add(obj6);
-//		
-//		return lista;
-//	}
-	
-
-	
+	/**
+	 * Gets a List of JsonObject containing the data obtained from a generic source.
+	 * Every JsonObject contains three fields:</br>
+	 * 	-"name" : an identifying name for the data.</br>
+	 * 	-"type" : the type of the data (currently only int, double, boolean).</br>
+	 * 	-"value: : the value of the data.</br></br>
+	 * 
+	 * NOTE: Currently, for testing purposes, the data are randomly generated at each invocation based on
+	 * the configuration file "data_configuration.xml" contained in the deploy archive.
+	 * 
+	 * @return a List<JsonObject> containing the data
+	 */
 	public List<JsonObject> getData()
 	{
 		SAXBuilder builder = new SAXBuilder();

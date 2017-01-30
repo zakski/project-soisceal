@@ -6,6 +6,10 @@ import java.util.List;
 import alice.tuprolog.SolveInfo;
 
 /**
+ * This is a container object to encapsulate both a List of SolveInfo
+ * from the solution of a goal on a Prolog engine and the serialized state
+ * at the end of the above-mentioned resolution.
+ * 
  * @author Andrea Muccioli
  *
  */

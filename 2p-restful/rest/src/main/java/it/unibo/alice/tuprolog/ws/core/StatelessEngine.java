@@ -7,8 +7,6 @@ import javax.ejb.EJB;
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 
-import com.google.gson.JsonObject;
-
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.MalformedGoalException;
 import alice.tuprolog.NoMoreSolutionException;
@@ -20,6 +18,12 @@ import it.unibo.alice.tuprolog.ws.persistence.StorageService;
 
 
 /**
+ * This component is the executing unit of the application. All the StatelessEngines
+ * share their state in the form of a singleton EngineState.</br>
+ * This bean wraps a tuProlog engine and use it to solve all the requests it receives, while providing
+ * advanced features like the dynamic update of the Knowledge Base using the refresh of the assertions,
+ * or the resolution of goals with session state support.
+ * 
  * @author Andrea Muccioli
  *
  */
@@ -40,26 +44,10 @@ public class StatelessEngine {
     public StatelessEngine() {
 
     }
-    
-	public void reloadConfiguration() {
-		System.out.println("PrologEngine reload provo ad ottenere teoria");
-		String theory = manager.getConfiguration().getTheory();
-//		System.out.println("reload ottenuto: "+theory);
-		engine = new Prolog();
-		try {
-			if (!theory.isEmpty()) {
-				Theory t = new Theory(theory);
-				engine.setTheory(t);
-			}
-		} catch (InvalidTheoryException e) {
-			e.printStackTrace();
-			engine = new Prolog();
-		}
-	}
 	
 	/**
-	 * Initializes the engine with the theory set in the configuration. If no theory is
-	 * set or if the theory is not valid, a new Prolog engine is created.
+	 * Initializes the engine with the theory set in the configuration and the current
+	 * assertion list.
 	 */
 	public void loadConfiguration() {
 		System.out.println("StatelessEngine/ load provo ad ottenere teoria");
@@ -263,6 +251,12 @@ public class StatelessEngine {
 		return lista;
 	}
 	
+	/**
+	 * Updates the list of assertions. Retracts the terms in the current list
+	 * of assertions, get the updated assertions from the EngineState and finally
+	 * copies them in the local assertion list.
+	 * 
+	 */
 	private void refreshAssertions() {
 //		if(this.currentAssertions.equals(engineState.getCurrentAssertions()))
 //			return;
