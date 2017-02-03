@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using fit;
 using alice.tuprolog;
+using alice.tuprolog.exceptions;
+using alice.tuprolog.interfaces;
+using alice.tuprolog.interfaces.@event;
 using alice.tuprolog.@event;
 using java.util;
 
@@ -208,6 +211,11 @@ namespace Fixtures
     }
 
     Term copy(AbstractMap vMap, int idExecCtx){
+        return this;
+    }
+
+    public override Term copyAndRetainFreeVar(AbstractMap vMap, int idExecCtx)
+    {
         return this;
     }
 
