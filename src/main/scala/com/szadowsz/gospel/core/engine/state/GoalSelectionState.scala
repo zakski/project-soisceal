@@ -21,45 +21,47 @@ import com.szadowsz.gospel.core.data.{Struct, Term}
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
 
 /**
- * @author Alex Benini
- *
- */
-class GoalSelectionState(runner : EngineRunner) extends State(runner,"Call"){
+  * State to select a valid available clause to evaluate.
+  *
+  * @param runner the runner the state occurred in.
+  */
+class GoalSelectionState(protected override val runner: EngineRunner) extends State {
 
-  private def fetchGoal(theEngine: Engine): Term = {
-    val curGoal = theEngine.context.goalsToEval.fetch
-    if (curGoal == null) {
-      if (theEngine.context.fatherCtx == null) {
-        // demonstration termination
-        curGoal
-      } else {
-        // drop back to the parent execution context
-        theEngine.context = theEngine.context.fatherCtx
-        fetchGoal(theEngine)
-      }
-    } else {
-      curGoal
+  /**
+    * the name of the engine state.
+    */
+  protected val stateName: String = "Call"
+
+  private def fetchGoal(theEngine: Engine): Option[Term] = {
+    theEngine.context.goalsToEval.fetch() match {
+      case None =>
+        if (theEngine.context.fatherCtx == null) {
+          None // demonstration termination
+        } else {
+          theEngine.context = theEngine.context.fatherCtx  // drop back to the parent execution context
+          fetchGoal(theEngine)
+        }
+      case s: Some[Term] => s
     }
   }
 
-  private[engine] override def doJob(theEngine: Engine) {
-    var curGoal: Term = fetchGoal(theEngine)
-
-    if (curGoal == null) {
-      theEngine.nextState = if (theEngine.hasChoicePoint) runner.END_TRUE_CP else runner.END_TRUE
-    } else {
-      val goal_app: Term = curGoal.getTerm
+  private[engine] override def doJob(theEngine: Engine): Unit = {
+     fetchGoal(theEngine) match {
+      case None =>  theEngine.nextState = if (theEngine.hasChoicePoint) runner.END_TRUE_CP else runner.END_TRUE
+      case Some(goal) =>
+        var curGoal = goal
+        val goal_app: Term = curGoal.getTerm
 
       if (!goal_app.isInstanceOf[Struct]) {
         theEngine.nextState = runner.END_FALSE
-
       } else {
-
-        // Code inserted to allow evaluation of meta-clause
-        // such as p(X) :- X. When evaluating directly terms,
-        // they are converted to execution of a call/1 predicate.
-        // This enables the dynamic linking of built-ins for
-        // terms coming from outside the demonstration context.
+        /*
+         Code inserted to allow evaluation of meta-clause
+         such as p(X) :- X. When evaluating directly terms,
+         they are converted to execution of a call/1 predicate.
+         This enables the dynamic linking of built-ins for
+         terms coming from outside the demonstration context.
+        */
         if (curGoal ne goal_app) {
           curGoal = new Struct("call", goal_app)
         }

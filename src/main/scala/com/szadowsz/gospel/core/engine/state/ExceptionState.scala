@@ -9,7 +9,12 @@ import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
 /**
  * @author Matteo Iuliani
  */
-class ExceptionState(runner : EngineRunner) extends State(runner,"Exception") {
+class ExceptionState(protected override val runner : EngineRunner) extends State {
+  /**
+    * the name of the engine state.
+    */
+  protected val stateName: String = "Exception"
+
   private[gospel] final val catchTerm: Term = Term.createTerm("catch(Goal, Catcher, Handler)")
   private[gospel] final val javaCatchTerm: Term = Term.createTerm("java_catch(Goal, List, Finally)")
 

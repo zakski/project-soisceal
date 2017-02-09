@@ -26,7 +26,13 @@ import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
  * @author Alex Benini
  *
  */
-class BacktrackState(runner : EngineRunner) extends State(runner,"Back") {
+class BacktrackState(protected override val runner : EngineRunner) extends State {
+
+  /**
+    * the name of the engine state.
+    */
+  protected val stateName: String = "Back"
+
 
   private def verifyChoicePoint(e: Engine, curChoice: ChoiceContext): Boolean = {
     if (curChoice == null) {
@@ -63,7 +69,7 @@ class BacktrackState(runner : EngineRunner) extends State(runner,"Back") {
         stopDeunify = curCtx.fatherVarsList
         fatherIndex = curCtx.fatherGoalId
         curCtx = curCtx.fatherCtx
-        curGoal = curCtx.goalsToEval.backTo(fatherIndex).getTerm
+        curGoal = curCtx.goalsToEval.backTo(fatherIndex).get.getTerm
         if (!(curGoal.isInstanceOf[Struct])) {
           e.nextState = runner.END_FALSE
           return
@@ -76,7 +82,7 @@ class BacktrackState(runner : EngineRunner) extends State(runner,"Back") {
     e.nextState = runner.GOAL_EVALUATION
   }
 
-  private[gospel] def doJob(e: Engine) {
+  private[gospel] def doJob(e: Engine): Unit = {
     val curChoice: ChoiceContext = e.fetchChoicePoint
     if (!verifyChoicePoint(e, curChoice))
       return
@@ -84,7 +90,7 @@ class BacktrackState(runner : EngineRunner) extends State(runner,"Back") {
     // deunify variables and reload old goal
     e.currentAlternative = curChoice
     e.context = curChoice.executionContext
-    val curGoal = e.context.goalsToEval.backTo(curChoice.indexSubGoal).getTerm
+    val curGoal = e.context.goalsToEval.backTo(curChoice.indexSubGoal).get.getTerm
 
     if (!(curGoal.isInstanceOf[Struct])) {
       e.nextState = runner.END_FALSE

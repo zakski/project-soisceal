@@ -22,17 +22,28 @@ import com.szadowsz.gospel.util.LoggerCategory
 import org.slf4j.LoggerFactory
 
 /**
- * @author Alex Benini
- *
- *         Template for states of Core Engine
- */
-abstract class State private[gospel] (protected val  runner : EngineRunner, protected val stateName: String) {
+  * Template for states of Core Engine. Not for consumption outside of the core engine package.
+  *
+  */
+trait State {
 
+  /**
+    * Use one logger category for all states.
+    */
   protected lazy val _logger = LoggerFactory.getLogger(LoggerCategory.ENGINE_STATE)
 
-  private[engine] def doJob(e: Engine)
+  /**
+    * the runner the state occurred in.
+    */
+  protected val runner : EngineRunner
 
-  override def toString: String = {
-    return stateName
-  }
+  /**
+    * the name of the engine state.
+    */
+  protected val stateName: String
+
+
+  private[engine] def doJob(e: Engine) : Unit
+
+  override def toString: String = stateName
 }

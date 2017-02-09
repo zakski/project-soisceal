@@ -25,8 +25,12 @@ import com.szadowsz.gospel.util.exception.engine.{PrologException, JVMException,
 /**
  * @author Alex Benini
  */
-class GoalEvaluationState(runner: EngineRunner) extends State(runner,"Eval"){
+class GoalEvaluationState(protected override val runner: EngineRunner) extends State{
 
+  /**
+    * the name of the engine state.
+    */
+  protected val stateName: String = "Eval"
 
   private def handleHaltException(halt: HaltException, theEngine: Engine): Unit = {
     theEngine.nextState = runner.END_HALT

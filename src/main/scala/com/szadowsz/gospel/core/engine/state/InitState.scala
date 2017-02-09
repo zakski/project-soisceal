@@ -21,20 +21,23 @@ import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
 
 /**
- * @author Alex Benini
- *
- *         Initial state of demonstration
- */
-class InitState(runner : EngineRunner) extends State(runner,"Goal"){
+  * Initial demonstration state of the engine.
+  *
+  * @param runner the runner the state occurred in.
+  */
+final class InitState(protected override val runner: EngineRunner) extends State {
 
-  private[engine] override def doJob(theEngine: Engine) {
+  /**
+    * the name of the engine state.
+    */
+  protected val stateName: String = "Goal"
 
-    /* Initialize VM environment and first executionContext */
+  private[engine] override def doJob(theEngine: Engine): Unit = {
+    // Initialize WAM environment and initial executionContext
     val clause = theEngine.prepareGoal()
-    theEngine.context = new ExecutionContext(theEngine,clause)
+    theEngine.context = new ExecutionContext(theEngine, clause)
 
-    /* Set the future state */
+    // Set the future state to selecting an appropriate fact or rule base on our query.
     theEngine.nextState = runner.GOAL_SELECTION
-
   }
 }

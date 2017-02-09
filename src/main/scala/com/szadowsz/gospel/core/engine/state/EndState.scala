@@ -31,10 +31,15 @@ import scala.collection.JavaConverters._
  *         End state of demostration.
  *
  * Constructor
- * @param end Terminal state of computation
+ * @param endState Terminal state of computation
  */
-class EndState(runner : EngineRunner, end: scala.Int) extends State(runner,"End") {
-  private var endState: scala.Int = end
+class EndState(protected override val runner : EngineRunner, protected val endState: scala.Int) extends State {
+
+  /**
+    * the name of the engine state.
+    */
+  protected val stateName: String = "End"
+
   private var goal: Struct = null
   private var vars: List[Var] = null
   private var setOfCounter = 0

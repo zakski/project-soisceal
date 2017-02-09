@@ -22,10 +22,10 @@ private[engine] class SubGoalStore(subGoals: SubGoalTree) {
     *
     * @param identifier The sub-goal state to backtrack to
     */
-  def backTo(identifier: SubGoalId): Term = {
+  def backTo(identifier: SubGoalId): Option[Term] = {
     popSubGoal(identifier.asInstanceOf[SubGoalId])
     _index -= 1 // decrease the index so the term we fetch and return will be correct
-    fetch
+    fetch()
   }
 
   /** Pushes a new sub-goal list onto the stack
@@ -49,7 +49,7 @@ private[engine] class SubGoalStore(subGoals: SubGoalTree) {
   }
 
   /** Returns the next sub-goal to evaluate */
-  def fetch: Term = {
+  def fetch(): Option[Term] = {
     if (haveSubGoals) {
       val goal = _goals.getChild(_index)
       _index += 1
@@ -57,17 +57,16 @@ private[engine] class SubGoalStore(subGoals: SubGoalTree) {
       goal match {
         case g : SubGoalTree =>
           pushSubGoal(g)
-          fetch
+          fetch()
         case g : SubGoalLeaf =>
-          g.getValue
+          Option(g.getValue)
       }
     } else { // if we have no more sub-goals we go back up a level if able
       if (_curSGId == null) {
-        null
-
+        None
       } else {
         popSubGoal(_curSGId)
-        fetch
+        fetch()
       }
     }
   }

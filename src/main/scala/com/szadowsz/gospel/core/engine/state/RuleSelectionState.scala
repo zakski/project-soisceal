@@ -30,7 +30,12 @@ import com.szadowsz.gospel.util.OneWayList
  * @author Alex Benini
  *
  */
-class RuleSelectionState(runner : EngineRunner) extends State (runner,"Init"){
+class RuleSelectionState(protected override val runner : EngineRunner) extends State {
+
+  /**
+    * the name of the engine state.
+    */
+  protected val stateName: String = "Init"
 
   private def getClauseOptions(e: Engine, goal: Struct, alternative: ChoiceContext): Option[ClauseStore] = {
     if (alternative == null) {/* from normal evaluation */
