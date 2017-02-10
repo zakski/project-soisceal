@@ -76,11 +76,11 @@ class Flag implements java.io.Serializable {
      * @param value the possible value of the flag
      * @return flag validity
      */
-    public boolean isValidValue(Prolog mediator, Term value) {
+    public boolean isValidValue(boolean isOccursCheckEnabled, Term value) {
         java.util.Iterator<? extends Term> it=valueList.listIterator();
         while (it.hasNext()) {
             Term t=(Term)it.next();
-            if (value.match(mediator, t)) {
+            if (value.match(isOccursCheckEnabled, t)) {
                 return true;
             }
         }
@@ -110,8 +110,8 @@ class Flag implements java.io.Serializable {
      * @param value new value of the flag
      * @return true if the value is valid
      */
-    public boolean setValue(Prolog mediator, Term value) {
-        if (isValidValue(mediator, value) && modifiable) {
+    public boolean setValue(boolean isOccursCheckEnabled, Term value) {
+        if (isValidValue(isOccursCheckEnabled, value) && modifiable) {
             this.value = value;
             return true;
         } else {

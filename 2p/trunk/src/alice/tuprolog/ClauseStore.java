@@ -119,7 +119,7 @@ public class ClauseStore {
         ClauseInfo clause = null;
         do {
             clause = (ClauseInfo) clauses.getHead();
-            if (goal.match(this.mediator, clause.getHead())) return true;
+            if (goal.match(this.mediator.getFlagManager().isOccursCheckEnabled(), clause.getHead())) return true;
             clauses = clauses.getTail();
         } while (clauses != null);
         return false;

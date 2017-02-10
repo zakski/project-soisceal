@@ -246,18 +246,17 @@ public abstract class Term implements Serializable {
      * Tests if this term is unifiable with an other term.
      * No unification is done.
      *
-     * The test is done outside any demonstration context
-	 * @param prolog 
+     * The test is done outside any demonstration context 
      * @param t the term to checked
      *
      * @return true if the term is unifiable with this one
      */
-    public boolean match(Prolog prolog, Term t) {
+    public boolean match(boolean isOccursCheckEnabled, Term t) {
         resolveTerm();
         t.resolveTerm();
         List<Var> v1 = new LinkedList<Var>();
         List<Var> v2 = new LinkedList<Var>();
-        boolean ok = unify(v1,v2,t, prolog.getFlagManager().isOccursCheckEnabled());
+        boolean ok = unify(v1,v2,t, isOccursCheckEnabled);
         Var.free(v1);
         Var.free(v2);
         return ok;

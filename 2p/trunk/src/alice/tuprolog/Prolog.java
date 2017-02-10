@@ -730,7 +730,7 @@ public class Prolog implements IProlog, Serializable
 	
 	public boolean match(Term t0, Term t1) 
 	{
-		return t0.match(this, t1);
+		return t0.match(this.getFlagManager().isOccursCheckEnabled(), t1);
 	}
 
 	/**
