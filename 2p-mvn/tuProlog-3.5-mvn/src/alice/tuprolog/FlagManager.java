@@ -29,9 +29,6 @@ import alice.tuprolog.json.JSONSerializerManager;
  * @author Alex Benini
  */
 class FlagManager {
-
-	/* flag list */
-	private static ArrayList<Flag> Sflags; //Alberto
 	
     /* flag list */
     private ArrayList<Flag> flags;
@@ -43,7 +40,6 @@ class FlagManager {
 
     FlagManager() { //Alberto
         flags = new ArrayList<Flag>();
-        Sflags = flags;
         
         //occursCheck flag -> a default è on!
         Struct s = new Struct();
@@ -73,8 +69,8 @@ class FlagManager {
         while (it.hasNext()) {
             Flag flag = (Flag) it.next();
             if (flag.getName().equals(name)) {
-                if (flag.isModifiable() && flag.isValidValue(value)) {
-                    flag.setValue(value);
+                if (flag.isModifiable() && flag.isValidValue(mediator, value)) {
+                    flag.setValue(mediator, value);
                     return true;
                 } else {
                     return false;
@@ -126,15 +122,15 @@ class FlagManager {
         while (it.hasNext()) {
             Flag flag = (Flag) it.next();
             if (flag.getName().equals(name)) {
-                return flag.isValidValue(value);
+                return flag.isValidValue(mediator, value);
             }
         }
         return false;
     }
 
     //Alberto
-	public static boolean isOccursCheckEnabled() {
-		for(Flag f : Sflags){
+	public synchronized boolean isOccursCheckEnabled() {
+		for(Flag f : flags){
 			if(f.getName().equals("occursCheck")){
 				if(f.getValue().toString().equals("on"))
 					return true;
@@ -145,25 +141,24 @@ class FlagManager {
 	}
 	
 	//Alberto
-			public void serializeFlags(AbstractEngineState brain) {
-				if(brain instanceof FullEngineState){
-					ArrayList<String> a = new ArrayList<String>();
-					for(Flag f : flags){
-						a.add(JSONSerializerManager.toJSON(f));
-					}
-					((FullEngineState) brain).setFlags(a);
-				}
+	public void serializeFlags(AbstractEngineState brain) {
+		if(brain instanceof FullEngineState){
+			ArrayList<String> a = new ArrayList<String>();
+			for(Flag f : flags){
+				a.add(JSONSerializerManager.toJSON(f));
 			}
+			((FullEngineState) brain).setFlags(a);
+		}
+	}
 
-			//Alberto
-			public void reloadFlags(FullEngineState brain) {
-				ArrayList<String> a = brain.getFlags();
-				ArrayList<Flag> f = new ArrayList<Flag>();
-				for(String s : a){
-					Flag fl = JSONSerializerManager.fromJSON(s, Flag.class);
-					f.add(fl);
-				}
-				Sflags = f;
-				flags = f;
-			}
+	//Alberto
+	public void reloadFlags(FullEngineState brain) {
+		ArrayList<String> a = brain.getFlags();
+		ArrayList<Flag> f = new ArrayList<Flag>();
+		for(String s : a){
+			Flag fl = JSONSerializerManager.fromJSON(s, Flag.class);
+			f.add(fl);
+		}
+		flags = f;
+	}
 }

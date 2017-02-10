@@ -53,7 +53,7 @@ public class StateRuleSelection extends State {
             fromBacktracking = false;
             List<Var> varsList = new ArrayList<Var>();
             e.currentContext.trailingVars = new OneWayList<List<Var>>(varsList,e.currentContext.trailingVars);
-            clauseStore = ClauseStore.build(goal, varsList, c.find(goal));
+            clauseStore = ClauseStore.build(c.getMediator(), goal, varsList, c.find(goal));
             if (clauseStore == null){
                 e.nextState = c.BACKTRACK;
                 return;
@@ -106,7 +106,7 @@ public class StateRuleSelection extends State {
             
         Struct curGoal = curCtx.currentGoal;
         List<Var> unifiedVars = e.currentContext.trailingVars.getHead();
-        curGoal.unify(unifiedVars,unifiedVars,ec.headClause);
+        curGoal.unify(unifiedVars,unifiedVars,ec.headClause, c.getMediator().getFlagManager().isOccursCheckEnabled());
         
         ec.haveAlternatives = clauseStore.haveAlternatives();
         

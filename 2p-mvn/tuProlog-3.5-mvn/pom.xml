@@ -47,6 +47,18 @@
     </developer>
   </developers>
   
+  <profiles>
+  <profile>
+    <id>java8-doclint-disabled</id>
+    <activation>
+      <jdk>[1.8,)</jdk>
+    </activation>
+    <properties>
+      <javadoc.opts>-Xdoclint:none</javadoc.opts>
+    </properties>
+  </profile>
+</profiles>
+
   <build>
   
     <sourceDirectory>src</sourceDirectory>
@@ -92,6 +104,9 @@
           <goals>
             <goal>jar</goal>
           </goals>
+          <configuration>
+                    <additionalparam>${javadoc.opts}</additionalparam>
+                </configuration>
         </execution>
       </executions>
     </plugin>
@@ -142,17 +157,6 @@
     	<version>2.6.2</version>
 	</dependency>
 	
-		<dependency>
-     <groupId>com.ikvm</groupId>
-     <artifactId>ikvm</artifactId>
-     <version>1.0</version>
-</dependency>
-<dependency>
-     <groupId>com.ikvm</groupId>
-     <artifactId>ikvmapi</artifactId>
-     <version>1.0</version>
-</dependency>
- 
   </dependencies>
   
 </project>

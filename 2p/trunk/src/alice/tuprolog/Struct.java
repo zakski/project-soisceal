@@ -626,21 +626,21 @@ public class Struct extends Term {
      * @param vl2 list of variables unified
      * @return true if the term is unifiable with this one
      */
-    boolean unify(List<Var> vl1,List<Var> vl2,Term t) {
+    boolean unify(List<Var> vl1,List<Var> vl2,Term t, boolean isOccursCheckEnabled) {
         // In fase di unificazione bisogna annotare tutte le variabili della struct completa.
         t = t.getTerm();
         if (t instanceof Struct) {
             Struct ts = (Struct) t;
             if ( arity == ts.arity && name.equals(ts.name)) {
                 for (int c = 0;c < arity;c++) {
-                    if (!arg[c].unify(vl1,vl2,ts.arg[c])) {
+                    if (!arg[c].unify(vl1,vl2,ts.arg[c], isOccursCheckEnabled)) {
                         return false;
                     }
                 }
                 return true;
             }
         } else if (t instanceof Var) {
-            return t.unify(vl2, vl1, this);
+            return t.unify(vl2, vl1, this, isOccursCheckEnabled);
         }
         return false;
     }

@@ -259,74 +259,74 @@ public class Prolog implements IProlog, Serializable
 	}
 	
 	//Alberto
-			public static AbstractEngineState getEngineStateFromJSON(String jsonString){
-				AbstractEngineState brain = null;
-				if(jsonString.contains("FullEngineState")){
-					brain = JSONSerializerManager.fromJSON(jsonString, FullEngineState.class);
-				} else if(jsonString.contains("ReducedEngineState")){
-					brain = JSONSerializerManager.fromJSON(jsonString, ReducedEngineState.class);
-				}
-				return brain;
+	public static AbstractEngineState getEngineStateFromJSON(String jsonString){
+		AbstractEngineState brain = null;
+		if(jsonString.contains("FullEngineState")){
+			brain = JSONSerializerManager.fromJSON(jsonString, FullEngineState.class);
+		} else if(jsonString.contains("ReducedEngineState")){
+			brain = JSONSerializerManager.fromJSON(jsonString, ReducedEngineState.class);
+		}
+		return brain;
+	}
+				
+	//Alberto
+	public static Prolog fromJSON(String jsonString) {
+		AbstractEngineState brain = null;
+		Prolog p = null;
+		if(jsonString.contains("FullEngineState")){
+			brain = JSONSerializerManager.fromJSON(jsonString, FullEngineState.class);
+		}
+		else
+			return p;
+		try {
+			p = new Prolog(((FullEngineState) brain).getLibraries());
+			p.setTheory(new Theory(((FullEngineState) brain).getDynTheory()));
+			p.opManager = new OperatorManager();
+			LinkedList<Operator> l = ((FullEngineState) brain).getOp();
+			for(Operator o : l)
+				p.opManager.opNew(o.name, o.type, o.prio);
+			} catch (InvalidLibraryException e) {
+				e.printStackTrace();
+				return null;
+			} catch (InvalidTheoryException e) {
+				e.printStackTrace();
+				return null;
 			}
-				
-			//Alberto
-			public static Prolog fromJSON(String jsonString) {
-				AbstractEngineState brain = null;
-				Prolog p = null;
-				if(jsonString.contains("FullEngineState")){
-					brain = JSONSerializerManager.fromJSON(jsonString, FullEngineState.class);
+			p.flagManager.reloadFlags((FullEngineState) brain);
+			int i = 0;
+			int n = brain.getNumberAskedResults();
+			if(brain.hasOpenAlternatives()){
+				p.solve(brain.getQuery());
+				while(i<n){
+					try {
+						p.solveNext();
+					} catch (NoMoreSolutionException e) {}
+					i++;
 				}
-				else
-					return p;
-				try {
-					p = new Prolog(((FullEngineState) brain).getLibraries());
-					p.setTheory(new Theory(((FullEngineState) brain).getDynTheory()));
-					p.opManager = new OperatorManager();
-					LinkedList<Operator> l = ((FullEngineState) brain).getOp();
-					for(Operator o : l)
-						p.opManager.opNew(o.name, o.type, o.prio);
-					
-				} catch (InvalidLibraryException e) {
-					e.printStackTrace();
-					return null;
-				} catch (InvalidTheoryException e) {
-					e.printStackTrace();
-					return null;
-				}
-				p.flagManager.reloadFlags((FullEngineState) brain);
-				int i = 0;
-				int n = brain.getNumberAskedResults();
-				if(brain.hasOpenAlternatives()){
-					p.solve(brain.getQuery());
-					while(i<n){
-						try {
-							p.solveNext();
-						} catch (NoMoreSolutionException e) {}
-						i++;
-					}
-				}
-				return p;
 			}
+			return p;
+		}
 				
-			//Alberto
-			public String toJSON(boolean alsoKB){
-				AbstractEngineState brain = null;
-				if(alsoKB)
-				{
-					brain = new FullEngineState();
-					this.theoryManager.serializeLibraries((FullEngineState)brain);
-					this.theoryManager.serializeDynDataBase((FullEngineState)brain);
-					((FullEngineState)brain).setOp((LinkedList<Operator>)this.opManager.getOperators());
-				}
-				else
-					brain = new ReducedEngineState();
-				
-				this.theoryManager.serializeTimestamp(brain);
-				this.engineManager.serializeQueryState(brain);
-				this.flagManager.serializeFlags(brain);
-				
-				return JSONSerializerManager.toJSON(brain);
+		//Alberto
+		public String toJSON(boolean alsoKB){
+			AbstractEngineState brain = null;
+			if(alsoKB)
+			{
+				brain = new FullEngineState();
+				this.theoryManager.serializeLibraries((FullEngineState)brain);
+				this.theoryManager.serializeDynDataBase((FullEngineState)brain);
+				((FullEngineState)brain).setOp((LinkedList<Operator>)this.opManager.getOperators());
 			}
+			else
+				brain = new ReducedEngineState();
+				
+			this.theoryManager.serializeTimestamp(brain);
+			this.engineManager.serializeQueryState(brain);
+			this.flagManager.serializeFlags(brain);
+				
+			return JSONSerializerManager.toJSON(brain);
+		}
+		
 	/**
 	 * Gets the component managing flags
 	 */
@@ -729,8 +729,8 @@ public class Prolog implements IProlog, Serializable
 	 */
 	
 	public boolean match(Term t0, Term t1) 
-	{	//no syn
-		return t0.match(t1);
+	{
+		return t0.match(this, t1);
 	}
 
 	/**

@@ -15,9 +15,12 @@ public class ClauseStore {
     private List<Var> vars;
     private boolean haveAlternatives;
     
-    private ClauseStore(Term goal, List<Var> vars) {
+    private Prolog mediator;
+    
+    private ClauseStore(Prolog prolog, Term goal, List<Var> vars) {
         this.goal = goal;
         this.vars = vars;
+        this.mediator = prolog;
         clauses = null;
     }
     
@@ -26,11 +29,12 @@ public class ClauseStore {
          *
          * Reviewed by Paolo Contessi:
          * OneWayList.transform(List) -> OneWayList.transform2(List)
+     * @param prolog 
          * 
      * @param familyClauses
      */
-    public static ClauseStore build(Term goal, List<Var> vars, List<ClauseInfo> familyClauses) {
-        ClauseStore clauseStore = new ClauseStore(goal, vars);
+    public static ClauseStore build(Prolog prolog, Term goal, List<Var> vars, List<ClauseInfo> familyClauses) {
+        ClauseStore clauseStore = new ClauseStore(prolog, goal, vars);
                 clauseStore.clauses = OneWayList.transform2(familyClauses);
                 if (clauseStore.clauses == null || !clauseStore.existCompatibleClause())
             return null;
@@ -115,7 +119,7 @@ public class ClauseStore {
         ClauseInfo clause = null;
         do {
             clause = (ClauseInfo) clauses.getHead();
-            if (goal.match(clause.getHead())) return true;
+            if (goal.match(this.mediator, clause.getHead())) return true;
             clauses = clauses.getTail();
         } while (clauses != null);
         return false;

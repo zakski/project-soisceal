@@ -267,7 +267,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
-		assertTrue(g.match(new Struct("text_from_file", new Var("X"), new Var(
+		assertTrue(g.match(engine, new Struct("text_from_file", new Var("X"), new Var(
 				"Y"))));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 1);
@@ -280,7 +280,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
-		assertTrue(g.match(new Struct("text_from_file", new Int(1),
+		assertTrue(g.match(engine, new Struct("text_from_file", new Int(1),
 				new Var("Y"))));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 1);
@@ -298,7 +298,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
-		assertTrue(g.match(new Struct("text_from_file", new Struct("text"),
+		assertTrue(g.match(engine, new Struct("text_from_file", new Struct("text"),
 				new Var("Y"))));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 1);
@@ -317,7 +317,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
-		assertTrue(g.match(new Struct("text_from_file", new Var("X"), new Var(
+		assertTrue(g.match(engine, new Struct("text_from_file", new Var("X"), new Var(
 				"Y"))));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 1);
@@ -330,7 +330,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
-		assertTrue(g.match(new Struct("text_from_file", new Int(1),
+		assertTrue(g.match(engine, new Struct("text_from_file", new Int(1),
 				new Var("Y"))));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 1);
@@ -348,7 +348,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
-		assertTrue(g.match(new Struct("text_from_file", new Struct("text"),
+		assertTrue(g.match(engine, new Struct("text_from_file", new Struct("text"),
 				new Var("Y"))));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 1);
@@ -397,7 +397,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
-		assertTrue(g.match(new Struct("text_from_file", new Var("X"), new Var(
+		assertTrue(g.match(engine, new Struct("text_from_file", new Var("X"), new Var(
 				"Y"))));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 1);
@@ -410,7 +410,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
-		assertTrue(g.match(new Struct("text_from_file", new Int(1),
+		assertTrue(g.match(engine, new Struct("text_from_file", new Int(1),
 				new Var("Y"))));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 1);
@@ -428,7 +428,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
 		SolveInfo info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
-		assertTrue(g.match(new Struct("text_from_file", new Struct("text"),
+		assertTrue(g.match(engine, new Struct("text_from_file", new Struct("text"),
 				new Var("Y"))));
 		Int argNo = (Int) info.getTerm("ArgNo");
 		assertTrue(argNo.intValue() == 1);

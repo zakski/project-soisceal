@@ -209,7 +209,7 @@ public abstract class Term implements Serializable {
         t1.resolveTerm();
         List<Var> v1 = new LinkedList<Var>(); /* Reviewed by: Paolo Contessi (was: ArrayList()) */
         List<Var> v2 = new LinkedList<Var>(); /* Reviewed by: Paolo Contessi (was: ArrayList()) */
-        boolean ok = unify(v1,v2,t1);
+        boolean ok = unify(v1,v2,t1, mediator.getFlagManager().isOccursCheckEnabled());
         if (ok) {
             ExecutionContext ec = engine.getCurrentContext();
             if (ec != null) {
@@ -241,23 +241,23 @@ public abstract class Term implements Serializable {
         Var.free(v2);
     	return false;
     }
-    
-    
-    /**
+
+	/**
      * Tests if this term is unifiable with an other term.
      * No unification is done.
      *
      * The test is done outside any demonstration context
+	 * @param prolog 
      * @param t the term to checked
      *
      * @return true if the term is unifiable with this one
      */
-    public boolean match(Term t) {
+    public boolean match(Prolog prolog, Term t) {
         resolveTerm();
         t.resolveTerm();
         List<Var> v1 = new LinkedList<Var>();
         List<Var> v2 = new LinkedList<Var>();
-        boolean ok = unify(v1,v2,t);
+        boolean ok = unify(v1,v2,t, prolog.getFlagManager().isOccursCheckEnabled());
         Var.free(v1);
         Var.free(v2);
         return ok;
@@ -271,8 +271,9 @@ public abstract class Term implements Serializable {
      * Try the unification among the term and the term specified
      * @param varsUnifiedArg1 Vars unified in myself
      * @param varsUnifiedArg2 Vars unified in term t
+     * @param isOccursCheckEnabled
      */
-    abstract boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t);
+    abstract boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t, boolean isOccursCheckEnabled);
     
     
     /**

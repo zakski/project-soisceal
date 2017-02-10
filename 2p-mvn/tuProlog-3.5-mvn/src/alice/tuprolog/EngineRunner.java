@@ -438,6 +438,10 @@ public class EngineRunner implements java.io.Serializable, Runnable{
     		return this.engineManager;
     	}
         
+        Prolog getMediator(){
+    		return this.mediator;
+    	}
+        
         //Alberto
         public Term getQuery(){
         	return this.query;
