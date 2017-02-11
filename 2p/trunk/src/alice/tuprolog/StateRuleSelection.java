@@ -53,7 +53,7 @@ public class StateRuleSelection extends State {
             fromBacktracking = false;
             List<Var> varsList = new ArrayList<Var>();
             e.currentContext.trailingVars = new OneWayList<List<Var>>(varsList,e.currentContext.trailingVars);
-            clauseStore = ClauseStore.build(c.getMediator(), goal, varsList, c.find(goal));
+            clauseStore = ClauseStore.build(goal, varsList, c.find(goal));
             if (clauseStore == null){
                 e.nextState = c.BACKTRACK;
                 return;

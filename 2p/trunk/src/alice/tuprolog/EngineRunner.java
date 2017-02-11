@@ -434,10 +434,12 @@ public class EngineRunner implements java.io.Serializable, Runnable{
             return theoryManager;
          }
         
+        //Alberto
         public EngineManager getEngineMan(){
     		return this.engineManager;
     	}
         
+        //Alberto
         Prolog getMediator(){
     		return this.mediator;
     	}

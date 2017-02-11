@@ -107,7 +107,7 @@ public class Var extends Term {
 	 * @param n is the name
 	 * @param id is the id of ExecCtx
 	 * @param alias code to discriminate external vars
-	 * @param isCyclic 
+	 * 
 	 * @param time is timestamp
 	 */
 	private Var(String n, int id, int alias, long count/*, boolean isCyclic*/) {
@@ -461,6 +461,7 @@ public class Var extends Term {
 	  * the var must not appear in the compound ( avoid X=p(X),
 	  * or p(X,X)=p(Y,f(Y)) ); if occur check is ok
 	  * then it's success and a new link is created (retractable by a code)
+	  * (test done if occursCheck is enabled)
 	  */
 	 boolean unify(List<Var> vl1, List<Var> vl2, Term t, boolean isOccursCheckEnabled) {
 		 Term tt = getTerm();
@@ -568,4 +569,9 @@ public class Var extends Term {
 	 public void accept(TermVisitor tv) {
 		 tv.visit(this);
 	 }
+
+	@Override
+	boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t) {
+		return unify(varsUnifiedArg1, varsUnifiedArg2, t, true);
+	}
 }

@@ -37,9 +37,8 @@ public class StateException extends State {
             // visito all'indietro l'albero di risoluzione alla ricerca di un
             // subgoal catch/3 il cui secondo argomento unifica con l?argomento
             // dell?eccezione lanciata
-        	boolean isOccursCheckEnabled = c.getMediator().getFlagManager().isOccursCheckEnabled();
-            if (e.currentContext.currentGoal.match(isOccursCheckEnabled, catchTerm)
-                    && e.currentContext.currentGoal.getArg(1).match(isOccursCheckEnabled, errorTerm)) {
+            if (e.currentContext.currentGoal.match(catchTerm)
+                    && e.currentContext.currentGoal.getArg(1).match(errorTerm)) {
                 // ho identificato l?ExecutionContext con il corretto subgoal
                 // catch/3
 
@@ -108,7 +107,7 @@ public class StateException extends State {
             // visito all'indietro l'albero di risoluzione alla ricerca di un
             // subgoal java_catch/3 che abbia un catcher unificabile con
             // l'argomento dell'eccezione lanciata
-            if (e.currentContext.currentGoal.match(c.getMediator().getFlagManager().isOccursCheckEnabled(), javaCatchTerm)
+            if (e.currentContext.currentGoal.match(javaCatchTerm)
                     && javaMatch(e.currentContext.currentGoal.getArg(1),
                             exceptionTerm)) {
                 // ho identificato l?ExecutionContext con il corretto subgoal
@@ -212,7 +211,7 @@ public class StateException extends State {
                 continue;
             if (element.getArity() != 2)
                 continue;
-            if (element.getArg(0).match(c.getMediator().getFlagManager().isOccursCheckEnabled(), exceptionTerm)) {
+            if (element.getArg(0).match(exceptionTerm)) {
                 return true;
             }
         }
@@ -233,7 +232,7 @@ public class StateException extends State {
                 continue;
             if (element.getArity() != 2)
                 continue;
-            if (element.getArg(0).match(c.getMediator().getFlagManager().isOccursCheckEnabled(), exceptionTerm)) {
+            if (element.getArg(0).match(exceptionTerm)) {
                 element.getArg(0)
                         .unify(unifiedVars, unifiedVars, exceptionTerm, c.getMediator().getFlagManager().isOccursCheckEnabled());
                 return element.getArg(1);

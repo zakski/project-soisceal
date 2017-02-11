@@ -21,9 +21,9 @@
   </licenses>
   
   <scm>
-  	<connection>scm:git:ssh://git@bitbucket.org/[username]/tuprolog.git</connection>
-    <developerConnection>scm:git:ssh://git@bitbucket.org/[username]/tuprolog.git</developerConnection>
-    <url>https://bitbucket.org/AlbertoSita_93/tuprolog.git</url>
+  	<connection>scm:git:ssh://git@bitbucket.org/[user]/tuprolog.git</connection>
+    <developerConnection>scm:git:ssh://git@bitbucket.org/[user]/tuprolog.git</developerConnection>
+    <url>https://bitbucket.org/[user]/tuprolog.git</url>
   </scm>  
 
   <distributionManagement>

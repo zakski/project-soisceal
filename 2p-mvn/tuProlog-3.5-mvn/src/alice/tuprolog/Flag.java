@@ -71,16 +71,15 @@ class Flag implements java.io.Serializable {
     
     /**
      * Checks if a value is valid according to flag description
-     * @param mediator 
      *
      * @param value the possible value of the flag
      * @return flag validity
      */
-    public boolean isValidValue(boolean isOccursCheckEnabled, Term value) {
+    public boolean isValidValue(Term value) {
         java.util.Iterator<? extends Term> it=valueList.listIterator();
         while (it.hasNext()) {
             Term t=(Term)it.next();
-            if (value.match(isOccursCheckEnabled, t)) {
+            if (value.match(t)) {
                 return true;
             }
         }
@@ -105,13 +104,12 @@ class Flag implements java.io.Serializable {
     
     /**
      * Sets the value of a flag
-     * @param mediator 
      *
      * @param value new value of the flag
      * @return true if the value is valid
      */
-    public boolean setValue(boolean isOccursCheckEnabled, Term value) {
-        if (isValidValue(isOccursCheckEnabled, value) && modifiable) {
+    public boolean setValue(Term value) {
+        if (isValidValue(value) && modifiable) {
             this.value = value;
             return true;
         } else {

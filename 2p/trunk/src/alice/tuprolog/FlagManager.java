@@ -69,8 +69,8 @@ class FlagManager {
         while (it.hasNext()) {
             Flag flag = (Flag) it.next();
             if (flag.getName().equals(name)) {
-                if (flag.isModifiable() && flag.isValidValue(isOccursCheckEnabled(), value)) {
-                    flag.setValue(isOccursCheckEnabled(), value);
+                if (flag.isModifiable() && flag.isValidValue(value)) {
+                    flag.setValue(value);
                     return true;
                 } else {
                     return false;
@@ -122,7 +122,7 @@ class FlagManager {
         while (it.hasNext()) {
             Flag flag = (Flag) it.next();
             if (flag.getName().equals(name)) {
-                return flag.isValidValue(isOccursCheckEnabled(), value);
+                return flag.isValidValue(value);
             }
         }
         return false;

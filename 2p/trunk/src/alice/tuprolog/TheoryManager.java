@@ -134,7 +134,7 @@ public class TheoryManager implements Serializable {
 		if (family != null){
 			for (Iterator<ClauseInfo> it = family.iterator(); it.hasNext();) {
 				ClauseInfo d = it.next();
-				if (clause.match(engine.getFlagManager().isOccursCheckEnabled(), d.getClause())) {
+				if (clause.match(d.getClause())) {
 					it.remove();
 					break;
 				}
@@ -143,7 +143,7 @@ public class TheoryManager implements Serializable {
 		//fa la retract dal retract db
 		for (Iterator<ClauseInfo> i = familyQuery.iterator(); i.hasNext();) {
 			ClauseInfo d = i.next();
-			if (clause.match(engine.getFlagManager().isOccursCheckEnabled(), d.getClause())) {
+			if (clause.match(d.getClause())) {
 				i.remove();
 				engine.spy("DELETE: " + d.getClause() + "\n");
 				return new ClauseInfo(d.getClause(), null);
