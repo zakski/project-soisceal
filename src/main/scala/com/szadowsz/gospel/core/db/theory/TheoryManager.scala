@@ -17,6 +17,8 @@
  */
 package com.szadowsz.gospel.core.db.theory
 
+import java.{util => ju}
+
 import com.szadowsz.gospel.core.Prolog
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.db.theory.clause.{ClauseDatabase, FamilyClausesList}
@@ -29,7 +31,6 @@ import com.szadowsz.gospel.util.exception.theory.InvalidTheoryException
 import com.szadowsz.gospel.util.{LoggerCategory, Tools}
 import org.slf4j.LoggerFactory
 
-import java.{util => ju}
 import scala.collection.JavaConverters._
 
 /**

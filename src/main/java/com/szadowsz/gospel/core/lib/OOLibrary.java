@@ -32,6 +32,7 @@ import com.szadowsz.gospel.util.classloader.AndroidDynamicClassLoader;
 import com.szadowsz.gospel.util.classloader.JavaDynamicClassLoader;
 import com.szadowsz.gospel.util.exception.lib.InvalidObjectIdException;
 import com.szadowsz.gospel.util.proxyGenerator.Generator;
+import com.szadowsz.gospel.core.db.lib.Library;
 
 import scala.collection.Iterator;
 

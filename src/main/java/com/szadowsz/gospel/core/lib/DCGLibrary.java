@@ -20,6 +20,7 @@ package com.szadowsz.gospel.core.lib;
 import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.data.Var;
 import com.szadowsz.gospel.util.exception.engine.PrologException;
+import com.szadowsz.gospel.core.db.lib.Library;
 
 /**
  * Library for managing DCGs.

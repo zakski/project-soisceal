@@ -27,6 +27,7 @@ import com.szadowsz.gospel.util.exception.data.TermParsingException;
 
 import java.io.*;
 import java.util.Random;
+import com.szadowsz.gospel.core.db.lib.Library;
 
 /**
  * This class provides basic I/O predicates.

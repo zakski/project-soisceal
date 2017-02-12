@@ -5,17 +5,16 @@
 package com.szadowsz.gospel.core.engine
 
 import com.szadowsz.gospel.core.engine.clause.ClauseInfo
-import com.szadowsz.gospel.core.db.LibraryManager
-import com.szadowsz.gospel.core.db.primitive.PrimitiveManager
-import com.szadowsz.gospel.core.db.theory.TheoryManager
 import com.szadowsz.gospel.util.exception.solution.NoMoreSolutionsException
-
 import java.util.concurrent.locks.{Condition, Lock, ReentrantLock}
 import java.{util => ju}
 
 import com.szadowsz.gospel.core.Prolog
 import com.szadowsz.gospel.core.data.Term
 import com.szadowsz.gospel.core.data.util.TermQueue
+import com.szadowsz.gospel.core.db.LibraryManager
+import com.szadowsz.gospel.core.db.theory.TheoryManager
+import com.szadowsz.gospel.core.db.primitive.PrimitiveManager
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.state._
 import com.szadowsz.gospel.core.engine.subgoal.tree.SubGoalTree

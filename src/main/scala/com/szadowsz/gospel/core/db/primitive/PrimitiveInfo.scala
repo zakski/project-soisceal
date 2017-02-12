@@ -18,10 +18,10 @@
 package com.szadowsz.gospel.core.db.primitive
 
 import com.szadowsz.gospel.core.data.{Struct, Term}
-import com.szadowsz.gospel.core.lib.Library
 import com.szadowsz.gospel.util.InspectionUtils
-
 import java.lang.reflect.{InvocationTargetException, Method}
+
+import com.szadowsz.gospel.core.db.lib.Library
 
 /**
  * Primitive class

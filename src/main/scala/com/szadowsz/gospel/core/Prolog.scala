@@ -17,27 +17,26 @@
  */
 package com.szadowsz.gospel.core
 
-import com.szadowsz.gospel.core.db.LibraryManager
-import com.szadowsz.gospel.core.db.primitive.PrimitiveManager
-import com.szadowsz.gospel.core.db.theory.{TheoryManager, Theory}
-import com.szadowsz.gospel.core.operation.{OperatorManager, Operator}
+import com.szadowsz.gospel.core.db.theory.{Theory, TheoryManager}
+import com.szadowsz.gospel.core.operation.{Operator, OperatorManager}
 import com.szadowsz.gospel.core.parser.Parser
 import com.szadowsz.gospel.util.exception.data.InvalidTermException
-import com.szadowsz.gospel.util.exception.solution.{NoMoreSolutionsException, MalformedGoalException}
+import com.szadowsz.gospel.util.exception.solution.{MalformedGoalException, NoMoreSolutionsException}
 import com.szadowsz.gospel.util.exception.theory.InvalidTheoryException
 import org.slf4j.LoggerFactory
-
 import java.{util => ju}
 
 import com.szadowsz.gospel.core.data.{Struct, Term}
+import com.szadowsz.gospel.core.db.LibraryManager
+import com.szadowsz.gospel.core.db.lib.Library
+import com.szadowsz.gospel.core.db.primitive.PrimitiveManager
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.{Engine, EngineManager, Solution}
 import com.szadowsz.gospel.core.event._
 import com.szadowsz.gospel.core.event.interpreter.{LibraryEvent, QueryEvent, TheoryEvent}
 import com.szadowsz.gospel.core.event.io.OutputEvent
-import com.szadowsz.gospel.core.event.logging.{SpyEvent}
+import com.szadowsz.gospel.core.event.logging.SpyEvent
 import com.szadowsz.gospel.core.flag.FlagManager
-import com.szadowsz.gospel.core.lib.Library
 import com.szadowsz.gospel.util.{LoggerCategory, VersionInfo}
 import com.szadowsz.gospel.util.exception.lib.InvalidLibraryException
 

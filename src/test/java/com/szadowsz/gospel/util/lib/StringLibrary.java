@@ -22,7 +22,7 @@ package com.szadowsz.gospel.util.lib;
 
 import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.Term;
-import com.szadowsz.gospel.core.lib.Library;
+import com.szadowsz.gospel.core.db.lib.Library;
 
 public class StringLibrary extends Library {
 	private static final long serialVersionUID = 1L;

@@ -15,6 +15,7 @@ import com.szadowsz.gospel.util.exception.engine.PrologException;
 import com.szadowsz.gospel.util.Tools;
 import com.szadowsz.gospel.util.exception.lib.InvalidLibraryException;
 import scala.collection.Iterator;
+import com.szadowsz.gospel.core.db.lib.Library;
 
 import java.io.*;
 import java.util.*;

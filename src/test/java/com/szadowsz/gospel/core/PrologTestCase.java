@@ -3,7 +3,7 @@ package com.szadowsz.gospel.core;
 import com.szadowsz.gospel.core.event.SpyListener;
 import com.szadowsz.gospel.core.event.logging.SpyEvent;
 import com.szadowsz.gospel.util.exception.theory.InvalidTheoryException;
-import com.szadowsz.gospel.core.lib.Library;
+import com.szadowsz.gospel.core.db.lib.Library;
 import com.szadowsz.gospel.core.lib.OOLibrary;
 import com.szadowsz.gospel.core.db.theory.Theory;
 import com.szadowsz.gospel.util.event.TestPrologEventAdapter;

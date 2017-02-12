@@ -17,12 +17,12 @@
  */
 package com.szadowsz.gospel.core.db.primitive
 
-import com.szadowsz.gospel.core.data.{Struct, Term}
-import com.szadowsz.gospel.core.lib.{BuiltIn, Library}
-import com.szadowsz.gospel.core.Prolog
-
 import java.lang.reflect.InvocationTargetException
 import java.util._
+
+import com.szadowsz.gospel.core.Prolog
+import com.szadowsz.gospel.core.data.{Struct, Term}
+import com.szadowsz.gospel.core.db.lib.{BuiltIn, Library}
 
 /**
  * Administration of primitive predicates

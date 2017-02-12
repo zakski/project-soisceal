@@ -167,7 +167,7 @@ class EngineManager(m: Prolog) extends java.io.Serializable {
     }
   }
 
-  private[gospel] def cut {
+  private[gospel] def cut(): Unit = {
     findRunner.cut
   }
 

@@ -1,6 +1,7 @@
 package com.szadowsz.gospel.core.lib;
 
 import com.szadowsz.gospel.core.Prolog;
+import com.szadowsz.gospel.core.db.lib.Library;
 import com.szadowsz.gospel.core.db.primitive.PrimitiveInfo;
 import com.szadowsz.gospel.util.event.TestOutputListener;
 import com.szadowsz.gospel.util.exception.solution.InvalidSolutionException;
