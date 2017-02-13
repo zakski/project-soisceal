@@ -1,2 +1,0 @@
-﻿%NameSpace MyNameSpace
-%ClassName MyClassName
