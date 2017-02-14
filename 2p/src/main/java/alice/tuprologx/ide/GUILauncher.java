@@ -1,4 +1,5 @@
 /*
+
  * tuProlog - Copyright (C) 2001-2004  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
@@ -85,7 +86,7 @@ public class GUILauncher {
         String version = System.getProperty("java.version");
         int versionNumber = launcher.getVersionNumber(version);
         int subVersionNumber = launcher.getSubVersionNumber(version);
-        System.out.println("We are on a J2SE " + versionNumber + "" + subVersionNumber + ".x plaftorm");
+        System.out.println("We are on a J2SE " + versionNumber + "." + subVersionNumber + ".x plaftorm");
         if (versionNumber == 1)
             if (subVersionNumber == 1)
                 launcher.launchDotNetGUI();

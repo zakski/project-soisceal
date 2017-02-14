@@ -50,7 +50,7 @@ public class StateException extends State {
                 List<Var> unifiedVars = e.currentContext.trailingVars
                         .getHead();
                 e.currentContext.currentGoal.getArg(1).unify(unifiedVars,
-                        unifiedVars, errorTerm);
+                        unifiedVars, errorTerm, c.getMediator().getFlagManager().isOccursCheckEnabled());
 
                 // inserisco il gestore dell?errore in testa alla lista dei
                 // subgoal da eseguire, come definito dal terzo argomento di
@@ -107,7 +107,7 @@ public class StateException extends State {
             // visito all'indietro l'albero di risoluzione alla ricerca di un
             // subgoal java_catch/3 che abbia un catcher unificabile con
             // l'argomento dell'eccezione lanciata
-            if (e.currentContext.currentGoal.match(javaCatchTerm)
+        	if (e.currentContext.currentGoal.match(javaCatchTerm)
                     && javaMatch(e.currentContext.currentGoal.getArg(1),
                             exceptionTerm)) {
                 // ho identificato l?ExecutionContext con il corretto subgoal
@@ -234,7 +234,7 @@ public class StateException extends State {
                 continue;
             if (element.getArg(0).match(exceptionTerm)) {
                 element.getArg(0)
-                        .unify(unifiedVars, unifiedVars, exceptionTerm);
+                        .unify(unifiedVars, unifiedVars, exceptionTerm, c.getMediator().getFlagManager().isOccursCheckEnabled());
                 return element.getArg(1);
             }
         }

@@ -145,10 +145,10 @@ public class Double extends Number {
      * Tries to unify a term with the provided term argument.
      * This service is to be used in demonstration context.
      */
-    boolean unify(List<Var> vl1, List<Var> vl2, Term t) {
+    boolean unify(List<Var> vl1, List<Var> vl2, Term t, boolean isOccursCheckEnabled) {
         t = t.getTerm();
         if (t instanceof Var) {
-            return t.unify(vl2, vl1, this);
+            return t.unify(vl2, vl1, this, isOccursCheckEnabled);
         } else if (t instanceof Number && ((Number) t).isReal()) {
             return value == ((Number) t).doubleValue();
         } else {
@@ -170,5 +170,10 @@ public class Double extends Number {
     public int compareTo(Number o) {
         return (new java.lang.Double(value)).compareTo(o.doubleValue());
     }
-    
+
+	@Override
+	boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t) {
+		return unify(varsUnifiedArg1, varsUnifiedArg2, t, true);
+	}
+
 }

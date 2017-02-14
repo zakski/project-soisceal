@@ -599,7 +599,7 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @return true if the unification was successful
 	 */
 	public boolean match(Term t0, Term t1) {	//no syn
-		return t0.match(t1);
+		return t0.match(this.getFlagManager().isOccursCheckEnabled(), t1);
 	}
 
 	/**

@@ -46,10 +46,10 @@ public class Datagram_Socket extends AbstractSocket {
 	}
 
 	@Override
-	boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t) {
+	boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t, boolean isOccursCheckEnabled) {
 		t = t.getTerm();
         if (t instanceof Var) {
-            return t.unify(varsUnifiedArg1, varsUnifiedArg2, this);
+            return t.unify(varsUnifiedArg1, varsUnifiedArg2, this, isOccursCheckEnabled);
         } else if (t instanceof AbstractSocket && ((AbstractSocket) t).isDatagramSocket()) {
         	InetAddress addr= ((AbstractSocket) t).getAddress();
             return socket.getInetAddress().toString().equals(addr.toString());
@@ -61,6 +61,11 @@ public class Datagram_Socket extends AbstractSocket {
 	@Override
 	public String toString(){
 		return socket.toString();
+	}
+
+	@Override
+	boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t) {
+		return unify(varsUnifiedArg1, varsUnifiedArg2, t, true);
 	}
 
 }
