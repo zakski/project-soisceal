@@ -29,10 +29,8 @@ import java.util.*;
 @SuppressWarnings("serial")
 public class OperatorManager implements Serializable {
 	private static final long serialVersionUID = 1L;
-    /**
-	 * current known operators
-	 */
-    private OperatorRegister operatorList = new OperatorRegister();
+
+    private OperatorRegister operatorList = new OperatorRegister(); // list of current known operators.
     
     /** lowest operator priority */
     public static final int OP_LOW = 1;

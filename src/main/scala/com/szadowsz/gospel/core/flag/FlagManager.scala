@@ -17,7 +17,6 @@
  */
 package com.szadowsz.gospel.core.flag
 
-import com.szadowsz.gospel.core.Prolog
 import com.szadowsz.gospel.core.data.{Struct, Term}
 
 /**
@@ -25,12 +24,9 @@ import com.szadowsz.gospel.core.data.{Struct, Term}
  *
  * @author Alex Benini
  */
-class FlagManager(vm: Prolog) {
+final class FlagManager {
+
   private var flags : List[Flag] = List()
-  /**
-   * mediator owner of the manager
-   */
-  protected var mediator: Prolog = vm
 
   /**
    * Defines a new flag
@@ -46,11 +42,7 @@ class FlagManager(vm: Prolog) {
     }
   }
 
-  def setFlag(name: String, value: Term): Boolean = {
-    val index = flags.indexWhere(_.getName == name)
-    flags = flags.updated(index, flags(index).setValue(value))
-    flags(index).isModifiable && flags(index).isValidValue(value)
-  }
+  def setFlag(name: String, value: Term): Boolean = synchronized{flags.find(_.getName == name).exists(_.setValue(value))}
 
   def getPrologFlagList: Struct = {
     synchronized{flags.map(fl => new Struct("flag", new Struct(fl.getName), fl.getValue)).foldLeft(new Struct)((b,a) => new Struct(a,b))}
@@ -63,14 +55,10 @@ class FlagManager(vm: Prolog) {
   /*
    * returns true if there is a flag with the given name and this flag is editable
    */
-  def isModifiable(name: String): Boolean = {
-    synchronized{flags.exists(flag => flag.getName == name && flag.isModifiable)}
-  }
+  def isModifiable(name: String): Boolean = synchronized{flags.exists(flag => flag.getName == name && flag.isModifiable)}
 
   /*
    * Returns true if there is a flag with the given name and the value is eligible for this flag
    */
-  def isValidValue(name: String, value: Term): Boolean = {
-    synchronized{flags.exists(flag => flag.getName == name && flag.isValidValue(value))}
-  }
+  def isValidValue(name: String, value: Term): Boolean = synchronized{flags.exists(flag => flag.getName == name && flag.isValidValue(value))}
 }

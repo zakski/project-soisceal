@@ -34,53 +34,50 @@ import org.slf4j.LoggerFactory
 import scala.collection.JavaConverters._
 
 /**
- * This class defines the Theory Manager who manages the clauses/theory often referred to as the Prolog database.
- * The theory (as a set of clauses) are stored in the ClauseDatabase which in essence is a HashMap grouped by functor/arity.
- * <p/>
- * The TheoryManager functions logically, as prescribed by ISO Standard 7.5.4
- * section. The effects of assertions and retractions shall not be undone if the
- * program subsequently backtracks over the assert or retract call, as prescribed
- * by ISO Standard 7.7.9 section.
- * <p/>
- * To use the TheoryManager one should primarily use the methods assertA, assertZ, consult, retract, abolish and find.
- * <p/>
- *
- * rewritten by:
- * @author ivar.orstavik@hist.no
- *
- * @see alice.gospel.core.theory.Theory
- */
+  * This class defines the Theory Manager who manages the clauses/theory often referred to as the Prolog database.
+  * The theory (as a set of clauses) are stored in the ClauseDatabase which in essence is a HashMap grouped by functor/arity.
+  *
+  * The TheoryManager functions logically, as prescribed by ISO Standard 7.5.4 section. The effects of assertions and retractions shall not be undone if the
+  * program subsequently backtracks over the assert or retract call, as prescribed by ISO Standard 7.7.9 section.
+  * <
+  * To use the TheoryManager one should primarily use the methods assertA, assertZ, consult, retract, abolish and find.
+  *
+  * rewritten by:
+  *
+  * @author ivar.orstavik@hist.no
+  *
+  * @see alice.gospel.core.theory.Theory
+  */
 @SerialVersionUID(1L)
-class TheoryManager(vm: Prolog) extends Serializable {
-  private lazy val _logger = LoggerFactory.getLogger(LoggerCategory.DB)
+final case class TheoryManager(private val wam: Prolog) extends Serializable {
+  private lazy val logger = LoggerFactory.getLogger(LoggerCategory.DB)
 
-  private val _wam: Prolog = vm
-  private lazy val _primitiveManager = _wam.getPrimitiveManager
+  private lazy val _primitiveManager = wam.getPrimitiveManager
 
-  private var _dynamicDBase: ClauseDatabase = new ClauseDatabase
-  private val _staticDBase: ClauseDatabase = new ClauseDatabase
-  private var _retractDBase: ClauseDatabase = new ClauseDatabase
+  private val staticDB = new ClauseDatabase()
+  private var dynamicDB = new ClauseDatabase()
+  private var retractDB = new ClauseDatabase()
 
 
   private var startGoalStack: ju.Stack[Term] = null
   private[theory] var lastConsultedTheory: Theory = new Theory()
 
   /**
-   * Method to check if a Strutc is a directive and if so, run it.
-   *
-   * @param directive Struct that contains the directive to be run
-   * @return true if it is a directive, false otherwise
-   */
+    * Method to check if a Strutc is a directive and if so, run it.
+    *
+    * @param directive Struct that contains the directive to be run
+    * @return true if it is a directive, false otherwise
+    */
   private def runDirective(directive: Struct): Boolean = {
     val hasDirName = "':-'" == directive.getName || ":-" == directive.getName
     if (hasDirName && directive.getArity == 1 && directive.getTerm(0).isInstanceOf[Struct]) {
       val dir: Struct = directive.getTerm(0).asInstanceOf[Struct]
       try {
         if (!_primitiveManager.evalAsDirective(dir))
-          _logger.warn("The directive {} is unknown.", dir.getPredicateIndicator)
+          logger.warn("The directive {} is unknown.", dir.getPredicateIndicator)
       } catch {
         case thrown: Throwable => {
-          _logger.error("Exception thrown during execution of " + dir.getPredicateIndicator + " directive.", thrown)
+          logger.error("Exception thrown during execution of " + dir.getPredicateIndicator + " directive.", thrown)
         }
       }
       true
@@ -90,57 +87,57 @@ class TheoryManager(vm: Prolog) extends Serializable {
   }
 
   /**
-   * Method inserts of a clause at the head of the theory.
-   *
-   * @param clause the Struct to insert.
-   * @param isDynamic True if being done on the fly, false if it comes from a library.
-   * @param libName The name of the library the clause comes from, if any.
-   */
+    * Method inserts of a clause at the head of the theory.
+    *
+    * @param clause    the Struct to insert.
+    * @param isDynamic True if being done on the fly, false if it comes from a library.
+    * @param libName   The name of the library the clause comes from, if any.
+    */
   def assertA(clause: Struct, isDynamic: Boolean, libName: String): Unit = {
     synchronized {
       val d: ClauseInfo = new ClauseInfo(toClause(clause), libName)
 
       val key: String = d.getHead.getPredicateIndicator
       if (isDynamic) {
-        _dynamicDBase.addFirst(key, d)
-        if (_staticDBase.containsKey(key)) {
-          _logger.warn("A static predicate with signature {} has been overridden.", key)
+        dynamicDB.addFirst(key, d)
+        if (staticDB.containsKey(key)) {
+          logger.warn("A static predicate with signature {} has been overridden.", key)
         }
-      } else _staticDBase.addFirst(key, d)
-      _logger.info("INSERTA: {}", d.getClause)
+      } else staticDB.addFirst(key, d)
+      logger.info("INSERTA: {}", d.getClause)
     }
   }
 
   /**
-   * Method inserts of a clause at the end of the DB.
-   *
-   * @param clause the Struct to insert.
-   * @param isDynamic True if being done on the fly, false if it comes from a library.
-   * @param libName The name of the library the clause comes from, if any.
-   */
+    * Method inserts of a clause at the end of the DB.
+    *
+    * @param clause    the Struct to insert.
+    * @param isDynamic True if being done on the fly, false if it comes from a library.
+    * @param libName   The name of the library the clause comes from, if any.
+    */
   def assertZ(clause: Struct, isDynamic: Boolean, libName: String): Unit = {
     synchronized {
       val d: ClauseInfo = new ClauseInfo(toClause(clause), libName)
 
       val key: String = d.getHead.getPredicateIndicator
       if (isDynamic) {
-        _dynamicDBase.addLast(key, d)
-        if (_staticDBase.containsKey(key)) {
-          _logger.warn("A static predicate with signature {} has been overridden.", key)
+        dynamicDB.addLast(key, d)
+        if (staticDB.containsKey(key)) {
+          logger.warn("A static predicate with signature {} has been overridden.", key)
         }
       }
-      else _staticDBase.addLast(key, d)
-      _logger.info("INSERTZ: {}", d.getClause)
+      else staticDB.addLast(key, d)
+      logger.info("INSERTZ: {}", d.getClause)
     }
   }
 
   /**
-   * Consults a theory, adding it to the base of known terms.
-   *
-   * @param theory the theory to add
-   * @param isDynamic if it is true, then the clauses are marked as dynamic
-   * @param libName if it not null, then the clauses are marked to belong to the specified library
-   */
+    * Consults a theory, adding it to the base of known terms.
+    *
+    * @param theory    the theory to add
+    * @param isDynamic if it is true, then the clauses are marked as dynamic
+    * @param libName   if it not null, then the clauses are marked to belong to the specified library
+    */
   @throws(classOf[InvalidTheoryException])
   def consult(theory: Theory, isDynamic: Boolean, libName: String): Unit = {
     synchronized {
@@ -149,7 +146,7 @@ class TheoryManager(vm: Prolog) extends Serializable {
 
       // iterate all clauses in theory and assert them or run them in the case of directives.
       try {
-        val it: Iterator[_ <: Term] = theory.iterator(_wam)
+        val it: Iterator[_ <: Term] = theory.iterator(wam)
         while (it.hasNext) {
           clause += 1
           val d: Struct = it.next().asInstanceOf[Struct]
@@ -167,17 +164,17 @@ class TheoryManager(vm: Prolog) extends Serializable {
   }
 
   /**
-   * Method to remove the first clause that unifies with the provided clause from the DB.
-   *
-   * @param oldClause the clause struct to remove.
-   * @return the removed Clause
-   */
+    * Method to remove the first clause that unifies with the provided clause from the DB.
+    *
+    * @param oldClause the clause struct to remove.
+    * @return the removed Clause
+    */
   def retract(oldClause: Struct): ClauseInfo = {
     synchronized {
       val clause: Struct = toClause(oldClause)
       val struct: Struct = clause.getArg(0).asInstanceOf[Struct]
-      val family: FamilyClausesList = _dynamicDBase.get(struct.getPredicateIndicator)
-      val ctx : ExecutionContext = _wam.getEngineManager.getCurrentContext
+      val family: FamilyClausesList = dynamicDB.get(struct.getPredicateIndicator)
+      val ctx: ExecutionContext = wam.getEngineManager.getCurrentContext
 
       /* create a new clause list to store the theory upon retract
      * This is done only on the first loop of the same retract
@@ -185,15 +182,15 @@ class TheoryManager(vm: Prolog) extends Serializable {
      * Will be 'the retract from this db to return the result
      */
       var familyQuery: FamilyClausesList = null
-      if (!_retractDBase.containsKey("ctxId " + ctx.id)) {
+      if (!retractDB.containsKey("ctxId " + ctx.id)) {
         familyQuery = new FamilyClausesList
         for (i <- 0 until family.size) {
           familyQuery.add(family.get(i))
         }
-        _retractDBase.put("ctxId " + ctx.id, familyQuery)
+        retractDB.put("ctxId " + ctx.id, familyQuery)
       }
       else {
-        familyQuery = _retractDBase.get("ctxId " + ctx.id)
+        familyQuery = retractDB.get("ctxId " + ctx.id)
       }
       if (familyQuery == null)
         return null
@@ -213,7 +210,7 @@ class TheoryManager(vm: Prolog) extends Serializable {
         val d: ClauseInfo = i.next
         if (clause.matches(d.getClause)) {
           i.remove()
-          _logger.info("DELETED: {}",d.getClause)
+          logger.info("DELETED: {}", d.getClause)
           return new ClauseInfo(d.getClause, null)
         }
       }
@@ -222,10 +219,10 @@ class TheoryManager(vm: Prolog) extends Serializable {
   }
 
   /**
-   * Binds clauses in the database with the corresponding primitive predicate, if any.
-   */
+    * Binds clauses in the database with the corresponding primitive predicate, if any.
+    */
   def rebind(): Unit = {
-    for (d <- _dynamicDBase.iterator.asScala) {
+    for (d <- dynamicDB.iterator.asScala) {
       for (sge <- d.getBody.iterator) {
         val t: Term = sge.asInstanceOf[SubGoalLeaf].getValue
         _primitiveManager.identifyPredicate(t)
@@ -234,22 +231,22 @@ class TheoryManager(vm: Prolog) extends Serializable {
   }
 
   /**
-   * Clears the dynamic clause database.
-   */
+    * Clears the dynamic clause database.
+    */
   def clear(): Unit = {
     synchronized {
-      _dynamicDBase = new ClauseDatabase
+      dynamicDB = new ClauseDatabase
     }
   }
 
 
   /**
-   * Method to remove all the clauses corresponding to the predicate indicator passed as a parameter from the DB.
-   *
-   * @param indicator struct with "/" as name, arg0 "name" and arg1 "arity".
-   * @throws java.lang.IllegalArgumentException thrown if predicate indicator is invalid.
-   * @return true if it was successful
-   */
+    * Method to remove all the clauses corresponding to the predicate indicator passed as a parameter from the DB.
+    *
+    * @param indicator struct with "/" as name, arg0 "name" and arg1 "arity".
+    * @throws java.lang.IllegalArgumentException thrown if predicate indicator is invalid.
+    * @return true if it was successful
+    */
   @throws(classOf[IllegalArgumentException])
   def abolish(indicator: Struct): Boolean = {
     synchronized {
@@ -264,9 +261,9 @@ class TheoryManager(vm: Prolog) extends Serializable {
       val arg1: String = Tools.removeApices(indicator.getArg(1).toString)
       val key: String = arg0 + "/" + arg1
 
-      val abolished = _dynamicDBase.abolish(key)
+      val abolished = dynamicDB.abolish(key)
       if (abolished != null) {
-        _logger.info("ABOLISHED: {} number of clauses={}", key, abolished.size)
+        logger.info("ABOLISHED: {} number of clauses={}", key, abolished.size)
       }
       true
     }
@@ -274,17 +271,17 @@ class TheoryManager(vm: Prolog) extends Serializable {
 
 
   /**
-   * Returns a family of clauses with functor and arity equals
-   * to the functor and arity of the term passed as a parameter
-   *
-   * Reviewed by Paolo Contessi: modified according to new ClauseDatabase
-   * implementation
-   */
+    * Returns a family of clauses with functor and arity equals
+    * to the functor and arity of the term passed as a parameter
+    *
+    * Reviewed by Paolo Contessi: modified according to new ClauseDatabase
+    * implementation
+    */
   def find(headt: Term): List[ClauseInfo] = {
     synchronized {
       if (headt.isInstanceOf[Struct]) {
-        var list: List[ClauseInfo] = _dynamicDBase.getPredicates(headt)
-        if (list.isEmpty) list = _staticDBase.getPredicates(headt)
+        var list: List[ClauseInfo] = dynamicDB.getPredicates(headt)
+        if (list.isEmpty) list = staticDB.getPredicates(headt)
         return list
       }
       if (headt.isInstanceOf[Var]) {
@@ -295,13 +292,13 @@ class TheoryManager(vm: Prolog) extends Serializable {
   }
 
   /**
-   * Method to remove all the clauses of library theory.
-   *
-   * @param libName the library to remove.
-   */
-  def removeLibraryTheory(libName: String):Unit = {
+    * Method to remove all the clauses of library theory.
+    *
+    * @param libName the library to remove.
+    */
+  def removeLibraryTheory(libName: String): Unit = {
     synchronized {
-      val allClauses: ju.Iterator[ClauseInfo] = _staticDBase.iterator
+      val allClauses: ju.Iterator[ClauseInfo] = staticDB.iterator
       while (allClauses.hasNext) {
         val clause = allClauses.next
         if (clause.getLib != null && (libName == clause.getLib)) {
@@ -309,21 +306,21 @@ class TheoryManager(vm: Prolog) extends Serializable {
             allClauses.remove()
           }
           catch {
-            case e: Exception => _logger.error("Error during library theory removal",e)
-            }
+            case e: Exception => logger.error("Error during library theory removal", e)
+          }
         }
       }
     }
   }
 
   /**
-   * Gets a clause from a generic Term
-   *
-   * @param clauseContainer the term the clause is contained in.
-   * @return the identified clause.
-   */
+    * Gets a clause from a generic Term
+    *
+    * @param clauseContainer the term the clause is contained in.
+    * @return the identified clause.
+    */
   private def toClause(clauseContainer: Struct): Struct = {
-    var term = Parser.parseSingleTerm(clauseContainer.toString(), _wam.getOperatorManager).asInstanceOf[Struct]
+    var term = Parser.parseSingleTerm(clauseContainer.toString(), wam.getOperatorManager).asInstanceOf[Struct]
     if (!term.isClause) {
       term = new Struct(":-", term, new Struct("true"))
     }
@@ -332,9 +329,9 @@ class TheoryManager(vm: Prolog) extends Serializable {
   }
 
   /**
-   * Method solves and goals that have been added during the theory initialisation process
-   */
-  def solveTheoryGoal():Unit= {
+    * Method solves and goals that have been added during the theory initialisation process
+    */
+  def solveTheoryGoal(): Unit = {
     synchronized {
       var s: Struct = null
       while (!startGoalStack.empty) {
@@ -342,11 +339,11 @@ class TheoryManager(vm: Prolog) extends Serializable {
       }
       if (s != null) {
         try {
-          _wam.solve(s)
+          wam.solve(s)
         }
         catch {
           case ex: Exception => {
-            _logger.error("Exception thrown when solving " + s.toString()  + " during Theory initialisation",ex)
+            logger.error("Exception thrown when solving " + s.toString() + " during Theory initialisation", ex)
           }
         }
       }
@@ -354,8 +351,8 @@ class TheoryManager(vm: Prolog) extends Serializable {
   }
 
   /**
-   * add a goal eventually defined by last parsed theory.
-   */
+    * add a goal eventually defined by last parsed theory.
+    */
   def addStartGoal(g: Struct) {
     synchronized {
       startGoalStack.push(g)
@@ -363,25 +360,25 @@ class TheoryManager(vm: Prolog) extends Serializable {
   }
 
   /**
-   * Gets current theory
-   *
-   * @param onlyDynamic if true, fetches only dynamic clauses
-   */
+    * Gets current theory
+    *
+    * @param onlyDynamic if true, fetches only dynamic clauses
+    */
   def getTheory(onlyDynamic: Boolean): String = {
     synchronized {
       val buffer = new StringBuffer
-      val dynamicClauses = _dynamicDBase.iterator
+      val dynamicClauses = dynamicDB.iterator
 
       while (dynamicClauses.hasNext) {
         val d = dynamicClauses.next
-        buffer.append(d.toString(_wam.getOperatorManager)).append("\n")
+        buffer.append(d.toString(wam.getOperatorManager)).append("\n")
       }
 
       if (!onlyDynamic) {
-        val staticClauses: ju.Iterator[ClauseInfo] = _staticDBase.iterator
+        val staticClauses: ju.Iterator[ClauseInfo] = staticDB.iterator
         while (staticClauses.hasNext) {
           val d: ClauseInfo = staticClauses.next
-          buffer.append(d.toString(_wam.getOperatorManager)).append("\n")
+          buffer.append(d.toString(wam.getOperatorManager)).append("\n")
         }
       }
       return buffer.toString
@@ -389,16 +386,15 @@ class TheoryManager(vm: Prolog) extends Serializable {
   }
 
   /**
-   * Gets last consulted theory
-   * @return  last theory
-   */
+    * Method to get the last consulted theory.
+    *
+    * @return the last theory.
+    */
   def getLastConsultedTheory: Theory = {
     synchronized {
-      return lastConsultedTheory
+      lastConsultedTheory
     }
   }
 
-  def clearRetractDB() {
-    this._retractDBase = new ClauseDatabase
-  }
+  def clearRetractDB(): Unit = retractDB = new ClauseDatabase()
 }

@@ -26,45 +26,27 @@ import com.szadowsz.gospel.core.data.{Struct, Term, Var}
  *
  */
 @SerialVersionUID(1L)
-private[flag] class Flag  (theName: String, theValSet: Struct, theDefValue: Term, theCurValue: Term, canModify: Boolean, theLibrary: String) extends Serializable {
-  private val _name: String = theName
+private[flag] class Flag(flagName: String, valueList: Struct, defaultValue: Term, v: Term, canModify: Boolean, library: String) extends Serializable {
+  private val name: String = flagName
+  private val lib: String = library
 
-  private val _valueList: Struct = theValSet
-  private val _defaultValue: Term = theDefValue
-  private val _value: Term = theCurValue
+  private val valList: Struct = valueList
+  private val defaultVal: Term = defaultValue
+  private val modifiable: Boolean = canModify
 
-  private val _modifiable: Boolean = canModify
-  private val _libraryName: String = theLibrary
-
+  private var value: Term = v
 
   /**
    * Builds a Prolog flag
    *
    * @param theName is the name of the flag
    * @param theValSet is the Prolog list of the possible values
-   * @param theDefValue is the default value
+   * @param theDefValue is the current & default value
    * @param isModifiable states if the flag is modifiable
    * @param theLibrary is the library defining the flag
    */
   def this (theName: String, theValSet: Struct, theDefValue: Term, isModifiable: Boolean, theLibrary: String){
     this(theName,theValSet,theDefValue,theDefValue,isModifiable,theLibrary)
-  }
-
-
-  /**
-   * Gets a deep copy of the flag
-   *
-   * @return a copy of the flag
-   */
-  override def clone: AnyRef = {
-    val name = _name
-    val valueList = _valueList.copy(new HashMap[Var, Var], Var.ORIGINAL).asInstanceOf[Struct]
-    val value = _value.copy(new HashMap[Var, Var], Var.ORIGINAL)
-    val defaultValue = _defaultValue.copy(new HashMap[Var, Var], Var.ORIGINAL)
-    val modifiable = _modifiable
-    val libraryName = _libraryName
-    val f = new Flag(name, valueList, defaultValue, value, modifiable, libraryName)
-    return f
   }
 
   /**
@@ -73,25 +55,19 @@ private[flag] class Flag  (theName: String, theValSet: Struct, theDefValue: Term
    * @param value the possible value of the flag
    * @return flag validity
    */
-  def isValidValue(value: Term): Boolean = {
-    _valueList.iterator.exists(value.matches(_))
-  }
+  def isValidValue(value: Term): Boolean = valList.exists(value.matches)
 
   /**
    * Gets the name of the flag
    * @return  the name
    */
-  def getName: String = {
-    return _name
-  }
+  def getName: String = name
 
   /**
    * Gets the list of flag possible values
    * @return  a Prolog list
    */
-  def getValueList: Struct = {
-    return _valueList
-  }
+  def getValueList: Struct = valList
 
   /**
    * Sets the value of a flag
@@ -99,12 +75,12 @@ private[flag] class Flag  (theName: String, theValSet: Struct, theDefValue: Term
    * @param value new value of the flag
    * @return true if the value is valid
    */
-  def setValue(value: Term): Flag = {
-    if (isValidValue(value) && _modifiable) {
-      return new Flag(_name, _valueList, _defaultValue, value, _modifiable, _libraryName)
-    }
-    else {
-      return this
+  def setValue(value: Term): Boolean = {
+    if (isValidValue(value) && modifiable) {
+      this.value = value
+      true
+    } else {
+      false
     }
   }
 
@@ -112,23 +88,17 @@ private[flag] class Flag  (theName: String, theValSet: Struct, theDefValue: Term
    * Gets the current value of the flag
    * @return  flag current value
    */
-  def getValue: Term = {
-    return _value
-  }
+  def getValue: Term = value
 
   /**
    * Checks if the value is modifiable
    * @return
    */
-  def isModifiable: Boolean = {
-    return _modifiable
-  }
+  def isModifiable: Boolean = modifiable
 
   /**
    * Gets the name of the library where the flag has been defined
    * @return  the library name
    */
-  def getLibraryName: String = {
-    return _libraryName
-  }
+  def getLibraryName: String = lib
 }

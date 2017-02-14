@@ -14,26 +14,24 @@ import com.szadowsz.gospel.util.exception.lib.{InvalidLibraryException, LibraryL
 import com.szadowsz.gospel.util.exception.theory.InvalidTheoryException
 import org.slf4j.LoggerFactory
 
+import scala.annotation.varargs
 import scala.util.control.NonFatal
 
 /**
   *
   * @param wam The implementation of Warren's Abstract Machine attached to the database.
   */
-final class LibraryManager(private val wam: Prolog) {
+final case class LibraryManager(private val wam: Prolog) {
   private lazy val logger = LoggerFactory.getLogger(LoggerCategory.DB)
 
   private var currentLibraries: List[Library] = List[Library]()
 
-  /**
-    * component to manage working theory
-    */
-  private lazy val theoryManager: TheoryManager = wam.getTheoryManager
+  private lazy val theoryManager = wam.getTheoryManager //  manager of current theories
 
   /**
     * component to record primitives, initialised with the built-in predicates
     */
-  private lazy val primitiveManager: PrimitiveManager = wam.getPrimitiveManager
+  private lazy val primitiveManager = wam.getPrimitiveManager
 
   /**
     * Binds a library by adding its clauses to the database and carrying out tis directives.
@@ -107,7 +105,7 @@ final class LibraryManager(private val wam: Prolog) {
         currentLibraries = currentLibraries.filterNot(_ == lib)
         theoryManager.removeLibraryTheory(className)
         theoryManager.rebind()
-      case None => throw new LibraryNotFoundException(className)// TODO don't throw error here logger.warn(s"Library $className is not loaded.")
+      case None => throw new LibraryNotFoundException(className) // TODO don't throw error here logger.warn(s"Library $className is not loaded.")
     }
   }
 
@@ -122,29 +120,46 @@ final class LibraryManager(private val wam: Prolog) {
     */
   @throws(classOf[InvalidLibraryException])
   def loadLibrary(className: String): Library = {
-    val lib = getLibrary(className) match {
-      case Some(l) =>
-        logger.warn(s"Library ${l.getName} already loaded.")
-        l
+    try {
+      loadLibrary(Class.forName(className).asInstanceOf[Class[Library]])
+    } catch {
+      case notFound: ClassNotFoundException => throw new LibraryNotFoundException(className)
+      case notLib: ClassCastException => throw new LibraryLoadException(className, notLib)
+    }
+  }
+
+  /**
+    * Loads a library.
+    *
+    * If a library with the same name is already present, a warning event is notified and the request is ignored.
+    *
+    * @param libClass the library class to be loaded.
+    * @throws InvalidLibraryException if we cannot create a valid library.
+    * @return the reference to the Library just loaded.
+    */
+  @throws(classOf[InvalidLibraryException])
+  def loadLibrary(libClass: Class[_ <: Library]): Library = {
+    val library = getLibrary(libClass.getName) match {
+      case Some(lib) =>
+        logger.warn(s"Library ${lib.getName} already loaded.")
+        lib
       case None =>
         try {
-          Class.forName(className).newInstance.asInstanceOf[Library]
+          libClass.newInstance()
         } catch {
-          case notFound: ClassNotFoundException => throw new LibraryNotFoundException(className)
-          case NonFatal(ex) => throw new LibraryLoadException(className, ex)
+          case NonFatal(ex) => throw new LibraryLoadException(libClass.getName, ex)
         }
     }
-    bindLibrary(lib)
-    logger.info(s"Loaded Library ${lib.getName}")
-    lib
+    bindLibrary(library)
+    logger.info(s"Loaded Library ${library.getName}")
+    library
   }
 
   /**
     * Loads a specific instance of a library.
     *
-    * If a library of the same class is already present, a warning event is
-    * notified. Then, the current instance of that library is discarded, and
-    * the new instance gets loaded.
+    * If a library of the same class is already present, a warning event is notified. Then, the current instance of that library is discarded, and the new
+    * instance gets loaded.
     *
     * @param lib the (Java class) name of the library to be loaded
     * @throws InvalidLibraryException if we cannot create a valid library.
@@ -164,5 +179,4 @@ final class LibraryManager(private val wam: Prolog) {
     logger.info("Loaded Library {}", lib)
     lib
   }
-
 }

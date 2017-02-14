@@ -12,12 +12,12 @@ import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.subgoal.tree.SubGoalTree
 
 @SerialVersionUID(1L)
-class EngineManager(m: Prolog) extends java.io.Serializable {
-  private val vm: Prolog = m
+final case class EngineManager(private val wam: Prolog) extends java.io.Serializable {
+
   private var runners = new Hashtable[Integer, EngineRunner]
   private var threads = new Hashtable[Integer, Integer]
   private val rootID:  scala.Int = 0
-  private val er1: EngineRunner= new EngineRunner(vm,rootID)
+  private val er1: EngineRunner= new EngineRunner(wam,rootID)
   private var id:  scala.Int = 0
   private var queues: Hashtable[String, TermQueue] = new Hashtable[String, TermQueue]
   private var locks: Hashtable[String, ReentrantLock] = new Hashtable[String, ReentrantLock]
@@ -31,8 +31,8 @@ class EngineManager(m: Prolog) extends java.io.Serializable {
     if (goal.isInstanceOf[Var])
       goal = goal.getTerm
 
-    val er: EngineRunner = new EngineRunner(vm,id)
-    if (!vm.unify(threadID, new numeric.Int(id))) return false
+    val er: EngineRunner = new EngineRunner(wam,id)
+    if (!wam.unify(threadID, new numeric.Int(id))) return false
     er.setGoal(goal)
     addRunner(er, id)
     val t: Thread = new Thread(er)
@@ -102,7 +102,7 @@ class EngineManager(m: Prolog) extends java.io.Serializable {
     if (er == null) return false
     val queue: TermQueue = queues.get(name)
     if (queue == null) return false
-    return queue.get(msg, vm, er)
+    return queue.get(msg, wam, er)
   }
 
   def waitMsg(id:  scala.Int, msg: Term): Boolean = {
@@ -116,7 +116,7 @@ class EngineManager(m: Prolog) extends java.io.Serializable {
     if (er == null) return false
     val queue: TermQueue = queues.get(name)
     if (queue == null) return false
-    return queue.wait(msg, vm, er)
+    return queue.wait(msg, wam, er)
   }
 
   def peekMsg(id:  scala.Int, msg: Term): Boolean = {
@@ -128,7 +128,7 @@ class EngineManager(m: Prolog) extends java.io.Serializable {
   def peekMsg(name: String, msg: Term): Boolean = {
     val queue: TermQueue = queues.get(name)
     if (queue == null) return false
-    return queue.peek(msg, vm)
+    return queue.peek(msg, wam)
   }
 
   def removeMsg(id:  scala.Int, msg: Term): Boolean = {
@@ -140,7 +140,7 @@ class EngineManager(m: Prolog) extends java.io.Serializable {
   def removeMsg(name: String, msg: Term): Boolean = {
     val queue: TermQueue = queues.get(name)
     if (queue == null) return false
-    return queue.remove(msg, vm)
+    return queue.remove(msg, wam)
   }
 
   private def removeRunner(id:  scala.Int) {
@@ -200,7 +200,7 @@ class EngineManager(m: Prolog) extends java.io.Serializable {
     }
   }
 
-  def solveEnd {
+  def solveEnd(): Unit = {
     er1.solveEnd
     if (runners.size != 0) {
       val ers = runners.elements
@@ -216,7 +216,7 @@ class EngineManager(m: Prolog) extends java.io.Serializable {
     }
   }
 
-  def solveHalt {
+  def solveHalt(): Unit = {
     er1.solveHalt
     if (runners.size != 0) {
       val ers = runners.elements

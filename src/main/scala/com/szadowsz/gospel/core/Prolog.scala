@@ -37,13 +37,17 @@ import com.szadowsz.gospel.core.event.interpreter.{LibraryEvent, QueryEvent, The
 import com.szadowsz.gospel.core.event.io.OutputEvent
 import com.szadowsz.gospel.core.event.logging.SpyEvent
 import com.szadowsz.gospel.core.flag.FlagManager
+import com.szadowsz.gospel.core.lib.{BasicLibrary, IOLibrary, ISOLibrary, OOLibrary}
 import com.szadowsz.gospel.util.{LoggerCategory, VersionInfo}
 import com.szadowsz.gospel.util.exception.lib.InvalidLibraryException
 
+import scala.annotation.varargs
+import scala.util.Try
+
 object Prolog {
   /**
-   * Gets the current version of the tuProlog system
-   */
+    * Gets the current version of the tuProlog system
+    */
   def getVersion: String = {
     VersionInfo.getEngineVersion
   }
@@ -51,31 +55,27 @@ object Prolog {
 
 
 /**
- *
- * The Prolog class represents a tuProlog engine.
- *
- */
+  *
+  * The Prolog class represents a tuProlog engine.
+  *
+  */
 @SerialVersionUID(1L)
 class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
-  private val _logger = LoggerFactory.getLogger(LoggerCategory.PROLOG)
+  private lazy val logger = LoggerFactory.getLogger(LoggerCategory.PROLOG)
 
-  /*  manager of current theory */
-  private val _theoryManager: TheoryManager = new TheoryManager(this)
+  private val theoryManager = TheoryManager(this) // manager of current theories
+
+  private val libManager = LibraryManager(this) // manager of loaded libraries
+
+  private val engManager = EngineManager(this) // manager of the prolog engine execution
+
+  private val flagManager = new FlagManager() // engine flag manager
 
   /* component managing operators */
   private val _opManager = new OperatorManager
 
-  /* component managing flags */
-  private val _flagManager = new FlagManager(this)
-
-  /* component managing libraries */
-  private val _libraryManager = new LibraryManager(this)
-
-  /* component managing engine */
-  private val _engineManager: EngineManager  = new EngineManager(this)
-
   /*  component managing primitive  */
-  private val _primitiveManager: PrimitiveManager  = new PrimitiveManager(this)
+  private val _primitiveManager: PrimitiveManager = new PrimitiveManager(this)
 
   /*  if spying activated  */
   private var _spy: Boolean = spy
@@ -93,131 +93,104 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   private val _queryListeners = new ju.ArrayList[QueryListener]
 
   /* path history for including documents */
-  private var absolutePathList: ju.ArrayList[String]  = new ju.ArrayList[String]
+  private var absolutePathList: ju.ArrayList[String] = new ju.ArrayList[String]
   private var lastPath: String = null
 
 
-  /**
-   * Checks if the demonstration process was stopped by an halt command.
-   *
-   * @return true if the demonstration was stopped
-   */
-  def isHalted: Boolean = _engineManager.isHalted
-
 
   /**
-   * Tests Unification between two terms using the current demonstration context.
-   *
-   * @param t0 first term to be unified
-   * @param t1 second term to be unified
-   * @return true if the unification was successful, false otherwise
-   */
-  def isMatch(t0: Term, t1: Term): Boolean = t0.matches(t1)
-
-
-  /**
-   * Unifies two terms using current demonstration context.
-   *
-   * @param t0 first term to be unified
-   * @param t1 second term to be unified
-   * @return true if the unification was successful, false otherwise
-   */
-  def unify(t0: Term, t1: Term): Boolean = t0.unify(this, t1)
-
-
-
-  /**
-   * Builds a prolog engine with default libraries loaded.
-   *
-   * The default libraries are BasicLibrary, ISOLibrary,
-   * IOLibrary, and  JavaLibrary
-   */
-  def this() {
-    this(false, true)
-    try {
-      loadLibrary("com.szadowsz.gospel.core.lib.BasicLibrary")
-    }
-    catch {
-      case ex: Exception => {
-        ex.printStackTrace
-      }
-    }
-    try {
-      loadLibrary("com.szadowsz.gospel.core.lib.ISOLibrary")
-    }
-    catch {
-      case ex: Exception => {
-        ex.printStackTrace
-      }
-    }
-    try {
-      loadLibrary("com.szadowsz.gospel.core.lib.IOLibrary")
-    }
-    catch {
-      case ex: Exception => {
-        ex.printStackTrace
-      }
-    }
-    try {
-      loadLibrary("com.szadowsz.gospel.core.lib.OOLibrary")
-    }
-    catch {
-      case ex: Exception => {
-        ex.printStackTrace
-      }
-    }
-  }
-
-  /**
-   * Builds a tuProlog engine with loaded
-   * the specified libraries
-   *
-   * @param libs the (class) name of the libraries to be loaded
-   */
+    * Builds a tuProlog engine with loaded the specified libraries.
+    *
+    * @param libs the (class) names of the libraries to be loaded
+    */
   @throws(classOf[InvalidLibraryException])
   def this(libs: Array[String]) {
     this(false, true)
-    if (libs != null) {
-      {
-        var i: Int = 0
-        while (i < libs.length) {
-          {
-            loadLibrary(libs(i))
-          }
-          ({
-            i += 1; i - 1
-          })
-        }
-      }
-    }
+    libs.foreach(s => loadLibrary(s))
   }
 
   /**
-   * Gets the component managing flags
-   */
-  def getFlagManager: FlagManager = {
-    _flagManager
+    * Builds a tuProlog engine with loaded the specified libraries.
+    *
+    * @param libs the classes of the libraries to be loaded
+    */
+  def this(libs: Array[Class[_ <: Library]]) {
+    this(false, true)
+    libs.foreach(c => loadLibrary(c))
   }
 
   /**
-   * Gets the component managing theory
-   */
-  def getTheoryManager: TheoryManager = {
-    _theoryManager
+    * Builds a Prolog engine with default libraries loaded.
+    *
+    * The default libraries are BasicLibrary, ISOLibrary, IOLibrary, and OOLibrary.
+    */
+  def this() {
+    this(Array[Class[_ <: Library]](
+      classOf[BasicLibrary],
+      classOf[ISOLibrary],
+      classOf[IOLibrary],
+      classOf[OOLibrary]
+    ))
   }
 
+   /**
+    * Internal only method to retrieve the component managing the engine.
+    *
+    * @return the engine manager instance attached to this.
+    */
+  private[gospel] def getEngineManager: EngineManager = engManager
+
   /**
-   * Gets the component managing primitives
-   */
+    * Internal only method to retrieve the component managing flags.
+    *
+    * @return the flag manager instance attached to this prolog engine.
+    */
+  private[gospel] def getFlagManager: FlagManager = flagManager
+
+  /**
+    * Internal only method to retrieve the component managing libraries.
+    *
+    * @return the library manager instance attached to this prolog engine.
+    */
+  private[gospel] def getLibraryManager: LibraryManager = libManager
+
+  /**
+    * Internal only method to retrieve the component managing the theory.
+    *
+    * @return the theory manager instance attached to this prolog engine.
+    */
+  private[gospel] def getTheoryManager: TheoryManager = theoryManager
+
+  /**
+    * Checks if the demonstration process was stopped by an halt command.
+    *
+    * @return true if the demonstration was stopped
+    */
+  def isHalted: Boolean = engManager.isHalted
+
+  /**
+    * Tests Unification between two terms using the current demonstration context.
+    *
+    * @param t0 first term to be unified
+    * @param t1 second term to be unified
+    * @return true if the unification was successful, false otherwise
+    */
+  def isMatch(t0: Term, t1: Term): Boolean = t0.matches(t1)
+
+  /**
+    * Unifies two terms using current demonstration context.
+    *
+    * @param t0 first term to be unified
+    * @param t1 second term to be unified
+    * @return true if the unification was successful, false otherwise
+    */
+  def unify(t0: Term, t1: Term): Boolean = t0.unify(this, t1)
+
+  /**
+    * Gets the component managing primitives
+    */
   def getPrimitiveManager: PrimitiveManager = {
     _primitiveManager
-  }
-
-  /**
-   * Gets the component managing libraries
-   */
-  def getLibraryManager: LibraryManager = {
-    _libraryManager
   }
 
   /** Gets the component managing operators */
@@ -226,15 +199,8 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   * Gets the component managing engine
-   */
-  def getEngineManager: EngineManager = {
-    _engineManager
-  }
-
-  /**
-   * Gets the last Element of the path list
-   */
+    * Gets the last Element of the path list
+    */
   def getCurrentDirectory: String = {
     var directory: String = ""
     if (absolutePathList.isEmpty) {
@@ -252,295 +218,256 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   * Sets the last Element of the path list
-   */
+    * Sets the last Element of the path list
+    */
   def setCurrentDirectory(s: String) {
     this.lastPath = s
   }
 
   /**
-   * Sets a new theory
-   *
-   * @param th is the new theory
-   * @throws InvalidTheoryException if the new theory is not valid
-   * @see alice.gospel.core.theory.Theory
-   */
+    * Sets a new theory
+    *
+    * @param th is the new theory
+    * @throws InvalidTheoryException if the new theory is not valid
+    * @see alice.gospel.core.theory.Theory
+    */
   @throws(classOf[InvalidTheoryException])
-  def setTheory(th: Theory) {
-    _theoryManager.clear
+  def setTheory(th: Theory):Unit = {
+    theoryManager.clear()
     addTheory(th)
   }
 
   /**
-   * Adds (appends) a theory
-   *
-   * @param th is the theory to be added
-   * @throws InvalidTheoryException if the new theory is not valid
-   * @see alice.gospel.core.theory.Theory
-   */
+    * Adds (appends) a theory
+    *
+    * @param th is the theory to be added
+    * @throws InvalidTheoryException if the new theory is not valid
+    * @see alice.gospel.core.theory.Theory
+    */
   @throws(classOf[InvalidTheoryException])
-  def addTheory(th: Theory) {
+  def addTheory(th: Theory): Unit = {
     val oldTh: Theory = getTheory
-    _theoryManager.consult(th, true, null)
-    _theoryManager.solveTheoryGoal
+    theoryManager.consult(th, true, null)
+    theoryManager.solveTheoryGoal()
     val newTh: Theory = getTheory
     val ev: TheoryEvent = new TheoryEvent(this, oldTh, newTh)
     this.notifyChangedTheory(ev)
   }
 
   /**
-   * Gets current theory
-   *
-   * @return current(dynamic) theory
-   */
-  def getTheory: Theory = {
-    try {
-      new Theory(_theoryManager.getTheory(true))
-    }
-    catch {
-      case ex: Exception => {
-        null
-      }
-    }
-  }
+    * Gets current theory
+    *
+    * @return current(dynamic) theory
+    */
+  def getTheory: Theory = Try(new Theory(theoryManager.getTheory(true))).toOption.orNull
 
   /**
-   * Gets last consulted theory, with the original textual format
-   *
-   * @return theory
-   */
-  def getLastConsultedTheory: Theory = {
-    _theoryManager.getLastConsultedTheory
-  }
+    * Gets last consulted theory, with the original textual format
+    *
+    * @return theory
+    */
+  def getLastConsultedTheory: Theory = theoryManager.getLastConsultedTheory
 
   /**
-   * Clears current theory
-   */
-  def clearTheory {
-    try {
-      setTheory(new Theory)
-    }
-    catch {
-      case e: InvalidTheoryException => {
-      }
-    }
-  }
+    * Clears current theory
+    */
+  def clearTheory(): Unit = setTheory(new Theory)
 
   /**
-   * Loads a library.
-   *
-   * If a library with the same name is already present,
-   * a warning event is notified and the request is ignored.
-   *
-   * @param className name of the Java class containing the library to be loaded
-   * @return the reference to the Library just loaded
-   * @throws InvalidLibraryException if name is not a valid library
-   */
+    * Loads a library.
+    *
+    * If a library with the same name is already present, a warning event is notified and the request is ignored.
+    *
+    * @param className the name of the Java class containing the library to be loaded.
+    * @throws InvalidLibraryException if we cannot create a valid library.
+    * @return the reference to the Library just loaded.
+    */
   @throws(classOf[InvalidLibraryException])
-  def loadLibrary(className: String): Library = {
-    _libraryManager.loadLibrary(className)
-  }
+  def loadLibrary(className: String): Library = libManager.loadLibrary(className)
 
   /**
-   * Loads a specific instance of a library
-   *
-   * If a library with the same name is already present,
-   * a warning event is notified
-   *
-   * @param lib the (Java class) name of the library to be loaded
-   * @throws InvalidLibraryException if name is not a valid library
-   */
+    * Loads a library.
+    *
+    * If a library with the same name is already present, a warning event is notified and the request is ignored.
+    *
+    * @param libClass the library class to be loaded.
+    * @tparam L parameter to allow for any subclass of library to be used.
+    * @throws InvalidLibraryException if we cannot create a valid library.
+    * @return the reference to the Library just loaded.
+    */
   @throws(classOf[InvalidLibraryException])
-  def loadLibrary(lib: Library) {
-    _libraryManager.loadLibrary(lib)
-  }
+  def loadLibrary[L <: Library](libClass: Class[L]): Library = libManager.loadLibrary(libClass)
 
   /**
-   * Gets the list of current libraries loaded
-   *
-   * @return the list of the library names
-   */
-  def getCurrentLibraries: Array[String] = {
-    _libraryManager.getCurrentLibraries
-  }
-
-  /**
-   * Unloads a previously loaded library
-   *
-   * @param name of the library to be unloaded
-   * @throws InvalidLibraryException if name is not a valid loaded library
-   */
+    * Loads a specific instance of a library
+    *
+    * If a library with the same name is already present, a warning event is notified
+    *
+    * @param lib the (Java class) name of the library to be loaded
+    * @throws InvalidLibraryException if name is not a valid library
+    */
   @throws(classOf[InvalidLibraryException])
-  def unloadLibrary(name: String) {
-    _libraryManager.unloadLibrary(name)
-  }
+  def loadLibrary(lib: Library): Library = libManager.loadLibrary(lib)
 
   /**
-   * Gets the reference to a loaded library
-   *
-   * @param name the name of the library already loaded
-   * @return the reference to the library loaded, null if the library is
-   *         not found
-   */
-  def getLibrary(name: String): Library = {
-    _libraryManager.getLibrary(name).orNull
-  }
-
-  protected def getLibraryPredicate(name: String, nArgs: Int): Library = {
-    _primitiveManager.getLibraryPredicate(name, nArgs)
-  }
-
-  protected def getLibraryFunctor(name: String, nArgs: Int): Library = {
-    _primitiveManager.getLibraryFunctor(name, nArgs)
-  }
+    * Gets the list of current libraries loaded
+    *
+    * @return the list of the library names
+    */
+  def getCurrentLibraries: Array[String] = libManager.getCurrentLibraries
 
   /**
-   * Gets the list of the operators currently defined
-   *
-   * @return the list of the operators
-   */
-  def getCurrentOperatorList: ju.List[Operator] = {
-    _opManager.getOperators
-  }
+    * Unloads a previously loaded library
+    *
+    * @param name of the library to be unloaded
+    * @throws InvalidLibraryException if name is not a valid loaded library
+    */
+  @throws(classOf[InvalidLibraryException])
+  def unloadLibrary(name: String) : Unit = libManager.unloadLibrary(name)
 
   /**
-   * Solves a query
-   *
-   * @param g the term representing the goal to be demonstrated
-   * @return the result of the demonstration
-   * @see Solution
-   **/
+    * Gets the reference to a loaded library
+    *
+    * @param name the name of the library already loaded
+    * @return the reference to the library loaded, null if the library is not found
+    */
+  def getLibrary(name: String): Library = libManager.getLibrary(name).orNull
+
+  protected def getLibraryPredicate(name: String, nArgs: Int): Library = _primitiveManager.getLibraryPredicate(name, nArgs)
+
+  protected def getLibraryFunctor(name: String, nArgs: Int): Library = _primitiveManager.getLibraryFunctor(name, nArgs)
+
+  /**
+    * Gets the list of the operators currently defined
+    *
+    * @return the list of the operators
+    */
+  def getCurrentOperatorList: ju.List[Operator] = _opManager.getOperators
+
+  /**
+    * Solves a query
+    *
+    * @param g the term representing the goal to be demonstrated
+    * @return the result of the demonstration
+    * @see Solution
+    **/
   def solve(g: Term): Solution = {
     if (g == null) return null
-    val sinfo: Solution = _engineManager.solve(g)
+    val sinfo: Solution = engManager.solve(g)
     val ev: QueryEvent = new QueryEvent(this, sinfo)
     notifyNewQueryResultAvailable(ev)
     sinfo
   }
 
   /**
-   * Solves a query
-   *
-   * @param st the string representing the goal to be demonstrated
-   * @return the result of the demonstration
-   * @see Solution
-   **/
+    * Solves a query
+    *
+    * @param st the string representing the goal to be demonstrated
+    * @return the result of the demonstration
+    * @see Solution
+    **/
   @throws(classOf[MalformedGoalException])
   def solve(st: String): Solution = {
     try {
       val p: Parser = new Parser(_opManager, st)
       val t: Term = p.nextTerm(true)
       solve(t)
-    }
-    catch {
-      case ex: InvalidTermException => {
-        throw new MalformedGoalException
-      }
+    } catch {
+      case ex: InvalidTermException => throw new MalformedGoalException
     }
   }
 
   /**
-   * Gets next solution
-   *
-   * @return the result of the demonstration
-   * @throws NoMoreSolutionsException if no more solutions are present
-   * @see Solution
-   **/
+    * Gets next solution
+    *
+    * @return the result of the demonstration
+    * @throws NoMoreSolutionsException if no more solutions are present
+    * @see Solution
+    **/
   @throws(classOf[NoMoreSolutionsException])
   def solveNext: Solution = {
     if (hasOpenAlternatives) {
-      val sinfo: Solution = _engineManager.solveNext
+      val sinfo: Solution = engManager.solveNext
       val ev: QueryEvent = new QueryEvent(this, sinfo)
       notifyNewQueryResultAvailable(ev)
       sinfo
+    } else {
+      throw new NoMoreSolutionsException
     }
-    else throw new NoMoreSolutionsException
   }
 
   /**
-   * Halts current solve computation
-   */
-  def solveHalt {
-    _engineManager.solveHalt
-  }
+    * Halts current solve computation
+    */
+  def solveHalt(): Unit = engManager.solveHalt()
 
   /**
-   * Accepts current solution
-   */
-  def solveEnd {
-    _engineManager.solveEnd
-  }
+    * Accepts current solution
+    */
+  def solveEnd(): Unit = engManager.solveEnd()
 
   /**
-   * Asks for the presence of open alternatives to be explored
-   * in current demostration process.
-   *
-   * @return true if open alternatives are present
-   */
-  def hasOpenAlternatives: Boolean = {
-    val b: Boolean = _engineManager.hasOpenAlternatives
-    b
-  }
+    * Asks if there is the presence of any open alternatives to be explored in current demonstration process.
+    *
+    * @return true if open alternatives are present, false otherwise.
+    */
+  def hasOpenAlternatives: Boolean = engManager.hasOpenAlternatives
 
   /**
-   * Identify functors
-   *
-   * @param term term to identify
-   */
-  def identifyFunctor(term: Term) {
-    _primitiveManager.identifyFunctor(term)
-  }
+    * Identify functors
+    *
+    * @param term term to identify
+    */
+  def identifyFunctor(term: Term):Unit =_primitiveManager.identifyFunctor(term)
 
   /**
-   * Gets a term from a string, using the operators currently
-   * defined by the engine
-   *
-   * @param st the string representing a term
-   * @return the term parsed from the string
-   * @throws InvalidTermException if the string does not represent a valid term
-   */
+    * Gets a term from a string, using the operators currently
+    * defined by the engine
+    *
+    * @param st the string representing a term
+    * @return the term parsed from the string
+    * @throws InvalidTermException if the string does not represent a valid term
+    */
   @throws(classOf[InvalidTermException])
-  def toTerm(st: String): Term = {
-    Parser.parseSingleTerm(st, _opManager)
-  }
+  def toTerm(st: String): Term = Parser.parseSingleTerm(st, _opManager)
 
   /**
-   * Gets the string representation of a term, using operators
-   * currently defined by engine
-   *
-   * @param term      the term to be represented as a string
-   * @return the string representing the term
-   */
-  def toString(term: Term): String = {
-    (term.toStringAsArgY(_opManager, OperatorManager.OP_HIGH))
-  }
+    * Gets the string representation of a term, using operators
+    * currently defined by engine
+    *
+    * @param term the term to be represented as a string
+    * @return the string representing the term
+    */
+  def toString(term: Term): String = term.toStringAsArgY(_opManager, OperatorManager.OP_HIGH)
 
   /**
-   * Defines a new flag
-   */
+    * Defines a new flag
+    */
   def defineFlag(name: String, valueList: Struct, defValue: Term, modifiable: Boolean, libName: String): Boolean = {
-    _flagManager.defineFlag(name, valueList, defValue, modifiable, libName)
+    flagManager.defineFlag(name, valueList, defValue, modifiable, libName)
   }
 
   /**
-   * Switches on/off the notification of spy information events
-   * @param state  - true for enabling the notification of spy event
-   */
+    * Switches on/off the notification of spy information events
+    *
+    * @param state - true for enabling the notification of spy event
+    */
   def setSpy(state: Boolean) {
     _spy = state
   }
 
   /**
-   * Checks the spy state of the engine
-   * @return  true if the engine emits spy information
-   */
+    * Checks the spy state of the engine
+    *
+    * @return true if the engine emits spy information
+    */
   def isSpy: Boolean = {
     _spy
   }
 
   /**
-   * Notifies a spy information event
-   */
+    * Notifies a spy information event
+    */
   def spy(s: String) {
     if (_spy) {
       notifySpy(new SpyEvent(this, s))
@@ -548,9 +475,10 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   * Notifies a spy information event
-   * @param s TODO
-   */
+    * Notifies a spy information event
+    *
+    * @param s TODO
+    */
   def spy(s: String, e: Engine) {
     if (_spy) {
       val ctx: ExecutionContext = e.context
@@ -565,137 +493,116 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   * Produces an output information event
-   *
-   * @param m the output string
-   */
+    * Produces an output information event
+    *
+    * @param m the output string
+    */
   def stdOutput(m: String) {
     notifyOutput(new OutputEvent(this, m))
   }
 
   /**
-   * Adds a listener to ouput events
-   *
-   * @param l the listener
-   */
-  def addOutputListener(l: OutputListener) {
-    _outputListeners.add(l)
-  }
+    * Adds a listener to ouput events
+    *
+    * @param l the listener
+    */
+  def addOutputListener(l: OutputListener): Unit = _outputListeners.add(l)
 
   /**
-   * Adds a listener to theory events
-   *
-   * @param l the listener
-   */
-  def addTheoryListener(l: TheoryListener) {
-    _theoryListeners.add(l)
-  }
+    * Adds a listener to theory events
+    *
+    * @param l the listener
+    */
+  def addTheoryListener(l: TheoryListener): Unit = _theoryListeners.add(l)
 
   /**
-   * Adds a listener to theory events
-   *
-   * @param l the listener
-   */
-  def addQueryListener(l: QueryListener) {
-    _queryListeners.add(l)
-  }
+    * Adds a listener to theory events
+    *
+    * @param l the listener
+    */
+  def addQueryListener(l: QueryListener): Unit = _queryListeners.add(l)
 
   /**
-   * Adds a listener to spy events
-   *
-   * @param l the listener
-   */
-  def addSpyListener(l: SpyListener) {
-    _spyListeners.add(l)
-  }
+    * Adds a listener to spy events
+    *
+    * @param l the listener
+    */
+  def addSpyListener(l: SpyListener): Unit = _spyListeners.add(l)
 
   /**
-   * Removes a listener to ouput events
-   *
-   * @param l the listener
-   */
-  def removeOutputListener(l: OutputListener) {
-    _outputListeners.remove(l)
-  }
+    * Removes a listener to ouput events
+    *
+    * @param l the listener
+    */
+  def removeOutputListener(l: OutputListener) : Unit = _outputListeners.remove(l)
 
   /**
-   * Removes all output event listeners
-   */
-  def removeAllOutputListeners {
-    _outputListeners.clear
-  }
+    * Removes all output event listeners
+    */
+  def removeAllOutputListeners(): Unit =_outputListeners.clear()
 
   /**
-   * Removes a listener to theory events
-   *
-   * @param l the listener
-   */
-  def removeTheoryListener(l: TheoryListener) {
-    _theoryListeners.remove(l)
-  }
+    * Removes a listener to theory events
+    *
+    * @param l the listener
+    */
+  def removeTheoryListener(l: TheoryListener): Unit =_theoryListeners.remove(l)
 
   /**
-   * Removes a listener to query events
-   *
-   * @param l the listener
-   */
-  def removeQueryListener(l: QueryListener) {
-    _queryListeners.remove(l)
-  }
+    * Removes a listener to query events
+    *
+    * @param l the listener
+    */
+  def removeQueryListener(l: QueryListener): Unit = _queryListeners.remove(l)
 
   /**
-   * Removes a listener to spy events
-   *
-   * @param l the listener
-   */
-  def removeSpyListener(l: SpyListener) {
-    _spyListeners.remove(l)
-  }
+    * Removes a listener to spy events
+    *
+    * @param l the listener
+    */
+  def removeSpyListener(l: SpyListener): Unit = _spyListeners.remove(l)
 
   /**
-   * Removes all spy event listeners
-   */
-  def removeAllSpyListeners {
-    _spyListeners.clear
-  }
+    * Removes all spy event listeners
+    */
+  def removeAllSpyListeners():Unit = _spyListeners.clear()
 
   /**
-   * Gets a copy of current listener list to output events
-   */
+    * Gets a copy of current listener list to output events
+    */
   def getOutputListenerList: ju.List[OutputListener] = {
     new ju.ArrayList[OutputListener](_outputListeners)
   }
 
-
   /**
-   * Gets a copy of current listener list to spy events
-   *
-   */
+    * Gets a copy of current listener list to spy events
+    *
+    */
   def getSpyListenerList: ju.List[SpyListener] = {
     new ju.ArrayList[SpyListener](_spyListeners)
   }
 
   /**
-   * Gets a copy of current listener list to theory events
-   *
-   */
+    * Gets a copy of current listener list to theory events
+    *
+    */
   def getTheoryListenerList: ju.List[TheoryListener] = {
     new ju.ArrayList[TheoryListener](_theoryListeners)
   }
 
   /**
-   * Gets a copy of current listener list to query events
-   *
-   */
+    * Gets a copy of current listener list to query events
+    *
+    */
   def getQueryListenerList: ju.List[QueryListener] = {
     new ju.ArrayList[QueryListener](_queryListeners)
   }
 
   /**
-   * Notifies an ouput information event
-   *
-   * @param e the event
-   */
+    * Notifies an ouput information event
+    *
+    * @param e the event
+    */
   protected def notifyOutput(e: OutputEvent) {
     import scala.collection.JavaConversions._
     for (ol <- _outputListeners) {
@@ -704,10 +611,10 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   * Notifies a spy information event
-   *
-   * @param e the event
-   */
+    * Notifies a spy information event
+    *
+    * @param e the event
+    */
   protected def notifySpy(e: SpyEvent) {
     import scala.collection.JavaConversions._
     for (sl <- _spyListeners) {
@@ -716,10 +623,10 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   * Notifies a new theory set or updated event
-   *
-   * @param e the event
-   */
+    * Notifies a new theory set or updated event
+    *
+    * @param e the event
+    */
   protected def notifyChangedTheory(e: TheoryEvent) {
     import scala.collection.JavaConversions._
     for (tl <- _theoryListeners) {
@@ -728,10 +635,10 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   * Notifies a library loaded event
-   *
-   * @param e the event
-   */
+    * Notifies a library loaded event
+    *
+    * @param e the event
+    */
   protected def notifyNewQueryResultAvailable(e: QueryEvent) {
     import scala.collection.JavaConversions._
     for (ql <- _queryListeners) {
@@ -740,17 +647,17 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   * Append a new path to directory list
-   *
-   */
+    * Append a new path to directory list
+    *
+    */
   def pushDirectoryToList(path: String) {
     absolutePathList.add(path)
   }
 
   /**
-   *
-   * Retract an element from directory list
-   */
+    *
+    * Retract an element from directory list
+    */
   def popDirectoryFromList {
     if (!absolutePathList.isEmpty) {
       absolutePathList.remove(absolutePathList.size - 1)
@@ -758,9 +665,9 @@ class Prolog(spy: Boolean, warning: Boolean) extends Serializable {
   }
 
   /**
-   *
-   * Reset directory list
-   */
+    *
+    * Reset directory list
+    */
   def resetDirectoryList(path: String) {
     absolutePathList = new ju.ArrayList[String]
     absolutePathList.add(path)
