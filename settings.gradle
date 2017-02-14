@@ -1,0 +1,4 @@
+rootProject.name = 'project-soisceal'
+
+include ':2p'//,':2p-android'
+

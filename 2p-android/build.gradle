@@ -1,0 +1,20 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath group: 'com.android.tools.build', name: 'gradle', version: '2.2.3'
+     }
+}
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+}
+
+dependencies {
+    compile module(':2p')
+}
