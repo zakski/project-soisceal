@@ -29,7 +29,7 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener{
      * is therefore used.
      */
     @Override
-    public Node makeTreeFrom(List<ExecutionContext> eclist){
+    public alice.tuprologx.spyframe.Node makeTreeFrom(List<ExecutionContext> eclist){
       return TermFrame.term2tree.makeTreeFrom(makeTermFrom(eclist));
     }
 

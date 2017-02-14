@@ -1,4 +1,4 @@
-package SpyFrame;
+package spyframe;
 // franz.beslmeisl at googlemail.com
 
 import alice.tuprolog.Library;
