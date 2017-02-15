@@ -19,6 +19,7 @@ package alice.tuprolog;
 
 import java.util.*;
 
+import alice.tuprolog.interfaces.IFlagManager;
 import alice.tuprolog.json.AbstractEngineState;
 import alice.tuprolog.json.FullEngineState;
 import alice.tuprolog.json.JSONSerializerManager;
@@ -28,7 +29,7 @@ import alice.tuprolog.json.JSONSerializerManager;
  * 
  * @author Alex Benini
  */
-class FlagManager {
+class FlagManager implements IFlagManager {
 	
     /* flag list */
     private ArrayList<Flag> flags;

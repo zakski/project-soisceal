@@ -17,6 +17,8 @@
  */
 package alice.tuprolog;
 
+import alice.tuprolog.interfaces.IFlagManager;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,7 +38,7 @@ public class BuiltIn extends Library {
 	private EngineManager engineManager;
 	private TheoryManager theoryManager;
 	private LibraryManager libraryManager;
-	private FlagManager flagManager;
+	private IFlagManager flagManager;
 	private PrimitiveManager primitiveManager;
 	private OperatorManager operatorManager;
 

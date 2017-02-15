@@ -21,6 +21,7 @@ import java.util.*;
 import java.io.*;
 
 import alice.tuprolog.event.*;
+import alice.tuprolog.interfaces.IFlagManager;
 import alice.tuprolog.interfaces.IProlog;
 //import alice.tuprologx.ide.ToolBar;
 import alice.tuprolog.event.ExceptionListener;
@@ -150,7 +151,7 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @param spy spying activated
 	 * @param warning warning activated
 	 */
-	private Prolog(boolean spy, boolean warning) {
+	protected Prolog(boolean spy, boolean warning) {
 		outputListeners = new ArrayList<OutputListener>();
 		spyListeners = new ArrayList<SpyListener>();
 		warningListeners = new ArrayList<WarningListener>();
@@ -258,7 +259,7 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	/**
 	 * Gets the component managing flags
 	 */
-	public FlagManager getFlagManager() {
+	public IFlagManager getFlagManager() {
 		return flagManager;
 	}
 
