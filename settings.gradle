@@ -1,4 +1,4 @@
 rootProject.name = 'project-soisceal'
 
-include ':2p', ':2p-ide'//,':2p-android'
+include ':scala-core',':2p', ':2p-ide'//,':2p-android'
 
