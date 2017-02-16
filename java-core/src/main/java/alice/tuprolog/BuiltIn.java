@@ -18,6 +18,7 @@
 package alice.tuprolog;
 
 import alice.tuprolog.interfaces.IFlagManager;
+import alice.tuprolog.interfaces.IPrimitiveManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,7 +40,7 @@ public class BuiltIn extends Library {
 	private TheoryManager theoryManager;
 	private LibraryManager libraryManager;
 	private IFlagManager flagManager;
-	private PrimitiveManager primitiveManager;
+	private IPrimitiveManager primitiveManager;
 	private OperatorManager operatorManager;
 
 	public BuiltIn(Prolog mediator) {

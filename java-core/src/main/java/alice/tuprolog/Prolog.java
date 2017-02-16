@@ -22,6 +22,7 @@ import java.io.*;
 
 import alice.tuprolog.event.*;
 import alice.tuprolog.interfaces.IFlagManager;
+import alice.tuprolog.interfaces.IPrimitiveManager;
 import alice.tuprolog.interfaces.IProlog;
 //import alice.tuprologx.ide.ToolBar;
 import alice.tuprolog.event.ExceptionListener;
@@ -273,7 +274,7 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	/**
 	 * Gets the component managing primitives
 	 */
-	public PrimitiveManager getPrimitiveManager() {
+	public IPrimitiveManager getPrimitiveManager() {
 		return primitiveManager;
 	}
 

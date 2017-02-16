@@ -9,7 +9,7 @@ import java.lang.*;
  * @author Matteo Iuliani
  * 
  *         Test del funzionamento delle eccezioni lanciate dai predicati della
- *         classe BuiltIn
+ *         classe ScalaBuiltIn
  */
 public class BuiltInExceptionsTestCase extends TestCase {
 

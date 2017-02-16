@@ -36,7 +36,7 @@ private[core] final class FlagManager extends IFlagManager {
   private def init() = { val s: Struct = new Struct
     s.append(new Struct("on"))
     s.append(new Struct("off"))
-    this.defineFlag("occursCheck", s, new Struct("on"), true, "BuiltIn")
+    this.defineFlag("occursCheck", s, new Struct("on"), true, "ScalaBuiltIn")
   }
 
 

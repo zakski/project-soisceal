@@ -28,6 +28,7 @@ import java.util.Stack;
 
 import alice.tuprolog.InvalidTermException;
 import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.interfaces.IPrimitiveManager;
 import alice.tuprolog.json.AbstractEngineState;
 import alice.tuprolog.json.FullEngineState;
 import alice.util.Tools;
@@ -57,7 +58,7 @@ public class TheoryManager implements Serializable {
 	private ClauseDatabase staticDBase;
 	private ClauseDatabase retractDBase;
 	private Prolog engine;
-	private PrimitiveManager primitiveManager;
+	private IPrimitiveManager primitiveManager;
 	private Stack<Term> startGoalStack;
 	Theory lastConsultedTheory;
 

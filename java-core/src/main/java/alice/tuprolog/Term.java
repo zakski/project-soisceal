@@ -187,7 +187,7 @@ public abstract class Term implements Serializable {
      * (if empty list then no renaming)
      * @param idExecCtx Execution Context identifier
      */
-    abstract Term copy(AbstractMap<Var,Var> vMap, int idExecCtx);
+    public abstract Term copy(AbstractMap<Var,Var> vMap, int idExecCtx);
     
     //Alberto
     public abstract Term copyAndRetainFreeVar(AbstractMap<Var,Var> vMap, int idExecCtx);

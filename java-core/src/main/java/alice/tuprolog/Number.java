@@ -172,7 +172,7 @@ public abstract class Number extends Term implements Comparable<Number> {
      * the list argument passed contains the list of variables to be renamed
      * (if empty list then no renaming)
      */
-    Term copy(AbstractMap<Var,Var> vMap, int idExecCtx) {
+    public Term copy(AbstractMap<Var,Var> vMap, int idExecCtx) {
         return this;
     }
     

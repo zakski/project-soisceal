@@ -181,7 +181,7 @@ public class EngineManager implements java.io.Serializable {
 		}
 	}
 	
-	void cut() {
+	public void cut() {
 		findRunner().cut();
 	}
 	
@@ -200,7 +200,7 @@ public class EngineManager implements java.io.Serializable {
 		return runner.isHalted();
 	}
 	
-	void pushSubGoal(SubGoalTree goals) {
+	public void pushSubGoal(SubGoalTree goals) {
 		EngineRunner runner= findRunner();
 		runner.pushSubGoal(goals);
 		

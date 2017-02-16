@@ -74,7 +74,7 @@ public class ClauseInfo {
     /**
      * Gets a clause from a generic Term
      */
-    static SubGoalTree extractBody(Term body) {
+    public static SubGoalTree extractBody(Term body) {
         SubGoalTree r = new SubGoalTree();
         extractBody(r, body);
         return r;
@@ -134,12 +134,12 @@ public class ClauseInfo {
     }
     
    
-    Struct getClause() {
+    public Struct getClause() {
         return clause;
     }
     
    
-    Struct getHead() {
+    public Struct getHead() {
         return head;
     }    
     

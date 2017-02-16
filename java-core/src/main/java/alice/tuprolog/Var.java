@@ -155,7 +155,7 @@ public class Var extends Term {
 	 * then the variable in the list is returned.
 	 */
 	@Override
-	Term copy(AbstractMap<Var,Var> vMap, int idExecCtx) {
+	public Term copy(AbstractMap<Var,Var> vMap, int idExecCtx) {
 		Term tt = getTerm();
 		if (tt == this) {
 			Var v = (Var)(vMap.get(this));

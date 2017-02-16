@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
+
+import alice.tuprolog.interfaces.IPrimitiveManager;
 import cli.System.Reflection.Assembly;
 
 import alice.tuprolog.event.LibraryEvent;
@@ -28,7 +30,7 @@ public class LibraryManager
 	/*  */
 	private Prolog prolog;
 	private TheoryManager theoryManager;
-	private PrimitiveManager primitiveManager;
+	private IPrimitiveManager primitiveManager;
 	private Hashtable<String, URL> externalLibraries = new Hashtable<String, URL>();
 
 	/**

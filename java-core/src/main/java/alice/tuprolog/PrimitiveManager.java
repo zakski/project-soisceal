@@ -47,8 +47,8 @@ public class PrimitiveManager /*Castagna 06/2011*/implements IPrimitiveManager/*
     void initialize(Prolog vm) {
         createPrimitiveInfo(new BuiltIn(vm)); 
     }
-    
-    void createPrimitiveInfo(IPrimitives src) {
+
+    public void createPrimitiveInfo(IPrimitives src) {
         Map<Integer,List<PrimitiveInfo>> prims = src.getPrimitives();
         Iterator<PrimitiveInfo> it = prims.get(PrimitiveInfo.DIRECTIVE).iterator();
         while(it.hasNext()) {
@@ -70,9 +70,9 @@ public class PrimitiveManager /*Castagna 06/2011*/implements IPrimitiveManager/*
         primOfLib.addAll(prims.get(PrimitiveInfo.FUNCTOR));
         libHashMap.put(src,primOfLib);
     }
-    
-    
-    void deletePrimitiveInfo(IPrimitives src) {
+
+
+    public void deletePrimitiveInfo(IPrimitives src) {
         Iterator<PrimitiveInfo> it = libHashMap.remove(src).iterator();
         while(it.hasNext()) {
             String k = ((PrimitiveInfo)it.next()).invalidate();

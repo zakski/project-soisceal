@@ -27,7 +27,7 @@ import alice.tuprolog.interfaces.IEngine;
  */
 public class Engine implements IEngine {    
 	
-	int nDemoSteps; //Alberto
+	public int nDemoSteps; //Alberto
 	int nResultAsked; //Alberto
 	boolean hasOpenAlternatives; //Alberto
 	boolean mustStop;

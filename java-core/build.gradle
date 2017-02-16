@@ -52,3 +52,9 @@ dependencies {
     testCompile group: 'org.concordion', name: 'concordion', version: '2.0.3'
     testCompile group: 'org.concordion', name: 'concordion-extensions', version: '1.1.1'
 }
+
+test {
+    testLogging.showStandardStreams = true   // display test output on console
+    systemProperties['concordion.output.dir'] = "$reporting.baseDir/spec"  // write output to build/reports/spec
+    outputs.upToDateWhen { false }   // force tests to run even if code hasn't changed
+}

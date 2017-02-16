@@ -210,7 +210,7 @@ public class Struct extends Term {
     /**
 	 * @return
 	 */
-    String getPredicateIndicator() {
+    public String getPredicateIndicator() {
         return predicateIndicator;
     }
     
@@ -376,7 +376,7 @@ public class Struct extends Term {
      * Gets a copy of this structure
      * @param vMap is needed for register occurence of same variables
      */
-    Term copy(AbstractMap<Var,Var> vMap, int idExecCtx) {
+    public Term copy(AbstractMap<Var,Var> vMap, int idExecCtx) {
         Struct t = new Struct(arity);
         t.resolved  = resolved;
         t.name      = name;
@@ -561,7 +561,7 @@ public class Struct extends Term {
     /**
      * Gets a list Struct representation, with the functor as first element.
      */
-    Struct toList() {
+    public Struct toList() {
         Struct t = new Struct();
         for(int c = arity - 1;c >= 0;c--) {
             t = new Struct(arg[c].getTerm(),t);
@@ -574,7 +574,7 @@ public class Struct extends Term {
      *
      * If this structure is not a list, null object is returned
      */
-    Struct fromList() {
+    public Struct fromList() {
         Term ft = arg[0].getTerm();
         if (!ft.isAtom()) {
             return null;
@@ -651,7 +651,7 @@ public class Struct extends Term {
     /**
 	 * Set primitive behaviour associated at structure
 	 */
-    void setPrimitive(PrimitiveInfo b) {
+    public void setPrimitive(PrimitiveInfo b) {
         primitive = b;
     }
     

@@ -9,6 +9,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import alice.tuprolog.NoMoreSolutionException;
+import alice.tuprolog.interfaces.IPrimitiveManager;
 
 /**
  * @author Alex Benini
@@ -21,7 +22,7 @@ public class EngineRunner implements java.io.Serializable, Runnable{
     
 	private Prolog mediator;
     private TheoryManager theoryManager;
-    private PrimitiveManager primitiveManager;
+    private IPrimitiveManager primitiveManager;
     private LibraryManager libraryManager;
     private EngineManager engineManager;
 

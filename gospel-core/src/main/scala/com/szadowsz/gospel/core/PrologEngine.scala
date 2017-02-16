@@ -33,9 +33,11 @@
  */
 package com.szadowsz.gospel.core
 
-import alice.tuprolog.{InvalidLibraryException, Library}
-import alice.tuprolog.interfaces.IFlagManager
+import alice.tuprolog.{InvalidLibraryException, Library, Term}
+import alice.tuprolog.interfaces.{IFlagManager, IPrimitiveManager}
 import alice.tuprolog.lib.{BasicLibrary, IOLibrary, ISOLibrary, OOLibrary}
+import com.szadowsz.gospel.core.db.LibraryManager
+import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
 import com.szadowsz.gospel.core.engine.flags.FlagManager
 
 /**
@@ -47,10 +49,12 @@ import com.szadowsz.gospel.core.engine.flags.FlagManager
   */
 class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tuprolog.Prolog(spy,warning) {
 
+  private lazy val primManager = new PrimitiveManager(this)  // db primitive prolog term manager
+
   private lazy val flagManager = new FlagManager() // engine flag manager
 
   /**
-    * Builds a tuProlog engine with loaded the specified libraries.
+    * Builds a Prolog engine with loaded the specified libraries.
     *
     * @param libs the (class) names of the libraries to be loaded
     */
@@ -60,7 +64,7 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tupro
     libs.foreach(s => loadLibrary(s))
   }
   /**
-    * Builds a tuProlog engine with loaded the specified libraries.
+    * Builds a Prolog engine with loaded the specified libraries.
     *
     * @param libs the classes of the libraries to be loaded
     */
@@ -83,11 +87,28 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tupro
     ))
   }
 
-  /**
+  override protected def getLibraryPredicate(name: String, nArgs: Int): Library = primManager.getLibraryPredicate(name, nArgs) // TODO comment or remove
+
+  override protected def getLibraryFunctor(name: String, nArgs: Int): Library = primManager.getLibraryFunctor(name, nArgs) // TODO comment or remove
+
+    /**
     * Method to retrieve the component managing flags.
     *
     * @return the flag manager instance attached to this prolog engine.
     */
   override def getFlagManager: IFlagManager = flagManager // TODO Make Internal only
 
+  /**
+    * Method to retrieve the db component that manages primitives.
+    *
+    * @return the primitive manager instance attached to this prolog engine.
+    */
+  override def getPrimitiveManager: IPrimitiveManager = primManager  // TODO Make Internal only
+
+  /**
+    * Identify any functors.
+    *
+    * @param term the term to identify.
+    */
+ override def identifyFunctor(term: Term): Unit = primManager.identifyFunctor(term)
 }

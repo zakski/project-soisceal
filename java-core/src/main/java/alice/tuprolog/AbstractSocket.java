@@ -102,7 +102,7 @@ public abstract class AbstractSocket extends Term{
 	}
 
 	@Override
-	Term copy(AbstractMap<Var, Var> vMap, int idExecCtx) {
+	public Term copy(AbstractMap<Var, Var> vMap, int idExecCtx) {
 		return this;
 	}
 
