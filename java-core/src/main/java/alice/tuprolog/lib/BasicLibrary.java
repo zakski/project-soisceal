@@ -530,7 +530,7 @@ public class BasicLibrary extends Library {
         }
     }
 
-    alice.tuprolog.Number getIntegerNumber(long num) {
+    public alice.tuprolog.Number getIntegerNumber(long num) {
         if (num > Integer.MIN_VALUE && num < Integer.MAX_VALUE)
             return new Int((int) num);
         else

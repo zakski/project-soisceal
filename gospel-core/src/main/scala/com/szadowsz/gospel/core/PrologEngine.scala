@@ -35,8 +35,9 @@ package com.szadowsz.gospel.core
 
 import alice.tuprolog.{InvalidLibraryException, Library, Term}
 import alice.tuprolog.interfaces.{IFlagManager, ILibraryManager, IPrimitiveManager}
-import alice.tuprolog.lib.{BasicLibrary, IOLibrary, ISOLibrary, OOLibrary}
+import alice.tuprolog.lib.{IOLibrary, ISOLibrary, OOLibrary}
 import com.szadowsz.gospel.core.db.LibManager
+import com.szadowsz.gospel.core.db.libs.MyBasicLibrary
 import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
 import com.szadowsz.gospel.core.engine.flags.FlagManager
 
@@ -82,7 +83,7 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tupro
     */
    def this() {
     this(Array[Class[_ <: Library]](
-      classOf[BasicLibrary],
+      classOf[MyBasicLibrary],
       classOf[ISOLibrary],
       classOf[IOLibrary],
       classOf[OOLibrary]

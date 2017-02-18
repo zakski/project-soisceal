@@ -8,31 +8,6 @@ import junit.framework.TestCase;
 
 public class PrologTestCase extends TestCase {
 	
-	public void testEngineInitialization() {
-		PrologEngine engine = new PrologEngine();
-		assertEquals(4, engine.getCurrentLibraries().length);
-		assertNotNull(engine.getLibrary("alice.tuprolog.lib.BasicLibrary"));
-		assertNotNull(engine.getLibrary("alice.tuprolog.lib.ISOLibrary"));
-		assertNotNull(engine.getLibrary("alice.tuprolog.lib.IOLibrary"));
-		assertNotNull(engine.getLibrary("alice.tuprolog.lib.OOLibrary"));
-	}
-	
-	public void testLoadLibraryAsString() throws InvalidLibraryException {
-		PrologEngine engine = new PrologEngine();
-		engine.loadLibrary("alice.tuprolog.StringLibrary");
-		assertNotNull(engine.getLibrary("alice.tuprolog.StringLibrary"));
-	}
-	
-	public void testLoadLibraryAsObject() throws InvalidLibraryException {
-		PrologEngine engine = new PrologEngine();
-		Library stringLibrary = new StringLibrary();
-		engine.loadLibrary(stringLibrary);
-		assertNotNull(engine.getLibrary("alice.tuprolog.StringLibrary"));
-		Library javaLibrary = new alice.tuprolog.lib.OOLibrary();
-		engine.loadLibrary(javaLibrary);
-		assertSame(javaLibrary, engine.getLibrary("alice.tuprolog.lib.OOLibrary"));
-	}
-	
 	public void testGetLibraryWithName() throws InvalidLibraryException {
 		PrologEngine engine = new PrologEngine(new String[] {"alice.tuprolog.TestLibrary"});
 		assertNotNull(engine.getLibrary("TestLibraryName"));

@@ -6,7 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({	BuiltInTestCase.class,
-				PrologTestCase.class, 
+				com.szadowsz.gospel.core.PrologTestCase.class,
 				IntTestCase.class, 
 				IOLibraryTestCase.class, 
 				DoubleTestCase.class, 

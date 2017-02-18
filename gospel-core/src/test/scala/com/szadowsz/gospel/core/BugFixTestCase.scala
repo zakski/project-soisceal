@@ -1,12 +1,15 @@
 package com.szadowsz.gospel.core
 
-import alice.tuprolog.{Struct, Theory, Int}
+import alice.tuprolog.{Int, Struct, Theory}
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
 import org.scalatest.{FlatSpec, FunSpec}
 
 /**
   * Created on 16/02/2017.
   */
-class BugFixTests extends FunSpec with BaseEngineSpec {
+@RunWith(classOf[JUnitRunner])
+class BugFixTestCase extends FunSpec with BaseEngineSpec {
 
   protected override def init(): PrologEngine = new PrologEngine()
 
