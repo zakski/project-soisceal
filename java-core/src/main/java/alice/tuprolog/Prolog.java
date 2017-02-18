@@ -22,6 +22,7 @@ import java.io.*;
 
 import alice.tuprolog.event.*;
 import alice.tuprolog.interfaces.IFlagManager;
+import alice.tuprolog.interfaces.ILibraryManager;
 import alice.tuprolog.interfaces.IPrimitiveManager;
 import alice.tuprolog.interfaces.IProlog;
 //import alice.tuprologx.ide.ToolBar;
@@ -281,7 +282,7 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	/**
 	 * Gets the component managing libraries
 	 */
-	public LibraryManager getLibraryManager() {
+	public ILibraryManager getLibraryManager() {
 		return libraryManager;
 	}
 
@@ -1063,7 +1064,7 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * 
 	 * @param e the event
 	 */
-	protected void notifyLoadedLibrary(LibraryEvent e) {
+	public void notifyLoadedLibrary(LibraryEvent e) {
 		for(LibraryListener ll:libraryListeners){
 			ll.libraryLoaded(e);
 		}

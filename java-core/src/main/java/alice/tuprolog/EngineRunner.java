@@ -8,7 +8,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import alice.tuprolog.NoMoreSolutionException;
+import alice.tuprolog.interfaces.ILibraryManager;
 import alice.tuprolog.interfaces.IPrimitiveManager;
 
 /**
@@ -23,7 +23,7 @@ public class EngineRunner implements java.io.Serializable, Runnable{
 	private Prolog mediator;
     private TheoryManager theoryManager;
     private IPrimitiveManager primitiveManager;
-    private LibraryManager libraryManager;
+    private ILibraryManager ILibraryManager;
     private EngineManager engineManager;
 
     private int id;
@@ -88,7 +88,7 @@ public class EngineRunner implements java.io.Serializable, Runnable{
         mediator = vm;
         theoryManager    = vm.getTheoryManager();
         primitiveManager = vm.getPrimitiveManager();
-        libraryManager   = vm.getLibraryManager();
+        ILibraryManager = vm.getLibraryManager();
         engineManager = vm.getEngineManager();
         
         detached = false;
@@ -159,7 +159,7 @@ public class EngineRunner implements java.io.Serializable, Runnable{
         try {
             query.resolveTerm();
             
-            libraryManager.onSolveBegin(query);
+            ILibraryManager.onSolveBegin(query);
             primitiveManager.identifyPredicate(query);
             
             freeze();
@@ -261,14 +261,14 @@ public class EngineRunner implements java.io.Serializable, Runnable{
      */
     public void solveHalt() {
         env.mustStop();
-        libraryManager.onSolveHalt();
+        ILibraryManager.onSolveHalt();
     }
     
     /**
      * Accepts current solution
      */
     public void solveEnd() {
-        libraryManager.onSolveEnd();
+        ILibraryManager.onSolveEnd();
     }
     
     private void freeze() {

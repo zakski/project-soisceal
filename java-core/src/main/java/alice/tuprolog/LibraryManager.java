@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 
+import alice.tuprolog.interfaces.ILibraryManager;
 import alice.tuprolog.interfaces.IPrimitiveManager;
 import cli.System.Reflection.Assembly;
 
@@ -21,8 +22,7 @@ import alice.util.AssemblyCustomClassLoader;
  * @author Alex Benini
  * 
  */
-public class LibraryManager
-{
+public class LibraryManager implements ILibraryManager {
 
 	/* dynamically loaded built-in libraries */
 	private ArrayList<Library> currentLibraries;
@@ -68,7 +68,8 @@ public class LibraryManager
 	 * @throws InvalidLibraryException
 	 *             if name is not a valid library
 	 */
-	public synchronized Library loadLibrary(String className)
+	@Override
+    public synchronized Library loadLibrary(String className)
 			throws InvalidLibraryException
 	{
 		Library lib = null;
@@ -112,7 +113,8 @@ public class LibraryManager
 	 * @throws InvalidLibraryException
 	 *             if name is not a valid library
 	 */
-	public synchronized Library loadLibrary(String className, String[] paths)
+	@Override
+    public synchronized Library loadLibrary(String className, String[] paths)
 			throws InvalidLibraryException
 	{
 		Library lib = null;
@@ -271,7 +273,8 @@ public class LibraryManager
 	 * @throws InvalidLibraryException
 	 *             if name is not a valid library
 	 */
-	public synchronized void loadLibrary(Library lib)
+	@Override
+    public synchronized void loadLibrary(Library lib)
 			throws InvalidLibraryException
 	{
 		String name = lib.getName();
@@ -295,7 +298,8 @@ public class LibraryManager
 	 * 
 	 * @return the list of the library names
 	 */
-	public synchronized String[] getCurrentLibraries()
+	@Override
+    public synchronized String[] getCurrentLibraries()
 	{
 		String[] libs = new String[currentLibraries.size()];
 		for (int i = 0; i < libs.length; i++)
@@ -313,7 +317,8 @@ public class LibraryManager
 	 * @throws InvalidLibraryException
 	 *             if name is not a valid loaded library
 	 */
-	public synchronized void unloadLibrary(String name)
+	@Override
+    public synchronized void unloadLibrary(String name)
 			throws InvalidLibraryException
 	{
 		boolean found = false;
@@ -393,7 +398,8 @@ public class LibraryManager
 	 * @return the reference to the library loaded, null if the library is not
 	 *         found
 	 */
-	public synchronized Library getLibrary(String name)
+	@Override
+    public synchronized Library getLibrary(String name)
 	{
 		for (Library alib : currentLibraries)
 		{
@@ -405,7 +411,8 @@ public class LibraryManager
 		return null;
 	}
 
-	public synchronized void onSolveBegin(Term g)
+	@Override
+    public synchronized void onSolveBegin(Term g)
 	{
 		for (Library alib : currentLibraries)
 		{
@@ -413,7 +420,8 @@ public class LibraryManager
 		}
 	}
 
-	public synchronized void onSolveHalt()
+	@Override
+    public synchronized void onSolveHalt()
 	{
 		for (Library alib : currentLibraries)
 		{
@@ -421,7 +429,8 @@ public class LibraryManager
 		}
 	}
 
-	public synchronized void onSolveEnd()
+	@Override
+    public synchronized void onSolveEnd()
 	{
 		for (Library alib : currentLibraries)
 		{
@@ -429,12 +438,14 @@ public class LibraryManager
 		}
 	}
 
-	public synchronized URL getExternalLibraryURL(String name)
+	@Override
+    public synchronized URL getExternalLibraryURL(String name)
 	{
 		return isExternalLibrary(name) ? externalLibraries.get(name) : null;
 	}
 
-	public synchronized boolean isExternalLibrary(String name)
+	@Override
+    public synchronized boolean isExternalLibrary(String name)
 	{
 		return externalLibraries.containsKey(name);
 	}
@@ -454,12 +465,14 @@ public class LibraryManager
 	 * The directory is created Android side.
 	 */
 	
-	public void setOptimizedDirectory(String optimizedDirectory)
+	@Override
+    public void setOptimizedDirectory(String optimizedDirectory)
 	{
 		this.optimizedDirectory = optimizedDirectory;
 	}
 	
-	public String getOptimizedDirectory()
+	@Override
+    public String getOptimizedDirectory()
 	{
 		return optimizedDirectory;
 	}

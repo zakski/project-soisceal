@@ -34,9 +34,9 @@
 package com.szadowsz.gospel.core
 
 import alice.tuprolog.{InvalidLibraryException, Library, Term}
-import alice.tuprolog.interfaces.{IFlagManager, IPrimitiveManager}
+import alice.tuprolog.interfaces.{IFlagManager, ILibraryManager, IPrimitiveManager}
 import alice.tuprolog.lib.{BasicLibrary, IOLibrary, ISOLibrary, OOLibrary}
-import com.szadowsz.gospel.core.db.LibraryManager
+import com.szadowsz.gospel.core.db.LibManager
 import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
 import com.szadowsz.gospel.core.engine.flags.FlagManager
 
@@ -49,9 +49,11 @@ import com.szadowsz.gospel.core.engine.flags.FlagManager
   */
 class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tuprolog.Prolog(spy,warning) {
 
-  private lazy val primManager = new PrimitiveManager(this)  // db primitive prolog term manager
+  private lazy val libManager = new LibManager(this) // manager of loaded libraries
 
-  private lazy val flagManager = new FlagManager() // engine flag manager
+  private lazy val primManager = new PrimitiveManager(this)  // primitive prolog term manager.
+
+  private lazy val flagManager = new FlagManager() // engine flag manager.
 
   /**
     * Builds a Prolog engine with loaded the specified libraries.
@@ -92,11 +94,18 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tupro
   override protected def getLibraryFunctor(name: String, nArgs: Int): Library = primManager.getLibraryFunctor(name, nArgs) // TODO comment or remove
 
     /**
-    * Method to retrieve the component managing flags.
+    * Method to retrieve the engine component managing flags.
     *
     * @return the flag manager instance attached to this prolog engine.
     */
   override def getFlagManager: IFlagManager = flagManager // TODO Make Internal only
+
+  /**
+    * Method to retrieve the db component that manages libraries.
+    *
+    * @return the library manager instance attached to this prolog engine.
+    */
+  override def getLibraryManager: ILibraryManager = libManager  // TODO Make Internal only
 
   /**
     * Method to retrieve the db component that manages primitives.
@@ -106,9 +115,86 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tupro
   override def getPrimitiveManager: IPrimitiveManager = primManager  // TODO Make Internal only
 
   /**
+    * Gets the list of current libraries loaded
+    *
+    * @return the list of the library names
+    */
+  override def getCurrentLibraries: Array[String] = libManager.getCurrentLibraries
+
+  /**
+    * Gets the reference to a loaded library
+    *
+    * @param name the name of the library already loaded
+    * @return the reference to the library loaded, null if the library is not found
+    */
+  override def getLibrary(name: String): Library = libManager.getLibrary(name)
+
+  /**
     * Identify any functors.
     *
     * @param term the term to identify.
     */
- override def identifyFunctor(term: Term): Unit = primManager.identifyFunctor(term)
+  override def identifyFunctor(term: Term): Unit = primManager.identifyFunctor(term)
+
+  /**
+    * Unloads a previously loaded library
+    *
+    * @param name of the library to be unloaded
+    * @throws InvalidLibraryException if name is not a valid loaded library
+    */
+  @throws(classOf[InvalidLibraryException])
+  override def unloadLibrary(name: String) : Unit = libManager.unloadLibrary(name)
+
+  /**
+    * Loads a library.
+    *
+    * If a library with the same name is already present, a warning event is notified and the request is ignored.
+    *
+    * @param className the name of the Java class containing the library to be loaded.
+    * @throws InvalidLibraryException if we cannot create a valid library.
+    * @return the reference to the Library just loaded.
+    */
+  @throws(classOf[InvalidLibraryException])
+  override def loadLibrary(className: String): Library = libManager.loadLibrary(className)
+
+  /**
+    * Loads a library.
+    *
+    * If a library with the same name is already present,
+    * a warning event is notified and the request is ignored.
+    *
+    * @param className name of the Java class containing the library to be loaded
+    * @param paths     The path where is contained the library.
+    * @return the reference to the Library just loaded
+    * @throws InvalidLibraryException if name is not a valid library
+    */
+  @throws[InvalidLibraryException]
+  override def loadLibrary(className: String, paths: Array[String]): Library = libManager.loadLibrary(className, paths)
+
+  /**
+    * Loads a specific instance of a library
+    *
+    * If a library with the same name is already present, a warning event is notified
+    *
+    * @param lib the (Java class) name of the library to be loaded
+    * @throws InvalidLibraryException if name is not a valid library
+    */
+  @throws(classOf[InvalidLibraryException])
+  override def loadLibrary(lib: Library): Unit = libManager.loadLibrary(lib)
+
+  /**
+    * Loads a library.
+    *
+    * If a library with the same name is already present, a warning event is notified and the request is ignored.
+    *
+    * @param libClass the library class to be loaded.
+    * @tparam L parameter to allow for any subclass of library to be used.
+    * @throws InvalidLibraryException if we cannot create a valid library.
+    * @return the reference to the Library just loaded.
+    */
+  @throws(classOf[InvalidLibraryException])
+  def loadLibrary[L <: Library](libClass: Class[L]): Library = libManager.loadLibrary(libClass)
+
+
+
 }

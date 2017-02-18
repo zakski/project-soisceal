@@ -30,11 +30,14 @@ import scala.collection.JavaConverters._
 import scala.util.Try
 
 /**
-  * Administration of primitive predicates
+  * Administration of primitive predicate objects.
   *
-  * @author Alex Benini
+  * Created on 16/02/2017.
+  *
+  * @version Gospel 2.0.0
   */
-private[core] class PrimitiveManager (vm: PrologEngine) extends IPrimitiveManager {
+
+private[core] class PrimitiveManager(vm: PrologEngine) extends IPrimitiveManager {
   private val libs = new mutable.HashMap[IPrimitives, List[PrimitiveInfo]]()
   private val directives = ju.Collections.synchronizedMap(new ju.HashMap[String, PrimitiveInfo])
   private val predicates = ju.Collections.synchronizedMap(new ju.HashMap[String, PrimitiveInfo])
@@ -123,13 +126,20 @@ private[core] class PrimitiveManager (vm: PrologEngine) extends IPrimitiveManage
     }
   }
 
+  /**
+    * Identifies the predicate term passed as argument.
+    *
+    * This involves identifying structs representing built-in predicates and functors, and setting up related structures and links.
+    *
+    * @param term the term to be identified
+    * @return term with the identified built-in predicate
+    */
   override def identifyPredicate(term: Term): Unit = identify(term, PrimitiveInfo.PREDICATE)
 
   /**
-    * Identifies the term passed as argument.
+    * Identifies the directive term passed as argument.
     *
-    * This involves identifying structs representing builtin
-    * predicates and functors, and setting up related structures and links
+    * This involves identifying structs representing built-in predicates and functors, and setting up related structures and links.
     *
     * @param term the term to be identified
     * @return term with the identified built-in directive
@@ -139,5 +149,13 @@ private[core] class PrimitiveManager (vm: PrologEngine) extends IPrimitiveManage
     term.asInstanceOf[Struct]
   }
 
+  /**
+    * Identifies the functor term passed as argument.
+    *
+    * This involves identifying structs representing built-in predicates and functors, and setting up related structures and links.
+    *
+    * @param term the term to be identified
+    * @return term with the identified built-in functor
+    */
   def identifyFunctor(term: Term): Unit = identify(term, PrimitiveInfo.FUNCTOR)
 }

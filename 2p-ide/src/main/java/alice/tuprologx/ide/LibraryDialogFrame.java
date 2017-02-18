@@ -18,6 +18,7 @@ import java.util.StringTokenizer;
 import alice.tuprolog.event.LibraryEvent;
 import alice.tuprolog.InvalidLibraryException;
 import alice.tuprolog.event.LibraryListener;
+import alice.tuprolog.interfaces.ILibraryManager;
 
 public class LibraryDialogFrame extends GenericFrame implements LibraryListener
 {
@@ -514,10 +515,10 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
         {
             try
             {
-            	alice.tuprolog.LibraryManager mainLibraryManager = libraryManager.getEngine().getLibraryManager();
-            	if(mainLibraryManager.isExternalLibrary(libraryName))
+            	ILibraryManager mainILibraryManager = libraryManager.getEngine().getLibraryManager();
+            	if(mainILibraryManager.isExternalLibrary(libraryName))
             	{
-            		URL url = mainLibraryManager.getExternalLibraryURL(libraryName);
+            		URL url = mainILibraryManager.getExternalLibraryURL(libraryName);
             		if(url.getProtocol().equals("jar"))
             		{
 	            		JarURLConnection connection =

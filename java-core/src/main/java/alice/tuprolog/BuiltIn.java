@@ -18,6 +18,7 @@
 package alice.tuprolog;
 
 import alice.tuprolog.interfaces.IFlagManager;
+import alice.tuprolog.interfaces.ILibraryManager;
 import alice.tuprolog.interfaces.IPrimitiveManager;
 
 import java.io.File;
@@ -38,7 +39,7 @@ public class BuiltIn extends Library {
 	private static final long serialVersionUID = 1L;
 	private EngineManager engineManager;
 	private TheoryManager theoryManager;
-	private LibraryManager libraryManager;
+	private ILibraryManager ILibraryManager;
 	private IFlagManager flagManager;
 	private IPrimitiveManager primitiveManager;
 	private OperatorManager operatorManager;
@@ -48,7 +49,7 @@ public class BuiltIn extends Library {
 		setEngine(mediator);
 		engineManager = mediator.getEngineManager();
 		theoryManager = mediator.getTheoryManager();
-		libraryManager = mediator.getLibraryManager();
+		ILibraryManager = mediator.getLibraryManager();
 		flagManager = mediator.getFlagManager();
 		primitiveManager = mediator.getPrimitiveManager();
 		operatorManager = mediator.getOperatorManager();
@@ -215,7 +216,7 @@ public class BuiltIn extends Library {
 				 throw PrologError.type_error(engineManager, 1, "atom", arg0);
 		 }
 		 try {
-			 libraryManager.loadLibrary(((Struct) arg0).getName());
+			 ILibraryManager.loadLibrary(((Struct) arg0).getName());
 			 return true;
 		 } catch (Exception ex) {
 			 throw PrologError.existence_error(engineManager, 1, "class", arg0,
@@ -244,7 +245,7 @@ public class BuiltIn extends Library {
 			 String[] paths = getStringArrayFromStruct((Struct) arg1);
 			 if(paths == null || paths.length == 0)
 				 throw PrologError.existence_error(engineManager, 2, "paths", arg1, new Struct("Invalid paths' list."));
-			 libraryManager.loadLibrary(((Struct) arg0).getName(), paths);
+			 ILibraryManager.loadLibrary(((Struct) arg0).getName(), paths);
 			 return true;
 			
 		 } catch (Exception ex) {
@@ -275,7 +276,7 @@ public class BuiltIn extends Library {
 				 throw PrologError.type_error(engineManager, 1, "atom", arg0);
 		 }
 		 try {
-			 libraryManager.unloadLibrary(((Struct) arg0).getName());
+			 ILibraryManager.unloadLibrary(((Struct) arg0).getName());
 			 return true;
 		 } catch (Exception ex) {
 			 throw PrologError.existence_error(engineManager, 1, "class", arg0,
@@ -596,7 +597,7 @@ public class BuiltIn extends Library {
 	 public void $load_library_1(Term lib) throws InvalidLibraryException {
 		 lib = lib.getTerm();
 		 if (lib.isAtom())
-			 libraryManager.loadLibrary(((Struct) lib).getName());
+			 ILibraryManager.loadLibrary(((Struct) lib).getName());
 	 }
 
 	 public void include_1(Term theory) throws FileNotFoundException,
