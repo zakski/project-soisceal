@@ -185,7 +185,7 @@ public class EngineManager implements java.io.Serializable {
 		findRunner().cut();
 	}
 	
-	ExecutionContext getCurrentContext() {
+	public ExecutionContext getCurrentContext() {
 		EngineRunner runner=findRunner();
 		return runner.getCurrentContext();
 	}

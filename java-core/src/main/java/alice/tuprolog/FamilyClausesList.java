@@ -18,7 +18,7 @@ import java.util.ListIterator;
  * 
  * @see LinkedList
  */
-class FamilyClausesList extends LinkedList<ClauseInfo> {
+public class FamilyClausesList extends LinkedList<ClauseInfo> {
 	private static final long serialVersionUID = 1L;
 	private FamilyClausesIndex<Number> numCompClausesIndex;
 	private FamilyClausesIndex<String> constantCompClausesIndex;

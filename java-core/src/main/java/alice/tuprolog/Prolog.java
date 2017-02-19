@@ -265,7 +265,7 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	/**
 	 * Gets the component managing theory
 	 */
-	public TheoryManager getTheoryManager() {
+	public ITheoryManager getTheoryManager() {
 		return theoryManager;
 	}
 

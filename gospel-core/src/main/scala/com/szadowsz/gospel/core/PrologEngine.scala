@@ -33,13 +33,17 @@
  */
 package com.szadowsz.gospel.core
 
-import alice.tuprolog.{InvalidLibraryException, Library, Term}
-import alice.tuprolog.interfaces.{IFlagManager, ILibraryManager, IPrimitiveManager}
+import alice.tuprolog.event.TheoryEvent
+import alice.tuprolog.{InvalidLibraryException, InvalidTheoryException, Library, Term}
+import alice.tuprolog.interfaces._
 import alice.tuprolog.lib.{IOLibrary, ISOLibrary, OOLibrary}
 import com.szadowsz.gospel.core.db.LibManager
 import com.szadowsz.gospel.core.db.libs.MyBasicLibrary
 import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
+import com.szadowsz.gospel.core.db.theory.TheoryManager
 import com.szadowsz.gospel.core.engine.flags.FlagManager
+
+import scala.util.Try
 
 /**
   * This class represents a tuProlog engine.
@@ -48,11 +52,13 @@ import com.szadowsz.gospel.core.engine.flags.FlagManager
   *
   * @version Gospel 2.0.0
   */
-class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tuprolog.Prolog(spy,warning) {
+class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tuprolog.Prolog(spy, warning) {
 
-  private lazy val libManager = new LibManager(this) // manager of loaded libraries
+  private lazy val libManager = LibManager(this) // manager of loaded libraries
 
-  private lazy val primManager = new PrimitiveManager(this)  // primitive prolog term manager.
+  private lazy val theoryManager = TheoryManager(this) // manager of current theories
+
+  private lazy val primManager = PrimitiveManager(this) // primitive prolog term manager.
 
   private lazy val flagManager = new FlagManager() // engine flag manager.
 
@@ -66,6 +72,7 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tupro
     this(false, true)
     libs.foreach(s => loadLibrary(s))
   }
+
   /**
     * Builds a Prolog engine with loaded the specified libraries.
     *
@@ -81,7 +88,7 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tupro
     *
     * The default libraries are BasicLibrary, ISOLibrary, IOLibrary, and OOLibrary.
     */
-   def this() {
+  def this() {
     this(Array[Class[_ <: Library]](
       classOf[MyBasicLibrary],
       classOf[ISOLibrary],
@@ -94,7 +101,7 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tupro
 
   override protected def getLibraryFunctor(name: String, nArgs: Int): Library = primManager.getLibraryFunctor(name, nArgs) // TODO comment or remove
 
-    /**
+  /**
     * Method to retrieve the engine component managing flags.
     *
     * @return the flag manager instance attached to this prolog engine.
@@ -106,14 +113,22 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tupro
     *
     * @return the library manager instance attached to this prolog engine.
     */
-  override def getLibraryManager: ILibraryManager = libManager  // TODO Make Internal only
+  override def getLibraryManager: ILibraryManager = libManager // TODO Make Internal only
 
   /**
     * Method to retrieve the db component that manages primitives.
     *
     * @return the primitive manager instance attached to this prolog engine.
     */
-  override def getPrimitiveManager: IPrimitiveManager = primManager  // TODO Make Internal only
+  override def getPrimitiveManager: IPrimitiveManager = primManager // TODO Make Internal only
+
+
+  /**
+    * method to retrieve the component managing the theory.
+    *
+    * @return the theory manager instance attached to this prolog engine.
+    */
+  override def getTheoryManager: ITheoryManager = theoryManager // TODO Make Internal only
 
   /**
     * Gets the list of current libraries loaded
@@ -144,7 +159,7 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tupro
     * @throws InvalidLibraryException if name is not a valid loaded library
     */
   @throws(classOf[InvalidLibraryException])
-  override def unloadLibrary(name: String) : Unit = libManager.unloadLibrary(name)
+  override def unloadLibrary(name: String): Unit = libManager.unloadLibrary(name)
 
   /**
     * Loads a library.
@@ -197,5 +212,53 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tupro
   def loadLibrary[L <: Library](libClass: Class[L]): Library = libManager.loadLibrary(libClass)
 
 
+  /**
+    * Sets a new theory
+    *
+    * @param th is the new theory
+    * @throws InvalidTheoryException if the new theory is not valid
+    * @see alice.gospel.core.theory.Theory
+    */
+  @throws(classOf[InvalidTheoryException])
+  override def setTheory(th: ITheory): Unit = {
+    theoryManager.clear()
+    addTheory(th)
+  }
+
+  /**
+    * Adds (appends) a theory
+    *
+    * @param th is the theory to be added
+    * @throws InvalidTheoryException if the new theory is not valid
+    * @see alice.gospel.core.theory.Theory
+    */
+  @throws(classOf[InvalidTheoryException])
+  override def addTheory(th: ITheory): Unit = {
+    val oldTh: ITheory = getTheory
+    theoryManager.consult(th, true, null)
+    theoryManager.solveTheoryGoal()
+    val newTh: ITheory = getTheory
+    val ev: TheoryEvent = new TheoryEvent(this, oldTh, newTh)
+    this.notifyChangedTheory(ev)
+  }
+
+  /**
+    * Gets current theory
+    *
+    * @return current(dynamic) theory
+    */
+  override def getTheory: ITheory = Try(new Theory(theoryManager.getTheory(true))).toOption.orNull
+
+  /**
+    * Gets last consulted theory, with the original textual format
+    *
+    * @return theory
+    */
+  override def getLastConsultedTheory: ITheory = theoryManager.getLastConsultedTheory
+
+  /**
+    * Clears current theory
+    */
+  override def clearTheory(): Unit = setTheory(new Theory)
 
 }

@@ -30,21 +30,22 @@ import java.util.*;
 
 public class ClauseDatabase extends HashMap<String,FamilyClausesList> implements Iterable<ClauseInfo> {
 	private static final long serialVersionUID = 1L;
-	void addFirst(String key, ClauseInfo d) {
+
+	public void addFirst(String key, ClauseInfo d) {
 		FamilyClausesList family = get(key);
 		if (family == null)
 			put(key, family = new FamilyClausesList());
 		family.addFirst(d);
 	}
 
-	void addLast(String key, ClauseInfo d) {
+	public void addLast(String key, ClauseInfo d) {
 		FamilyClausesList family = get(key);
 		if (family == null)
 			put(key, family = new FamilyClausesList());
 		family.addLast(d);
 	}
 
-	FamilyClausesList abolish(String key) 
+	public FamilyClausesList abolish(String key)
 	{
 		return (FamilyClausesList) remove(key);
 	}
@@ -56,7 +57,7 @@ public class ClauseDatabase extends HashMap<String,FamilyClausesList> implements
 	 * @param headt The goal
 	 * @return  The list of matching-compatible predicates
 	 */
-	List<ClauseInfo> getPredicates(Term headt) {
+	public List<ClauseInfo> getPredicates(Term headt) {
 		FamilyClausesList family = (FamilyClausesList) get(((Struct) headt).getPredicateIndicator());
 		if (family == null){
 			return new ReadOnlyLinkedList<ClauseInfo>();

@@ -10,6 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import alice.tuprolog.interfaces.ILibraryManager;
 import alice.tuprolog.interfaces.IPrimitiveManager;
+import alice.tuprolog.interfaces.ITheoryManager;
 
 /**
  * @author Alex Benini
@@ -21,7 +22,7 @@ public class EngineRunner implements java.io.Serializable, Runnable{
 	private static final long serialVersionUID = 1L;
     
 	private Prolog mediator;
-    private TheoryManager theoryManager;
+    private ITheoryManager theoryManager;
     private IPrimitiveManager primitiveManager;
     private ILibraryManager ILibraryManager;
     private EngineManager engineManager;
@@ -430,7 +431,7 @@ public class EngineRunner implements java.io.Serializable, Runnable{
                 return msgs.size();
         }
         
-        TheoryManager getTheoryManager() {
+        ITheoryManager getTheoryManager() {
             return theoryManager;
          }
         

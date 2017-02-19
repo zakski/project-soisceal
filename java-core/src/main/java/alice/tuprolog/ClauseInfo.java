@@ -56,7 +56,7 @@ public class ClauseInfo {
     /**
      * building a valid clause with a time stamp = original time stamp + NumVar in clause
      */
-    ClauseInfo(Struct clause_, String lib) {
+    public ClauseInfo(Struct clause_, String lib) {
         clause = clause_;
         head = extractHead(clause);
         body = extractBody(clause.getArg(1));
@@ -144,11 +144,11 @@ public class ClauseInfo {
     }    
     
     
-    SubGoalTree getBody() {
+    public SubGoalTree getBody() {
         return body;
     }    
     
-    String getLibraryName() {
+    public String getLibraryName() {
         return libName;
     }
     

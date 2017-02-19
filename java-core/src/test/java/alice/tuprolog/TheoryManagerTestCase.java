@@ -3,6 +3,7 @@ package alice.tuprolog;
 import java.util.List;
 
 
+import alice.tuprolog.interfaces.ITheoryManager;
 import junit.framework.TestCase;
 
 public class TheoryManagerTestCase extends TestCase {
@@ -38,7 +39,7 @@ public class TheoryManagerTestCase extends TestCase {
 		Prolog engine = new Prolog();
 		String theory = "test(A, B) :- A is 1+2, B is 2+3.";
 		engine.setTheory(new Theory(theory));
-		TheoryManager manager = engine.getTheoryManager();
+		ITheoryManager manager = engine.getTheoryManager();
 		Struct testTerm = new Struct("test", new Struct("a"), new Struct("b"));
 		List<ClauseInfo> testClauses = manager.find(testTerm);
 		assertEquals(1, testClauses.size());

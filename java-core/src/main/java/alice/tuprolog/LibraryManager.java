@@ -12,6 +12,7 @@ import java.util.*;
 
 import alice.tuprolog.interfaces.ILibraryManager;
 import alice.tuprolog.interfaces.IPrimitiveManager;
+import alice.tuprolog.interfaces.ITheoryManager;
 import cli.System.Reflection.Assembly;
 
 import alice.tuprolog.event.LibraryEvent;
@@ -29,7 +30,7 @@ public class LibraryManager implements ILibraryManager {
 
 	/*  */
 	private Prolog prolog;
-	private TheoryManager theoryManager;
+	private ITheoryManager theoryManager;
 	private IPrimitiveManager primitiveManager;
 	private Hashtable<String, URL> externalLibraries = new Hashtable<String, URL>();
 

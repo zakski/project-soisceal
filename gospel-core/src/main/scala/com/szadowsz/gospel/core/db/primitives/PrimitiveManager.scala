@@ -37,7 +37,7 @@ import scala.util.Try
   * @version Gospel 2.0.0
   */
 
-private[core] class PrimitiveManager(vm: PrologEngine) extends IPrimitiveManager {
+final case class PrimitiveManager(vm: PrologEngine) extends IPrimitiveManager {
   private val libs = new mutable.HashMap[IPrimitives, List[PrimitiveInfo]]()
   private val directives = ju.Collections.synchronizedMap(new ju.HashMap[String, PrimitiveInfo])
   private val predicates = ju.Collections.synchronizedMap(new ju.HashMap[String, PrimitiveInfo])

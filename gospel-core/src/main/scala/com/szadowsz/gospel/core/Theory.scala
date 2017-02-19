@@ -36,7 +36,7 @@ import com.szadowsz.gospel.core.parser.Parser
   * @version Gospel 2.0.0
   */
 @SerialVersionUID(1L)
-class Theory private() extends ITheory {
+class Theory private[core]() extends ITheory {
   private var theory: String = ""
   private var clauseList: Struct = _
 

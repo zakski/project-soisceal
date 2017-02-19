@@ -32,7 +32,7 @@ import alice.tuprolog.json.JSONSerializerManager;
  * @see Prolog
  *
  */
-public class Theory implements alice.tuprolog.interfaces.ITheory {
+public class Theory implements ITheory {
 	private static final long serialVersionUID = 1L;
     private String theory;
     private Struct clauseList;

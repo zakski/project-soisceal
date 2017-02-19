@@ -20,16 +20,14 @@ package alice.tuprolog;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
-import alice.tuprolog.InvalidTermException;
-import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.interfaces.IPrimitiveManager;
 import alice.tuprolog.interfaces.ITheory;
+import alice.tuprolog.interfaces.ITheoryManager;
 import alice.tuprolog.json.AbstractEngineState;
 import alice.tuprolog.json.FullEngineState;
 import alice.util.Tools;
@@ -51,7 +49,7 @@ import alice.util.Tools;
  *
  * @see Theory
  */
-public class TheoryManager implements Serializable {
+public class TheoryManager implements ITheoryManager {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -75,6 +73,7 @@ public class TheoryManager implements Serializable {
 	/**
 	 * inserting of a clause at the head of the dbase
 	 */
+	@Override
 	public synchronized void assertA(Struct clause, boolean dyn, String libName, boolean backtrackable) {
 		ClauseInfo d = new ClauseInfo(toClause(clause), libName);
 		String key = d.getHead().getPredicateIndicator();
@@ -91,6 +90,7 @@ public class TheoryManager implements Serializable {
 	/**
 	 * inserting of a clause at the end of the dbase
 	 */
+	@Override
 	public synchronized void assertZ(Struct clause, boolean dyn, String libName, boolean backtrackable) {
 		ClauseInfo d = new ClauseInfo(toClause(clause), libName);
 		String key = d.getHead().getPredicateIndicator();
@@ -107,6 +107,7 @@ public class TheoryManager implements Serializable {
 	/**
 	 * removing from dbase the first clause with head unifying with clause
 	 */
+	@Override
 	public synchronized ClauseInfo retract(Struct cl) {
 		Struct clause = toClause(cl);
 		Struct struct = ((Struct) clause.getArg(0));
@@ -158,7 +159,8 @@ public class TheoryManager implements Serializable {
 	 * removing from dbase all the clauses corresponding to the
 	 * predicate indicator passed as a parameter
 	 */
-	public synchronized boolean abolish(Struct pi) {		
+	@Override
+	public synchronized boolean abolish(Struct pi) {
 		if (!(pi instanceof Struct) || !pi.isGround() || !(pi.getArity() == 2))
 			throw new IllegalArgumentException(pi + " is not a valid Struct");
 		if(!pi.getName().equals("/"))
@@ -180,6 +182,7 @@ public class TheoryManager implements Serializable {
 	 * Reviewed by Paolo Contessi: modified according to new ClauseDatabase
 	 * implementation
 	 */
+	@Override
 	public synchronized List<ClauseInfo> find(Term headt) {
 		if (headt instanceof Struct) {
 			List<ClauseInfo> list = dynamicDBase.getPredicates(headt);
@@ -201,6 +204,7 @@ public class TheoryManager implements Serializable {
 	 * @param dynamicTheory if it is true, then the clauses are marked as dynamic
 	 * @param libName       if it not null, then the clauses are marked to belong to the specified library
 	 */
+	@Override
 	public synchronized void consult(ITheory theory, boolean dynamicTheory, String libName) throws InvalidTheoryException {
 		startGoalStack = new Stack<Term>();
 		int clause = 1;
@@ -223,6 +227,7 @@ public class TheoryManager implements Serializable {
 	 * Binds clauses in the database with the corresponding
 	 * primitive predicate, if any
 	 */
+	@Override
 	public void rebindPrimitives() {
 		for (ClauseInfo d:dynamicDBase){
 			for(AbstractSubGoalTree sge:d.getBody()){
@@ -235,6 +240,7 @@ public class TheoryManager implements Serializable {
 	/**
 	 * Clears the clause dbase.
 	 */
+	@Override
 	public synchronized void clear() {
 		dynamicDBase = new ClauseDatabase();
 	}
@@ -242,6 +248,7 @@ public class TheoryManager implements Serializable {
 	/**
 	 * remove all the clauses of lib theory
 	 */
+	@Override
 	public synchronized void removeLibraryTheory(String libName) {
 		for (Iterator<ClauseInfo> allClauses = staticDBase.iterator(); allClauses.hasNext();) {
 			ClauseInfo d = allClauses.next();
@@ -285,6 +292,7 @@ public class TheoryManager implements Serializable {
 		return t;
 	}
 
+	@Override
 	public synchronized void solveTheoryGoal() {
 		Struct s = null;
 		while (!startGoalStack.empty()) {
@@ -304,6 +312,7 @@ public class TheoryManager implements Serializable {
 	/**
 	 * add a goal eventually defined by last parsed theory.
 	 */
+	@Override
 	public synchronized void addStartGoal(Struct g) {
 		startGoalStack.push(g);
 	}
@@ -325,6 +334,7 @@ public class TheoryManager implements Serializable {
 	 *
 	 * @param onlyDynamic if true, fetches only dynamic clauses
 	 */
+	@Override
 	public synchronized String getTheory(boolean onlyDynamic) {
 		StringBuffer buffer = new StringBuffer();
 		for (Iterator<ClauseInfo> dynamicClauses = dynamicDBase.iterator(); dynamicClauses.hasNext();) {
@@ -343,30 +353,36 @@ public class TheoryManager implements Serializable {
 	 * Gets last consulted theory
 	 * @return  last theory
 	 */
+	@Override
 	public synchronized ITheory getLastConsultedTheory() {
 		return lastConsultedTheory;
 	}
 	
+	@Override
 	public void clearRetractDB() {
 		this.retractDBase=new ClauseDatabase();
 	}
 
 	//Alberto
-	public boolean checkExistance(String predicateIndicator){
+	@Override
+	public boolean checkExistence(String predicateIndicator){
 		return (this.dynamicDBase.containsKey(predicateIndicator) || this.staticDBase.containsKey(predicateIndicator));
 	}
 	
 	//Alberto
+	@Override
 	public void serializeLibraries(FullEngineState brain){
 		brain.setLibraries(engine.getCurrentLibraries());
 	}
 	
 	//Alberto
+	@Override
 	public void serializeTimestamp(AbstractEngineState brain){
 		brain.setSerializationTimestamp(System.currentTimeMillis());
 	}
 
 	//Alberto
+	@Override
 	public void serializeDynDataBase(FullEngineState brain) {
 		brain.setDynTheory(getTheory(true));
 	}

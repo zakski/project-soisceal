@@ -18,7 +18,7 @@ import scala.util.control.NonFatal
   *
   * @version Gospel 2.0.0
   */
-class LibManager(private val wam: PrologEngine) extends ILibraryManager {
+final case class LibManager(private val wam: PrologEngine) extends ILibraryManager {
   private lazy val logger = LoggerFactory.getLogger(getClass)
 
   private var currentLibs: List[Library] = List[Library]()

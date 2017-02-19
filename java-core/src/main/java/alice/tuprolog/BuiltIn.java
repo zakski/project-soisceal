@@ -20,6 +20,7 @@ package alice.tuprolog;
 import alice.tuprolog.interfaces.IFlagManager;
 import alice.tuprolog.interfaces.ILibraryManager;
 import alice.tuprolog.interfaces.IPrimitiveManager;
+import alice.tuprolog.interfaces.ITheoryManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,7 +39,7 @@ import java.util.List;
 public class BuiltIn extends Library {
 	private static final long serialVersionUID = 1L;
 	private EngineManager engineManager;
-	private TheoryManager theoryManager;
+	private ITheoryManager theoryManager;
 	private ILibraryManager ILibraryManager;
 	private IFlagManager flagManager;
 	private IPrimitiveManager primitiveManager;
