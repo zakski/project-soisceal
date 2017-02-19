@@ -36,7 +36,7 @@ package com.szadowsz.gospel.core.db.libs
 import java.util
 
 import alice.tuprolog._
-import alice.tuprolog.lib.{BasicLibrary, TheoryLibrary}
+import alice.tuprolog.lib.BasicLibrary
 
 import scala.util.control.NonFatal
 import scala.collection.JavaConverters._
@@ -159,7 +159,7 @@ class MyBasicLibrary() extends BasicLibrary {
         false
       } else {
         val t: Theory = new Theory(theory.getName)
-        val thlib: TheoryLibrary = new TheoryLibrary(libN.getName, t)
+        val thlib: TheoryLibrary = TheoryLibrary(libN.getName, t)
         engine.loadLibrary(thlib)
         true
       }
