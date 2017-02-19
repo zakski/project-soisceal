@@ -9,6 +9,7 @@ package alice.tuprolog;
 import alice.tuprolog.event.SpyEvent;
 import alice.tuprolog.event.SpyListener;
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Theory;
 
 /**
  * @author aricci

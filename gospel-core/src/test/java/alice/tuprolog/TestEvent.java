@@ -9,6 +9,7 @@ import alice.tuprolog.event.PrologEventAdapter;
 import alice.tuprolog.event.QueryEvent;
 import alice.tuprolog.event.TheoryEvent;
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Theory;
 
 class MyListener extends PrologEventAdapter {
     

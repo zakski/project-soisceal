@@ -17,6 +17,8 @@
  */
 package alice.tuprolog;
 
+import alice.tuprolog.interfaces.IParser;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -30,13 +32,13 @@ import java.util.NoSuchElementException;
  * instead of just returning it or checking for its existence from a pool
  * of already produced terms.
  */
-class TermIterator implements Iterator<Term>, java.io.Serializable {
+public class TermIterator implements Iterator<Term>, java.io.Serializable {
 	private static final long serialVersionUID = 1L;
-    private Parser parser;
+    private IParser parser;
     private boolean hasNext;
     private Term next;
     
-    TermIterator(Parser p) {
+    public TermIterator(IParser p) {
         parser = p;
         next = parser.nextTerm(true);
         hasNext = (next != null);    

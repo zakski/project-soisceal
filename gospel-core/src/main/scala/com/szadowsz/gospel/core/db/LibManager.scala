@@ -6,7 +6,7 @@ import java.net.{URL, URLClassLoader}
 import alice.tuprolog._
 import alice.tuprolog.event.LibraryEvent
 import alice.tuprolog.interfaces.ILibraryManager
-import com.szadowsz.gospel.core.PrologEngine
+import com.szadowsz.gospel.core.{PrologEngine,Theory}
 import org.slf4j.LoggerFactory
 
 import scala.util.control.NonFatal

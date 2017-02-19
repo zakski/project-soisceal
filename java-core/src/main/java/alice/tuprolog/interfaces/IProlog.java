@@ -27,7 +27,7 @@ public interface IProlog {
 	 * Gets current theory
 	 * @return   current(dynamic) theory
 	 */
-	Theory getTheory();
+	ITheory getTheory();
 	
 	/**
 	 * Adds (appends) a theory
@@ -35,7 +35,7 @@ public interface IProlog {
 	 * @param th is the theory to be added
 	 * @throws InvalidTheoryException if the new theory is not valid
 	 */
-	void addTheory(Theory th) throws Exception;
+	void addTheory(ITheory th) throws Exception;
 	
 	/**
 	 * Clears current theory

@@ -46,25 +46,25 @@ import java.util.Arrays;
  */
 public class Tokenizer extends StreamTokenizer implements Serializable {
 	private static final long serialVersionUID = 1L;
-    static final int TYPEMASK = 0x00FF;
-    static final int ATTRMASK = 0xFF00;
-    static final int LPAR = 0x0001;
-    static final int RPAR = 0x0002;
-    static final int LBRA = 0x0003;
-    static final int RBRA = 0x0004;
-    static final int BAR = 0x0005;
-    static final int INTEGER = 0x0006;
-    static final int FLOAT = 0x0007;
-    static final int ATOM = 0x0008;
-    static final int VARIABLE = 0x0009;
-    static final int SQ_SEQUENCE = 0x000A;
-    static final int DQ_SEQUENCE = 0x000B;
-    static final int END = 0x000D;
-    static final int LBRA2 = 0x000E;
-    static final int RBRA2 = 0x000F;
-    static final int FUNCTOR = 0x0100;
-    static final int OPERATOR = 0x0200;
-    static final int EOF = 0x1000;
+    public static final int TYPEMASK = 0x00FF;
+    public static final int ATTRMASK = 0xFF00;
+    public static final int LPAR = 0x0001;
+    public static final int RPAR = 0x0002;
+    public static final int LBRA = 0x0003;
+    public static final int RBRA = 0x0004;
+    public static final int BAR = 0x0005;
+    public static final int INTEGER = 0x0006;
+    public static final int FLOAT = 0x0007;
+    public  static final int ATOM = 0x0008;
+    public static final int VARIABLE = 0x0009;
+    public static final int SQ_SEQUENCE = 0x000A;
+    public  static final int DQ_SEQUENCE = 0x000B;
+    public static final int END = 0x000D;
+    public static final int LBRA2 = 0x000E;
+    public static final int RBRA2 = 0x000F;
+    public  static final int FUNCTOR = 0x0100;
+    public static final int OPERATOR = 0x0200;
+    public  static final int EOF = 0x1000;
 
     static final char[] GRAPHIC_CHARS = {'\\', '$', '&', '?', '^', '@', '#', '.', ',', ':', ';', '=', '<', '>', '+', '-', '*', '/', '~'};
     static {
@@ -155,7 +155,7 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
     /**
      * puts back token to be read again
      */
-    void unreadToken(Token token) {
+    public void unreadToken(Token token) {
         tokenList.addFirst(token);
     }
 

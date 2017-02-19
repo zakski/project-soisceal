@@ -1,6 +1,7 @@
 package alice.tuprolog;
 
 import junit.framework.TestCase;
+import com.szadowsz.gospel.core.parser.Parser;
 
 public class ParserTestCase extends TestCase {
 	

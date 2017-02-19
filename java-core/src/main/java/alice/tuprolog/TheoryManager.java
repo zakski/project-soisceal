@@ -29,6 +29,7 @@ import java.util.Stack;
 import alice.tuprolog.InvalidTermException;
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.interfaces.IPrimitiveManager;
+import alice.tuprolog.interfaces.ITheory;
 import alice.tuprolog.json.AbstractEngineState;
 import alice.tuprolog.json.FullEngineState;
 import alice.util.Tools;
@@ -60,7 +61,7 @@ public class TheoryManager implements Serializable {
 	private Prolog engine;
 	private IPrimitiveManager primitiveManager;
 	private Stack<Term> startGoalStack;
-	Theory lastConsultedTheory;
+	ITheory lastConsultedTheory;
 
 	public void initialize(Prolog vm) {
 		dynamicDBase = new ClauseDatabase();
@@ -200,7 +201,7 @@ public class TheoryManager implements Serializable {
 	 * @param dynamicTheory if it is true, then the clauses are marked as dynamic
 	 * @param libName       if it not null, then the clauses are marked to belong to the specified library
 	 */
-	public synchronized void consult(Theory theory, boolean dynamicTheory, String libName) throws InvalidTheoryException {
+	public synchronized void consult(ITheory theory, boolean dynamicTheory, String libName) throws InvalidTheoryException {
 		startGoalStack = new Stack<Term>();
 		int clause = 1;
 		try {
@@ -342,7 +343,7 @@ public class TheoryManager implements Serializable {
 	 * Gets last consulted theory
 	 * @return  last theory
 	 */
-	public synchronized Theory getLastConsultedTheory() {
+	public synchronized ITheory getLastConsultedTheory() {
 		return lastConsultedTheory;
 	}
 	

@@ -26,8 +26,6 @@ import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 
-import alice.tuprolog.InvalidTermException;
-import alice.tuprolog.TermVisitor;
 import alice.tuprolog.json.JSONSerializerManager;
 import alice.util.OneWayList;
 

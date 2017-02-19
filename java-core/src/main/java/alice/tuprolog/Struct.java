@@ -23,9 +23,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import alice.tuprolog.InvalidTermException;
-import alice.tuprolog.TermVisitor;
-
 /**
  * Struct class represents both compound prolog term
  * and atom term (considered as 0-arity compound).
@@ -171,7 +168,7 @@ public class Struct extends Term {
     /**
      * Builds a compound, with a linked list of arguments
      */
-    Struct(String f, LinkedList<Term> al) {
+    public Struct(String f, LinkedList<Term> al) {
         name = f;
         arity = al.size();
         if (arity > 0) {

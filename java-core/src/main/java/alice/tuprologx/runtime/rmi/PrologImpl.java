@@ -1,13 +1,14 @@
 package alice.tuprologx.runtime.rmi;
 import alice.tuprolog.*;
+import alice.tuprolog.interfaces.ITheory;
+
 import  java.io.*;
 
 import java.rmi.*;
 import java.rmi.server.UnicastRemoteObject;
 
 @SuppressWarnings("serial")
-public class PrologImpl extends UnicastRemoteObject
-    implements alice.tuprologx.runtime.rmi.Prolog, Serializable {
+public class PrologImpl extends UnicastRemoteObject implements alice.tuprologx.runtime.rmi.Prolog, Serializable {
 
    private alice.tuprolog.Prolog imp;
 
@@ -23,15 +24,15 @@ public class PrologImpl extends UnicastRemoteObject
         imp.clearTheory();
     }
 
-    public Theory getTheory() throws RemoteException{
+    public ITheory getTheory() throws RemoteException{
         return imp.getTheory();
     }
 
-    public void setTheory(Theory theory) throws InvalidTheoryException, RemoteException {
+    public void setTheory(ITheory theory) throws InvalidTheoryException, RemoteException {
         imp.setTheory(theory);
     }
 
-    public void addTheory(Theory theory) throws InvalidTheoryException, RemoteException {
+    public void addTheory(ITheory theory) throws InvalidTheoryException, RemoteException {
         imp.addTheory(theory);
     }
 

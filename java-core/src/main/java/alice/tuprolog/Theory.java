@@ -19,6 +19,7 @@ package alice.tuprolog;
 import    java.io.*;
 import java.util.Iterator;
 
+import alice.tuprolog.interfaces.ITheory;
 import alice.tuprolog.json.JSONSerializerManager;
 
 /**
@@ -31,7 +32,7 @@ import alice.tuprolog.json.JSONSerializerManager;
  * @see Prolog
  *
  */
-public class Theory implements Serializable {
+public class Theory implements alice.tuprolog.interfaces.ITheory {
 	private static final long serialVersionUID = 1L;
     private String theory;
     private Struct clauseList;
@@ -77,6 +78,7 @@ public class Theory implements Serializable {
         this.clauseList = clauseList;
     }
     
+    @Override
     public Iterator<? extends Term> iterator(Prolog engine) {
         if (isTextual())
             return new Parser(engine.getOperatorManager(), theory).iterator();
@@ -91,9 +93,10 @@ public class Theory implements Serializable {
      * @throws s InvalidTheoryException if the theory object are not compatibles (they are
      *  compatibles when both have been built from texts or both from clause lists)
      */
-    public void append(Theory th) throws InvalidTheoryException {
+    @Override
+    public void append(ITheory th) throws InvalidTheoryException {
         if (th.isTextual() && isTextual()) {
-            theory += th.theory;
+            theory += th.toString();
         } else if (!th.isTextual() && !isTextual()) {
             Struct otherClauseList = th.getClauseListRepresentation();
             if (clauseList.isEmptyList())
@@ -120,26 +123,23 @@ public class Theory implements Serializable {
      * from a text or a clause list
      *
      */
-    boolean isTextual() {
+    public boolean isTextual() {
         return theory != null;
     }
 
-    Struct getClauseListRepresentation() {
+    public Struct getClauseListRepresentation() {
         return clauseList;
     }
 
+    @Override
     public String toString() {
         return theory != null ? theory : clauseList.toString();
     }
 
     //Alberto
-  	public String toJSON(){
+  	@Override
+    public String toJSON(){
   		return JSONSerializerManager.toJSON(this);
-  	}
-  	
-  	//Alberto
-  	public static Theory fromJSON(String jsonString){
-  		return JSONSerializerManager.fromJSON(jsonString, Theory.class);	
   	}
 
 }

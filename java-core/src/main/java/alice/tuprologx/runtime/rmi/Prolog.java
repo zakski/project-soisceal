@@ -1,5 +1,6 @@
 package alice.tuprologx.runtime.rmi;
 import alice.tuprolog.*;
+import alice.tuprolog.interfaces.ITheory;
 
 /**
  * @author  ale
@@ -9,16 +10,16 @@ public interface Prolog extends java.rmi.Remote {
 
     public void clearTheory() throws java.rmi.RemoteException;
 
-   public Theory getTheory() throws java.rmi.RemoteException;
+   public ITheory getTheory() throws java.rmi.RemoteException;
 
     /**
 	 * @param theory
 	 * @throws InvalidTheoryException
 	 * @throws java.rmi.RemoteException
 	 */
-    public void setTheory(Theory theory) throws InvalidTheoryException, java.rmi.RemoteException;
+    public void setTheory(ITheory theory) throws InvalidTheoryException, java.rmi.RemoteException;
 
-    public void addTheory(Theory theory) throws InvalidTheoryException, java.rmi.RemoteException;
+    public void addTheory(ITheory theory) throws InvalidTheoryException, java.rmi.RemoteException;
 
 
     public SolveInfo   solve(Term g) throws java.rmi.RemoteException;

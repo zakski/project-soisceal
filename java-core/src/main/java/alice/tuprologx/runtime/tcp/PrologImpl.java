@@ -1,6 +1,8 @@
 package alice.tuprologx.runtime.tcp;
 
 import alice.tuprolog.*;
+import alice.tuprolog.interfaces.ITheory;
+
 import  java.io.*;
 
 @SuppressWarnings("serial")
@@ -19,7 +21,7 @@ public class PrologImpl implements java.io.Serializable {
     }
 
     public void getTheory(ObjectInputStream in,ObjectOutputStream out) throws Exception {
-        Theory th=core.getTheory();
+        ITheory th=core.getTheory();
         out.writeObject(new Boolean(false));
         out.writeObject(th);
     }

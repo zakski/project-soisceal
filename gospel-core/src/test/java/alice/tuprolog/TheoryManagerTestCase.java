@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Theory;
 import junit.framework.TestCase;
 
 public class TheoryManagerTestCase extends TestCase {

@@ -1,6 +1,7 @@
 package alice.tuprologx.runtime.corba;
 
 import alice.tuprolog.*;
+import alice.tuprolog.interfaces.ITheory;
 
 import  java.io.*;
 
@@ -36,7 +37,7 @@ public class PrologImpl extends _PrologImplBase {
     }
 
     public String getTheory(){
-        Theory th=imp.getTheory();
+        ITheory th=imp.getTheory();
         return th.toString();
     }
 

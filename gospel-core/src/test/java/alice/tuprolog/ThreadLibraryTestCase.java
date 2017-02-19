@@ -2,6 +2,7 @@ package alice.tuprolog;
 import static org.junit.Assert.*;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Theory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,8 +13,6 @@ import alice.tuprolog.NoSolutionException;
 import alice.tuprolog.SolveInfo;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
-import alice.tuprolog.Theory;
-
 /**
  * 
  */

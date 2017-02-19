@@ -36,8 +36,9 @@ package com.szadowsz.gospel.core.db.libs
 import java.io.{File, FileInputStream, FileNotFoundException, IOException}
 import java.util
 
-import alice.tuprolog.{ClauseInfo, Int, InvalidLibraryException, InvalidTheoryException, Library, OperatorManager, Prolog, PrologError, Struct, Term, Theory, Var}
+import alice.tuprolog.{ClauseInfo, Int, InvalidLibraryException, InvalidTheoryException, Library, OperatorManager, Prolog, PrologError, Struct, Term, Var}
 import alice.util.Tools
+import com.szadowsz.gospel.core.Theory
 
 import scala.util.control.NonFatal
 import scala.collection.JavaConverters._

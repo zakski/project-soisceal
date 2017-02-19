@@ -24,10 +24,10 @@ import java.io.Serializable;
  *
  *
  */
-class Token implements Serializable {
+public class Token implements Serializable {
 	private static final long serialVersionUID = 1L;
     // token textual representation
-    String seq;
+    public String seq;
     // token type and attribute
     int type;
     
@@ -65,11 +65,11 @@ class Token implements Serializable {
         return type == Tokenizer.INTEGER || type == Tokenizer.FLOAT;
     }
 
-    boolean isEOF() {
+    public boolean isEOF() {
         return getAttribute() == Tokenizer.EOF;
     }
 
-    boolean isType(int type) {
+    public boolean isType(int type) {
         return getType() == type;
     }
 }

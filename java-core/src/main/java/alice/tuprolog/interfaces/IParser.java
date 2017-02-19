@@ -1,5 +1,6 @@
 package alice.tuprolog.interfaces;
 
+import alice.tuprolog.InvalidTermException;
 import alice.tuprolog.Term;
 
 public interface IParser {
@@ -10,7 +11,7 @@ public interface IParser {
      * (a period), <tt>false</tt> otherwise.
      * @throws InvalidTermException if a syntax error is found. 
      */
-    Term nextTerm(boolean endNeeded) throws Exception;
+    Term nextTerm(boolean endNeeded) throws InvalidTermException;
     
     /**
      * @return the current line number

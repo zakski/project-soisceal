@@ -8,6 +8,7 @@ import java.util.Map;
 import alice.tuprolog.lib.InvalidObjectIdException;
 import alice.tuprolog.lib.OOLibrary;
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Theory;
 import junit.framework.TestCase;
 
 public class JavaLibraryTestCase extends TestCase {

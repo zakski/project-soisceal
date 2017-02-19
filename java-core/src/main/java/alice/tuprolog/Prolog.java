@@ -21,10 +21,7 @@ import java.util.*;
 import java.io.*;
 
 import alice.tuprolog.event.*;
-import alice.tuprolog.interfaces.IFlagManager;
-import alice.tuprolog.interfaces.ILibraryManager;
-import alice.tuprolog.interfaces.IPrimitiveManager;
-import alice.tuprolog.interfaces.IProlog;
+import alice.tuprolog.interfaces.*;
 //import alice.tuprologx.ide.ToolBar;
 import alice.tuprolog.event.ExceptionListener;
 import alice.tuprolog.event.LibraryListener;
@@ -343,7 +340,7 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @throws InvalidTheoryException if the new theory is not valid
 	 * @see Theory
 	 */
-	public void setTheory(Theory th) throws InvalidTheoryException {	//no syn
+	public void setTheory(ITheory th) throws InvalidTheoryException {	//no syn
 		theoryManager.clear();
 		addTheory(th);
 	}
@@ -356,11 +353,11 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * @throws InvalidTheoryException if the new theory is not valid
 	 * @see Theory
 	 */
-	public void addTheory(Theory th) throws InvalidTheoryException {	//no syn
-		Theory oldTh = getTheory();
+	public void addTheory(ITheory th) throws InvalidTheoryException {	//no syn
+		ITheory oldTh = getTheory();
 		theoryManager.consult(th, true, null);
 		theoryManager.solveTheoryGoal();
-		Theory newTh = getTheory();
+		ITheory newTh = getTheory();
 		TheoryEvent ev = new TheoryEvent(this, oldTh, newTh);    
 		this.notifyChangedTheory(ev);
 	}    
@@ -370,7 +367,7 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *
 	 * @return current(dynamic) theory
 	 */
-	public Theory getTheory() {	//no syn
+	public ITheory getTheory() {	//no syn
 		try {
 			return new Theory(theoryManager.getTheory(true));
 		} catch (Exception ex){
@@ -384,7 +381,7 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 *  
 	 * @return theory
 	 */
-	public Theory getLastConsultedTheory() {	//no syn
+	public ITheory getLastConsultedTheory() {	//no syn
 		return theoryManager.getLastConsultedTheory();
 	}
 

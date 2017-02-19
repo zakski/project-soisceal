@@ -19,7 +19,6 @@ repositories {
 
 dependencies {
     compile project(':java-core')
-    compile project(':scala-core')
 
     testCompile group: 'org.scalatest', name: 'scalatest_2.11', version: scalaTestVersion
     testCompile group: 'junit', name: 'junit', version: junitVersion

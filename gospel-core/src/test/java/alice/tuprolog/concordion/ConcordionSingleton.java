@@ -7,6 +7,7 @@ import alice.tuprolog.*;
 import alice.tuprolog.event.ExceptionEvent;
 import alice.tuprolog.event.ExceptionListener;
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Theory;
 
 public class ConcordionSingleton {
 
