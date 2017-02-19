@@ -38,7 +38,7 @@ import java.util
 import java.util.regex.Pattern
 
 import alice.tuprolog.interfaces.IParser
-import alice.tuprolog.{DefaultOperatorManager, Double, Int, InvalidTermException, Long, Number, OperatorManager, Struct, Term, TermIterator, Token, Tokenizer, Var}
+import alice.tuprolog.{DefaultOperatorManager, Double, Int, InvalidTermException, Long, Number, OperatorManager, Struct, Term, TermIterator, Var}
 
 /**
   * This class defines a parser of prolog terms and sentences.
