@@ -21,6 +21,7 @@ package alice.tuprolog;
 import java.util.*;
 
 import alice.tuprolog.interfaces.IEngine;
+import alice.tuprolog.interfaces.IEngineRunner;
 
 /**
  * @author Alex Benini
@@ -28,21 +29,21 @@ import alice.tuprolog.interfaces.IEngine;
 public class Engine implements IEngine {    
 	
 	public int nDemoSteps; //Alberto
-	int nResultAsked; //Alberto
-	boolean hasOpenAlternatives; //Alberto
+	public int nResultAsked; //Alberto
+	public boolean hasOpenAlternatives; //Alberto
 	boolean mustStop;
-	State nextState;
-	Term query;
+	public State nextState;
+	public Term query;
 	Struct startGoal;
 	Collection<Var> goalVars;
-	ExecutionContext currentContext; 
+	public ExecutionContext currentContext;
 	ChoicePointContext currentAlternative;
-	ChoicePointStore choicePointSelector;
-	EngineRunner manager;
+	public ChoicePointStore choicePointSelector;
+	IEngineRunner manager;
 
-	public Engine(EngineRunner manager, Term query) {
+	public Engine(IEngineRunner manager, Term query) {
 		this.manager = manager;        
-		this.nextState = manager.INIT;
+		this.nextState = manager.getINIT();
 		this.query = query;
 		this.mustStop = false;
 		this.manager.getTheoryManager().clearRetractDB();
@@ -57,7 +58,7 @@ public class Engine implements IEngine {
 	public int getNResultAsked(){
 		return nResultAsked;
 	}
-	
+
 	//Alberto
 	public boolean hasOpenAlternatives(){
 		return hasOpenAlternatives;
@@ -73,19 +74,19 @@ public class Engine implements IEngine {
 		}
 	}
 
-	void mustStop() {
+	public void mustStop() {
 		mustStop = true;
 	}
 
 	/**
 	 * Core of engine. Finite State Machine
 	 */
-	StateEnd run() {
+	public StateEnd run() {
 		String action;
 
 		do {
 			if (mustStop) {
-				nextState = manager.END_FALSE;
+				nextState = manager.getEND_FALSE();
 				break;
 			}
 			action = nextState.toString();

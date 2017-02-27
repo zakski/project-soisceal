@@ -1,6 +1,8 @@
 package alice.tuprolog;
 
 
+import alice.tuprolog.interfaces.IEngineRunner;
+
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -12,11 +14,11 @@ public class TermQueue {
 		queue=new LinkedList<Term>();
 	}
 	
-	public synchronized boolean get(Term t, Prolog engine, EngineRunner er){
+	public synchronized boolean get(Term t, Prolog engine, IEngineRunner er){
 		return searchLoop(t,engine,true, true, er);
 	}
 	
-	private synchronized boolean searchLoop(Term t, Prolog engine, boolean block, boolean remove, EngineRunner er){
+	private synchronized boolean searchLoop(Term t, Prolog engine, boolean block, boolean remove, IEngineRunner er){
 		boolean found=false;
 		do{
 			found=search(t,engine,remove);
@@ -58,7 +60,7 @@ public class TermQueue {
 		return search(t, engine, true);
 	}
 	
-	public synchronized boolean wait (Term t, Prolog engine, EngineRunner er){
+	public synchronized boolean wait (Term t, Prolog engine, IEngineRunner er){
 		return searchLoop(t,engine, true, false, er);
 	}
 	

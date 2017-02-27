@@ -38,10 +38,10 @@ public class ExecutionContext {
     SubGoalId fatherGoalId;
     Struct clause;
     Struct headClause;
-    SubGoalStore goalsToEval;
+    public SubGoalStore goalsToEval;
     OneWayList<List<Var>> trailingVars;
     OneWayList<List<Var>> fatherVarsList;
-    ChoicePointContext choicePointAfterCut;
+    public ChoicePointContext choicePointAfterCut;
     boolean haveAlternatives;
     
     ExecutionContext(int id) {

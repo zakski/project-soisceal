@@ -1,11 +1,12 @@
 package com.szadowsz.gospel.core.engine
 
-import alice.tuprolog._
 import alice.tuprolog.json.AbstractEngineState
 import java.util
 import java.util.concurrent.locks.ReentrantLock
 
+import alice.tuprolog.{Engine, ExecutionContext, NoMoreSolutionException, SolveInfo, SubGoalTree, Term, TermQueue, Var,Int}
 import alice.tuprolog.interfaces.IEngineManager
+import com.szadowsz.gospel.core.PrologEngine
 
 /**
   * Prolog Interpreter Execution Handler.
@@ -15,18 +16,17 @@ import alice.tuprolog.interfaces.IEngineManager
   * @version Gospel 2.0.0
   */
 @SerialVersionUID(1L)
-final case class EngineManager(private val wam: Prolog) extends IEngineManager {
+final case class EngineManager(private val wam: PrologEngine ) extends IEngineManager {
   private var runners = new util.Hashtable[Integer, EngineRunner]
   //key: id;  obj: runner
   private var threads = new util.Hashtable[Integer, Integer]
   //key: pid; obj: id
   private val rootID: scala.Int = 0
-  private var er1: EngineRunner = new EngineRunner(rootID)
+  private var er1: EngineRunner = new EngineRunner(wam,rootID)
   private var id: scala.Int = 0
   private var queues = new util.Hashtable[String, TermQueue]
   private var locks = new util.Hashtable[String, ReentrantLock]
 
-  def initialise() = er1.initialize(wam)
 
   override def threadCreate(threadID: Term, goal: Term): Boolean = {
     id = id + 1
@@ -38,8 +38,7 @@ final case class EngineManager(private val wam: Prolog) extends IEngineManager {
       } else {
         goal
       }
-      val er: EngineRunner = new EngineRunner(id)
-      er.initialize(wam)
+      val er: EngineRunner = new EngineRunner(wam,id)
       if (!wam.unify(threadID, new Int(id))) return false
       er.setGoal(goalTerm)
       addRunner(er, id)

@@ -19,6 +19,7 @@ package alice.tuprolog;
 
 import java.util.*;
 
+import alice.tuprolog.interfaces.IEngineRunner;
 import alice.util.OneWayList;
 
 
@@ -28,7 +29,7 @@ import alice.util.OneWayList;
  */
 public class StateBacktrack extends State {
     
-    public StateBacktrack(EngineRunner c) {
+    public StateBacktrack(IEngineRunner c) {
         this.c = c;
         stateName = "Back";
     }
@@ -39,7 +40,7 @@ public class StateBacktrack extends State {
     void doJob(Engine e) {
         ChoicePointContext curChoice = e.choicePointSelector.fetch();
         if (curChoice == null) {
-            e.nextState = c.END_FALSE;
+            e.nextState = c.getEND_FALSE();
             Struct goal = e.currentContext.currentGoal;
             if(!c.getTheoryManager().checkExistence(goal.getPredicateIndicator())) //Alberto
             	c.warn("The predicate " + goal.getPredicateIndicator() + " is unknown.");
@@ -52,7 +53,7 @@ public class StateBacktrack extends State {
         e.currentContext = curChoice.executionContext;
         Term curGoal = e.currentContext.goalsToEval.backTo(curChoice.indexSubGoal).getTerm();
         if (!(curGoal instanceof Struct)) {
-            e.nextState = c.END_FALSE;
+            e.nextState = c.getEND_FALSE();
             return;
         }
         e.currentContext.currentGoal = (Struct) curGoal;
@@ -80,7 +81,7 @@ public class StateBacktrack extends State {
             curCtx = curCtx.fatherCtx;
             curGoal = curCtx.goalsToEval.backTo(fatherIndex).getTerm();
             if (!(curGoal instanceof Struct)) {
-                e.nextState = c.END_FALSE;
+                e.nextState = c.getEND_FALSE();
                 return;
             }
             curCtx.currentGoal = (Struct)curGoal;
@@ -88,7 +89,7 @@ public class StateBacktrack extends State {
         } while (true);
         
         //set next state
-        e.nextState = c.GOAL_EVALUATION;
+        e.nextState = c.getGOAL_EVALUATION();
     }
     
 }

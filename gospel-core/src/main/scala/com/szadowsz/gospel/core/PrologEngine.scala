@@ -69,7 +69,6 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
   private lazy val theoryManager = TheoryManager(this) // manager of current theories
 
   private val engineState = new FullEngineState
-  engManager.initialise()
 
   //used in serialization
   /**

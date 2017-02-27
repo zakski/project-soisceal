@@ -18,14 +18,16 @@
 
 package alice.tuprolog;
 
+import alice.tuprolog.interfaces.IEngineRunner;
+
 /**
  * @author Alex Benini
  *
  * Template for states of Core Engine
  */
-abstract class State {
+public abstract class State {
     
-    protected EngineRunner c;
+    protected IEngineRunner c;
     protected String stateName;
     
     abstract void doJob(Engine e);

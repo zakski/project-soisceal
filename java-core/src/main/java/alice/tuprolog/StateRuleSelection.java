@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import alice.tuprolog.ClauseInfo;
 import alice.tuprolog.Struct;
+import alice.tuprolog.interfaces.IEngineRunner;
 import alice.util.OneWayList;
 
 /**
@@ -30,7 +31,7 @@ import alice.util.OneWayList;
  */
 public class StateRuleSelection extends State {
     
-    public StateRuleSelection(EngineRunner c) {
+    public StateRuleSelection(IEngineRunner c) {
         this.c = c;
         stateName = "Init";
     }
@@ -55,7 +56,7 @@ public class StateRuleSelection extends State {
             e.currentContext.trailingVars = new OneWayList<List<Var>>(varsList,e.currentContext.trailingVars);
             clauseStore = ClauseStore.build(goal, varsList, c.find(goal));
             if (clauseStore == null){
-                e.nextState = c.BACKTRACK;
+                e.nextState = c.getBACKTRACK();
                 return;
             }
         } else
@@ -130,7 +131,7 @@ public class StateRuleSelection extends State {
         
         ec.saveParentState();
         e.currentContext = ec;
-        e.nextState = c.GOAL_SELECTION;
+        e.nextState = c.getGOAL_SELECTION();
     }
     
 }

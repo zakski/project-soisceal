@@ -51,7 +51,7 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
     /**
      * 
      */
-    SolveInfo(Term initGoal){
+    public SolveInfo(Term initGoal){
         query = initGoal;
         isSuccess = false;
     }
@@ -63,7 +63,7 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
      * @param resultDemo
      * @param resultVars
      */
-    SolveInfo(Term initGoal, Struct resultGoal, int resultDemo, List<Var> resultVars) {
+    public SolveInfo(Term initGoal, Struct resultGoal, int resultDemo, List<Var> resultVars) {
         query = initGoal;
         goal = resultGoal;
         bindings = resultVars;

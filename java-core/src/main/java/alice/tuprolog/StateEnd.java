@@ -20,6 +20,7 @@ package alice.tuprolog;
 import java.util.*;
 
 import alice.tuprolog.Struct;
+import alice.tuprolog.interfaces.IEngineRunner;
 
 /**
  * @author Alex Benini
@@ -36,7 +37,7 @@ public class StateEnd extends State {
      * Constructor
      * @param end Terminal state of computation
      */
-    public StateEnd(EngineRunner c, int end) {
+    public StateEnd(IEngineRunner c, int end) {
     	this.c=c;
         endState = end;
     }
