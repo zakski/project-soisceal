@@ -8,6 +8,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import alice.tuprolog.interfaces.IEngineManager;
 import alice.tuprolog.interfaces.ILibraryManager;
 import alice.tuprolog.interfaces.IPrimitiveManager;
 import alice.tuprolog.interfaces.ITheoryManager;
@@ -25,7 +26,7 @@ public class EngineRunner implements java.io.Serializable, Runnable{
     private ITheoryManager theoryManager;
     private IPrimitiveManager primitiveManager;
     private ILibraryManager ILibraryManager;
-    private EngineManager engineManager;
+    private IEngineManager engineManager;
 
     private int id;
     private int pid;
@@ -40,7 +41,7 @@ public class EngineRunner implements java.io.Serializable, Runnable{
     private Object semaphore;
     
     /* Current environment */
-    Engine env;
+    public Engine env;
     
     /* Last environment used */
     private Engine last_env;
@@ -85,7 +86,7 @@ public class EngineRunner implements java.io.Serializable, Runnable{
     /**
      * Config this Manager
      */
-    void initialize(Prolog vm) {
+    public void initialize(Prolog vm) {
         mediator = vm;
         theoryManager    = vm.getTheoryManager();
         primitiveManager = vm.getPrimitiveManager();
@@ -103,7 +104,7 @@ public class EngineRunner implements java.io.Serializable, Runnable{
         semaphore = new Object();
     }
     
-    void spy(String action, Engine env) {
+    public void spy(String action, Engine env) {
         mediator.spy(action,env);
     }
     
@@ -295,19 +296,19 @@ public class EngineRunner implements java.io.Serializable, Runnable{
         return theoryManager.find(t);
     }
     
-    void identify(Term t) {
+    public void identify(Term t) {
         primitiveManager.identifyPredicate(t);
     }
     
-    void pushSubGoal(SubGoalTree goals) {
+    public void pushSubGoal(SubGoalTree goals) {
         env.currentContext.goalsToEval.pushSubGoal(goals);
     }
     
-    void cut() {
+    public void cut() {
         env.choicePointSelector.cut(env.currentContext.choicePointAfterCut);
     }
      
-    ExecutionContext getCurrentContext() {
+    public ExecutionContext getCurrentContext() {
         return (env==null)? null : env.currentContext;
     }
     
@@ -318,7 +319,7 @@ public class EngineRunner implements java.io.Serializable, Runnable{
      *
      * @return true if open alternatives are present
      */
-    boolean hasOpenAlternatives() {
+    public boolean hasOpenAlternatives() {
         if (sinfo==null) return false;
         return sinfo.hasOpenAlternatives();
     }
@@ -329,7 +330,7 @@ public class EngineRunner implements java.io.Serializable, Runnable{
      * 
      * @return true if the demonstration was stopped
      */
-    boolean isHalted() {
+    public boolean isHalted() {
         if (sinfo==null) return false;
         return sinfo.isHalted();
     }
@@ -436,7 +437,7 @@ public class EngineRunner implements java.io.Serializable, Runnable{
          }
         
         //Alberto
-        public EngineManager getEngineMan(){
+        public IEngineManager getEngineMan(){
     		return this.engineManager;
     	}
         

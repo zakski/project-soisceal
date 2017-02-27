@@ -11,7 +11,7 @@ import org.scalatest.junit.JUnitRunner
   * Created on 18/02/2017.
   */
 @RunWith(classOf[JUnitRunner])
-class PrologEngineTestCase extends FlatSpec with BaseEngineSpec {
+class PrologEngineSpec extends FlatSpec with BaseEngineSpec {
 
   override protected def init(): PrologEngine = new PrologEngine()
 

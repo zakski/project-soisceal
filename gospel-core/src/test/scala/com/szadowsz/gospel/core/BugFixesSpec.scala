@@ -9,7 +9,7 @@ import org.scalatest.{FlatSpec, FunSpec}
   * Created on 16/02/2017.
   */
 @RunWith(classOf[JUnitRunner])
-class BugFixTestCase extends FunSpec with BaseEngineSpec {
+class BugFixesSpec extends FunSpec with BaseEngineSpec {
 
   protected override def init(): PrologEngine = new PrologEngine()
 

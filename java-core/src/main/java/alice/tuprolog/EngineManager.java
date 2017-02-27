@@ -7,10 +7,10 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
-import alice.tuprolog.NoMoreSolutionException;
+import alice.tuprolog.interfaces.IEngineManager;
 import alice.tuprolog.json.AbstractEngineState;
 
-public class EngineManager implements java.io.Serializable {
+public class EngineManager implements IEngineManager {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -34,6 +34,7 @@ public class EngineManager implements java.io.Serializable {
 		er1.initialize(vm);	
 	}
 	
+	@Override
 	public synchronized boolean threadCreate(Term threadID, Term goal) {
 		id = id+1;
 		
@@ -55,6 +56,7 @@ public class EngineManager implements java.io.Serializable {
 		return true;
 	}
 	
+	@Override
 	public SolveInfo join(int id) {
 		EngineRunner er = findRunner(id);
 		if (er==null || er.isDetached()) return null;
@@ -63,33 +65,38 @@ public class EngineManager implements java.io.Serializable {
 		return solution;
 	}
 	
-	public SolveInfo read (int id) {
+	@Override
+	public SolveInfo read(int id) {
 		EngineRunner er = findRunner(id);
 		if (er==null || er.isDetached()) return null;
 		SolveInfo solution = er.read();
 		return solution;
 	}
 	
-	public boolean hasNext (int id){
+	@Override
+	public boolean hasNext(int id){
 		EngineRunner er = findRunner(id);
 		if (er==null || er.isDetached()) return false;
 		return er.hasOpenAlternatives();
 	}
 	
-	public boolean nextSolution (int id){
+	@Override
+	public boolean nextSolution(int id){
 		EngineRunner er = findRunner(id);
 		if (er==null || er.isDetached()) return false;
 		boolean bool = er.nextSolution();
 		return bool;
 	}
 	
-	public void detach (int id) {
+	@Override
+	public void detach(int id) {
 		EngineRunner er= findRunner(id);
 		if (er==null) return;
 		er.detach();
 	}
 	
-	public boolean sendMsg (int dest, Term msg){
+	@Override
+	public boolean sendMsg(int dest, Term msg){
 		EngineRunner er = findRunner(dest);
 		if (er==null) return false;
 		Term msgcopy = msg.copy(new LinkedHashMap<Var,Var>(), 0);
@@ -97,6 +104,7 @@ public class EngineManager implements java.io.Serializable {
 		return true;
 	}
 	
+	@Override
 	public boolean sendMsg(String name, Term msg) {
 		TermQueue queue = queues.get(name);
 		if (queue==null) return false;
@@ -105,12 +113,14 @@ public class EngineManager implements java.io.Serializable {
 		return true;
 	}
 	
+	@Override
 	public boolean getMsg(int id, Term msg){
 		EngineRunner er = findRunner(id);
 		if (er==null) return false;
 		return er.getMsg(msg);
 	}
 	
+	@Override
 	public boolean getMsg(String name, Term msg){
 		EngineRunner er=findRunner();
 		if (er==null) return false;
@@ -119,12 +129,14 @@ public class EngineManager implements java.io.Serializable {
 		return queue.get(msg, vm, er);
 	}
 	
+	@Override
 	public boolean waitMsg(int id, Term msg){
 		EngineRunner er=findRunner(id);
 		if (er==null) return false;
 		return er.waitMsg(msg);
 	}	
 	
+	@Override
 	public boolean waitMsg(String name, Term msg){
 		EngineRunner er=findRunner();
 		if (er==null) return false;
@@ -133,24 +145,28 @@ public class EngineManager implements java.io.Serializable {
 		return queue.wait(msg, vm, er);
 	}
 	
+	@Override
 	public boolean peekMsg(int id, Term msg){
 		EngineRunner er = findRunner(id);
 		if (er==null) return false;
 		return er.peekMsg(msg);
 	}
 	
+	@Override
 	public boolean peekMsg(String name, Term msg){
 		TermQueue queue = queues.get(name);
 		if (queue==null) return false;
 		return queue.peek(msg, vm);
 	}
 
+	@Override
 	public boolean removeMsg(int id, Term msg){
 		EngineRunner er=findRunner(id);
 		if (er==null) return false;
 		return er.removeMsg(msg);
 	}
 	
+	@Override
 	public boolean removeMsg(String name, Term msg){
 		TermQueue queue=queues.get(name);
 		if (queue==null) return false;
@@ -181,10 +197,12 @@ public class EngineManager implements java.io.Serializable {
 		}
 	}
 	
+	@Override
 	public void cut() {
 		findRunner().cut();
 	}
 	
+	@Override
 	public ExecutionContext getCurrentContext() {
 		EngineRunner runner=findRunner();
 		return runner.getCurrentContext();
@@ -200,18 +218,21 @@ public class EngineManager implements java.io.Serializable {
 		return runner.isHalted();
 	}
 	
+	@Override
 	public void pushSubGoal(SubGoalTree goals) {
 		EngineRunner runner= findRunner();
 		runner.pushSubGoal(goals);
 		
 	}
 	
+	@Override
 	public synchronized SolveInfo solve(Term query) {
 		er1.setGoal(query);
 		SolveInfo s = er1.solve();
 		return s;
 	}
 	
+	@Override
 	public void solveEnd() {
 		er1.solveEnd();
 		if(runners.size()!=0){
@@ -228,6 +249,7 @@ public class EngineManager implements java.io.Serializable {
 		}
 	}
 	
+	@Override
 	public void solveHalt() {
 		er1.solveHalt();
 		if(runners.size()!=0){
@@ -239,6 +261,7 @@ public class EngineManager implements java.io.Serializable {
 		}
 	}
 	
+	@Override
 	public synchronized SolveInfo solveNext() throws NoMoreSolutionException {
 		return er1.solveNext();
 	}
@@ -274,12 +297,14 @@ public class EngineManager implements java.io.Serializable {
 	}
 	
 	//Ritorna l'identificativo del thread corrente
-	public int runnerId (){
+	@Override
+	public int runnerId(){
 		EngineRunner er=findRunner();
 		return er.getId();
 	}
 	
-	public boolean createQueue (String name){
+	@Override
+	public boolean createQueue(String name){
 		synchronized (queues){
 			if (queues.containsKey(name)) return true;
 			TermQueue newQ = new TermQueue();
@@ -288,23 +313,27 @@ public class EngineManager implements java.io.Serializable {
 		return true;
 	}
 	
-	public void destroyQueue (String name) {
+	@Override
+	public void destroyQueue(String name) {
 		synchronized (queues){
 			queues.remove(name);
 		}
 	}
 	
+	@Override
 	public int queueSize(int id){
 		EngineRunner er = findRunner(id);
 		return er.msgQSize();
 	}
 
+	@Override
 	public int queueSize(String name){
 		TermQueue q=queues.get(name);
 		if (q==null) return -1;
 		return q.size();
 	}
 	
+	@Override
 	public boolean createLock(String name){
 		synchronized (locks){
 			if (locks.containsKey(name)) return true;
@@ -314,12 +343,14 @@ public class EngineManager implements java.io.Serializable {
 		return true;
 	}
 	
+	@Override
 	public void destroyLock(String name){
 		synchronized (locks){
 			locks.remove(name);
 		}
 	}
 	
+	@Override
 	public boolean mutexLock(String name){
 		ReentrantLock mutex = locks.get(name);
 		if (mutex==null) {
@@ -331,13 +362,15 @@ public class EngineManager implements java.io.Serializable {
 	}
 
 	
+	@Override
 	public boolean mutexTryLock(String name){
 		ReentrantLock mutex=locks.get(name);
 		if (mutex==null) return false;
 		return mutex.tryLock();
 	}
 	
-	public boolean mutexUnlock (String name){
+	@Override
+	public boolean mutexUnlock(String name){
 		ReentrantLock mutex=locks.get(name);
 		if (mutex==null) return false;
 		try{
@@ -349,12 +382,14 @@ public class EngineManager implements java.io.Serializable {
 		}
 	}
 	
+	@Override
 	public boolean isLocked(String name){
 		ReentrantLock mutex=locks.get(name);
 		if (mutex==null) return false;
 		return mutex.isLocked();
 	}
 	
+	@Override
 	public void unlockAll(){
 		synchronized (locks){
 			Set<String> mutexList=locks.keySet();
@@ -375,17 +410,20 @@ public class EngineManager implements java.io.Serializable {
 		}
 	}
 
+	@Override
 	public Engine getEnv() {
 		EngineRunner er=findRunner();
 		return er.env;
 	}
 	
+	@Override
 	public void identify(Term t) {
 		EngineRunner er=findRunner();
 		er.identify(t);
 	}
 
 	//Alberto
+	@Override
 	public void serializeQueryState(AbstractEngineState brain) {
 		brain.setQuery(findRunner().getQuery());
 		if(findRunner().env == null) {

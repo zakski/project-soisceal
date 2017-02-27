@@ -9,7 +9,7 @@ import org.scalatest.junit.JUnitRunner
   * Created on 18/02/2017.
   */
 @RunWith(classOf[JUnitRunner])
-class AllSolutionsTestCase extends FunSpec with BaseEngineSpec {
+class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
 
   override protected def init(): PrologEngine = new PrologEngine()
 

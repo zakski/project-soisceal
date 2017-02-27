@@ -2,6 +2,8 @@ package alice.tuprologx.spyframe;
 
 import alice.tuprolog.*;
 import alice.tuprolog.event.*;
+import alice.tuprolog.interfaces.ITheory;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -110,7 +112,7 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener{
    * @param goal the prolog term to be tested.
    * @throws InvalidTheoryException if we have no valid prolog theory.
    */
-  public SpyFrame(Theory theory, final Term goal) throws InvalidTheoryException{
+  public SpyFrame(ITheory theory, final Term goal) throws InvalidTheoryException{
     //START of visible stuff
     super("SpyFrame");
     Container c=getContentPane();

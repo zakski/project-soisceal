@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 
+import alice.tuprolog.interfaces.IEngineManager;
 import alice.tuprolog.json.JSONSerializerManager;
 import alice.util.OneWayList;
 
@@ -202,7 +203,7 @@ public abstract class Term implements Serializable {
      * @return true if the term is unifiable with this one
      */
     public boolean unify(Prolog mediator, Term t1) {
-        EngineManager engine = mediator.getEngineManager();
+        IEngineManager engine = mediator.getEngineManager();
         resolveTerm();
         t1.resolveTerm();
         List<Var> v1 = new LinkedList<Var>(); /* Reviewed by: Paolo Contessi (was: ArrayList()) */

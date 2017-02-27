@@ -14,6 +14,7 @@ import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.Term;
 import alice.tuprolog.Theory;
+import alice.tuprolog.interfaces.ITheory;
 import alice.tuprologx.spyframe.SpyFrame;
 
 public class ToolBar extends JPanel
@@ -196,7 +197,7 @@ public class ToolBar extends JPanel
         	public void actionPerformed(ActionEvent event)
             {
         		ConsoleManager consoleManager = JavaIDE.getConsoleManager();
-                Theory theory = engine.getTheory();
+                ITheory theory = engine.getTheory();
                 Term rich = engine.termSolve(consoleManager.getGoal());
                 try {
 					new SpyFrame(theory, rich);

@@ -14,13 +14,12 @@ import alice.tuprolog.Prolog;
 import alice.tuprolog.PrologError;
 import alice.tuprolog.SolveInfo;
 import alice.tuprolog.Term;
-
-
+import alice.tuprolog.interfaces.IEngineManager;
 
 
 public class ThreadLibrary extends Library {
 	private static final long serialVersionUID = 1L;
-	protected EngineManager engineManager;
+	protected IEngineManager engineManager;
 	
 	public void setEngine(Prolog en) {	
         engine = en;

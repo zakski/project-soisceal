@@ -17,7 +17,10 @@
  */
 package com.szadowsz.gospel.core.engine.flags
 
+import java.util
+
 import alice.tuprolog.interfaces.IFlagManager
+import alice.tuprolog.json.{AbstractEngineState, FullEngineState, JSONSerializerManager}
 import alice.tuprolog.{Struct, Term}
 
 
@@ -78,5 +81,15 @@ private[core] final class FlagManager extends IFlagManager {
    */
   def isValidValue(name: String, value: Term): Boolean = synchronized {
     flags.exists(flag => flag.getName == name && flag.isValidValue(value))
+  }
+
+  def serializeFlags(brain: AbstractEngineState) {
+    if (brain.isInstanceOf[FullEngineState]) {
+      val a: util.ArrayList[String] = new util.ArrayList[String]
+      for (f <- flags) {
+        a.add(JSONSerializerManager.toJSON(f))
+      }
+      brain.asInstanceOf[FullEngineState].setFlags(a)
+    }
   }
 }

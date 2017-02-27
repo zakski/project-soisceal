@@ -33,14 +33,18 @@
  */
 package com.szadowsz.gospel.core
 
-import alice.tuprolog.event.TheoryEvent
-import alice.tuprolog.{InvalidLibraryException, InvalidTheoryException, Library, Term}
+import java.util
+
+import alice.tuprolog.event.{QueryEvent, TheoryEvent}
+import alice.tuprolog.{InvalidLibraryException, InvalidTheoryException, Library, NoMoreSolutionException, Operator, Prolog, SolveInfo, Term}
 import alice.tuprolog.interfaces._
+import alice.tuprolog.json.{AbstractEngineState, FullEngineState, JSONSerializerManager, ReducedEngineState}
 import alice.tuprolog.lib.{IOLibrary, ISOLibrary, OOLibrary}
 import com.szadowsz.gospel.core.db.LibManager
 import com.szadowsz.gospel.core.db.libs.MyBasicLibrary
 import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
 import com.szadowsz.gospel.core.db.theory.TheoryManager
+import com.szadowsz.gospel.core.engine.EngineManager
 import com.szadowsz.gospel.core.engine.flags.FlagManager
 
 import scala.util.Try
@@ -52,16 +56,22 @@ import scala.util.Try
   *
   * @version Gospel 2.0.0
   */
-class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tuprolog.Prolog(spy, warning) {
+class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy, warning) {
 
-  private lazy val libManager = LibManager(this) // manager of loaded libraries
-
-  private lazy val theoryManager = TheoryManager(this) // manager of current theories
-
-  private lazy val primManager = PrimitiveManager(this) // primitive prolog term manager.
+  private lazy val engManager = EngineManager(this) // primitive prolog term manager.
 
   private lazy val flagManager = new FlagManager() // engine flag manager.
 
+  private lazy val libManager = LibManager(this) // manager of loaded libraries
+
+  private lazy val primManager = PrimitiveManager(this) // primitive prolog term manager.
+
+  private lazy val theoryManager = TheoryManager(this) // manager of current theories
+
+  private val engineState = new FullEngineState
+  engManager.initialise()
+
+  //used in serialization
   /**
     * Builds a Prolog engine with loaded the specified libraries.
     *
@@ -122,6 +132,13 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tupro
     */
   override def getPrimitiveManager: IPrimitiveManager = primManager // TODO Make Internal only
 
+
+  /**
+    * Method to retrieve the db component that manages primitives.
+    *
+    * @return the primitive manager instance attached to this prolog engine.
+    */
+  override def getEngineManager: IEngineManager = engManager // TODO Make Internal only
 
   /**
     * method to retrieve the component managing the theory.
@@ -260,5 +277,81 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends alice.tupro
     * Clears current theory
     */
   override def clearTheory(): Unit = setTheory(new Theory)
+
+  /**
+    * Solves a query
+    *
+    * @param g the term representing the goal to be demonstrated
+    * @return the result of the demonstration
+    * @see SolveInfo
+    **/
+  override def solve(g: Term): SolveInfo = {
+    //System.out.println("ENGINE SOLVE #0: "+g);
+    if (g == null) {
+      null
+    } else {
+      val sinfo: SolveInfo = engManager.solve(g)
+      val ev: QueryEvent = new QueryEvent(this, sinfo)
+      notifyNewQueryResultAvailable(ev)
+      sinfo
+    }
+  }
+
+  /**
+    * Gets next solution
+    *
+    * @return the result of the demonstration
+    * @throws NoMoreSolutionException if no more solutions are present
+    * @see SolveInfo
+    **/
+  @throws[NoMoreSolutionException]
+  override def solveNext: SolveInfo = {
+    if (hasOpenAlternatives) {
+      val sinfo: SolveInfo = engManager.solveNext
+      val ev: QueryEvent = new QueryEvent(this, sinfo)
+      notifyNewQueryResultAvailable(ev)
+      sinfo
+    }
+    else throw new NoMoreSolutionException
+  }
+
+  /**
+    * Halts current solve computation
+    */
+  override def solveHalt() {
+    engManager.solveHalt()
+  }
+
+  /**
+    * Accepts current solution
+    */
+  override def solveEnd() {
+    engManager.solveEnd()
+  }
+
+  /**
+    * Asks for the presence of open alternatives to be explored
+    * in current demostration process.
+    *
+    * @return true if open alternatives are present
+    */
+  override def hasOpenAlternatives: Boolean = engManager.hasOpenAlternatives
+
+  override def toJSON(alsoKB: Boolean): String = {
+    var brain: AbstractEngineState = null
+    if (alsoKB) {
+      brain = this.engineState
+      this.theoryManager.serializeLibraries(brain.asInstanceOf[FullEngineState])
+      this.theoryManager.serializeDynDataBase(brain.asInstanceOf[FullEngineState])
+      brain.asInstanceOf[FullEngineState].setOp(getOperatorManager.getOperators.asInstanceOf[util.LinkedList[Operator]])
+    } else {
+      brain = new ReducedEngineState
+
+    }
+    theoryManager.serializeTimestamp(brain)
+    engManager.serializeQueryState(brain)
+    flagManager.serializeFlags(brain)
+    JSONSerializerManager.toJSON(brain)
+  }
 
 }

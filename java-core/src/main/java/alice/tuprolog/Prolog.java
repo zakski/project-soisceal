@@ -291,7 +291,7 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	/**
 	 * Gets the component managing engine
 	 */
-	public EngineManager getEngineManager() {
+	public IEngineManager getEngineManager() {
 		return engineManager; 
 	}
 

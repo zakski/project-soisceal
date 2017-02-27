@@ -10,6 +10,8 @@
 package alice.tuprologx.pj.model;
 
 
+import alice.tuprolog.interfaces.ITheory;
+
 import java.util.Collection;
 import java.util.Vector;
 
@@ -60,7 +62,7 @@ public class Theory extends List<Clause<?,?>> {
         this(parseTheoryArray(s));
     }
     
-    public static Theory unmarshal(alice.tuprolog.Theory t) {
+    public static Theory unmarshal(ITheory t) {
         Vector<Clause<?,?>> clauses = new Vector<Clause<?,?>>();                
         for (java.util.Iterator<? extends alice.tuprolog.Term> it = t.iterator(engine); it.hasNext();) {
             alice.tuprolog.Struct st = (alice.tuprolog.Struct) it.next();                        
