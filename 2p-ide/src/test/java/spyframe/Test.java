@@ -1,12 +1,12 @@
 package spyframe;
 
-import alice.tuprolog.Engine;
 import alice.tuprolog.ExecutionContext;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.SolveInfo;
 import alice.tuprolog.Term;
 import alice.tuprolog.Theory;
 import alice.tuprolog.event.*;
+import alice.tuprolog.interfaces.IEngine;
 import alice.tuprologx.spyframe.TermFrame;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class Test {
       @Override
       public void onSpy(SpyEvent se){
         if(se==null) return;
-        Engine engine=se.getSnapshot();
+        IEngine engine=se.getSnapshot();
         if(engine==null) System.out.println("noengine:"+se);
         else{
           //if(!"Eval".equals(engine.getNextStateName())) return;

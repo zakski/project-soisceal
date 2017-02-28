@@ -623,7 +623,7 @@ public class Struct extends Term {
      * @param vl2 list of variables unified
      * @return true if the term is unifiable with this one
      */
-    boolean unify(List<Var> vl1,List<Var> vl2,Term t, boolean isOccursCheckEnabled) {
+    public boolean unify(List<Var> vl1,List<Var> vl2,Term t, boolean isOccursCheckEnabled) {
         // In fase di unificazione bisogna annotare tutte le variabili della struct completa.
         t = t.getTerm();
         if (t instanceof Struct) {

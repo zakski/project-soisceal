@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface IEngineRunner extends java.io.Serializable, Runnable {
 
-    void spy(String action, Engine env);
+    void spy(String action, IEngine env);
 
     void detach();
 
@@ -95,26 +95,6 @@ public interface IEngineRunner extends java.io.Serializable, Runnable {
     public void warn(String message);
 
     public void exception(String message);
-
-    public State getINIT();
-
-    public State getGOAL_EVALUATION();
-
-    public State getEXCEPTION();
-
-    public State getRULE_SELECTION();
-
-    public State getGOAL_SELECTION();
-
-    public State getBACKTRACK();
-
-    public State getEND_FALSE();
-
-    public State getEND_TRUE();
-
-    public State getEND_TRUE_CP();
-
-    public State getEND_HALT();
 
     public Prolog getMediator();
 }

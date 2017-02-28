@@ -34,11 +34,11 @@ import scala.collection.JavaConverters._
  * @param endState Terminal state of computation
  */
 class EndState(protected override val runner : EngineRunner, protected val endState: scala.Int) extends State {
+  protected val stateName: String = "End"
 
   /**
     * the name of the engine state.
     */
-  protected val stateName: String = "End"
 
   private var goal: Struct = null
   private var vars: List[Var] = null

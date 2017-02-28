@@ -446,7 +446,7 @@ public class Var extends Term {
 	  * then it's success and a new link is created (retractable by a code)
 	  * (test done if occursCheck is enabled)
 	  */
-	 boolean unify(List<Var> vl1, List<Var> vl2, Term t, boolean isOccursCheckEnabled) {
+	 public boolean unify(List<Var> vl1, List<Var> vl2, Term t, boolean isOccursCheckEnabled) {
 		 Term tt = getTerm();
 		 if(tt == this) {
 			 t = t.getTerm();

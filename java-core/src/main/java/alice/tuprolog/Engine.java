@@ -26,7 +26,7 @@ import alice.tuprolog.interfaces.IEngineRunner;
 /**
  * @author Alex Benini
  */
-public class Engine implements IEngine {    
+public class Engine implements IEngine {
 	
 	public int nDemoSteps; //Alberto
 	public int nResultAsked; //Alberto
@@ -39,31 +39,35 @@ public class Engine implements IEngine {
 	public ExecutionContext currentContext;
 	ChoicePointContext currentAlternative;
 	public ChoicePointStore choicePointSelector;
-	IEngineRunner manager;
+	EngineRunner manager;
 
-	public Engine(IEngineRunner manager, Term query) {
+	public Engine(EngineRunner manager, Term query) {
 		this.manager = manager;        
-		this.nextState = manager.getINIT();
+		this.nextState = manager.INIT;
 		this.query = query;
 		this.mustStop = false;
 		this.manager.getTheoryManager().clearRetractDB();
 	}
 
 	//Alberto
+	@Override
 	public int getNDemoSteps(){
 		return nDemoSteps;
 	}
 	
 	//Alberto
+	@Override
 	public int getNResultAsked(){
 		return nResultAsked;
 	}
 
 	//Alberto
+	@Override
 	public boolean hasOpenAlternatives(){
 		return hasOpenAlternatives;
 	}
 
+	@Override
 	public String toString() {
 		try {
 			return	"ExecutionStack: \n"+currentContext+"\n"+
@@ -74,7 +78,8 @@ public class Engine implements IEngine {
 		}
 	}
 
-	public void mustStop() {
+	@Override
+	public void requestStop() {
 		mustStop = true;
 	}
 
@@ -86,7 +91,7 @@ public class Engine implements IEngine {
 
 		do {
 			if (mustStop) {
-				nextState = manager.getEND_FALSE();
+				nextState = manager.END_FALSE;
 				break;
 			}
 			action = nextState.toString();
@@ -101,14 +106,17 @@ public class Engine implements IEngine {
 		return (StateEnd)(nextState);
 	}
 
+	@Override
 	public Term getQuery() {
 		return query;
 	}
 
+	@Override
 	public int getNumDemoSteps() {
 		return nDemoSteps;
 	}
 
+	@Override
 	public List<ExecutionContext> getExecutionStack() {
 		ArrayList<ExecutionContext> l = new ArrayList<ExecutionContext>();
 		ExecutionContext t = currentContext;
@@ -119,24 +127,33 @@ public class Engine implements IEngine {
 		return l;
 	}
 
+	@Override
 	public ChoicePointStore getChoicePointStore() {
 		return choicePointSelector;
 	}
 
-	void prepareGoal() {
+	public void prepareGoal() {
 		LinkedHashMap<Var,Var> goalVars = new LinkedHashMap<Var, Var>();
 		startGoal = (Struct)(query).copyGoal(goalVars,0);
 		this.goalVars = goalVars.values();
 	}
 
-	void initialize(ExecutionContext eCtx) {
+    @Override
+    public ExecutionContext getContext() {
+        return currentContext;
+    }
+
+    public void initialize(ExecutionContext eCtx) {
 		currentContext = eCtx;
 		choicePointSelector = new ChoicePointStore();
 		nDemoSteps = 1;
 		currentAlternative = null;
 	}
 	
+	@Override
 	public String getNextStateName(){
 		return nextState.stateName;
 	}
+
+
 }

@@ -18,7 +18,6 @@
 package alice.tuprolog;
 
 import alice.tuprolog.Struct;
-import alice.tuprolog.interfaces.IEngineRunner;
 
 /**
  * @author Alex Benini
@@ -27,7 +26,7 @@ import alice.tuprolog.interfaces.IEngineRunner;
  */
 public class StateInit extends State {
     
-    public StateInit(IEngineRunner c) {
+    public StateInit(EngineRunner c) {
         this.c = c;
         stateName = "Goal";
     }
@@ -52,7 +51,7 @@ public class StateInit extends State {
         e.initialize(eCtx);
         
         /* Set the future state */
-        e.nextState = c.getGOAL_SELECTION();
+        e.nextState = c.GOAL_SELECTION;
     }
     
 }

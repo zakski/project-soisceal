@@ -168,7 +168,7 @@ public class ClauseInfo {
      * Perform copy for use in current engine's demostration
      * @param idExecCtx Current ExecutionContext id
      */
-    void performCopy(int idExecCtx) {
+    public void performCopy(int idExecCtx) {
         IdentityHashMap<Var,Var> v = new IdentityHashMap<Var,Var>();
         headCopy = (Struct)head.copy(v,idExecCtx);
         bodyCopy = new SubGoalTree();
@@ -190,12 +190,12 @@ public class ClauseInfo {
     }
     
     
-    Struct getHeadCopy() {
+    public Struct getHeadCopy() {
         return headCopy;
     }
     
     
-    SubGoalTree getBodyCopy() {
+    public SubGoalTree getBodyCopy() {
         return bodyCopy;
     }
     

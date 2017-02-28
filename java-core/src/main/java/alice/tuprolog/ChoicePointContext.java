@@ -27,11 +27,11 @@ import alice.util.OneWayList;
  */
 public class ChoicePointContext {
     
-    ClauseStore compatibleGoals;
-    ExecutionContext executionContext;
-    ChoicePointContext prevChoicePointContext;
-    SubGoalId indexSubGoal;
-    OneWayList<List<Var>> varsToDeunify;
+    public ClauseStore compatibleGoals;
+    public ExecutionContext executionContext;
+    public ChoicePointContext prevChoicePointContext;
+    public SubGoalId indexSubGoal;
+    public OneWayList<List<Var>> varsToDeunify;
     
     
     public String toString(){

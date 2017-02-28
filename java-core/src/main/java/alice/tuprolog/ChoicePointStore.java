@@ -47,7 +47,7 @@ public class ChoicePointStore {
      * As a side effect, removes choice points which have been already used and are now empty. 
      * @return
      */
-    protected boolean existChoicePoint() {
+    public boolean existChoicePoint() {
         if (pointer == null) return false;
         ClauseStore clauses;
         do {
@@ -61,7 +61,7 @@ public class ChoicePointStore {
     /**
      * Removes choice points which have been already used and are now empty.
      */
-    protected void removeUnusedChoicePoints() {
+    public void removeUnusedChoicePoints() {
         // Note: it uses the side effect of this.existChoicePoint()!
         existChoicePoint();
     }

@@ -19,14 +19,13 @@ package alice.tuprolog;
 
 import alice.tuprolog.HaltException;
 import alice.tuprolog.JavaException;
-import alice.tuprolog.interfaces.IEngineRunner;
 
 /**
  * @author Alex Benini
  */
 public class StateGoalEvaluation extends State {
 
-	public StateGoalEvaluation(IEngineRunner c) {
+	public StateGoalEvaluation(EngineRunner c) {
 		this.c = c;
 		stateName = "Eval";
 	}
@@ -42,9 +41,11 @@ public class StateGoalEvaluation extends State {
 			PrimitiveInfo primitive = e.currentContext.currentGoal
 			.getPrimitive();
 			try {
-				e.nextState = (primitive.evalAsPredicate(e.currentContext.currentGoal)) ? c.getGOAL_SELECTION(): c.getBACKTRACK();
+				e.nextState = (primitive
+						.evalAsPredicate(e.currentContext.currentGoal)) ? c.GOAL_SELECTION
+								: c.BACKTRACK;
 			} catch (HaltException he) {
-				e.nextState = c.getEND_HALT();
+				e.nextState = c.END_HALT;
 			} catch (Throwable t) {
 
 				if (t instanceof PrologError) {
@@ -69,12 +70,12 @@ public class StateGoalEvaluation extends State {
 				}
 
 				// mi sposto nello stato EXCEPTION
-				e.nextState = c.getEXCEPTION();
+				e.nextState = c.EXCEPTION;
 			}
 			// Incremento il counter dei passi di dimostrazione
 			e.nDemoSteps++;
 		} else {
-			e.nextState = c.getRULE_SELECTION();
+			e.nextState = c.RULE_SELECTION;
 		}
 	}
 }

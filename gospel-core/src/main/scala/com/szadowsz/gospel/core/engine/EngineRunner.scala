@@ -8,6 +8,8 @@ import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
+import com.szadowsz.gospel.core.engine.state._
+
 object EngineRunner {
   val HALT: scala.Int = -1
   val FALSE: scala.Int = 0
@@ -24,16 +26,16 @@ object EngineRunner {
   */
 @SerialVersionUID(1L)
 class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
-  final private[engine] val INIT = new StateInit(this)
-  final private[engine] val GOAL_EVALUATION = new StateGoalEvaluation(this)
-  final private[engine] val EXCEPTION = new StateException(this)
-  final private[engine] val RULE_SELECTION = new StateRuleSelection(this)
-  final private[engine] val GOAL_SELECTION = new StateGoalSelection(this)
-  final private[engine] val BACKTRACK = new StateBacktrack(this)
-  final private[engine] val END_FALSE = new StateEnd(this, EngineRunner.FALSE)
-  final private[engine] val END_TRUE = new StateEnd(this, EngineRunner.TRUE)
-  final private[engine] val END_TRUE_CP = new StateEnd(this, EngineRunner.TRUE_CP)
-  final private[engine] val END_HALT = new StateEnd(this, EngineRunner.HALT)
+  final private[engine] val INIT = InitState(this)
+  final private[engine] val GOAL_EVALUATION = GoalEvaluationState(this)
+  final private[engine] val EXCEPTION = ExceptionState(this)
+  final private[engine] val RULE_SELECTION = RuleSelectionState(this)
+  final private[engine] val GOAL_SELECTION = GoalSelectionState(this)
+  final private[engine] val BACKTRACK = BacktrackState(this)
+  final private[engine] val END_FALSE = EndState(this, EngineRunner.FALSE)
+  final private[engine] val END_TRUE = EndState(this, EngineRunner.TRUE)
+  final private[engine] val END_TRUE_CP = EndState(this, EngineRunner.TRUE_CP)
+  final private[engine] val END_HALT = EndState(this, EngineRunner.HALT)
 
   private lazy val theoryManager: ITheoryManager = wam.getTheoryManager
   private lazy val primitiveManager: IPrimitiveManager = wam.getPrimitiveManager
@@ -49,13 +51,13 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
   private var lockVar: Lock = new ReentrantLock
   private var cond: Condition = lockVar.newCondition
   private var semaphore: AnyRef = new AnyRef
-  /* Current environment */ var env: Engine = null
-  /* Last environment used */ private var last_env: Engine = null
-  /* Stack environments of nidicate solving */ private val stackEnv: util.LinkedList[Engine] = new util.LinkedList[Engine]
+  var env: Engine = null /* Current environment */
+  private var last_env: Engine = null /* Last environment used */
+  private val stackEnv: util.LinkedList[Engine] = new util.LinkedList[Engine] /* Stack environments of nidicate solving */
   private var sinfo: SolveInfo = null
 
 
-  override def spy(action: String, env: Engine) {
+  override def spy(action: String, env: IEngine) {
     wam.spy(action, env)
   }
 
@@ -109,11 +111,11 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
       primitiveManager.identifyPredicate(query)
       freeze()
       env = new Engine(this, query)
-      val result: StateEnd = env.run
+      val result: EndState = env.run()
       defreeze()
       sinfo = new SolveInfo(query, result.getResultGoal, result.getResultDemo, result.getResultVars)
       //Alberto
-      env.hasOpenAlternatives = sinfo.hasOpenAlternatives
+      env.hasOpenAlts = sinfo.hasOpenAlternatives
       if (!sinfo.hasOpenAlternatives) solveEnd()
       //Alberto
       env.nResultAsked = 0
@@ -151,10 +153,8 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
           semaphore synchronized {
             semaphore.wait()
           }
-        }
-        catch {
-          case e: InterruptedException => {
-          }
+        } catch {
+          case e: InterruptedException =>
         }
       }
     }
@@ -165,26 +165,27 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
     if (hasOpenAlternatives) {
       refreeze()
       env.nextState = BACKTRACK
-      val result: StateEnd = env.run
+      val result: EndState = env.run()
       defreeze()
       sinfo = new SolveInfo(env.query, result.getResultGoal, result.getResultDemo, result.getResultVars)
       //Alberto
-      env.hasOpenAlternatives = sinfo.hasOpenAlternatives
+      env.hasOpenAlts = sinfo.hasOpenAlternatives
       if (!sinfo.hasOpenAlternatives) {
         solveEnd()
       }
       //Alberto
       env.nResultAsked = env.nResultAsked + 1
-      return sinfo
+      sinfo
+    } else {
+      throw new NoMoreSolutionException
     }
-    else throw new NoMoreSolutionException
   }
 
   /**
     * Halts current solve computation
     */
   override def solveHalt() {
-    env.mustStop()
+    env.requestStop()
     ILibraryManager.onSolveHalt()
   }
 
@@ -215,7 +216,7 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
   private def defreeze() {
     last_env = env
     if (stackEnv.isEmpty) return
-    env = (stackEnv.removeLast).asInstanceOf[Engine]
+    env = stackEnv.removeLast()
   }
 
   private[engine] def find(t: Term): util.List[ClauseInfo] = theoryManager.find(t)
@@ -243,8 +244,11 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
     * @return true if open alternatives are present
     */
   override def hasOpenAlternatives: Boolean = {
-    if (sinfo == null) return false
-    return sinfo.hasOpenAlternatives
+    if (sinfo == null) {
+      false
+    } else {
+      sinfo.hasOpenAlternatives
+    }
   }
 
   /**
@@ -253,8 +257,11 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
     * @return true if the demonstration was stopped
     */
   override def isHalted: Boolean = {
-    if (sinfo == null) return false
-    return sinfo.isHalted
+    if (sinfo == null) {
+      false
+    } else {
+      sinfo.isHalted
+    }
   }
 
   override def run() {
@@ -267,11 +274,8 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
       while (hasOpenAlternatives) {
         if (next.get(countNext)) threadSolveNext()
       }
-    }
-    catch {
-      case e: NoMoreSolutionException => {
-        e.printStackTrace()
-      }
+    } catch {
+      case e: NoMoreSolutionException => e.printStackTrace()
     }
   }
 
@@ -291,7 +295,7 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
     semaphore synchronized {
       semaphore.notify()
     }
-    return true
+    true
   }
 
   override def read: SolveInfo = {
@@ -300,17 +304,14 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
       while (solving || sinfo == null) {
         try {
           cond.await()
-        }
-        catch {
-          case e: InterruptedException => {
-            e.printStackTrace()
-          }
+        } catch {
+          case e: InterruptedException => e.printStackTrace()
         }
       }
     } finally {
       lockVar.unlock()
     }
-    return sinfo
+    sinfo
   }
 
   override def setSolving(solved: Boolean) {
@@ -323,7 +324,7 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
 
   override def getMsg(t: Term): Boolean = {
     msgs.get(t, wam, this)
-    return true
+    true
   }
 
   override def peekMsg(t: Term): Boolean = msgs.peek(t, wam)
@@ -332,39 +333,16 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
 
   override def waitMsg(msg: Term): Boolean = {
     msgs.wait(msg, wam, this)
-    return true
+    true
   }
 
   override def msgQSize: scala.Int = msgs.size
 
   override def getTheoryManager: ITheoryManager = theoryManager
 
-  //Alberto
   override def getEngineMan: IEngineManager = this.engineManager
 
-  //Alberto
   private[engine] override def getMediator: Prolog = wam
 
-  //Alberto
   override def getQuery: Term = this.query
-
-  override def getINIT: State = INIT
-
-  override def getGOAL_EVALUATION: State = GOAL_EVALUATION
-
-  override def getEXCEPTION: State = EXCEPTION
-
-  override def getRULE_SELECTION: State = RULE_SELECTION
-
-  override def getGOAL_SELECTION: State = GOAL_SELECTION
-
-  override def getBACKTRACK: State = BACKTRACK
-
-  override def getEND_FALSE: State = END_FALSE
-
-  override def getEND_TRUE: State = END_TRUE
-
-  override def getEND_TRUE_CP: State = END_TRUE_CP
-
-  override def getEND_HALT: State = END_HALT
 }

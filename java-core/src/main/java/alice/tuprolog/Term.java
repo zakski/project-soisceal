@@ -212,7 +212,7 @@ public abstract class Term implements Serializable {
         if (ok) {
             ExecutionContext ec = engine.getCurrentContext();
             if (ec != null) {
-                int id = (engine.getEnv()==null)? Var.PROGRESSIVE : engine.getEnv().nDemoSteps;
+                int id = (engine.getEnv()==null)? Var.PROGRESSIVE : engine.getEnv().getNDemoSteps();
                 // Update trailingVars
                 ec.trailingVars = new OneWayList<List<Var>>(v1,ec.trailingVars);
                 // Renaming after unify because its utility regards not the engine but the user
@@ -284,7 +284,7 @@ public abstract class Term implements Serializable {
      * @param varsUnifiedArg2 Vars unified in term t
      * @param isOccursCheckEnabled
      */
-    abstract boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t, boolean isOccursCheckEnabled);
+    public abstract boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t, boolean isOccursCheckEnabled);
     
     /**
      * Tries to unify two terms, given a demonstration context

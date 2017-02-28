@@ -22,6 +22,7 @@ import java.util.*;
 
 import alice.tuprolog.Struct;
 import alice.tuprolog.SubGoalId;
+import alice.tuprolog.interfaces.IEngine;
 import alice.util.OneWayList;
 
 
@@ -32,19 +33,19 @@ import alice.util.OneWayList;
 public class ExecutionContext {
     
     private int id;
-    int depth;
-    Struct currentGoal;
-    ExecutionContext fatherCtx;
-    SubGoalId fatherGoalId;
-    Struct clause;
-    Struct headClause;
+    public int depth;
+    public Struct currentGoal;
+    public ExecutionContext fatherCtx;
+    public SubGoalId fatherGoalId;
+    public Struct clause;
+    public Struct headClause;
     public SubGoalStore goalsToEval;
-    OneWayList<List<Var>> trailingVars;
-    OneWayList<List<Var>> fatherVarsList;
+    public OneWayList<List<Var>> trailingVars;
+    public OneWayList<List<Var>> fatherVarsList;
     public ChoicePointContext choicePointAfterCut;
-    boolean haveAlternatives;
+    public boolean haveAlternatives;
     
-    ExecutionContext(int id) {
+    public ExecutionContext(int id) {
         this.id=id;
     }
     
@@ -96,13 +97,17 @@ public class ExecutionContext {
      * Save the state of the parent context to later bring the ExectutionContext
      * objects tree in a consistent state after a backtracking step.
      */
-    void saveParentState() {
+    public void saveParentState() {
         if (fatherCtx != null) {
             fatherGoalId = fatherCtx.goalsToEval.getCurrentGoalId();
             fatherVarsList = fatherCtx.trailingVars;
         }
     }
-   
+
+    public boolean isHaveAlternatives() {
+        return haveAlternatives;
+    }
+
     /**
      * If no open alternatives, no other term to execute and
      * current context doesn't contain as current goal a catch or java_catch predicate ->
@@ -112,12 +117,12 @@ public class ExecutionContext {
      */
    
     //Alberto
-    boolean tryToPerformTailRecursionOptimization(Engine e)
+    public boolean tryToPerformTailRecursionOptimization(IEngine e)
     {
-    	if(!haveAlternatives && e.currentContext.goalsToEval.getCurSGId() == null && !e.currentContext.goalsToEval.haveSubGoals() && !(e.currentContext.currentGoal.getName().equalsIgnoreCase("catch") || e.currentContext.currentGoal.getName().equalsIgnoreCase("java_catch")))
+    	if(!haveAlternatives && e.getContext().goalsToEval.getCurSGId() == null && !e.getContext().goalsToEval.haveSubGoals() && !(e.getContext().currentGoal.getName().equalsIgnoreCase("catch") || e.getContext().currentGoal.getName().equalsIgnoreCase("java_catch")))
     	{
-    		fatherCtx = e.currentContext.fatherCtx;
-    		depth = e.currentContext.depth;
+    		fatherCtx = e.getContext().fatherCtx;
+    		depth = e.getContext().depth;
     		return true;
     	}
     	else
@@ -125,9 +130,9 @@ public class ExecutionContext {
     }
 
     //Alberto
-	void updateContextAndDepth(Engine e)
+	public void updateContextAndDepth(IEngine e)
 	{
-		fatherCtx = e.currentContext;
-        depth = e.currentContext.depth +1; 
+		fatherCtx = e.getContext();
+        depth = e.getContext().depth +1;
 	}
 }

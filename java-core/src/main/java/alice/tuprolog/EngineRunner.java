@@ -48,7 +48,7 @@ public class EngineRunner implements IEngineRunner {
     private Engine last_env;
 
     /* Stack environments of nidicate solving */
-    private LinkedList<Engine> stackEnv = new LinkedList<Engine>();
+    private LinkedList<IEngine> stackEnv = new LinkedList<IEngine>();
 
     private SolveInfo sinfo;
 
@@ -101,7 +101,7 @@ public class EngineRunner implements IEngineRunner {
     }
 
     @Override
-    public void spy(String action, Engine env) {
+    public void spy(String action, IEngine env) {
         mediator.spy(action, env);
     }
 
@@ -264,7 +264,7 @@ public class EngineRunner implements IEngineRunner {
      */
     @Override
     public void solveHalt() {
-        env.mustStop();
+        env.requestStop();
         ILibraryManager.onSolveHalt();
     }
 
@@ -457,56 +457,6 @@ public class EngineRunner implements IEngineRunner {
     @Override
     public ITheoryManager getTheoryManager() {
         return theoryManager;
-    }
-
-    @Override
-    public State getINIT() {
-        return INIT;
-    }
-
-    @Override
-    public State getGOAL_EVALUATION() {
-        return GOAL_EVALUATION;
-    }
-
-    @Override
-    public State getEXCEPTION() {
-        return EXCEPTION;
-    }
-
-    @Override
-    public State getRULE_SELECTION() {
-        return RULE_SELECTION;
-    }
-
-    @Override
-    public State getGOAL_SELECTION() {
-        return GOAL_SELECTION;
-    }
-
-    @Override
-    public State getBACKTRACK() {
-        return BACKTRACK;
-    }
-
-    @Override
-    public State getEND_FALSE() {
-        return END_FALSE;
-    }
-
-    @Override
-    public State getEND_TRUE() {
-        return END_TRUE;
-    }
-
-    @Override
-    public State getEND_TRUE_CP() {
-        return END_TRUE_CP;
-    }
-
-    @Override
-    public State getEND_HALT() {
-        return END_HALT;
     }
 
     //Alberto

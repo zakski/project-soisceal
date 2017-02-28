@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
+import alice.tuprolog.interfaces.IEngine;
 import alice.tuprolog.interfaces.IEngineManager;
 import alice.tuprolog.json.AbstractEngineState;
 
@@ -266,9 +267,9 @@ public class EngineManager implements IEngineManager {
 		return er1.solveNext();
 	}
 	
-	void spy(String action, Engine env) {
+	public void spy(String action, IEngine env) {
 		EngineRunner runner = findRunner();
-		runner.spy(action, env);
+		runner.spy(action, (Engine) env);
 	}
 	
 	/**
@@ -411,7 +412,7 @@ public class EngineManager implements IEngineManager {
 	}
 
 	@Override
-	public Engine getEnv() {
+	public IEngine getEnv() {
 		EngineRunner er=findRunner();
 		return er.env;
 	}

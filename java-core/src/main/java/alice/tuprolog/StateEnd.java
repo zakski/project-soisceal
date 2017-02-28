@@ -20,6 +20,7 @@ package alice.tuprolog;
 import java.util.*;
 
 import alice.tuprolog.Struct;
+import alice.tuprolog.interfaces.IEngine;
 import alice.tuprolog.interfaces.IEngineRunner;
 
 /**
@@ -37,7 +38,7 @@ public class StateEnd extends State {
      * Constructor
      * @param end Terminal state of computation
      */
-    public StateEnd(IEngineRunner c, int end) {
+    public StateEnd(EngineRunner c, int end) {
     	this.c=c;
         endState = end;
     }
@@ -63,7 +64,7 @@ public class StateEnd extends State {
         }  
     }
     
-    void doJob(Engine e) {	
+    void doJob(Engine e) {
         vars = new ArrayList<Var>();
         goal = (Struct)e.startGoal.copyResult(e.goalVars,vars);  
     }

@@ -15,23 +15,34 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+package com.szadowsz.gospel.core.engine.state
 
-package alice.tuprolog;
+import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
+import org.slf4j.{Logger, LoggerFactory}
 
 /**
- * @author Alex Benini
- *
- * Template for states of Core Engine
- */
-abstract class State {
-    
-    protected EngineRunner c;
-    protected String stateName;
-    
-    abstract void doJob(Engine e);
-    
-    public String toString() {
-        return stateName;
-    }
-    
+  * Template for states of Core Engine. Not for consumption outside of the core engine package.
+  *
+  */
+private[engine] trait State {
+
+  /**
+    * Use one logger category for all states.
+    */
+  protected lazy val logger : Logger = LoggerFactory.getLogger(classOf[State])
+
+  /**
+    * the runner the state occurred in.
+    */
+  protected val runner : EngineRunner
+
+  /**
+    * the name of the engine state.
+    */
+  protected val stateName: String
+
+
+  def doJob(e: Engine) : Unit
+
+  override def toString: String = stateName
 }

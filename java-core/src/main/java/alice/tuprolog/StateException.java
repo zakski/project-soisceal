@@ -1,7 +1,5 @@
 package alice.tuprolog;
 
-import alice.tuprolog.interfaces.IEngineRunner;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,7 +11,7 @@ public class StateException extends State {
     final Term catchTerm = Term.createTerm("catch(Goal, Catcher, Handler)");
     final Term javaCatchTerm = Term.createTerm("java_catch(Goal, List, Finally)");
 
-    public StateException(IEngineRunner c) {
+    public StateException(EngineRunner c) {
         this.c = c;
         stateName = "Exception";
     }
@@ -32,7 +30,7 @@ public class StateException extends State {
         if (e.currentContext == null) {
             // passo nello stato HALT se l?errore non pu? essere gestito (sono
             // arrivato alla radice dell'albero di risoluzione)
-            e.nextState = c.getEND_HALT();
+            e.nextState = c.END_HALT;
             return;
         }
         while (true) {
@@ -63,7 +61,7 @@ public class StateException extends State {
                 Term handlerTerm = e.currentContext.currentGoal.getArg(2);
                 Term curHandlerTerm = handlerTerm.getTerm();
                 if (!(curHandlerTerm instanceof Struct)) {
-                    e.nextState = c.getEND_FALSE();
+                    e.nextState = c.END_FALSE;
                     return;
                 }
                 // Code inserted to allow evaluation of meta-clause
@@ -81,7 +79,7 @@ public class StateException extends State {
                 e.currentContext.currentGoal = handler;
 
                 // passo allo stato GOAL_SELECTION
-                e.nextState = c.getGOAL_SELECTION();
+                e.nextState = c.GOAL_SELECTION;
                 return;
             } else {
                 // passo all'ExecutionContext successivo
@@ -89,7 +87,7 @@ public class StateException extends State {
                 if (e.currentContext == null) {
                     // passo nello stato HALT se l?errore non pu? essere gestito
                     // (sono arrivato alla radice dell'albero di risoluzione)
-                    e.nextState = c.getEND_HALT();
+                    e.nextState = c.END_HALT;
                     return;
                 }
             }
@@ -102,7 +100,7 @@ public class StateException extends State {
         if (e.currentContext == null) {
             // passo nello stato HALT se l?errore non pu? essere gestito (sono
             // arrivato alla radice dell'albero di risoluzione)
-            e.nextState = c.getEND_HALT();
+            e.nextState = c.END_HALT;
             return;
         }
         while (true) {
@@ -125,7 +123,7 @@ public class StateException extends State {
                 Term handlerTerm = javaUnify(e.currentContext.currentGoal
                         .getArg(1), exceptionTerm, unifiedVars);
                 if (handlerTerm == null) {
-                    e.nextState = c.getEND_FALSE();
+                    e.nextState = c.END_FALSE;
                     return;
                 }
 
@@ -136,7 +134,7 @@ public class StateException extends State {
                 // l'eccezione e il catcher
                 Term curHandlerTerm = handlerTerm.getTerm();
                 if (!(curHandlerTerm instanceof Struct)) {
-                    e.nextState = c.getEND_FALSE();
+                    e.nextState = c.END_FALSE;
                     return;
                 }
                 Term finallyTerm = e.currentContext.currentGoal.getArg(2);
@@ -149,11 +147,11 @@ public class StateException extends State {
                         isFinally = false;
                     else {
                         // errore di sintassi, esco
-                        e.nextState = c.getEND_FALSE();
+                        e.nextState = c.END_FALSE;
                         return;
                     }
                 } else if (!(curFinallyTerm instanceof Struct)) {
-                    e.nextState = c.getEND_FALSE();
+                    e.nextState = c.END_FALSE;
                     return;
                 }
                 // Code inserted to allow evaluation of meta-clause
@@ -179,7 +177,7 @@ public class StateException extends State {
                 e.currentContext.currentGoal = handler;
 
                 // passo allo stato GOAL_SELECTION
-                e.nextState = c.getGOAL_SELECTION();
+                e.nextState = c.GOAL_SELECTION;
                 return;
 
             } else {
@@ -188,7 +186,7 @@ public class StateException extends State {
                 if (e.currentContext == null) {
                     // passo nello stato HALT se l?errore non pu? essere gestito
                     // (sono arrivato alla radice dell'albero di risoluzione)
-                    e.nextState = c.getEND_HALT();
+                    e.nextState = c.END_HALT;
                     return;
                 }
             }

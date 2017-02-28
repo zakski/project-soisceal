@@ -4,8 +4,8 @@ import alice.tuprolog.json.AbstractEngineState
 import java.util
 import java.util.concurrent.locks.ReentrantLock
 
-import alice.tuprolog.{Engine, ExecutionContext, NoMoreSolutionException, SolveInfo, SubGoalTree, Term, TermQueue, Var,Int}
-import alice.tuprolog.interfaces.IEngineManager
+import alice.tuprolog.{Engine, ExecutionContext, Int, NoMoreSolutionException, SolveInfo, SubGoalTree, Term, TermQueue, Var}
+import alice.tuprolog.interfaces.{IEngine, IEngineManager}
 import com.szadowsz.gospel.core.PrologEngine
 
 /**
@@ -411,7 +411,7 @@ final case class EngineManager(private val wam: PrologEngine ) extends IEngineMa
     }
   }
 
-  override def getEnv: Engine = {
+  override def getEnv: IEngine = {
     val er: EngineRunner = findRunner
     er.env
   }
@@ -433,4 +433,6 @@ final case class EngineManager(private val wam: PrologEngine ) extends IEngineMa
       brain.setHasOpenAlternatives(findRunner.env.hasOpenAlternatives)
     }
   }
+
+  override def spy(action: String, env: IEngine): Unit = wam.spy(action,env)
 }

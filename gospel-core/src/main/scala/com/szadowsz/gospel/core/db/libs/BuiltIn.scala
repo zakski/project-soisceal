@@ -444,7 +444,7 @@ class BuiltIn(val mediator: Prolog) extends Library {
 
   def copy_term_2(arg0: Term, arg1: Term): Boolean = {
     // unify arg1 with a renamed copy of arg0
-    val id = engineManager.getEnv.nDemoSteps
+    val id = engineManager.getEnv.getNDemoSteps
     unify(arg1.getTerm, arg0.getTerm.copy(new util.IdentityHashMap[Var, Var](), id))
   }
 

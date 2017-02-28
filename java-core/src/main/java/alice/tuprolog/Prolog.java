@@ -687,10 +687,10 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	 * Notifies a spy information event
 	 * @param s TODO
 	 */
-	public synchronized void spy(String s, Engine e) {
+	public synchronized void spy(String s, IEngine e) {
 		//System.out.println("spy: "+i+"  "+s+"  "+g);
 		if (spy) {
-			ExecutionContext ctx = e.currentContext;
+			ExecutionContext ctx = e.getContext();
 			int i=0;
 			String g = "-";
 			if (ctx.fatherCtx != null){

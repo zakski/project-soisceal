@@ -19,7 +19,6 @@ package alice.tuprolog;
 
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
-import alice.tuprolog.interfaces.IEngineRunner;
 
 /**
  * @author Alex Benini
@@ -27,7 +26,7 @@ import alice.tuprolog.interfaces.IEngineRunner;
  */
 public class StateGoalSelection extends State {
     
-    public StateGoalSelection(IEngineRunner c) {
+    public StateGoalSelection(EngineRunner c) {
         this.c = c;
         stateName = "Call";
     }    
@@ -43,7 +42,7 @@ public class StateGoalSelection extends State {
                 // demo termination
                 if (e.currentContext.fatherCtx == null) {
                     //verify ChoicePoint
-                    e.nextState = (e.choicePointSelector.existChoicePoint())? c.getEND_TRUE_CP() : c.getEND_TRUE();
+                    e.nextState = (e.choicePointSelector.existChoicePoint())? c.END_TRUE_CP : c.END_TRUE;
                     return;
                 }
                 // Caso di rimozione di un contesto di esecuzione
@@ -52,7 +51,7 @@ public class StateGoalSelection extends State {
                 // Caso di individuazione curGoal
                 Term goal_app = curGoal.getTerm();
                 if (!(goal_app instanceof Struct)) {
-                    e.nextState = c.getEND_FALSE();
+                    e.nextState = c.END_FALSE;
                     return;
                 }
                 
@@ -65,7 +64,7 @@ public class StateGoalSelection extends State {
                     curGoal = new Struct("call", goal_app);
                 
                 e.currentContext.currentGoal = (Struct) curGoal;
-                e.nextState = c.getGOAL_EVALUATION();
+                e.nextState = c.GOAL_EVALUATION;
                 return;
             }            
         }

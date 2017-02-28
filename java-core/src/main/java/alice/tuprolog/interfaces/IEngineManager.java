@@ -78,10 +78,12 @@ public interface IEngineManager extends java.io.Serializable {
 
     void unlockAll();
 
-    Engine getEnv();
+    IEngine getEnv();
 
     void identify(Term t);
 
     //Alberto
     void serializeQueryState(AbstractEngineState brain);
+
+    void spy(String action, IEngine env);
 }
