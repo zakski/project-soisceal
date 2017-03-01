@@ -122,7 +122,7 @@ public class PJAnnotationProcessor extends ElementScanner6<Void,Void> implements
         if (init != "") {
             alice.tuprolog.Term t = null;
             try {                
-                t = alice.tuprolog.Parser.parseSingleTerm(init);
+                t = com.szadowsz.gospel.core.parser.Parser.parseSingleTerm(init);
             }
             catch (Throwable tw) {
                 env.getMessager().printMessage(ERROR,ERR_BAD_VAR_INIT,v);

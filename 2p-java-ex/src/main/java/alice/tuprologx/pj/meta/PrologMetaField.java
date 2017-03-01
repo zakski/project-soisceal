@@ -4,6 +4,7 @@ import java.lang.reflect.*;
 import alice.tuprologx.pj.model.*;
 import alice.tuprologx.pj.annotations.*;
 import alice.tuprologx.pj.engine.*;
+import com.szadowsz.gospel.core.parser.Parser;
 
 /**
  *
@@ -69,7 +70,7 @@ public class PrologMetaField {
         String init = _annotation.init();
         if (init != "") {
             try {
-                Term<?> t = Term.unmarshal(alice.tuprolog.Parser.parseSingleTerm(init));
+                Term<?> t = Term.unmarshal(Parser.parseSingleTerm(init));
                 System.out.println("init field = "+t);
                 setValue(o, t);
             }

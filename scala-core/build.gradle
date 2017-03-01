@@ -6,14 +6,6 @@ targetCompatibility = JavaVersion.VERSION_1_8
 sourceSets.main.scala.srcDir "src/main/java"
 sourceSets.main.java.srcDirs = []
 
-ext {
-    scalaVersion = '2.11.8'
-    scalaTestVersion = '2.2.4'
-    slf4jVersion = '1.7.12'
-    junitVersion = '4.11'
-}
-
-
 repositories {
     mavenCentral()
 }

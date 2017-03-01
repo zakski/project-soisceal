@@ -18,6 +18,7 @@
 package alice.tuprologx.ide;
 
 import alice.tuprolog.*;
+import com.szadowsz.gospel.core.Theory;
 
 import javax.swing.*;
 import java.io.*;

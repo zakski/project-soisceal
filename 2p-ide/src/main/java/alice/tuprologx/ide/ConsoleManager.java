@@ -6,6 +6,8 @@ import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.event.QueryListener;
 import alice.tuprolog.lib.IOLibrary;
 import alice.tuprologx.ide.EngineThread;
+import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Theory;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -16,7 +18,7 @@ public class ConsoleManager
 {
     private ConsoleDialog dialog;
     private InputField inputField;
-   private Prolog engine;
+   private PrologEngine engine;
     //private PJProlog pjengine;
     private IDE ide;
     private ArrayList<QueryEvent> queryEventList;
@@ -41,7 +43,7 @@ public class ConsoleManager
 
     public int getSolveType(){return solveType;}
 
-    public void setEngine(Prolog engine){this.engine = engine;}
+    public void setEngine(PrologEngine engine){this.engine = engine;}
 
     public void setInputField(InputField inputField){this.inputField = inputField;}
 

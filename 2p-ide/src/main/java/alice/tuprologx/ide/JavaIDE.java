@@ -22,6 +22,8 @@ import alice.tuprolog.event.*;
 import alice.tuprolog.lib.IOLibrary;
 
 import javax.swing.*;
+
+import com.szadowsz.gospel.core.PrologEngine;
 import org.fife.ui.autocomplete.DefaultCompletionProvider;
 
 import java.awt.*;
@@ -58,7 +60,7 @@ public class JavaIDE
     private void initComponents() {
         System.out.println("tuProlog system - release " + Prolog.getVersion());
 
-        final Prolog engine = new Prolog();
+        final PrologEngine engine = new PrologEngine();
         
         DefaultCompletionProvider commonCompletionProvider = CompletionUtils.createCompletionProvider();
         engine.addTheoryListener(new CompletionUpdateTheoryListener(commonCompletionProvider));

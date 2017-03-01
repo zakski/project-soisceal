@@ -1,13 +1,13 @@
 package spyframe;
 
-import alice.tuprolog.ExecutionContext;
-import alice.tuprolog.Prolog;
 import alice.tuprolog.SolveInfo;
 import alice.tuprolog.Term;
-import alice.tuprolog.Theory;
 import alice.tuprolog.event.*;
-import alice.tuprolog.interfaces.IEngine;
 import alice.tuprologx.spyframe.TermFrame;
+import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.engine.Engine;
+import com.szadowsz.gospel.core.engine.context.ExecutionContext;
 
 import java.util.List;
 import java.util.Scanner;
@@ -31,7 +31,7 @@ public class Test {
         + "  vorfahr(Z,N).\n"
         );
     System.out.println(theo);
-    Prolog prolog=new Prolog();
+    PrologEngine prolog=new PrologEngine();
     prolog.setTheory(theo);
     Term sol;
     final TermFrame tf=new TermFrame(null);
@@ -40,7 +40,7 @@ public class Test {
       @Override
       public void onSpy(SpyEvent se){
         if(se==null) return;
-        IEngine engine=se.getSnapshot();
+        Engine engine=se.getSnapshot();
         if(engine==null) System.out.println("noengine:"+se);
         else{
           //if(!"Eval".equals(engine.getNextStateName())) return;

@@ -368,6 +368,19 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     */
   def `match`(t0: Term, t1: Term): Boolean = t0.`match`(this.getFlagManager.isOccursCheckEnabled, t1)
 
+  def termSolve(st: String): Term = {
+    try {
+      val p = new Parser(opManager, st)
+      val t = p.nextTerm(true)
+      t
+    } catch {
+      case e: InvalidTermException =>
+        val s = "null"
+        val t = Term.createTerm(s)
+        t
+    }
+  }
+
   /**
     * Asks for the presence of open alternatives to be explored
     * in current demostration process.

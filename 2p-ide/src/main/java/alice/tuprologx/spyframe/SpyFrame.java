@@ -2,8 +2,10 @@ package alice.tuprologx.spyframe;
 
 import alice.tuprolog.*;
 import alice.tuprolog.event.*;
-import alice.tuprolog.interfaces.IEngine;
-import alice.tuprolog.interfaces.ITheory;
+import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.engine.Engine;
+import com.szadowsz.gospel.core.engine.context.ExecutionContext;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -100,7 +102,7 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener{
 		
 	}
   };
-  Prolog prolog;
+  PrologEngine prolog;
   Thread pprocess;
   JTextField number;
   JTextArea results;
@@ -113,7 +115,7 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener{
    * @param goal the prolog term to be tested.
    * @throws InvalidTheoryException if we have no valid prolog theory.
    */
-  public SpyFrame(ITheory theory, final Term goal) throws InvalidTheoryException{
+  public SpyFrame(Theory theory, final Term goal) throws InvalidTheoryException{
     //START of visible stuff
     super("SpyFrame");
     Container c=getContentPane();
@@ -154,7 +156,7 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener{
     setVisible(true);
     setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     //END of the visible stuff
-    prolog=new Prolog();
+    prolog=new PrologEngine();
     prolog.setTheory(theory);
     prolog.addSpyListener(this);
     prolog.setSpy(true);
@@ -210,7 +212,7 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener{
    */
   @Override
   public synchronized void onSpy(SpyEvent e){
-    IEngine engine=e.getSnapshot();
+    Engine engine=e.getSnapshot();
     if(engine==null || !"Call".equals(engine.getNextStateName())) return;
     if(--steps>0) return;
     tree.setStructure(engine.getExecutionStack());

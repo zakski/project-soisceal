@@ -11,6 +11,7 @@ package alice.tuprologx.pj.engine;
 
 
 import alice.tuprologx.pj.model.*;
+import com.szadowsz.gospel.core.PrologEngine;
 
 import java.util.*;
 
@@ -20,10 +21,10 @@ import java.util.*;
  */
 public class PJProlog /*extends alice.tuprolog.Prolog*/ {
     
-    protected alice.tuprolog.Prolog engine;
+    protected PrologEngine engine;
     
     public PJProlog() {
-        engine = new alice.tuprolog.Prolog();        
+        engine = new PrologEngine();
         try {
             engine.unloadLibrary("alice.tuprolog.lib.OOLibrary");
             engine.loadLibrary("alice.tuprologx.pj.lib.PJLibraryNew");
@@ -62,11 +63,11 @@ public class PJProlog /*extends alice.tuprolog.Prolog*/ {
     }
 
     public void setTheory(Theory theory) throws alice.tuprolog.InvalidTheoryException {
-        engine.setTheory(new alice.tuprolog.Theory(theory.marshal()));
+        engine.setTheory(new com.szadowsz.gospel.core.Theory(theory.marshal()));
     }
 
     public void addTheory(Theory theory) throws alice.tuprolog.InvalidTheoryException {
-        engine.addTheory(new alice.tuprolog.Theory(theory.marshal()));
+        engine.addTheory(new com.szadowsz.gospel.core.Theory(theory.marshal()));
     }
     
     public Theory getTheory() throws alice.tuprolog.InvalidTheoryException {

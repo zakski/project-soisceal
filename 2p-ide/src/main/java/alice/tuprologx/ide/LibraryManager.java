@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 import cli.System.Reflection.Assembly;
+import com.szadowsz.gospel.core.PrologEngine;
 
 /**
  * A dynamic manager for tuProlog libraries.
@@ -42,7 +43,7 @@ public final class LibraryManager
     /**
 	 * The Prolog engine referenced by the Library Manager. 
 	 */
-    private Prolog engine;
+    private PrologEngine engine;
     /**
 	 * Stores classnames for managed libraries.
 	 */
@@ -57,7 +58,7 @@ public final class LibraryManager
 	 * Set the engine to be referenced by the library manager.
 	 * @param engine  The engine to be referenced by the library manager.
 	 */
-    public void setEngine(Prolog engine) {
+    public void setEngine(PrologEngine engine) {
         this.engine = engine;
         initialize();
     }
@@ -76,7 +77,7 @@ public final class LibraryManager
 	 * Get the engine referenced by the library manager.
 	 * @return  the engine referenced by the library manager.
 	 */
-    public Prolog getEngine() {
+    public PrologEngine getEngine() {
         return engine;
     }
 

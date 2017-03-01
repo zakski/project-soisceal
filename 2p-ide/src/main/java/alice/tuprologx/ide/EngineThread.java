@@ -21,6 +21,7 @@ package alice.tuprologx.ide;
 
 import alice.tuprolog.*;
 import alice.tuprolog.MalformedGoalException;
+import com.szadowsz.gospel.core.PrologEngine;
 
 /**
  * 
@@ -31,18 +32,18 @@ import alice.tuprolog.MalformedGoalException;
 public class EngineThread extends Thread {
  
     private String goal;
-    private Prolog engine;
+    private PrologEngine engine;
     private ConsoleManager console;
     private int actionToDo;
     
-    public EngineThread(Prolog engine, String goal, ConsoleManager c){
+    public EngineThread(PrologEngine engine, String goal, ConsoleManager c){
         this.engine = engine;
         console = c;
         this.goal = goal;
         actionToDo = 1;
     }
 
-    public EngineThread(Prolog engine){
+    public EngineThread(PrologEngine engine){
         this.engine = engine;
         actionToDo = 2;
     }

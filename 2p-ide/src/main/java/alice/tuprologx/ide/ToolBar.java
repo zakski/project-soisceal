@@ -11,11 +11,10 @@ import java.awt.BorderLayout;
 import java.net.URL;
 
 import alice.tuprolog.InvalidTheoryException;
-import alice.tuprolog.Prolog;
 import alice.tuprolog.Term;
-import alice.tuprolog.Theory;
-import alice.tuprolog.interfaces.ITheory;
 import alice.tuprologx.spyframe.SpyFrame;
+import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Theory;
 
 public class ToolBar extends JPanel
 {
@@ -25,7 +24,7 @@ public class ToolBar extends JPanel
     /**
 	 * The Prolog engine referenced by the toolbar.  
 	 */
-    private Prolog engine;
+    private PrologEngine engine;
 
     private LibraryManager libraryManager;
     /**
@@ -197,7 +196,7 @@ public class ToolBar extends JPanel
         	public void actionPerformed(ActionEvent event)
             {
         		ConsoleManager consoleManager = JavaIDE.getConsoleManager();
-                ITheory theory = engine.getTheory();
+                Theory theory = engine.getTheory();
                 Term rich = engine.termSolve(consoleManager.getGoal());
                 try {
 					new SpyFrame(theory, rich);
@@ -230,7 +229,7 @@ public class ToolBar extends JPanel
 	 * Get the Prolog engine referenced by the toolbar.
 	 * @return  The Prolog engine referenced by the toolbar.
 	 */
-    public Prolog getEngine() {
+    public PrologEngine getEngine() {
         return engine;
     }
 
@@ -238,7 +237,7 @@ public class ToolBar extends JPanel
 	 * Set the Prolog engine referenced by the toolbar.
 	 * @param engine  an <code>alice.tuprolog.Prolog</code> engine.
 	 */
-    public void setEngine(Prolog engine) {
+    public void setEngine(PrologEngine engine) {
         this.engine = engine;
         debugArea = new DebugAreaFrame();
         libraryDialog = new LibraryDialogFrame(libraryManager,parent);

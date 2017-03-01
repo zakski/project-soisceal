@@ -6,9 +6,9 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.szadowsz.gospel.core.PrologEngine;
 import org.fife.ui.autocomplete.CompletionProvider;
 
-import alice.tuprolog.Prolog;
 
 import java.awt.event.*;
 import java.awt.*;
@@ -21,7 +21,7 @@ public class TheoryTabbedPane
 {
     private static final long serialVersionUID = 1L;
 
-    private Prolog engine;
+    private PrologEngine engine;
 
     private ToolBar toolBar;
     private TheoryEditor editor;
@@ -55,7 +55,7 @@ public class TheoryTabbedPane
         super.addTab(FileName, new CloseTabIcon(extraIcon), component);
     }
 
-    public void setEngine(Prolog engine)
+    public void setEngine(PrologEngine engine)
     {
         this.engine = engine;
     }

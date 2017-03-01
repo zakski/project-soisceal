@@ -18,7 +18,6 @@ import java.util.StringTokenizer;
 import alice.tuprolog.event.LibraryEvent;
 import alice.tuprolog.InvalidLibraryException;
 import alice.tuprolog.event.LibraryListener;
-import alice.tuprolog.interfaces.ILibraryManager;
 
 public class LibraryDialogFrame extends GenericFrame implements LibraryListener
 {
@@ -515,7 +514,7 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
         {
             try
             {
-            	ILibraryManager mainILibraryManager = libraryManager.getEngine().getLibraryManager();
+            	com.szadowsz.gospel.core.db.LibraryManager mainILibraryManager = libraryManager.getEngine().getLibraryManager();
             	if(mainILibraryManager.isExternalLibrary(libraryName))
             	{
             		URL url = mainILibraryManager.getExternalLibraryURL(libraryName);

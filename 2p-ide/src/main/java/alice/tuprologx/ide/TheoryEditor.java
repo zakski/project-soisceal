@@ -8,8 +8,8 @@ import java.awt.event.*;
 import java.net.URL;
 
 import alice.tuprolog.InvalidTheoryException;
-import alice.tuprolog.Prolog;
-import alice.tuprolog.Theory;
+import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Theory;
 
 public class TheoryEditor
     extends JPanel
@@ -20,7 +20,7 @@ public class TheoryEditor
     /**
 	 * The Prolog engine referenced by the editor.
 	 */
-    private Prolog engine;
+    private PrologEngine engine;
     /**
 	 * The edit area used by the editor.
 	 */
@@ -112,7 +112,7 @@ public class TheoryEditor
 	 * Get the Prolog engine referenced by the editor.
 	 * @return  The Prolog engine referenced by the editor.
 	 */
-    public Prolog getEngine() {
+    public PrologEngine getEngine() {
         return engine;
     }
 
@@ -120,7 +120,7 @@ public class TheoryEditor
 	 * Set the Prolog engine referenced by the editor.
 	 * @param engine  an <code>alice.tuprolog.Prolog</code> engine.
 	 */
-    public void setEngine(Prolog engine) {
+    public void setEngine(PrologEngine engine) {
         this.engine = engine;
     }
 
