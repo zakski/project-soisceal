@@ -37,6 +37,7 @@ import alice.util.OneWayList
 import java.util
 
 import alice.tuprolog._
+import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
 
 /**

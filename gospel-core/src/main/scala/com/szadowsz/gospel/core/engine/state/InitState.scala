@@ -34,9 +34,9 @@
 package com.szadowsz.gospel.core.engine.state
 
 import alice.tuprolog.ClauseInfo
-import alice.tuprolog.ExecutionContext
 import alice.tuprolog.Struct
 import alice.tuprolog.SubGoalStore
+import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
 
 /**

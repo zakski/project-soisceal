@@ -37,6 +37,7 @@ import java.util
 
 import alice.tuprolog._
 import alice.tuprolog.lib.BasicLibrary
+import com.szadowsz.gospel.core.Theory
 
 import scala.util.control.NonFatal
 import scala.collection.JavaConverters._
@@ -461,7 +462,7 @@ class MyBasicLibrary() extends BasicLibrary {
     if (!t0.isGround) {
       unify(t0, new Struct(t1.toString))
     } else {
-      Try(unify(t1, getEngine.toTerm(alice.util.Tools.removeApices(t0.toString)))).toOption.getOrElse(false)
+      Try(unify(t1, engine.toTerm(alice.util.Tools.removeApices(t0.toString)))).toOption.getOrElse(false)
     }
   }
 

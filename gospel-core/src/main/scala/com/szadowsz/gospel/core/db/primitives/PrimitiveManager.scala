@@ -21,7 +21,6 @@ import java.lang.reflect.InvocationTargetException
 import java.{util => ju}
 
 import alice.tuprolog.{IPrimitives, Library, PrimitiveInfo, Struct, Term}
-import alice.tuprolog.interfaces.IPrimitiveManager
 import com.szadowsz.gospel.core.PrologEngine
 import com.szadowsz.gospel.core.db.libs.BuiltIn
 
@@ -37,7 +36,7 @@ import scala.util.Try
   * @version Gospel 2.0.0
   */
 
-final case class PrimitiveManager(vm: PrologEngine) extends IPrimitiveManager {
+final case class PrimitiveManager(vm: PrologEngine) extends java.io.Serializable {
   private val libs = new mutable.HashMap[IPrimitives, List[PrimitiveInfo]]()
   private val directives = ju.Collections.synchronizedMap(new ju.HashMap[String, PrimitiveInfo])
   private val predicates = ju.Collections.synchronizedMap(new ju.HashMap[String, PrimitiveInfo])
@@ -50,19 +49,15 @@ final case class PrimitiveManager(vm: PrologEngine) extends IPrimitiveManager {
       case Some(t) =>
         t.getTerm match {
           case s: Struct =>
-            val arity: Int = s.getArity
-            val name: String = s.getName
-            if ((name == ",") || (name == "':-'") || (name == ":-")) {
-              for (c <- 0 until arity) {
-                identify(s.getArg(c), PrimitiveInfo.PREDICATE)
-              }
-            } else {
-              for (c <- 0 until arity) {
-                identify(s.getArg(c), PrimitiveInfo.FUNCTOR)
-              }
+            val arity = s.getArity
+            val name = s.getName
+            if ((name == ",") || (name == "':-'") || (name == ":-")) for (c <- 0 until arity) {
+              identify(s.getArg(c), PrimitiveInfo.PREDICATE)
+            } else for (c <- 0 until arity) {
+              identify(s.getArg(c), PrimitiveInfo.FUNCTOR)
             }
-            var prim: PrimitiveInfo = null
-            val key: String = name + "/" + arity
+            var prim : PrimitiveInfo = null
+            val key = name + "/" + arity
             typeOfPrimitive match {
               case PrimitiveInfo.DIRECTIVE =>
                 prim = directives.get(key)
@@ -77,19 +72,13 @@ final case class PrimitiveManager(vm: PrologEngine) extends IPrimitiveManager {
     }
   }
 
-  def getLibraryDirective(name: String, nArgs: Int): Library = {
-    Try(directives.get(name + "/" + nArgs).getSource.asInstanceOf[Library]).toOption.orNull
-  }
+  def getLibraryDirective(name: String, nArgs: Int): Library = Try(directives.get(name + "/" + nArgs).getSource.asInstanceOf[Library]).toOption.orNull
 
-  def getLibraryPredicate(name: String, nArgs: Int): Library = {
-    Try(predicates.get(name + "/" + nArgs).getSource.asInstanceOf[Library]).toOption.orNull
-  }
+  def getLibraryPredicate(name: String, nArgs: Int): Library = Try(predicates.get(name + "/" + nArgs).getSource.asInstanceOf[Library]).toOption.orNull
 
-  def getLibraryFunctor(name: String, nArgs: Int): Library = {
-    Try(functors.get(name + "/" + nArgs).getSource.asInstanceOf[Library]).toOption.orNull
-  }
+  def getLibraryFunctor(name: String, nArgs: Int): Library = Try(functors.get(name + "/" + nArgs).getSource.asInstanceOf[Library]).toOption.orNull
 
-  override def createPrimitiveInfo(src: IPrimitives): Unit = {
+  def createPrimitiveInfo(src: IPrimitives): Unit = {
     synchronized {
       val prims = src.getPrimitives.asScala.map { case (i: Integer, l: ju.List[PrimitiveInfo]) => i -> l.asScala.toList }
       val primOfLib = prims.values.flatten.toList
@@ -100,7 +89,7 @@ final case class PrimitiveManager(vm: PrologEngine) extends IPrimitiveManager {
     }
   }
 
-  override def deletePrimitiveInfo(src: IPrimitives): Unit = {
+  def deletePrimitiveInfo(src: IPrimitives): Unit = {
     synchronized {
       libs.remove(src).foreach(prims => prims.foreach { p =>
         directives.remove(p.getKey)
@@ -110,10 +99,10 @@ final case class PrimitiveManager(vm: PrologEngine) extends IPrimitiveManager {
     }
   }
 
-  override def containsTerm(name: String, nArgs: Int): Boolean = functors.containsKey(name + "/" + nArgs) || predicates.containsKey(name + "/" + nArgs)
+  def containsTerm(name: String, nArgs: Int): Boolean = functors.containsKey(name + "/" + nArgs) || predicates.containsKey(name + "/" + nArgs)
 
   @throws(classOf[Throwable])
-  override def evalAsDirective(d: Struct): Boolean = {
+  def evalAsDirective(d: Struct): Boolean = {
     Option(identifyDirective(d).getPrimitive) match {
       case Some(pd) =>
         try {
@@ -134,7 +123,7 @@ final case class PrimitiveManager(vm: PrologEngine) extends IPrimitiveManager {
     * @param term the term to be identified
     * @return term with the identified built-in predicate
     */
-  override def identifyPredicate(term: Term): Unit = identify(term, PrimitiveInfo.PREDICATE)
+  def identifyPredicate(term: Term): Unit = identify(term, PrimitiveInfo.PREDICATE)
 
   /**
     * Identifies the directive term passed as argument.

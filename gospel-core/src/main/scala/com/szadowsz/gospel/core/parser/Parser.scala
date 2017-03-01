@@ -37,7 +37,6 @@ import java.io._
 import java.util
 import java.util.regex.Pattern
 
-import alice.tuprolog.interfaces.IParser
 import alice.tuprolog.{DefaultOperatorManager, Double, Int, InvalidTermException, Long, Number, OperatorManager, Struct, Term, TermIterator, Var}
 
 /**
@@ -109,7 +108,7 @@ private case class IdentifiedTerm(priority: scala.Int, result: Term)
 
 
 @SerialVersionUID(1L)
-class Parser extends IParser with Serializable {
+class Parser extends Serializable {
   private var tokenizer: Tokenizer = null
   private var opManager: OperatorManager = Parser.defaultOperatorManager
   /*Castagna 06/2011*/ private var offsetsMap: util.HashMap[Term, Integer] = null

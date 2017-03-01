@@ -35,17 +35,18 @@ package com.szadowsz.gospel.core
 
 import java.util
 
-import alice.tuprolog.event.{QueryEvent, TheoryEvent}
-import alice.tuprolog.{InvalidLibraryException, InvalidTheoryException, Library, NoMoreSolutionException, Operator, Prolog, SolveInfo, Term}
+import alice.tuprolog.event.{QueryEvent, SpyEvent, TheoryEvent}
+import alice.tuprolog.{InvalidLibraryException, InvalidTermException, InvalidTheoryException, Library, MalformedGoalException, NoMoreSolutionException, Operator, Prolog, SolveInfo, Term}
 import alice.tuprolog.interfaces._
 import alice.tuprolog.json.{AbstractEngineState, FullEngineState, JSONSerializerManager, ReducedEngineState}
 import alice.tuprolog.lib.{IOLibrary, ISOLibrary, OOLibrary}
-import com.szadowsz.gospel.core.db.LibManager
+import com.szadowsz.gospel.core.db.LibraryManager
 import com.szadowsz.gospel.core.db.libs.MyBasicLibrary
 import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
 import com.szadowsz.gospel.core.db.theory.TheoryManager
-import com.szadowsz.gospel.core.engine.EngineManager
+import com.szadowsz.gospel.core.engine.{Engine, EngineManager}
 import com.szadowsz.gospel.core.engine.flags.FlagManager
+import com.szadowsz.gospel.core.parser.Parser
 
 import scala.util.Try
 
@@ -62,7 +63,7 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
 
   private lazy val flagManager = new FlagManager() // engine flag manager.
 
-  private lazy val libManager = LibManager(this) // manager of loaded libraries
+  private lazy val libManager = LibraryManager(this) // manager of loaded libraries
 
   private lazy val primManager = PrimitiveManager(this) // primitive prolog term manager.
 
@@ -106,30 +107,30 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     ))
   }
 
-  override protected def getLibraryPredicate(name: String, nArgs: Int): Library = primManager.getLibraryPredicate(name, nArgs) // TODO comment or remove
+  protected def getLibraryPredicate(name: String, nArgs: Int): Library = primManager.getLibraryPredicate(name, nArgs) // TODO comment or remove
 
-  override protected def getLibraryFunctor(name: String, nArgs: Int): Library = primManager.getLibraryFunctor(name, nArgs) // TODO comment or remove
+  protected def getLibraryFunctor(name: String, nArgs: Int): Library = primManager.getLibraryFunctor(name, nArgs) // TODO comment or remove
 
   /**
     * Method to retrieve the engine component managing flags.
     *
     * @return the flag manager instance attached to this prolog engine.
     */
-  override def getFlagManager: IFlagManager = flagManager // TODO Make Internal only
+  def getFlagManager: FlagManager = flagManager // TODO Make Internal only
 
   /**
     * Method to retrieve the db component that manages libraries.
     *
     * @return the library manager instance attached to this prolog engine.
     */
-  override def getLibraryManager: ILibraryManager = libManager // TODO Make Internal only
+  def getLibraryManager: LibraryManager = libManager // TODO Make Internal only
 
   /**
     * Method to retrieve the db component that manages primitives.
     *
     * @return the primitive manager instance attached to this prolog engine.
     */
-  override def getPrimitiveManager: IPrimitiveManager = primManager // TODO Make Internal only
+  def getPrimitiveManager: PrimitiveManager = primManager // TODO Make Internal only
 
 
   /**
@@ -137,21 +138,21 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     *
     * @return the primitive manager instance attached to this prolog engine.
     */
-  override def getEngineManager: IEngineManager = engManager // TODO Make Internal only
+  def getEngineManager: EngineManager = engManager // TODO Make Internal only
 
   /**
     * method to retrieve the component managing the theory.
     *
     * @return the theory manager instance attached to this prolog engine.
     */
-  override def getTheoryManager: ITheoryManager = theoryManager // TODO Make Internal only
+  def getTheoryManager: TheoryManager = theoryManager // TODO Make Internal only
 
   /**
     * Gets the list of current libraries loaded
     *
     * @return the list of the library names
     */
-  override def getCurrentLibraries: Array[String] = libManager.getCurrentLibraries
+  def getCurrentLibraries: Array[String] = libManager.getCurrentLibraries
 
   /**
     * Gets the reference to a loaded library
@@ -159,14 +160,14 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     * @param name the name of the library already loaded
     * @return the reference to the library loaded, null if the library is not found
     */
-  override def getLibrary(name: String): Library = libManager.getLibrary(name)
+  def getLibrary(name: String): Library = libManager.getLibrary(name)
 
   /**
     * Identify any functors.
     *
     * @param term the term to identify.
     */
-  override def identifyFunctor(term: Term): Unit = primManager.identifyFunctor(term)
+  def identifyFunctor(term: Term): Unit = primManager.identifyFunctor(term)
 
   /**
     * Unloads a previously loaded library
@@ -175,7 +176,7 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     * @throws InvalidLibraryException if name is not a valid loaded library
     */
   @throws(classOf[InvalidLibraryException])
-  override def unloadLibrary(name: String): Unit = libManager.unloadLibrary(name)
+  def unloadLibrary(name: String): Unit = libManager.unloadLibrary(name)
 
   /**
     * Loads a library.
@@ -187,7 +188,7 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     * @return the reference to the Library just loaded.
     */
   @throws(classOf[InvalidLibraryException])
-  override def loadLibrary(className: String): Library = libManager.loadLibrary(className)
+  def loadLibrary(className: String): Library = libManager.loadLibrary(className)
 
   /**
     * Loads a library.
@@ -201,7 +202,7 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     * @throws InvalidLibraryException if name is not a valid library
     */
   @throws[InvalidLibraryException]
-  override def loadLibrary(className: String, paths: Array[String]): Library = libManager.loadLibrary(className, paths)
+  def loadLibrary(className: String, paths: Array[String]): Library = libManager.loadLibrary(className, paths)
 
   /**
     * Loads a specific instance of a library
@@ -212,7 +213,7 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     * @throws InvalidLibraryException if name is not a valid library
     */
   @throws(classOf[InvalidLibraryException])
-  override def loadLibrary(lib: Library): Unit = libManager.loadLibrary(lib)
+  def loadLibrary(lib: Library): Unit = libManager.loadLibrary(lib)
 
   /**
     * Loads a library.
@@ -236,7 +237,7 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     * @see alice.gospel.core.theory.Theory
     */
   @throws(classOf[InvalidTheoryException])
-  override def setTheory(th: ITheory): Unit = {
+  def setTheory(th: Theory): Unit = {
     theoryManager.clear()
     addTheory(th)
   }
@@ -249,11 +250,11 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     * @see alice.gospel.core.theory.Theory
     */
   @throws(classOf[InvalidTheoryException])
-  override def addTheory(th: ITheory): Unit = {
-    val oldTh: ITheory = getTheory
+  def addTheory(th: Theory): Unit = {
+    val oldTh: Theory = getTheory
     theoryManager.consult(th, true, null)
     theoryManager.solveTheoryGoal()
-    val newTh: ITheory = getTheory
+    val newTh: Theory = getTheory
     val ev: TheoryEvent = new TheoryEvent(this, oldTh, newTh)
     this.notifyChangedTheory(ev)
   }
@@ -263,19 +264,19 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     *
     * @return current(dynamic) theory
     */
-  override def getTheory: ITheory = Try(new Theory(theoryManager.getTheory(true))).toOption.orNull
+  def getTheory: Theory = Try(new Theory(theoryManager.getTheory(true))).toOption.orNull
 
   /**
     * Gets last consulted theory, with the original textual format
     *
     * @return theory
     */
-  override def getLastConsultedTheory: ITheory = theoryManager.getLastConsultedTheory
+  def getLastConsultedTheory: Theory = theoryManager.getLastConsultedTheory
 
   /**
     * Clears current theory
     */
-  override def clearTheory(): Unit = setTheory(new Theory)
+  def clearTheory(): Unit = setTheory(new Theory)
 
   /**
     * Solves a query
@@ -284,7 +285,7 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     * @return the result of the demonstration
     * @see SolveInfo
     **/
-  override def solve(g: Term): SolveInfo = {
+  def solve(g: Term): SolveInfo = {
     //System.out.println("ENGINE SOLVE #0: "+g);
     if (g == null) {
       null
@@ -297,6 +298,24 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
   }
 
   /**
+    * Solves a query
+    *
+    * @param st the string representing the goal to be demonstrated
+    * @return the result of the demonstration
+    * @see SolveInfo
+    **/
+  @throws[MalformedGoalException]
+  def solve(st: String): SolveInfo = {
+    try {
+      val p = new Parser(opManager, st)
+      val t = p.nextTerm(true)
+      solve(t)
+    } catch {
+      case ex: InvalidTermException => throw new MalformedGoalException
+    }
+  }
+
+  /**
     * Gets next solution
     *
     * @return the result of the demonstration
@@ -304,7 +323,7 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     * @see SolveInfo
     **/
   @throws[NoMoreSolutionException]
-  override def solveNext: SolveInfo = {
+  def solveNext(): SolveInfo = {
     if (hasOpenAlternatives) {
       val sinfo: SolveInfo = engManager.solveNext
       val ev: QueryEvent = new QueryEvent(this, sinfo)
@@ -317,16 +336,37 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
   /**
     * Halts current solve computation
     */
-  override def solveHalt() {
+  def solveHalt() {
     engManager.solveHalt()
   }
 
   /**
     * Accepts current solution
     */
-  override def solveEnd() {
+  def solveEnd() {
     engManager.solveEnd()
   }
+
+  @throws[InvalidTermException]
+  def toTerm(st: String): Term = Parser.parseSingleTerm(st, opManager)
+
+  /**
+    * Unifies two terms using current demonstration context.
+    *
+    * @param t0 first term to be unified
+    * @param t1 second term to be unified
+    * @return true if the unification was successful
+    */
+  def unify(t0: Term, t1: Term): Boolean = t0.unify(this, t1)
+
+  /**
+    * Unifies two terms using current demonstration context.
+    *
+    * @param t0 first term to be unified
+    * @param t1 second term to be unified
+    * @return true if the unification was successful
+    */
+  def `match`(t0: Term, t1: Term): Boolean = t0.`match`(this.getFlagManager.isOccursCheckEnabled, t1)
 
   /**
     * Asks for the presence of open alternatives to be explored
@@ -334,9 +374,28 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     *
     * @return true if open alternatives are present
     */
-  override def hasOpenAlternatives: Boolean = engManager.hasOpenAlternatives
+  def hasOpenAlternatives: Boolean = engManager.hasOpenAlternatives
 
-  override def toJSON(alsoKB: Boolean): String = {
+  /**
+    * Notifies a spy information event
+    *
+    * @param s TODO
+    */
+  def spy(s: String, e: Engine) {
+    //System.out.println("spy: "+i+"  "+s+"  "+g);
+    if (spy) {
+      val ctx = e.currentContext
+      var i = 0
+      var g = "-"
+      if (ctx.fatherCtx != null) {
+        i = ctx.depth - 1
+        g = ctx.fatherCtx.currentGoal.toString
+      }
+      notifySpy(new SpyEvent(this, e, "spy: " + i + "  " + s + "  " + g))
+    }
+  }
+
+  def toJSON(alsoKB: Boolean): String = {
     var brain: AbstractEngineState = null
     if (alsoKB) {
       brain = this.engineState

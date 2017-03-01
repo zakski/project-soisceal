@@ -19,8 +19,6 @@ package com.szadowsz.gospel.core.parser
 
 import java.io.Serializable
 
-import alice.tuprolog.Tokenizer
-
 /**
   * This class represents a token read by the prolog term tokenizer
   *

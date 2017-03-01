@@ -18,5 +18,5 @@ repositories {
 }
 
 dependencies {
-    compile project(':java-core')
+    compile project(':gospel-core')
 }

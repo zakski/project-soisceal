@@ -33,18 +33,18 @@
  */
 package com.szadowsz.gospel.core.engine
 
-import alice.tuprolog.interfaces.IEngine
 import java.util
 
-import alice.tuprolog.{ChoicePointContext, ChoicePointStore, ExecutionContext, Struct, Term, Var}
+import alice.tuprolog.{ChoicePointContext, ChoicePointStore, Struct, Term, Var}
+import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.state.{EndState, State}
 
 import scala.util.Try
 /**
   * @author Alex Benini
   */
-private[engine] class Engine(val manager: EngineRunner, var query: Term) extends IEngine {
-  this.manager.getTheoryManager.clearRetractDB()
+class Engine(val manager: EngineRunner, var query: Term) {
+  manager.getTheoryManager.clearRetractDB()
   var nDemoSteps: scala.Int = 0
   var nResultAsked: scala.Int = 0
   var hasOpenAlts: Boolean = false
@@ -57,19 +57,19 @@ private[engine] class Engine(val manager: EngineRunner, var query: Term) extends
   var choicePointSelector: ChoicePointStore = null
 
   //Alberto
-  override def getNDemoSteps: scala.Int = nDemoSteps
+  def getNDemoSteps: scala.Int = nDemoSteps
 
   //Alberto
-  override def getNResultAsked: scala.Int = nResultAsked
+  def getNResultAsked: scala.Int = nResultAsked
 
   //Alberto
-  override def hasOpenAlternatives: Boolean = hasOpenAlts
+  def hasOpenAlternatives: Boolean = hasOpenAlts
 
   override def toString: String = {
     Try("ExecutionStack: \n" + currentContext + "\n" + "ChoicePointStore: \n" + choicePointSelector + "\n\n").toOption.getOrElse("")
   }
 
-  override def requestStop(): Unit = {
+  def requestStop(): Unit = {
     mustStop = true
   }
 
@@ -91,9 +91,9 @@ private[engine] class Engine(val manager: EngineRunner, var query: Term) extends
     nextState.asInstanceOf[EndState]
   }
 
-  override def getQuery: Term = query
+  def getQuery: Term = query
 
-  override def getNumDemoSteps: scala.Int = nDemoSteps
+  def getNumDemoSteps: scala.Int = nDemoSteps
 
 
   def getExecutionStack: util.List[ExecutionContext] = {
@@ -108,22 +108,22 @@ private[engine] class Engine(val manager: EngineRunner, var query: Term) extends
     l
   }
 
-  override def getChoicePointStore: ChoicePointStore = choicePointSelector
+  def getChoicePointStore: ChoicePointStore = choicePointSelector
 
-  override def prepareGoal() {
+  def prepareGoal() {
     val goalVars: util.LinkedHashMap[Var, Var] = new util.LinkedHashMap[Var, Var]
     startGoal = query.copyGoal(goalVars, 0).asInstanceOf[Struct]
     this.goalVars = goalVars.values
   }
 
-  override def initialize(eCtx: ExecutionContext) {
+  def initialize(eCtx: ExecutionContext) {
     currentContext = eCtx
     choicePointSelector = new ChoicePointStore
     nDemoSteps = 1
     currentAlternative = null
   }
 
-  override def getNextStateName: String = nextState.toString
+  def getNextStateName: String = nextState.toString
 
-  override def getContext: ExecutionContext = currentContext
+  def getContext: ExecutionContext = currentContext
 }

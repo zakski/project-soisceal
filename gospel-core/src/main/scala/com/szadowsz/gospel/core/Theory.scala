@@ -21,7 +21,6 @@ package com.szadowsz.gospel.core
 import java.io.{IOException, InputStream}
 import java.util
 
-import alice.tuprolog.interfaces.ITheory
 import alice.tuprolog.json.JSONSerializerManager
 import alice.tuprolog.{InvalidTheoryException, Prolog, Struct, Term}
 import com.szadowsz.gospel.core.parser.Parser
@@ -36,7 +35,7 @@ import com.szadowsz.gospel.core.parser.Parser
   * @version Gospel 2.0.0
   */
 @SerialVersionUID(1L)
-class Theory private[core]() extends ITheory {
+class Theory private[core]()  {
   private var theory: String = ""
   private var clauseList: Struct = _
 
@@ -99,7 +98,7 @@ class Theory private[core]() extends ITheory {
     *                                lists)
     */
   @throws(classOf[InvalidTheoryException])
-  def append(th: ITheory) {
+  def append(th: Theory) {
     if (th.isTextual && isTextual) {
       theory += th.toString
     } else if (!th.isTextual && !isTextual) {
@@ -144,5 +143,5 @@ class Theory private[core]() extends ITheory {
     if (theory != null) theory else clauseList.toString
   }
 
-  override def toJSON: String = JSONSerializerManager.toJSON(this)
+  def toJSON: String = JSONSerializerManager.toJSON(this)
 }

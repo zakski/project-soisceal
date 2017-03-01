@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    compile project(':java-core')
+    compile project(':gospel-core')
     compile group: 'com.fifesoft', name: 'rsyntaxtextarea', version: '2.6.1'
     compile group: 'com.fifesoft', name: 'autocomplete', version: '2.6.1'
 }

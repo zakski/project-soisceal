@@ -36,9 +36,10 @@ package com.szadowsz.gospel.core.db.libs
 import java.io.{File, FileInputStream, FileNotFoundException, IOException}
 import java.util
 
-import alice.tuprolog.{ClauseInfo, Int, InvalidLibraryException, InvalidTheoryException, Library, OperatorManager, Prolog, PrologError, Struct, Term, Var}
+import alice.tuprolog.{ClauseInfo, Number, Int, InvalidLibraryException, InvalidTheoryException, Library, OperatorManager, Prolog, PrologError, Struct, Term,
+Var}
 import alice.util.Tools
-import com.szadowsz.gospel.core.Theory
+import com.szadowsz.gospel.core.{PrologEngine, Theory}
 
 import scala.util.control.NonFatal
 import scala.collection.JavaConverters._
@@ -66,7 +67,7 @@ object BuiltIn {
     * bodies. Also note that if T is a number, then there is no goal which
     * corresponds to T.
     */
-  private[libs] def convertTermToGoal(term: Term): Term = {
+ def convertTermToGoal(term: Term): Term = {
     term match {
       case n: Number => null
       case v1: Var if v1.getLink.isInstanceOf[Number] => null
@@ -84,26 +85,27 @@ object BuiltIn {
               }
             }
             s
+          case t => t
         }
     }
   }
 }
 
 @SerialVersionUID(1L)
-class BuiltIn(val mediator: Prolog) extends Library {
+class BuiltIn(mediator: PrologEngine) extends Library {
   setEngine(mediator)
 
-  private lazy val engineManager = mediator.getEngineManager
+  private lazy val engineManager = engine.getEngineManager
 
-  private lazy val theoryManager = mediator.getTheoryManager
+  private lazy val theoryManager = engine.getTheoryManager
 
-  private lazy val libraryManager = mediator.getLibraryManager
+  private lazy val libraryManager = engine.getLibraryManager
 
-  private lazy val flagManager = mediator.getFlagManager
+  private lazy val flagManager = engine.getFlagManager
 
-  private lazy val primitiveManager = mediator.getPrimitiveManager
+  private lazy val primitiveManager = engine.getPrimitiveManager
 
-  private lazy val operatorManager = mediator.getOperatorManager
+  private lazy val operatorManager = engine.getOperatorManager
 
 
   /**

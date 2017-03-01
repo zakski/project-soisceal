@@ -2,6 +2,7 @@ package alice.tuprolog;
 
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.db.libs.BuiltIn;
 import junit.framework.TestCase;
 
 public class BuiltInTestCase extends TestCase {

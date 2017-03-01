@@ -19,7 +19,6 @@ package com.szadowsz.gospel.core.engine.flags
 
 import java.util
 
-import alice.tuprolog.interfaces.IFlagManager
 import alice.tuprolog.json.{AbstractEngineState, FullEngineState, JSONSerializerManager}
 import alice.tuprolog.{Struct, Term}
 
@@ -31,12 +30,13 @@ import alice.tuprolog.{Struct, Term}
   *
   * @version Gospel 2.0.0
   */
-private[core] final class FlagManager extends IFlagManager {
+private[core] final class FlagManager extends java.io.Serializable {
 
   private var flags: List[Flag] = List()
   init()
 
-  private def init() = { val s: Struct = new Struct
+  private def init() = {
+    val s = new Struct
     s.append(new Struct("on"))
     s.append(new Struct("off"))
     this.defineFlag("occursCheck", s, new Struct("on"), true, "ScalaBuiltIn")
@@ -85,7 +85,7 @@ private[core] final class FlagManager extends IFlagManager {
 
   def serializeFlags(brain: AbstractEngineState) {
     if (brain.isInstanceOf[FullEngineState]) {
-      val a: util.ArrayList[String] = new util.ArrayList[String]
+      val a = new util.ArrayList[String]
       for (f <- flags) {
         a.add(JSONSerializerManager.toJSON(f))
       }

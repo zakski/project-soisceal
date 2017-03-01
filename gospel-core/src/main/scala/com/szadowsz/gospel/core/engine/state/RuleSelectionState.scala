@@ -36,7 +36,8 @@ package com.szadowsz.gospel.core.engine.state
 import alice.util.OneWayList
 import java.util
 
-import alice.tuprolog.{ChoicePointContext, ClauseInfo, ClauseStore, ExecutionContext, Struct, SubGoalStore, Var}
+import alice.tuprolog.{ChoicePointContext, ClauseInfo, ClauseStore, Struct, SubGoalStore, Var}
+import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
 
 /**

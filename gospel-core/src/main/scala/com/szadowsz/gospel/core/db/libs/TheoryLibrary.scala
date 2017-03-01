@@ -34,14 +34,14 @@
 package com.szadowsz.gospel.core.db.libs
 
 import alice.tuprolog.Library
-import alice.tuprolog.interfaces.ITheory
+import com.szadowsz.gospel.core.Theory
 
 /**
   * Library built solely from Prolog theory.
   *
   */
 @SerialVersionUID(1L)
-case class TheoryLibrary(protected val name: String, protected val th: ITheory) extends Library {
+case class TheoryLibrary(protected val name: String, protected val th: Theory) extends Library {
 
     override def getTheory: String = th.toString
 

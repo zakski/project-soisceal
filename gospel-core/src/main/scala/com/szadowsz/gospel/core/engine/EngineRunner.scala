@@ -1,6 +1,5 @@
 package com.szadowsz.gospel.core.engine
 
-import alice.tuprolog._
 import alice.tuprolog.interfaces._
 import java.util
 import java.util.NoSuchElementException
@@ -8,6 +7,10 @@ import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
+import alice.tuprolog.{ClauseInfo, NoMoreSolutionException, Prolog, SolveInfo, SubGoalTree, Term, TermQueue}
+import com.szadowsz.gospel.core.PrologEngine
+import com.szadowsz.gospel.core.db.theory.TheoryManager
+import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.state._
 
 object EngineRunner {
@@ -25,7 +28,7 @@ object EngineRunner {
   * @version Gospel 2.0.0
   */
 @SerialVersionUID(1L)
-class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
+class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Serializable with Runnable {
   final private[engine] val INIT = InitState(this)
   final private[engine] val GOAL_EVALUATION = GoalEvaluationState(this)
   final private[engine] val EXCEPTION = ExceptionState(this)
@@ -37,10 +40,10 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
   final private[engine] val END_TRUE_CP = EndState(this, EngineRunner.TRUE_CP)
   final private[engine] val END_HALT = EndState(this, EngineRunner.HALT)
 
-  private lazy val theoryManager: ITheoryManager = wam.getTheoryManager
-  private lazy val primitiveManager: IPrimitiveManager = wam.getPrimitiveManager
-  private lazy val ILibraryManager: ILibraryManager = wam.getLibraryManager
-  private lazy val engineManager: IEngineManager = wam.getEngineManager
+  private lazy val theoryManager  = wam.getTheoryManager
+  private lazy val primitiveManager = wam.getPrimitiveManager
+  private lazy val ILibraryManager = wam.getLibraryManager
+  private lazy val engineManager = wam.getEngineManager
   private var pid: scala.Int = 0
   private var detached: Boolean = false
   private var solving: Boolean = false
@@ -57,7 +60,7 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
   private var sinfo: SolveInfo = null
 
 
-  override def spy(action: String, env: IEngine) {
+  def spy(action: String, env: Engine) {
     wam.spy(action, env)
   }
 
@@ -69,11 +72,11 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
     wam.exception(message)
   }
 
-  override def detach() {
+  def detach() {
     detached = true
   }
 
-  override def isDetached: Boolean = detached
+  def isDetached: Boolean = detached
 
   /**
     * Solves a query
@@ -104,7 +107,7 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
     }
   }
 
-  override def solve: SolveInfo = {
+  def solve: SolveInfo = {
     try {
       query.resolveTerm()
       ILibraryManager.onSolveBegin(query)
@@ -161,7 +164,7 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
   }
 
   @throws[NoMoreSolutionException]
-  override def solveNext: SolveInfo = {
+  def solveNext: SolveInfo = {
     if (hasOpenAlternatives) {
       refreeze()
       env.nextState = BACKTRACK
@@ -184,7 +187,7 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
   /**
     * Halts current solve computation
     */
-  override def solveHalt() {
+  def solveHalt() {
     env.requestStop()
     ILibraryManager.onSolveHalt()
   }
@@ -192,7 +195,7 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
   /**
     * Accepts current solution
     */
-  override def solveEnd() {
+  def solveEnd() {
     ILibraryManager.onSolveEnd()
   }
 
@@ -221,19 +224,19 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
 
   private[engine] def find(t: Term): util.List[ClauseInfo] = theoryManager.find(t)
 
-  override def identify(t: Term) {
+  def identify(t: Term) {
     primitiveManager.identifyPredicate(t)
   }
 
-  override def pushSubGoal(goals: SubGoalTree) {
+  def pushSubGoal(goals: SubGoalTree) {
     env.currentContext.goalsToEval.pushSubGoal(goals)
   }
 
-  override def cut() {
+  def cut() {
     env.choicePointSelector.cut(env.currentContext.choicePointAfterCut)
   }
 
-  override def getCurrentContext: ExecutionContext = {
+  def getCurrentContext: ExecutionContext = {
     if (env == null) null else env.currentContext
   }
 
@@ -243,7 +246,7 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
     *
     * @return true if open alternatives are present
     */
-  override def hasOpenAlternatives: Boolean = {
+  def hasOpenAlternatives: Boolean = {
     if (sinfo == null) {
       false
     } else {
@@ -256,7 +259,7 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
     *
     * @return true if the demonstration was stopped
     */
-  override def isHalted: Boolean = {
+  def isHalted: Boolean = {
     if (sinfo == null) {
       false
     } else {
@@ -264,7 +267,7 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
     }
   }
 
-  override def run() {
+  def run() {
     solving = true
     pid = Thread.currentThread.getId.toInt
     if (sinfo == null) {
@@ -279,17 +282,17 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
     }
   }
 
-  override def getId: scala.Int = id
+  def getId: scala.Int = id
 
-  override def getPid: scala.Int = pid
+  def getPid: scala.Int = pid
 
-  override def getSolution: SolveInfo = sinfo
+  def getSolution: SolveInfo = sinfo
 
-  override def setGoal(goal: Term) {
+  def setGoal(goal: Term) {
     this.query = goal
   }
 
-  override def nextSolution: Boolean = {
+  def nextSolution: Boolean = {
     solving = true
     next.add(true)
     semaphore synchronized {
@@ -298,7 +301,7 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
     true
   }
 
-  override def read: SolveInfo = {
+  def read: SolveInfo = {
     lockVar.lock()
     try {
       while (solving || sinfo == null) {
@@ -314,35 +317,35 @@ class EngineRunner(val wam: Prolog, var id: scala.Int) extends IEngineRunner {
     sinfo
   }
 
-  override def setSolving(solved: Boolean) {
+  def setSolving(solved: Boolean) {
     solving = solved
   }
 
-  override def sendMsg(t: Term) {
+  def sendMsg(t: Term) {
     msgs.store(t)
   }
 
-  override def getMsg(t: Term): Boolean = {
+  def getMsg(t: Term): Boolean = {
     msgs.get(t, wam, this)
     true
   }
 
-  override def peekMsg(t: Term): Boolean = msgs.peek(t, wam)
+  def peekMsg(t: Term): Boolean = msgs.peek(t, wam)
 
-  override def removeMsg(t: Term): Boolean = msgs.remove(t, wam)
+  def removeMsg(t: Term): Boolean = msgs.remove(t, wam)
 
-  override def waitMsg(msg: Term): Boolean = {
+  def waitMsg(msg: Term): Boolean = {
     msgs.wait(msg, wam, this)
     true
   }
 
-  override def msgQSize: scala.Int = msgs.size
+  def msgQSize: scala.Int = msgs.size
 
-  override def getTheoryManager: ITheoryManager = theoryManager
+  def getTheoryManager: TheoryManager = theoryManager
 
-  override def getEngineMan: IEngineManager = this.engineManager
+  def getEngineMan: EngineManager = engineManager
 
-  private[engine] override def getMediator: Prolog = wam
+  private[engine] def getMediator: PrologEngine = wam
 
-  override def getQuery: Term = this.query
+  def getQuery: Term = this.query
 }

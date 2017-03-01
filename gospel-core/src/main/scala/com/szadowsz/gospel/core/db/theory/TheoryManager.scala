@@ -3,11 +3,11 @@ package com.szadowsz.gospel.core.db.theory
 import java.util
 
 import alice.tuprolog._
-import alice.tuprolog.interfaces.{ITheory, ITheoryManager}
 import alice.tuprolog.json.{AbstractEngineState, FullEngineState}
 import alice.util.Tools
 import com.szadowsz.gospel.core.PrologEngine
 import com.szadowsz.gospel.core.Theory
+import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.parser.Parser
 import org.slf4j.LoggerFactory
 
@@ -28,7 +28,7 @@ import scala.collection.JavaConverters._
   * @version Gospel 2.0.0
   */
 @SerialVersionUID(1L)
-final case class TheoryManager(private val wam: PrologEngine) extends ITheoryManager {
+final case class TheoryManager(private val wam: PrologEngine) {
   private lazy val logger = LoggerFactory.getLogger(getClass)
 
   private lazy val _primitiveManager = wam.getPrimitiveManager
@@ -39,7 +39,7 @@ final case class TheoryManager(private val wam: PrologEngine) extends ITheoryMan
 
 
   private var startGoalStack: util.Stack[Term] = _
-  private[theory] var lastConsultedTheory: ITheory = new Theory()
+  private[theory] var lastConsultedTheory: Theory = new Theory()
 
 
   /**
@@ -90,7 +90,7 @@ final case class TheoryManager(private val wam: PrologEngine) extends ITheoryMan
     * @param isDynamic True if being done on the fly, false if it comes from a library.
     * @param libName   The name of the library the clause comes from, if any.
     */
-  override def assertA(clause: Struct, isDynamic: Boolean, libName: String, backtrackable: Boolean): Unit = {
+  def assertA(clause: Struct, isDynamic: Boolean, libName: String, backtrackable: Boolean): Unit = {
     synchronized {
       val d: ClauseInfo = new ClauseInfo(toClause(clause), libName)
 
@@ -112,7 +112,7 @@ final case class TheoryManager(private val wam: PrologEngine) extends ITheoryMan
     * @param isDynamic True if being done on the fly, false if it comes from a library.
     * @param libName   The name of the library the clause comes from, if any.
     */
-  override def assertZ(clause: Struct, isDynamic: Boolean, libName: String, backtrackable: Boolean): Unit = {
+  def assertZ(clause: Struct, isDynamic: Boolean, libName: String, backtrackable: Boolean): Unit = {
     synchronized {
       val d: ClauseInfo = new ClauseInfo(toClause(clause), libName)
 
@@ -134,7 +134,7 @@ final case class TheoryManager(private val wam: PrologEngine) extends ITheoryMan
     * @param oldClause the clause struct to remove.
     * @return the removed Clause
     */
-  override def retract(oldClause: Struct): ClauseInfo = {
+  def retract(oldClause: Struct): ClauseInfo = {
     synchronized {
       val clause: Struct = toClause(oldClause)
       val struct: Struct = clause.getArg(0).asInstanceOf[Struct]
@@ -191,7 +191,7 @@ final case class TheoryManager(private val wam: PrologEngine) extends ITheoryMan
     * @return true if it was successful
     */
   @throws(classOf[IllegalArgumentException])
-  override def abolish(indicator: Struct):Boolean = {
+  def abolish(indicator: Struct): Boolean = {
     synchronized {
       if (!indicator.isInstanceOf[Struct] || !indicator.isGround || !(indicator.getArity == 2)) {
         throw new IllegalArgumentException(indicator + " is not a valid Struct")
@@ -219,7 +219,7 @@ final case class TheoryManager(private val wam: PrologEngine) extends ITheoryMan
     * Reviewed by Paolo Contessi: modified according to new ClauseDatabase
     * implementation
     */
-  override def find(headt: Term): util.List[ClauseInfo] = {
+  def find(headt: Term): util.List[ClauseInfo] = {
     synchronized {
       if (headt.isInstanceOf[Struct]) {
         var list: util.List[ClauseInfo] = dynamicDB.getPredicates(headt)
@@ -240,7 +240,7 @@ final case class TheoryManager(private val wam: PrologEngine) extends ITheoryMan
     * @param isDynamic if it is true, then the clauses are marked as dynamic
     * @param libName   if it not null, then the clauses are marked to belong to the specified library
     */
-  override def consult(theory: ITheory, isDynamic: Boolean, libName: String): Unit = {
+  def consult(theory: Theory, isDynamic: Boolean, libName: String): Unit = {
     synchronized {
       startGoalStack = new util.Stack[Term]
       var clause: scala.Int = 1
@@ -267,7 +267,7 @@ final case class TheoryManager(private val wam: PrologEngine) extends ITheoryMan
   /**
     * Binds clauses in the database with the corresponding primitive predicate, if any.
     */
-  override def rebindPrimitives(): Unit = {
+  def rebindPrimitives(): Unit = {
     for (d <- dynamicDB.iterator.asScala) {
       for (sge <- d.getBody.asScala) {
         val t: Term = sge.asInstanceOf[SubGoalElement].getValue
@@ -279,7 +279,7 @@ final case class TheoryManager(private val wam: PrologEngine) extends ITheoryMan
   /**
     * Clears the dynamic clause database.
     */
-  override def clear(): Unit = {
+  def clear(): Unit = {
     synchronized {
       dynamicDB = new ClauseDatabase
     }
@@ -290,7 +290,7 @@ final case class TheoryManager(private val wam: PrologEngine) extends ITheoryMan
     *
     * @param libName the library to remove.
     */
-  override  def removeLibraryTheory(libName: String): Unit = {
+  def removeLibraryTheory(libName: String): Unit = {
     synchronized {
       val allClauses: util.Iterator[ClauseInfo] = staticDB.iterator
       while (allClauses.hasNext) {
@@ -310,7 +310,7 @@ final case class TheoryManager(private val wam: PrologEngine) extends ITheoryMan
   /**
     * Method solves and goals that have been added during the theory initialisation process
     */
-  override def solveTheoryGoal(): Unit = {
+  def solveTheoryGoal(): Unit = {
     synchronized {
       var s: Struct = null
       while (!startGoalStack.empty) {
@@ -331,7 +331,7 @@ final case class TheoryManager(private val wam: PrologEngine) extends ITheoryMan
   /**
     * add a goal eventually defined by last parsed theory.
     */
-  override def addStartGoal(g: Struct): Unit =  {
+  def addStartGoal(g: Struct): Unit = {
     synchronized {
       startGoalStack.push(g)
     }
@@ -342,7 +342,7 @@ final case class TheoryManager(private val wam: PrologEngine) extends ITheoryMan
     *
     * @param onlyDynamic if true, fetches only dynamic clauses
     */
-  override def getTheory(onlyDynamic: Boolean): String = {
+  def getTheory(onlyDynamic: Boolean): String = {
     synchronized {
       val buffer = new StringBuffer
       val dynamicClauses = dynamicDB.iterator
@@ -363,19 +363,19 @@ final case class TheoryManager(private val wam: PrologEngine) extends ITheoryMan
     }
   }
 
-  override def getLastConsultedTheory: ITheory = {
+  def getLastConsultedTheory: Theory = {
     synchronized {
       lastConsultedTheory
     }
   }
 
-  override def clearRetractDB(): Unit = retractDB = new ClauseDatabase()
+  def clearRetractDB(): Unit = retractDB = new ClauseDatabase()
 
-  override def checkExistence(predicateIndicator: String): Boolean = dynamicDB.containsKey(predicateIndicator) || staticDB.containsKey(predicateIndicator)
+  def checkExistence(predicateIndicator: String): Boolean = dynamicDB.containsKey(predicateIndicator) || staticDB.containsKey(predicateIndicator)
 
-  override def serializeLibraries(brain: FullEngineState): Unit = brain.setLibraries(wam.getCurrentLibraries)
+  def serializeLibraries(brain: FullEngineState): Unit = brain.setLibraries(wam.getCurrentLibraries)
 
-  override def serializeTimestamp(brain: AbstractEngineState): Unit = brain.setSerializationTimestamp(System.currentTimeMillis)
+  def serializeTimestamp(brain: AbstractEngineState): Unit = brain.setSerializationTimestamp(System.currentTimeMillis)
 
-  override def serializeDynDataBase(brain: FullEngineState): Unit = brain.setDynTheory(getTheory(true))
+  def serializeDynDataBase(brain: FullEngineState): Unit = brain.setDynTheory(getTheory(true))
 }
