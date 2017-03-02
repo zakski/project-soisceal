@@ -17,11 +17,13 @@
  */
 package alice.tuprolog;
 
+import com.szadowsz.gospel.core.Solution;
+
 /**
  * This exception means that other solutions are asked but
  * actually no other ones exist.
  *
- * @see SolveInfo
+ * @see Solution
  *
  *
  *

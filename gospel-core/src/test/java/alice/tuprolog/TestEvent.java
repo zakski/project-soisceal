@@ -9,6 +9,7 @@ import alice.tuprolog.event.PrologEventAdapter;
 import alice.tuprolog.event.QueryEvent;
 import alice.tuprolog.event.TheoryEvent;
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 
 class MyListener extends PrologEventAdapter {
@@ -60,7 +61,7 @@ public class TestEvent {
         
         engine.setTheory(th);
         
-        SolveInfo sinfo = engine.solve("a(X).");
+        Solution sinfo = engine.solve("a(X).");
         
         while (sinfo.isSuccess() && engine.hasOpenAlternatives()){
             sinfo = engine.solveNext();

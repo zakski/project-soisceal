@@ -9,6 +9,7 @@ package alice.tuprolog;
 import alice.tuprolog.event.SpyEvent;
 import alice.tuprolog.event.SpyListener;
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 
 /**
@@ -45,7 +46,7 @@ public class TestBug {
 		});
 		//engine.setSpy(true);
 		engine.setTheory(new Theory(st));
-		SolveInfo info = engine.solve("test(L1,L2).");
+		Solution info = engine.solve("test(L1,L2).");
 		System.out.println(info);
 		
 	}

@@ -1,6 +1,7 @@
 package alice.tuprolog;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 
 class PrologThread extends Thread {
@@ -14,7 +15,7 @@ class PrologThread extends Thread {
 	public void run(){
 		try {
 			System.out.println("STARTING...");
-			SolveInfo info = core.solve(goal);
+			Solution info = core.solve(goal);
 			System.out.println(info);
 			System.out.println("STOP.");
 		} catch (Exception ex){

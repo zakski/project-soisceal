@@ -1,6 +1,7 @@
 package alice.tuprolog;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import junit.framework.TestCase;
 
 /**
@@ -16,7 +17,7 @@ public class JavaThrowCatchTestCase extends TestCase {
 	public void test_java_catch_3_1() throws Exception {
 		PrologEngine engine = new PrologEngine();
 		String goal = "atom_length(err, 3), java_catch(java_object('Counter', ['MyCounter'], c), [('java.lang.ClassNotFoundException'(Cause, Message, StackTrace), ((X is Cause+2, 5 is X+3)))], Y is 2+3), Z is X+5.";
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Int cause = (Int) info.getTerm("Cause");
 		assertTrue(cause.intValue() == 0);
@@ -38,7 +39,7 @@ public class JavaThrowCatchTestCase extends TestCase {
 	public void test_java_catch_3_2() throws Exception {
 		PrologEngine engine = new PrologEngine();
 		String goal = "java_catch(java_object('Counter', ['MyCounter'], c), [('java.lang.ClassNotFoundException'(Cause, Message, StackTrace), true)], true), java_catch(java_object('Counter', ['MyCounter2'], c2), [('java.lang.ClassNotFoundException'(C, M, ST), X is C+2)], true).";
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Int cause = (Int) info.getTerm("Cause");
 		assertTrue(cause.intValue() == 0);
@@ -56,7 +57,7 @@ public class JavaThrowCatchTestCase extends TestCase {
 	public void test_java_catch_3_3() throws Exception {
 		PrologEngine engine = new PrologEngine();
 		String goal = "java_catch(java_object('Counter', ['MyCounter'], c), [('java.lang.Exception'(Cause, Message, StackTrace), true)], true).";
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		assertFalse(info.isSuccess());
 		assertTrue(info.isHalted());
 	}
@@ -65,7 +66,7 @@ public class JavaThrowCatchTestCase extends TestCase {
 	public void test_java_catch_3_4() throws Exception {
 		PrologEngine engine = new PrologEngine();
 		String goal = "java_catch(java_object('Counter', ['MyCounter'], c), [('java.lang.ClassNotFoundException'(Cause, Message, StackTrace), false)], true).";
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		assertFalse(info.isSuccess());
 	}
 
@@ -73,7 +74,7 @@ public class JavaThrowCatchTestCase extends TestCase {
 	public void test_java_catch_3_5() throws Exception {
 		PrologEngine engine = new PrologEngine();
 		String goal = "java_catch(java_object('java.util.ArrayList', [], l), [(E, true)], (X is 2+3, Y is 3+5)).";
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Term e = info.getTerm("E");
 		assertTrue(e instanceof Var);
@@ -88,7 +89,7 @@ public class JavaThrowCatchTestCase extends TestCase {
 	public void test_java_catch_3_6() throws Exception {
 		PrologEngine engine = new PrologEngine();
 		String goal = "java_catch(java_object('Counter', ['MyCounter'], c), [('java.lang.ClassNotFoundException'(Cause, Message, StackTrace), java_object('Counter', ['MyCounter2'], c2))], true).";
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		assertFalse(info.isSuccess());
 		assertTrue(info.isHalted());
 	}
@@ -97,7 +98,7 @@ public class JavaThrowCatchTestCase extends TestCase {
 	public void test_java_catch_3_7() throws Exception {
 		PrologEngine engine = new PrologEngine();
 		String goal = "java_catch(java_object('Counter', ['MyCounter'], c), [('java.lang.Exception'(Cause, Message, StackTrace), X is 2+3), ('java.lang.ClassNotFoundException'(Cause, Message, StackTrace), Y is 3+5)], true).";
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Term x = info.getTerm("X");
 		assertTrue(x instanceof Var);

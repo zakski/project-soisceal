@@ -1,6 +1,7 @@
 package alice.tuprolog;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import junit.framework.TestCase;
 
 /**
@@ -16,7 +17,7 @@ public class DCGLibraryExceptionsTestCase extends TestCase {
 		PrologEngine engine = new PrologEngine();
 		engine.loadLibrary("alice.tuprolog.lib.DCGLibrary");
 		String goal = "catch(phrase(X, []), error(instantiation_error, instantiation_error(Goal, ArgNo)), true).";
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
 		assertTrue(g.isEqual(new Struct("phrase_guard", new Var("X"),
@@ -30,7 +31,7 @@ public class DCGLibraryExceptionsTestCase extends TestCase {
 		PrologEngine engine = new PrologEngine();
 		engine.loadLibrary("alice.tuprolog.lib.DCGLibrary");
 		String goal = "catch(phrase(X, [], []), error(instantiation_error, instantiation_error(Goal, ArgNo)), true).";
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct g = (Struct) info.getTerm("Goal");
 		assertTrue(g.isEqual(new Struct("phrase_guard", new Var("X"),

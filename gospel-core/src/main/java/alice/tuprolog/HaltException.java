@@ -17,11 +17,13 @@
  */
 package alice.tuprolog;
 
+import com.szadowsz.gospel.core.Solution;
+
 /**
  * This exception is raised when an halt code is requested
  * and no halt predicate has been issued
  *
- * @see SolveInfo
+ * @see Solution
  *
  */
 public class HaltException extends PrologException {

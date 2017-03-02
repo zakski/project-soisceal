@@ -37,21 +37,21 @@ import java.util
 
 import alice.tuprolog.Struct
 import alice.tuprolog.Var
-import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
+import com.szadowsz.gospel.core.engine.{Engine, EngineRunner, ExecutionResultType}
 
 /**
   * @author Alex Benini
   *
   *         End state of demostration.
   */
-private[engine] final case class EndState(override protected val runner: EngineRunner, endState: Int) extends State {
+final private[engine] case class EndState(override protected val runner: EngineRunner, endState: ExecutionResultType.Value) extends State {
   protected override val stateName: String = "End"
 
-  private var goal: Struct = null
+  private var goal: Struct = _
 
-  private var vars: util.List[Var] = null
+  private var vars: util.List[Var] = _
 
-  def getResultDemo: Int = endState
+  def getResultType: ExecutionResultType.Value = endState
 
   def getResultGoal: Struct = goal
 
@@ -59,9 +59,9 @@ private[engine] final case class EndState(override protected val runner: EngineR
 
   override def toString: String = {
     endState match {
-      case EngineRunner.FALSE => "FALSE"
-      case EngineRunner.TRUE => "TRUE"
-      case EngineRunner.TRUE_CP => "TRUE_CP"
+      case ExecutionResultType.FALSE => "FALSE"
+      case ExecutionResultType.TRUE => "TRUE"
+      case ExecutionResultType.TRUE_CP => "TRUE_CP"
       case _ => "HALT"
     }
   }

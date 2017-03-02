@@ -7,6 +7,7 @@ import alice.tuprolog.*;
 import alice.tuprolog.event.ExceptionEvent;
 import alice.tuprolog.event.ExceptionListener;
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 
 public class ConcordionSingleton {
@@ -42,7 +43,7 @@ public class ConcordionSingleton {
 		PrologEngine engine = new PrologEngine();
 		if (!theory.equalsIgnoreCase("null"))
 			engine.setTheory(new Theory(theory));
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		return info.isSuccess();
 	}
 
@@ -52,7 +53,7 @@ public class ConcordionSingleton {
 
 		PrologEngine engine = null;
 		@SuppressWarnings("unused")
-		SolveInfo info = null;
+		Solution info = null;
 		exFounded = false;
 		engine = new PrologEngine();
 		if (!theory.equalsIgnoreCase("null"))
@@ -70,7 +71,7 @@ public class ConcordionSingleton {
 
 		PrologEngine engine = null;
 		@SuppressWarnings("unused")
-		SolveInfo info = null;
+		Solution info = null;
 		exFounded = false;
 		engine = new PrologEngine();
 		if (!theory.equalsIgnoreCase("null"))
@@ -124,7 +125,7 @@ public class ConcordionSingleton {
 			int maxSolutions) throws Exception {
 
 		PrologEngine engine = new PrologEngine();
-		SolveInfo info = null;
+		Solution info = null;
 		List<String> results = new ArrayList<String>();
 
 
@@ -171,7 +172,7 @@ public class ConcordionSingleton {
 			String variable, String solution, boolean replace) throws Exception {
 
 		PrologEngine engine = new PrologEngine();
-		SolveInfo info = null;
+		Solution info = null;
 		List<String> results = new ArrayList<String>();
 
 		if (!theory.equalsIgnoreCase("null"))
@@ -231,7 +232,7 @@ public class ConcordionSingleton {
 		PrologEngine engine = new PrologEngine();
 		if (!theory.equalsIgnoreCase("null"))
 			engine.setTheory(new Theory(theory));
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		for (Var var : info.getBindingVars()) {
 			if ((var.toString()).startsWith(variable)) {
 
@@ -287,7 +288,7 @@ public class ConcordionSingleton {
 	
 	 public Term value(String evaluable) throws Exception {
 	        PrologEngine engine = new PrologEngine();
-	        SolveInfo result = engine.solve("X is " + evaluable);
+	        Solution result = engine.solve("X is " + evaluable);
 	        return result.getVarValue("X");
 	    }
 	

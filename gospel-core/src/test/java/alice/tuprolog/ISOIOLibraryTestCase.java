@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -21,7 +22,7 @@ public class ISOIOLibraryTestCase {
 
     static PrologEngine engine = null;
     String theory = null;
-    SolveInfo info = null;
+    Solution info = null;
     static String writePath = null;
     static String readPath = null;
     static String binPath = null;

@@ -8,13 +8,14 @@ import java.util.Map;
 import alice.tuprolog.lib.InvalidObjectIdException;
 import alice.tuprolog.lib.OOLibrary;
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 import junit.framework.TestCase;
 
 public class JavaLibraryTestCase extends TestCase {
 	String theory = null;
 	PrologEngine engine = new PrologEngine();
-	SolveInfo info = null;
+	Solution info = null;
 	String result = null;
 	String paths = null;
 	
@@ -38,7 +39,7 @@ public class JavaLibraryTestCase extends TestCase {
 		assertEquals(1, counter.getValue());
 		// check unregistering behaviour
 		lib.unregister(t);
-		SolveInfo goal = engine.solve(new Struct("demo", t));
+		Solution goal = engine.solve(new Struct("demo", t));
 		assertFalse(goal.isSuccess());
 	}
 
@@ -50,7 +51,7 @@ public class JavaLibraryTestCase extends TestCase {
 				"C <- update, \n" +
 				"C <- update. \n";			
 		engine.setTheory(new Theory(theory));
-		SolveInfo info = engine.solve("demo(Obj).");
+		Solution info = engine.solve("demo(Obj).");
 		Struct id = (Struct) info.getVarValue("Obj");
 		TestCounter counter = (TestCounter) lib.getRegisteredDynamicObject(id);
 		assertEquals(2, counter.getValue());
@@ -247,7 +248,7 @@ public class JavaLibraryTestCase extends TestCase {
 				+ "Obj <- getValue returns Val.";
 		engine.addTheory(new Theory(theory));
 		String obj =  info.getTerm("R").toString();
-		SolveInfo info2 = engine.solve("demo2(" + obj + ", V).");
+		Solution info2 = engine.solve("demo2(" + obj + ", V).");
 		assertEquals(true, info2.isSuccess());
 		assertEquals(3, Integer.parseInt(info2.getVarValue("V").toString()));
 	

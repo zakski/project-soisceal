@@ -9,9 +9,8 @@ import alice.tuprolog.Int;
 import alice.tuprolog.InvalidTermException;
 import alice.tuprolog.Library;
 import alice.tuprolog.NoSolutionException;
-import alice.tuprolog.Prolog;
 import alice.tuprolog.PrologError;
-import alice.tuprolog.SolveInfo;
+import com.szadowsz.gospel.core.Solution;
 import alice.tuprolog.Term;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.engine.EngineManager;
@@ -45,7 +44,7 @@ public class ThreadLibrary extends Library {
 		if (!(id instanceof Int)) 
 			throw PrologError.type_error(engine.getEngineManager(), 1,
                     "integer", id);
-		SolveInfo res = engineManager.join(((Int)id).intValue());
+		Solution res = engineManager.join(((Int)id).intValue());
 		if (res == null) return false;
 		Term status;
 		try {
@@ -67,7 +66,7 @@ public class ThreadLibrary extends Library {
 		if (!(id instanceof Int)) 
 			throw PrologError.type_error(engine.getEngineManager(), 1,
                     "integer", id);
-		SolveInfo res=engineManager.read( ((Int)id).intValue());
+		Solution res=engineManager.read( ((Int)id).intValue());
 		if (res==null) return false;
 		Term status;
 		try {

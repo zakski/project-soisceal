@@ -4,8 +4,8 @@ import alice.tuprolog.json.AbstractEngineState
 import java.util
 import java.util.concurrent.locks.ReentrantLock
 
-import alice.tuprolog.{Int, NoMoreSolutionException, SolveInfo, SubGoalTree, Term, TermQueue, Var}
-import com.szadowsz.gospel.core.PrologEngine
+import alice.tuprolog.{Int, NoMoreSolutionException, SubGoalTree, Term, TermQueue, Var}
+import com.szadowsz.gospel.core.{PrologEngine, Solution}
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 
 /**
@@ -43,7 +43,7 @@ final case class EngineManager(private val wam: PrologEngine) extends java.io.Se
     }
   }
 
-  def join(id: scala.Int): SolveInfo = {
+  def join(id: scala.Int): Solution = {
     val er = findRunner(id)
     if (er == null || er.isDetached) null else {
       val solution = er.read
@@ -52,7 +52,7 @@ final case class EngineManager(private val wam: PrologEngine) extends java.io.Se
     }
   }
 
-  def read(id: scala.Int): SolveInfo = {
+  def read(id: scala.Int): Solution = {
     val er = findRunner(id)
     if (er == null || er.isDetached) null else {
       val solution = er.read
@@ -195,7 +195,7 @@ final case class EngineManager(private val wam: PrologEngine) extends java.io.Se
     runner.pushSubGoal(goals)
   }
 
-  def solve(query: Term): SolveInfo = {
+  def solve(query: Term): Solution = {
     er1.setGoal(query)
     val s = er1.solve
     s
@@ -229,7 +229,7 @@ final case class EngineManager(private val wam: PrologEngine) extends java.io.Se
   }
 
   @throws[NoMoreSolutionException]
-  def solveNext: SolveInfo = er1.solveNext
+  def solveNext: Solution = er1.solveNext
 
   /**
     *

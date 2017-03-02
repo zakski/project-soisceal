@@ -1,6 +1,7 @@
 package alice.tuprolog;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 import junit.framework.TestCase;
 import alice.tuprolog.event.OutputEvent;
@@ -108,7 +109,7 @@ public class TestVarIsEqual extends TestCase {
     
     core.setTheory(new Theory(theory));
     
-    SolveInfo info = core.solve("test. ");
+    Solution info = core.solve("test. ");
     assertTrue("Test should complete normally",info.isSuccess());
     String expected = ""
       + "\n" +    "body_for_head_literal input Head: d(X_e1,Y_e1)"

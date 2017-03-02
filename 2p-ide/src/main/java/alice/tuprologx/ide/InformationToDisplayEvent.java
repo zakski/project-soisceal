@@ -1,7 +1,7 @@
 package alice.tuprologx.ide;
 
 import alice.tuprolog.Prolog;
-import alice.tuprolog.SolveInfo;
+import com.szadowsz.gospel.core.Solution;
 import alice.tuprolog.event.PrologEvent;
 import alice.tuprolog.event.QueryEvent;
 
@@ -42,7 +42,7 @@ public class InformationToDisplayEvent extends PrologEvent {
         return queryEventListString;
     }
 
-    public SolveInfo getQueryResult()
+    public Solution getQueryResult()
     {
         return ( (QueryEvent) queryEventList.get(0)).getSolveInfo();
     }

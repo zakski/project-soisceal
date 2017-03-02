@@ -1,6 +1,7 @@
 package alice.tuprolog;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 import junit.framework.TestCase;
 
@@ -18,7 +19,7 @@ public class ThrowCatchTestCase extends TestCase {
 		String theory = "p(0) :- p(1). p(1) :- throw(error).";
 		engine.setTheory(new Theory(theory));
 		String goal = "atom_length(err, 3), catch(p(0), E, (atom_length(E, Length), X is 2+3)), Y is X+5.";
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct e = (Struct) info.getTerm("E");
 		assertTrue(e.isEqual(new Struct("error")));
@@ -37,7 +38,7 @@ public class ThrowCatchTestCase extends TestCase {
 		String theory = "p(0) :- throw(error). p(1).";
 		engine.setTheory(new Theory(theory));
 		String goal = "catch(p(1), E, fail), catch(p(0), E, atom_length(E, Length)).";
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		Struct e = (Struct) info.getTerm("E");
 		assertTrue(e.isEqual(new Struct("error")));
@@ -53,7 +54,7 @@ public class ThrowCatchTestCase extends TestCase {
 		String theory = "p(0) :- throw(error).";
 		engine.setTheory(new Theory(theory));
 		String goal = "catch(p(0), error(X), true).";
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		assertFalse(info.isSuccess());
 		assertTrue(info.isHalted());
 	}
@@ -64,7 +65,7 @@ public class ThrowCatchTestCase extends TestCase {
 		String theory = "p(0) :- throw(error).";
 		engine.setTheory(new Theory(theory));
 		String goal = "catch(p(0), E, E == err).";
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		assertFalse(info.isSuccess());
 	}
 
@@ -77,7 +78,7 @@ public class ThrowCatchTestCase extends TestCase {
 		String theory = "p(0). p(1) :- throw(error). p(2).";
 		engine.setTheory(new Theory(theory));
 		String goal = "catch(p(X), E, E == error).";
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		assertTrue(info.isSuccess());
 		assertTrue(info.hasOpenAlternatives());
 		info = engine.solveNext();
@@ -91,7 +92,7 @@ public class ThrowCatchTestCase extends TestCase {
 		String theory = "p(0) :- throw(error).";
 		engine.setTheory(new Theory(theory));
 		String goal = "catch(p(0), E, throw(err)).";
-		SolveInfo info = engine.solve(goal);
+		Solution info = engine.solve(goal);
 		assertFalse(info.isSuccess());
 		assertTrue(info.isHalted());
 	}

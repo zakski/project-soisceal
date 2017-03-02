@@ -15,6 +15,7 @@ import alice.tuprolog.event.SpyListener;
 import alice.tuprolog.event.WarningListener;
 import alice.tuprolog.lib.IOLibrary;
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 
 import java.io.*;
@@ -89,7 +90,7 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
     void solveGoal(String goal) {
 
         try {
-            SolveInfo info = engine.solve(goal);
+            Solution info = engine.solve(goal);
    
             /*Castagna 06/2011*/
             //if (engine.isHalted())
@@ -121,7 +122,7 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
         }
     }
 
-    private String solveInfoToString(SolveInfo result) {
+    private String solveInfoToString(Solution result) {
         String s = "";
         try {
             for (Var v : result.getBindingVars()) {
@@ -158,7 +159,7 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
         } else {
             try {
                 System.out.println();
-                SolveInfo info = engine.solveNext();
+                Solution info = engine.solveNext();
                 if (!info.isSuccess()) {
                     System.out.println("no.");
                     become("goalRequest");

@@ -1,6 +1,7 @@
 package alice.tuprolog;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import junit.framework.TestCase;
 
 public class LibraryTestCase extends TestCase {
@@ -8,7 +9,7 @@ public class LibraryTestCase extends TestCase {
 	public void testLibraryFunctor() throws PrologException {
 		PrologEngine engine = new PrologEngine();
 		engine.loadLibrary(new TestLibrary());
-		SolveInfo goal = engine.solve("N is sum(1, 3).");
+		Solution goal = engine.solve("N is sum(1, 3).");
 		assertTrue(goal.isSuccess());
 		assertEquals(new Int(4), goal.getVarValue("N"));
 	}

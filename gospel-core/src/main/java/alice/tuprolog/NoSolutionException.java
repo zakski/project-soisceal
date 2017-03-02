@@ -17,10 +17,12 @@
  */
 package alice.tuprolog;
 
+import com.szadowsz.gospel.core.Solution;
+
 /**
  * This exception means that a solution is asked, but actually none exists
  *
- * @see SolveInfo
+ * @see Solution
  */
 public class NoSolutionException extends PrologException {
 	private static final long serialVersionUID = 1L;

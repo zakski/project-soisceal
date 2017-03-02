@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 import com.szadowsz.gospel.core.db.theory.TheoryManager;
 import junit.framework.TestCase;
@@ -32,7 +33,7 @@ public class TheoryManagerTestCase extends TestCase {
 
 	public void testAssertNotBacktrackable() throws PrologException {
 		PrologEngine engine = new PrologEngine();
-		SolveInfo firstSolution = engine.solve("assertz(a(z)).");
+		Solution firstSolution = engine.solve("assertz(a(z)).");
 		assertTrue(firstSolution.isSuccess());
 		assertFalse(firstSolution.hasOpenAlternatives());
 	}
@@ -57,7 +58,7 @@ public class TheoryManagerTestCase extends TestCase {
 		engine.setTheory(new Theory("fact(new).\n" +
 									"fact(other).\n"));
 
-		SolveInfo info = engine.solve("abolish(fact/1).");
+		Solution info = engine.solve("abolish(fact/1).");
 		assertTrue(info.isSuccess());
 		info = engine.solve("fact(V).");
 		assertFalse(info.isSuccess());
@@ -66,7 +67,7 @@ public class TheoryManagerTestCase extends TestCase {
 	// Based on the bugs 65 and 66 on sourceforge
 	public void testRetractall() throws MalformedGoalException, NoSolutionException, NoMoreSolutionException {
 		PrologEngine engine = new PrologEngine();
-		SolveInfo info = engine.solve("assert(takes(s1,c2)), assert(takes(s1,c3)).");
+		Solution info = engine.solve("assert(takes(s1,c2)), assert(takes(s1,c3)).");
 		assertTrue(info.isSuccess());
 		info = engine.solve("takes(s1, N).");
 		assertTrue(info.isSuccess());
@@ -92,7 +93,7 @@ public class TheoryManagerTestCase extends TestCase {
 		TestOutputListener listener = new TestOutputListener();
 		engine.addOutputListener(listener);
 		engine.setTheory(new Theory("insect(ant). insect(bee)."));
-		SolveInfo info = engine.solve("retract(insect(I)), write(I), retract(insect(bee)), fail.");
+		Solution info = engine.solve("retract(insect(I)), write(I), retract(insect(bee)), fail.");
 		assertFalse(info.isSuccess());
 		assertEquals("antbee", listener.output);
 		

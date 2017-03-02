@@ -6,7 +6,7 @@ import alice.tuprolog.NoSolutionException;
 import alice.tuprolog.event.ExceptionListener;
 import alice.tuprolog.event.OutputListener;
 import alice.tuprolog.event.ReadListener;
-import alice.tuprolog.SolveInfo;
+import com.szadowsz.gospel.core.Solution;
 //import alice.tuprolog.Term;
 import alice.tuprolog.Var;
 
@@ -401,7 +401,7 @@ public class ConsoleDialog
         }
     }
 
-    private void showSolution(SolveInfo info)
+    private void showSolution(Solution info)
     {
         enableStopButton(false);
         enableSolutionCommands(true);
@@ -477,7 +477,7 @@ public class ConsoleDialog
         // shows solutions on the solution pane
         StringBuffer buffer = new StringBuffer();
         for (int i = 0; i < querySolutions.length; i++) {
-            SolveInfo s = querySolutions[i].getSolveInfo();
+            Solution s = querySolutions[i].getSolveInfo();
             if (s.isSuccess()) {
             	
             	if (s.toString().length()<querySolutionsString.get(i).length()){
@@ -515,7 +515,7 @@ public class ConsoleDialog
         if (columns > 0) {
             ArrayList<String> tableModelList = new ArrayList<String>();
             for (int i = 0; i < getSolutionsNumber(querySolutions); i++) {
-                SolveInfo solution = ((QueryEvent) querySolutions[i]).getSolveInfo();
+                Solution solution = ((QueryEvent) querySolutions[i]).getSolveInfo();
                 if (solution.isSuccess()) {
                     try {
                         for (Var v: solution.getBindingVars()) {
@@ -558,7 +558,7 @@ public class ConsoleDialog
             return null;
         }
     }
-    private String[] getVariablesName(SolveInfo info) {
+    private String[] getVariablesName(Solution info) {
         int columns = getVariablesNumber(info);
         if (columns > 0) {
             String[] variables = new String[columns];
@@ -587,7 +587,7 @@ public class ConsoleDialog
         }
         return count;
     }
-    private int getVariablesNumber(SolveInfo info) {
+    private int getVariablesNumber(Solution info) {
         int count = 0;
         try {
             for(Var v:info.getBindingVars()){

@@ -1,24 +1,16 @@
 package com.szadowsz.gospel.core.engine
 
-import alice.tuprolog.interfaces._
 import java.util
 import java.util.NoSuchElementException
 import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
-import alice.tuprolog.{ClauseInfo, NoMoreSolutionException, Prolog, SolveInfo, SubGoalTree, Term, TermQueue}
-import com.szadowsz.gospel.core.PrologEngine
+import alice.tuprolog.{ClauseInfo, NoMoreSolutionException, SubGoalTree, Term, TermQueue}
+import com.szadowsz.gospel.core.{PrologEngine, Solution}
 import com.szadowsz.gospel.core.db.theory.TheoryManager
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.state._
-
-object EngineRunner {
-  val HALT: scala.Int = -1
-  val FALSE: scala.Int = 0
-  val TRUE: scala.Int = 1
-  val TRUE_CP: scala.Int = 2
-}
 
 /**
   * Prolog Interpreter Executor.
@@ -35,10 +27,10 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
   final private[engine] val RULE_SELECTION = RuleSelectionState(this)
   final private[engine] val GOAL_SELECTION = GoalSelectionState(this)
   final private[engine] val BACKTRACK = BacktrackState(this)
-  final private[engine] val END_FALSE = EndState(this, EngineRunner.FALSE)
-  final private[engine] val END_TRUE = EndState(this, EngineRunner.TRUE)
-  final private[engine] val END_TRUE_CP = EndState(this, EngineRunner.TRUE_CP)
-  final private[engine] val END_HALT = EndState(this, EngineRunner.HALT)
+  final private[engine] val END_FALSE = EndState(this, ExecutionResultType.FALSE)
+  final private[engine] val END_TRUE = EndState(this, ExecutionResultType.TRUE)
+  final private[engine] val END_TRUE_CP = EndState(this, ExecutionResultType.TRUE_CP)
+  final private[engine] val END_HALT = EndState(this, ExecutionResultType.HALT)
 
   private lazy val theoryManager  = wam.getTheoryManager
   private lazy val primitiveManager = wam.getPrimitiveManager
@@ -57,7 +49,7 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
   var env: Engine = null /* Current environment */
   private var last_env: Engine = null /* Last environment used */
   private val stackEnv: util.LinkedList[Engine] = new util.LinkedList[Engine] /* Stack environments of nidicate solving */
-  private var sinfo: SolveInfo = null
+  private var sinfo: Solution = null
 
 
   def spy(action: String, env: Engine) {
@@ -107,7 +99,7 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
     }
   }
 
-  def solve: SolveInfo = {
+  def solve: Solution = {
     try {
       query.resolveTerm()
       ILibraryManager.onSolveBegin(query)
@@ -116,7 +108,7 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
       env = new Engine(this, query)
       val result: EndState = env.run()
       defreeze()
-      sinfo = new SolveInfo(query, result.getResultGoal, result.getResultDemo, result.getResultVars)
+      sinfo = new Solution(query, result.getResultGoal, result.getResultType, result.getResultVars)
       //Alberto
       env.hasOpenAlts = sinfo.hasOpenAlternatives
       if (!sinfo.hasOpenAlternatives) solveEnd()
@@ -126,7 +118,7 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
     } catch {
       case ex: Exception =>
         ex.printStackTrace()
-        new SolveInfo(query)
+        new Solution(query)
     }
   }
 
@@ -164,13 +156,13 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
   }
 
   @throws[NoMoreSolutionException]
-  def solveNext: SolveInfo = {
+  def solveNext: Solution = {
     if (hasOpenAlternatives) {
       refreeze()
       env.nextState = BACKTRACK
       val result: EndState = env.run()
       defreeze()
-      sinfo = new SolveInfo(env.query, result.getResultGoal, result.getResultDemo, result.getResultVars)
+      sinfo = new Solution(env.query, result.getResultGoal, result.getResultType, result.getResultVars)
       //Alberto
       env.hasOpenAlts = sinfo.hasOpenAlternatives
       if (!sinfo.hasOpenAlternatives) {
@@ -286,7 +278,7 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
 
   def getPid: scala.Int = pid
 
-  def getSolution: SolveInfo = sinfo
+  def getSolution: Solution = sinfo
 
   def setGoal(goal: Term) {
     this.query = goal
@@ -301,7 +293,7 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
     true
   }
 
-  def read: SolveInfo = {
+  def read: Solution = {
     lockVar.lock()
     try {
       while (solving || sinfo == null) {

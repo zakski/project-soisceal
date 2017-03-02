@@ -1,6 +1,6 @@
 package spyframe;
 
-import alice.tuprolog.SolveInfo;
+import com.szadowsz.gospel.core.Solution;
 import alice.tuprolog.Term;
 import alice.tuprolog.event.*;
 import alice.tuprologx.spyframe.TermFrame;
@@ -56,7 +56,7 @@ public class Test {
       }
     });
     prolog.setSpy(true);
-    SolveInfo sinfo=prolog.solve(args[0]);
+    Solution sinfo=prolog.solve(args[0]);
     while(sinfo.isSuccess()){
       sol=sinfo.getSolution();
       //tf.setTerm(sol);

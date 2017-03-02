@@ -36,7 +36,7 @@ package com.szadowsz.gospel.core
 import java.util
 
 import alice.tuprolog.event.{QueryEvent, SpyEvent, TheoryEvent}
-import alice.tuprolog.{InvalidLibraryException, InvalidTermException, InvalidTheoryException, Library, MalformedGoalException, NoMoreSolutionException, Operator, Prolog, SolveInfo, Term}
+import alice.tuprolog.{InvalidLibraryException, InvalidTermException, InvalidTheoryException, Library, MalformedGoalException, NoMoreSolutionException, Operator, Prolog, Term}
 import alice.tuprolog.interfaces._
 import alice.tuprolog.json.{AbstractEngineState, FullEngineState, JSONSerializerManager, ReducedEngineState}
 import alice.tuprolog.lib.{IOLibrary, ISOLibrary, OOLibrary}
@@ -285,12 +285,12 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     * @return the result of the demonstration
     * @see SolveInfo
     **/
-  def solve(g: Term): SolveInfo = {
+  def solve(g: Term): Solution = {
     //System.out.println("ENGINE SOLVE #0: "+g);
     if (g == null) {
       null
     } else {
-      val sinfo: SolveInfo = engManager.solve(g)
+      val sinfo: Solution = engManager.solve(g)
       val ev: QueryEvent = new QueryEvent(this, sinfo)
       notifyNewQueryResultAvailable(ev)
       sinfo
@@ -305,7 +305,7 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     * @see SolveInfo
     **/
   @throws[MalformedGoalException]
-  def solve(st: String): SolveInfo = {
+  def solve(st: String): Solution = {
     try {
       val p = new Parser(opManager, st)
       val t = p.nextTerm(true)
@@ -323,9 +323,9 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     * @see SolveInfo
     **/
   @throws[NoMoreSolutionException]
-  def solveNext(): SolveInfo = {
+  def solveNext(): Solution = {
     if (hasOpenAlternatives) {
-      val sinfo: SolveInfo = engManager.solveNext
+      val sinfo: Solution = engManager.solveNext
       val ev: QueryEvent = new QueryEvent(this, sinfo)
       notifyNewQueryResultAvailable(ev)
       sinfo

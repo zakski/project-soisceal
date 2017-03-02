@@ -3,6 +3,7 @@ package alice.tuprologx.spyframe;
 import alice.tuprolog.*;
 import alice.tuprolog.event.*;
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 import com.szadowsz.gospel.core.engine.Engine;
 import com.szadowsz.gospel.core.engine.context.ExecutionContext;
@@ -164,7 +165,7 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener{
       @Override
       public void run(){
         Term sol;
-        SolveInfo sinfo=prolog.solve(goal);
+        Solution sinfo=prolog.solve(goal);
         if(sinfo!=null)
         {
         	while(sinfo.isSuccess())

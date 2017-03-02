@@ -11,6 +11,8 @@ package alice.tuprologx.pj.engine;
 
 import alice.tuprologx.pj.model.*;
 import alice.tuprolog.UnknownVarException;
+import com.szadowsz.gospel.core.Solution;
+
 import java.util.List;
 import java.util.Vector;
 
@@ -20,10 +22,10 @@ import java.util.Vector;
  */
 public class PrologSolution<Q extends Term<?>, S extends Term<?>> /*implements ISolution<Q,S,Term<?>>*/ {
     
-    private alice.tuprolog.SolveInfo _solveInfo;
+    private Solution _solveInfo;
     
     /** Creates a new instance of SolveInfo */
-    public PrologSolution(alice.tuprolog.SolveInfo si) {
+    public PrologSolution(Solution si) {
         _solveInfo = si;
     }
 

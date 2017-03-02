@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +51,7 @@ public class SocketLibTestCase {
 		
 		engine.setTheory(new Theory(theory));
 		
-		SolveInfo result = engine.solve("server(doServer(SS)), client(doClient(CS,Msg)).");	
+		Solution result = engine.solve("server(doServer(SS)), client(doClient(CS,Msg)).");
 		assertTrue(result.isSuccess());
 
 		/*Var clientSock = (Var) result.getTerm("CS");	
@@ -82,7 +83,7 @@ public class SocketLibTestCase {
 		"read(ID1,Y):- thread_read(ID1,Y)." ;
 		engine.setTheory(new Theory(theory));
 		
-		SolveInfo result = engine.solve("server(ID1), client(doClient(CS)), read(ID1,doServer(SS,Msg)).");	
+		Solution result = engine.solve("server(ID1), client(doClient(CS)), read(ID1,doServer(SS,Msg)).");
 		assertTrue(result.isSuccess());
 		
 		/*Var clientSock = (Var) result.getTerm("CS");	

@@ -1,6 +1,7 @@
 package alice.tuprolog;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 import com.szadowsz.gospel.core.db.libs.BuiltIn;
 import junit.framework.TestCase;
@@ -33,7 +34,7 @@ public class BuiltInTestCase extends TestCase {
 	public void testGroupingConjunctions() throws InvalidTheoryException, MalformedGoalException {
 		PrologEngine engine = new PrologEngine();
 		engine.setTheory(new Theory("g1. g2."));
-		SolveInfo info = engine.solve("(g1, g2), (g3, g4).");
+		Solution info = engine.solve("(g1, g2), (g3, g4).");
 		assertFalse(info.isSuccess());
 		engine.setTheory(new Theory("g1. g2. g3. g4."));
 		info = engine.solve("(g1, g2), (g3, g4).");
