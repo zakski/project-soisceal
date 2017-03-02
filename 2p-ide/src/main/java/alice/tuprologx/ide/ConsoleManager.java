@@ -1,11 +1,9 @@
 package alice.tuprologx.ide;
 
-import alice.tuprolog.*;
-import alice.tuprolog.event.*;
 import alice.tuprolog.InvalidTheoryException;
-import alice.tuprolog.event.QueryListener;
+import com.szadowsz.gospel.core.event.interpreter.QueryEvent;
+import com.szadowsz.gospel.core.listener.QueryListener;
 import alice.tuprolog.lib.IOLibrary;
-import alice.tuprologx.ide.EngineThread;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Theory;
 
@@ -102,7 +100,7 @@ public class ConsoleManager
     public void newQueryResultAvailable(QueryEvent event)
     {
         queryEventList.add(event);
-        queryEventListString.add(event.getSolveInfo().toString());
+        queryEventListString.add(event.getSolution().toString());
         boolean display = false;
         if (getSolveType()==1)//if there is information about a solveAll operation
         {

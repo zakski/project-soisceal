@@ -1,6 +1,7 @@
 package com.szadowsz.gospel.core
 
-import alice.tuprolog.event.{ExceptionEvent, ExceptionListener}
+import com.szadowsz.gospel.core.event.interpreter.ExceptionEvent
+import com.szadowsz.gospel.core.listener.ExceptionListener
 import org.scalatest.{BeforeAndAfter, Matchers, Suite}
 
 /**

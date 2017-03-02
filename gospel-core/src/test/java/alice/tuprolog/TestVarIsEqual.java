@@ -3,9 +3,9 @@ package alice.tuprolog;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.event.io.OutputEvent;
 import junit.framework.TestCase;
-import alice.tuprolog.event.OutputEvent;
-import alice.tuprolog.event.OutputListener;
+import com.szadowsz.gospel.core.listener.OutputListener;
 
 
 

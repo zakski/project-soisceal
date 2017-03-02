@@ -35,8 +35,8 @@ package com.szadowsz.gospel.core.engine
 
 import java.util
 
-import alice.tuprolog.{ChoicePointContext, ChoicePointStore, Struct, Term, Var}
-import com.szadowsz.gospel.core.engine.context.ExecutionContext
+import alice.tuprolog.{ChoicePointStore, Struct, Term, Var}
+import com.szadowsz.gospel.core.engine.context.{ChoicePointContext, ExecutionContext}
 import com.szadowsz.gospel.core.engine.state.{EndState, State}
 
 import scala.util.Try

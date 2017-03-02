@@ -1,9 +1,10 @@
 package alice.tuprologx.ide;
 
 import alice.tuprolog.Prolog;
+import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
-import alice.tuprolog.event.PrologEvent;
-import alice.tuprolog.event.QueryEvent;
+import com.szadowsz.gospel.core.event.interpreter.PrologEvent;
+import com.szadowsz.gospel.core.event.interpreter.QueryEvent;
 
 import java.util.ArrayList;
 
@@ -20,7 +21,7 @@ public class InformationToDisplayEvent extends PrologEvent {
     private ArrayList<String> queryEventListString;
     private int solveType;
 
-    public InformationToDisplayEvent(Prolog source, ArrayList<QueryEvent> queryEventList,ArrayList<String> queryEventListString, int solveType){
+    public InformationToDisplayEvent(PrologEngine source, ArrayList<QueryEvent> queryEventList, ArrayList<String> queryEventListString, int solveType){
         super(source);
         this.queryEventList=queryEventList;
         this.queryEventListString=queryEventListString;
@@ -44,7 +45,7 @@ public class InformationToDisplayEvent extends PrologEvent {
 
     public Solution getQueryResult()
     {
-        return ( (QueryEvent) queryEventList.get(0)).getSolveInfo();
+        return ( (QueryEvent) queryEventList.get(0)).getSolution();
     }
 
     public int getListSize()

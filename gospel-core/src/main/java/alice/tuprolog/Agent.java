@@ -20,10 +20,10 @@ package alice.tuprolog;
 import java.io.*;
 
 import alice.util.Tools;
-import alice.tuprolog.event.OutputEvent;
-import alice.tuprolog.event.OutputListener;
+import com.szadowsz.gospel.core.listener.OutputListener;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.event.io.OutputEvent;
 
 /**
  * Provides a prolog virtual machine embedded in a separate thread.

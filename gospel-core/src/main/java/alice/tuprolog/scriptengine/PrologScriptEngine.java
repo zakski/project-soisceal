@@ -26,16 +26,16 @@ import alice.tuprolog.NoSolutionException;
 import com.szadowsz.gospel.core.Solution;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Var;
-import alice.tuprolog.event.ExceptionEvent;
-import alice.tuprolog.event.ExceptionListener;
-import alice.tuprolog.event.OutputEvent;
-import alice.tuprolog.event.OutputListener;
+import com.szadowsz.gospel.core.event.interpreter.ExceptionEvent;
+import com.szadowsz.gospel.core.listener.ExceptionListener;
+import com.szadowsz.gospel.core.listener.OutputListener;
 import alice.tuprolog.lib.IOLibrary;
 import alice.tuprolog.lib.InvalidObjectIdException;
 import alice.tuprolog.lib.OOLibrary;
 import alice.util.InputStreamAdapter;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.event.io.OutputEvent;
 
 
 /**

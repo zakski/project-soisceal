@@ -4,8 +4,8 @@ import java.io.File
 import java.net.{URL, URLClassLoader}
 
 import alice.tuprolog._
-import alice.tuprolog.event.LibraryEvent
-import com.szadowsz.gospel.core.{PrologEngine,Theory}
+import com.szadowsz.gospel.core.event.interpreter.LibraryEvent
+import com.szadowsz.gospel.core.{PrologEngine, Theory}
 import org.slf4j.LoggerFactory
 
 import scala.util.control.NonFatal

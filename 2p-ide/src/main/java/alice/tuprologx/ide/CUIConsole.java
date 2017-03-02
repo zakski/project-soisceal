@@ -2,17 +2,17 @@ package alice.tuprologx.ide;
 
 import alice.util.*;
 import alice.tuprolog.*;
-import alice.tuprolog.event.ExceptionEvent;
-import alice.tuprolog.event.OutputEvent;
-import alice.tuprolog.event.SpyEvent;
-import alice.tuprolog.event.WarningEvent;
+import com.szadowsz.gospel.core.event.interpreter.ExceptionEvent;
+import com.szadowsz.gospel.core.event.interpreter.WarningEvent;
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.MalformedGoalException;
 import alice.tuprolog.NoSolutionException;
-import alice.tuprolog.event.ExceptionListener;
-import alice.tuprolog.event.OutputListener;
-import alice.tuprolog.event.SpyListener;
-import alice.tuprolog.event.WarningListener;
+import com.szadowsz.gospel.core.listener.ExceptionListener;
+import com.szadowsz.gospel.core.event.interpreter.SpyEvent;
+import com.szadowsz.gospel.core.event.io.OutputEvent;
+import com.szadowsz.gospel.core.listener.OutputListener;
+import com.szadowsz.gospel.core.listener.SpyListener;
+import com.szadowsz.gospel.core.listener.WarningListener;
 import alice.tuprolog.lib.IOLibrary;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
@@ -21,7 +21,7 @@ import com.szadowsz.gospel.core.Theory;
 import java.io.*;
 
 @SuppressWarnings("serial")
-public class CUIConsole extends Automaton implements Serializable, OutputListener, SpyListener, WarningListener/*Castagna 06/2011*/, ExceptionListener/**/ {
+public class CUIConsole extends Automaton implements Serializable, OutputListener, SpyListener, WarningListener, ExceptionListener/**/ {
 
     BufferedReader stdin;
     PrologEngine engine;

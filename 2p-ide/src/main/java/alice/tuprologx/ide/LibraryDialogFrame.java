@@ -15,9 +15,9 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import alice.tuprolog.event.LibraryEvent;
 import alice.tuprolog.InvalidLibraryException;
-import alice.tuprolog.event.LibraryListener;
+import com.szadowsz.gospel.core.event.interpreter.LibraryEvent;
+import com.szadowsz.gospel.core.listener.LibraryListener;
 
 public class LibraryDialogFrame extends GenericFrame implements LibraryListener
 {

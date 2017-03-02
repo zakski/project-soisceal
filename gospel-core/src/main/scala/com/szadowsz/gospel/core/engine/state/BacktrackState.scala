@@ -36,8 +36,9 @@ package com.szadowsz.gospel.core.engine.state
 import alice.util.OneWayList
 import java.util
 
-import alice.tuprolog._
-import com.szadowsz.gospel.core.engine.context.ExecutionContext
+import alice.tuprolog.{Struct, Term, Var}
+import com.szadowsz.gospel.core.engine.context.subgoal.SubGoalId
+import com.szadowsz.gospel.core.engine.context.{ChoicePointContext, ExecutionContext}
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
 
 /**
@@ -59,7 +60,7 @@ private[engine] final case class BacktrackState(override protected val runner: E
     e.currentAlternative = curChoice
     //deunify variables and reload old goal
     e.currentContext = curChoice.executionContext
-    var curGoal: Term = e.currentContext.goalsToEval.backTo(curChoice.indexSubGoal).getTerm
+    var curGoal: Term = e.currentContext.goalsToEval.backTo(curChoice.indexSubGoal).orNull.getTerm
     if (!curGoal.isInstanceOf[Struct]) {
       e.nextState = runner.END_FALSE
       return
@@ -88,7 +89,7 @@ private[engine] final case class BacktrackState(override protected val runner: E
         stopDeunify = curCtx.fatherVarsList
         fatherIndex = curCtx.fatherGoalId
         curCtx = curCtx.fatherCtx
-        curGoal = curCtx.goalsToEval.backTo(fatherIndex).getTerm
+        curGoal = curCtx.goalsToEval.backTo(fatherIndex).orNull.getTerm
         if (!curGoal.isInstanceOf[Struct]) {
           e.nextState = runner.END_FALSE
           return

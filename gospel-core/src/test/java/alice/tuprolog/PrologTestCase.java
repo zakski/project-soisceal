@@ -1,10 +1,10 @@
 package alice.tuprolog;
 
-import alice.tuprolog.event.SpyEvent;
-import alice.tuprolog.event.SpyListener;
+import com.szadowsz.gospel.core.listener.SpyListener;
 
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.event.interpreter.SpyEvent;
 import junit.framework.TestCase;
 
 public class PrologTestCase extends TestCase {

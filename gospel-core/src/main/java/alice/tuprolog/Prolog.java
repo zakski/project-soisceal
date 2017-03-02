@@ -20,21 +20,20 @@ package alice.tuprolog;
 import java.util.*;
 import java.io.*;
 
-import alice.tuprolog.event.*;
-import alice.tuprolog.interfaces.*;
 //import alice.tuprologx.ide.ToolBar;
-import alice.tuprolog.event.ExceptionListener;
-import alice.tuprolog.event.LibraryListener;
-import alice.tuprolog.event.OutputListener;
-import  alice.tuprolog.event.QueryListener;
-import  alice.tuprolog.event.SpyListener;
-import  alice.tuprolog.event.TheoryListener;
-import  alice.tuprolog.event.WarningListener;
+import com.szadowsz.gospel.core.listener.ExceptionListener;
+import com.szadowsz.gospel.core.event.interpreter.*;
+import com.szadowsz.gospel.core.listener.LibraryListener;
+import com.szadowsz.gospel.core.listener.OutputListener;
+import com.szadowsz.gospel.core.listener.QueryListener;
+import com.szadowsz.gospel.core.listener.SpyListener;
+import com.szadowsz.gospel.core.listener.TheoryListener;
+import com.szadowsz.gospel.core.listener.WarningListener;
 import alice.tuprolog.json.AbstractEngineState;
 import alice.tuprolog.json.FullEngineState;
 import alice.tuprolog.json.JSONSerializerManager;
 import alice.tuprolog.json.ReducedEngineState;
-
+import com.szadowsz.gospel.core.event.io.OutputEvent;
 
 
 /**
@@ -198,16 +197,6 @@ public abstract class Prolog implements Serializable {
 		return spy;
 	}
 
-
-	/**
-	 * Notifies a spy information event
-	 */
-	protected synchronized void spy(String s) {
-		if (spy) {
-			notifySpy(new SpyEvent(this, s));
-		}
-	}
-
 	/**
 	 * Switches on/off the notification of warning information events
 	 * @param state  - true for enabling warning information notification
@@ -224,31 +213,7 @@ public abstract class Prolog implements Serializable {
 		return warning;
 	}
 
-	/**
-	 * Notifies a warn information event
-	 *
-	 *
-	 * @param m the warning message
-	 */
-	public void warn(String m) {
-		if (warning){
-			notifyWarning(new WarningEvent(this, m));
-			//log.warn(m);
-		}
-	}
 
-	/*Castagna 06/2011*/
-	/**
-	 * Notifies a exception information event
-	 *
-	 *
-	 * @param m the exception message
-	 */
-	public void exception(String m) {
-		if (exception){
-			notifyException(new ExceptionEvent(this, m));
-		}
-	}
 	/**/
 
 	/*Castagna 06/2011*/

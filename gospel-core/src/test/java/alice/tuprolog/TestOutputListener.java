@@ -1,7 +1,7 @@
 package alice.tuprolog;
 
-import alice.tuprolog.event.OutputEvent;
-import alice.tuprolog.event.OutputListener;
+import com.szadowsz.gospel.core.listener.OutputListener;
+import com.szadowsz.gospel.core.event.io.OutputEvent;
 
 class TestOutputListener implements OutputListener {
 	

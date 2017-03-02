@@ -1,5 +1,8 @@
 package alice.tuprolog;
 
+import com.szadowsz.gospel.core.engine.context.ChoicePointContext;
+import com.szadowsz.gospel.core.engine.context.clause.ClauseStore;
+
 import java.util.ArrayList;
 import java.util.List;
 

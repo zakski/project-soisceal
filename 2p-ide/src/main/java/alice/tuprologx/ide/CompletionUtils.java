@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import com.szadowsz.gospel.core.event.interpreter.TheoryEvent;
 import org.fife.ui.autocomplete.AbstractCompletion;
 import org.fife.ui.autocomplete.AbstractCompletionProvider;
 import org.fife.ui.autocomplete.BasicCompletion;
@@ -21,8 +22,7 @@ import org.fife.ui.autocomplete.Completion;
 import org.fife.ui.autocomplete.DefaultCompletionProvider;
 import org.fife.ui.autocomplete.TemplateCompletion;
 
-import alice.tuprolog.event.TheoryEvent;
-import alice.tuprolog.event.TheoryListener;
+import com.szadowsz.gospel.core.listener.TheoryListener;
 
 
 class CompletionUtils{

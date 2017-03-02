@@ -1,12 +1,18 @@
 package alice.tuprologx.spyframe;
 
-import alice.tuprolog.*;
-import alice.tuprolog.event.*;
+import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Term;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 import com.szadowsz.gospel.core.engine.Engine;
 import com.szadowsz.gospel.core.engine.context.ExecutionContext;
+import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalLeaf;
+import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalNode;
+import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalTree;
+import com.szadowsz.gospel.core.event.interpreter.SpyEvent;
+import com.szadowsz.gospel.core.listener.SpyListener;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -21,7 +27,7 @@ import javax.swing.*;
  *
  * @author franz.beslmeisl at googlemail.com
  */
-public class SpyFrame extends JFrame implements ActionListener, SpyListener{
+public class SpyFrame extends JFrame implements ActionListener, SpyListener {
 
 	private static final long serialVersionUID = 1L;
 /**An anonymous singleton instance building a tree out of a list of ExecutionContexts. */
@@ -52,7 +58,7 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener{
           Struct s=(Struct)c;
           String name=s.getName();
           ArrayList<Term> sub=new ArrayList<Term>();
-          for(AbstractSubGoalTree sgt: ec.getSubGoalStore().getSubGoals())
+          for(SubGoalNode sgt: ec.getSubGoalStore().getSubGoals())
           {
         	  if (sgt.isRoot())
         	  {
@@ -66,7 +72,7 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener{
         	  else
         	  {
         		  //SubGoalElement
-        		  sub.add(((SubGoalElement)sgt).getValue());
+        		  sub.add(((SubGoalLeaf)sgt).getValue());
         	  }
           }
           if(":-".equals(name))
@@ -85,15 +91,15 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener{
       return bottom;//is at last the top
     }
 
-	private void cerca(AbstractSubGoalTree sgt) {
+	private void cerca(SubGoalNode sgt) {
 		elementi=new ArrayList<Term>();
 		int dim = ((SubGoalTree)sgt).size();
 		for (int i=0; i<dim; i++)
 		{
-			AbstractSubGoalTree ab = ((SubGoalTree)sgt).getChild(i);
+			SubGoalNode ab = ((SubGoalTree)sgt).getChild(i);
 			if (ab.isLeaf())
 			{
-				elementi.add(((SubGoalElement)ab).getValue());
+				elementi.add(((SubGoalLeaf)ab).getValue());
 			}
 			else
 			{
@@ -116,7 +122,7 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener{
    * @param goal the prolog term to be tested.
    * @throws InvalidTheoryException if we have no valid prolog theory.
    */
-  public SpyFrame(Theory theory, final Term goal) throws InvalidTheoryException{
+  public SpyFrame(Theory theory, final Term goal) throws InvalidTheoryException {
     //START of visible stuff
     super("SpyFrame");
     Container c=getContentPane();

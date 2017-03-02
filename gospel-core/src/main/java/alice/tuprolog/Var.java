@@ -38,8 +38,8 @@ public class Var extends Term {
 	private String type = "Var";
 	
 	/* Identify kind of renaming */
-	final static int ORIGINAL = -1;
-	final static int PROGRESSIVE = -2;
+	public final static int ORIGINAL = -1;
+	public final static int PROGRESSIVE = -2;
 	
 	private static long fingerprint = 0; //Alberto //static version as global counter
 	
@@ -288,7 +288,7 @@ public class Var extends Term {
 	/**
 	 * Set the term which is direct bound
 	 */
-	void setLink(Term l) {
+	public void setLink(Term l) {
 		link = l;
 	}
 

@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import alice.tuprolog.event.ReadEvent;
-import alice.tuprolog.event.ReadListener;
+import com.szadowsz.gospel.core.listener.ReadListener;
+import com.szadowsz.gospel.core.event.io.ReadEvent;
 
 
 public class UserContextInputStream extends InputStream {

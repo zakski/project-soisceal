@@ -7,8 +7,8 @@ import java.io.ByteArrayInputStream;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import alice.tuprolog.event.ReadEvent;
-import alice.tuprolog.event.ReadListener;
+import com.szadowsz.gospel.core.event.io.ReadEvent;
+import com.szadowsz.gospel.core.listener.ReadListener;
 import alice.tuprolog.lib.UserContextInputStream;
 
 /**

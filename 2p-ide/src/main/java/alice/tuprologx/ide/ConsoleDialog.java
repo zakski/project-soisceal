@@ -1,11 +1,14 @@
 package alice.tuprologx.ide;
 
-import alice.tuprolog.event.*;
 //import alice.tuprologx.spyframe.TermPanel;
 import alice.tuprolog.NoSolutionException;
-import alice.tuprolog.event.ExceptionListener;
-import alice.tuprolog.event.OutputListener;
-import alice.tuprolog.event.ReadListener;
+import com.szadowsz.gospel.core.listener.ExceptionListener;
+import com.szadowsz.gospel.core.event.interpreter.ExceptionEvent;
+import com.szadowsz.gospel.core.event.interpreter.QueryEvent;
+import com.szadowsz.gospel.core.event.io.OutputEvent;
+import com.szadowsz.gospel.core.event.io.ReadEvent;
+import com.szadowsz.gospel.core.listener.OutputListener;
+import com.szadowsz.gospel.core.listener.ReadListener;
 import com.szadowsz.gospel.core.Solution;
 //import alice.tuprolog.Term;
 import alice.tuprolog.Var;
@@ -468,7 +471,7 @@ public class ConsoleDialog
             setStatusMessage("Internal error. " + ex.getMessage() + " " + ex.getLocalizedMessage());
         }
     }
-    private void showAllSolutions(QueryEvent[] querySolutions,ArrayList<String> querySolutionsString)
+    private void showAllSolutions(QueryEvent[] querySolutions, ArrayList<String> querySolutionsString)
     {
         enableStopButton(false);
         enableSolutionCommands(false);
@@ -477,7 +480,7 @@ public class ConsoleDialog
         // shows solutions on the solution pane
         StringBuffer buffer = new StringBuffer();
         for (int i = 0; i < querySolutions.length; i++) {
-            Solution s = querySolutions[i].getSolveInfo();
+            Solution s = querySolutions[i].getSolution();
             if (s.isSuccess()) {
             	
             	if (s.toString().length()<querySolutionsString.get(i).length()){
@@ -501,7 +504,7 @@ public class ConsoleDialog
             // shows solutions on the all bindings table
             tableSolveAll = newPrologTable(getSolutionsMatrix(querySolutions),getVariablesName(querySolutions));
         else {
-            String info = querySolutions[0].getSolveInfo().isSuccess() ? "Yes." : "No.";
+            String info = querySolutions[0].getSolution().isSuccess() ? "Yes." : "No.";
             setStatusMessage(info + " Ready.");
         }
         tp.setComponentAt(ALL_BINDINGS_INDEX, new JScrollPane(tableSolveAll));
@@ -515,7 +518,7 @@ public class ConsoleDialog
         if (columns > 0) {
             ArrayList<String> tableModelList = new ArrayList<String>();
             for (int i = 0; i < getSolutionsNumber(querySolutions); i++) {
-                Solution solution = ((QueryEvent) querySolutions[i]).getSolveInfo();
+                Solution solution = ((QueryEvent) querySolutions[i]).getSolution();
                 if (solution.isSuccess()) {
                     try {
                         for (Var v: solution.getBindingVars()) {
@@ -546,9 +549,9 @@ public class ConsoleDialog
         {
             for(int i=0;i<querySolutions.length;i++)
             {
-                if (getVariablesNumber(((QueryEvent)querySolutions[i]).getSolveInfo())==getVariablesNumber(querySolutions))
+                if (getVariablesNumber(((QueryEvent)querySolutions[i]).getSolution())==getVariablesNumber(querySolutions))
                 {
-                    return getVariablesName(((QueryEvent)querySolutions[i]).getSolveInfo());
+                    return getVariablesName(((QueryEvent)querySolutions[i]).getSolution());
                 }
             }
             return null;//never executed
@@ -581,7 +584,7 @@ public class ConsoleDialog
     private int getVariablesNumber(Object[] querySolutions) {
         int count = 0;
         for (int i = 0; i < querySolutions.length; i++) {
-            int n = getVariablesNumber(((QueryEvent) querySolutions[i]).getSolveInfo());
+            int n = getVariablesNumber(((QueryEvent) querySolutions[i]).getSolution());
             if (count < n)
                 count = n;
         }

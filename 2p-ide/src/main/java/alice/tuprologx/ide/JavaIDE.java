@@ -18,12 +18,14 @@
 package alice.tuprologx.ide;
 
 import alice.tuprolog.*;
-import alice.tuprolog.event.*;
 import alice.tuprolog.lib.IOLibrary;
 
 import javax.swing.*;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.event.interpreter.SpyEvent;
+import com.szadowsz.gospel.core.event.interpreter.WarningEvent;
+import com.szadowsz.gospel.core.event.io.OutputEvent;
 import org.fife.ui.autocomplete.DefaultCompletionProvider;
 
 import java.awt.*;

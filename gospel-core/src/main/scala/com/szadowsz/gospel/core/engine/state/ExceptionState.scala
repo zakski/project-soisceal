@@ -2,7 +2,8 @@ package com.szadowsz.gospel.core.engine.state
 
 import java.util
 
-import alice.tuprolog.{Struct, SubGoalTree, Term, Var}
+import alice.tuprolog.{Struct, Term, Var}
+import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalTree
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
 
 import scala.collection.JavaConverters._
@@ -61,7 +62,7 @@ private[engine] final case class ExceptionState(override protected val runner: E
         val handler: Struct = handlerTerm.asInstanceOf[Struct]
         runner.identify(handler)
         val sgt: SubGoalTree = new SubGoalTree
-        sgt.addChild(handler)
+        sgt.addLeaf(handler)
         runner.pushSubGoal(sgt)
         e.currentContext.currentGoal = handler
         e.nextState = runner.GOAL_SELECTION
@@ -145,11 +146,11 @@ private[engine] final case class ExceptionState(override protected val runner: E
         val handler: Struct = handlerTerm.asInstanceOf[Struct]
         runner.identify(handler)
         val sgt: SubGoalTree = new SubGoalTree
-        sgt.addChild(handler)
+        sgt.addLeaf(handler)
         if (isFinally) {
           val finallyStruct: Struct = finallyTerm.asInstanceOf[Struct]
           runner.identify(finallyStruct)
-          sgt.addChild(finallyStruct)
+          sgt.addLeaf(finallyStruct)
         }
         runner.pushSubGoal(sgt)
         e.currentContext.currentGoal = handler

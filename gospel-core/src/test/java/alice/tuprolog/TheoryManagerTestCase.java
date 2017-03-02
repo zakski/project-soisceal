@@ -7,6 +7,7 @@ import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 import com.szadowsz.gospel.core.db.theory.TheoryManager;
+import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo;
 import junit.framework.TestCase;
 
 public class TheoryManagerTestCase extends TestCase {

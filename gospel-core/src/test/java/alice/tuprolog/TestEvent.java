@@ -4,15 +4,15 @@
  */
 package alice.tuprolog;
 
-import alice.tuprolog.event.LibraryEvent;
-import alice.tuprolog.event.PrologEventAdapter;
-import alice.tuprolog.event.QueryEvent;
-import alice.tuprolog.event.TheoryEvent;
+import com.szadowsz.gospel.core.listener.PrologListener;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.event.interpreter.LibraryEvent;
+import com.szadowsz.gospel.core.event.interpreter.QueryEvent;
+import com.szadowsz.gospel.core.event.interpreter.TheoryEvent;
 
-class MyListener extends PrologEventAdapter {
+class MyListener implements PrologListener {
     
     public void theoryChanged(TheoryEvent ev){
         System.out.println("THEORY CHANGED: \n old: \n"+
@@ -21,8 +21,8 @@ class MyListener extends PrologEventAdapter {
     
     public void newQueryResultAvailable(QueryEvent ev){
         System.out.println("NEW QUERY RESULT AVAILABLE: \nquery\n "+
-                ev.getSolveInfo().getQuery().toString()+"\nresult\n"+
-                ev.getSolveInfo());
+                ev.getSolution().getQuery().toString()+"\nresult\n"+
+                ev.getSolution());
     }
     
     public void libraryLoaded(LibraryEvent ev){

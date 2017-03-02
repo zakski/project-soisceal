@@ -47,7 +47,7 @@ private[engine] final case class GoalSelectionState(override protected val runne
   override def doJob(e: Engine): Unit = {
     var curGoal: Term = null
     while (curGoal == null) {
-      curGoal = e.currentContext.goalsToEval.fetch
+      curGoal = e.currentContext.goalsToEval.fetch().orNull
       if (curGoal == null) {
         // demo termination
         if (e.currentContext.fatherCtx == null) {

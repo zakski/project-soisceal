@@ -349,7 +349,7 @@ public abstract class Term implements Serializable {
      * Gets the string representation of this term
      * as an X argument of an operator, considering the associative property.
      */
-    String toStringAsArgX(OperatorManager op,int prio) {
+    public String toStringAsArgX(OperatorManager op,int prio) {
         return toStringAsArg(op,prio,true);
     }
     
@@ -357,7 +357,7 @@ public abstract class Term implements Serializable {
      * Gets the string representation of this term
      * as an Y argument of an operator, considering the associative property.
      */
-    String toStringAsArgY(OperatorManager op,int prio) {
+    public String toStringAsArgY(OperatorManager op,int prio) {
         return toStringAsArg(op,prio,false);
     }
     

@@ -6,10 +6,12 @@ import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
-import alice.tuprolog.{ClauseInfo, NoMoreSolutionException, SubGoalTree, Term, TermQueue}
+import alice.tuprolog.{NoMoreSolutionException, Term, TermQueue}
 import com.szadowsz.gospel.core.{PrologEngine, Solution}
 import com.szadowsz.gospel.core.db.theory.TheoryManager
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
+import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
+import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalTree
 import com.szadowsz.gospel.core.engine.state._
 
 /**
@@ -220,8 +222,8 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
     primitiveManager.identifyPredicate(t)
   }
 
-  def pushSubGoal(goals: SubGoalTree) {
-    env.currentContext.goalsToEval.pushSubGoal(goals)
+  def pushSubGoal(goal: SubGoalTree) {
+    env.currentContext.goalsToEval.pushSubGoal(goal)
   }
 
   def cut() {

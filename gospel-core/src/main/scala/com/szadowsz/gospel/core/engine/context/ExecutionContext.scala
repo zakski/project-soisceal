@@ -36,8 +36,9 @@ package com.szadowsz.gospel.core.engine.context
 import alice.util.OneWayList
 import java.util
 
-import alice.tuprolog.{ChoicePointContext, Struct, SubGoalId, SubGoalStore, Var}
+import alice.tuprolog.{Struct, Var}
 import com.szadowsz.gospel.core.engine.Engine
+import com.szadowsz.gospel.core.engine.context.subgoal.{SubGoalId, SubGoalStore}
 
 /**
   *
@@ -88,7 +89,7 @@ final case class ExecutionContext(id: scala.Int) {
     */
   def saveParentState() {
     if (fatherCtx != null) {
-      fatherGoalId = fatherCtx.goalsToEval.getCurrentGoalId
+      fatherGoalId = fatherCtx.goalsToEval.getCurrentIndex
       fatherVarsList = fatherCtx.trailingVars
     }
   }
@@ -103,7 +104,7 @@ final case class ExecutionContext(id: scala.Int) {
   //Alberto
   def tryToPerformTailRecursionOptimization(e: Engine): Boolean = {
     if (!haveAlternatives &&
-      e.getContext.goalsToEval.getCurSGId == null &&
+      e.getContext.goalsToEval.getCurrentID == null &&
       !e.getContext.goalsToEval.haveSubGoals &&
       !(e.getContext.currentGoal.getName.equalsIgnoreCase("catch") || e.getContext.currentGoal.getName.equalsIgnoreCase("java_catch"))) {
       fatherCtx = e.getContext.fatherCtx

@@ -6,6 +6,8 @@
 package alice.tuprolog;
 
 import alice.util.OneWayList;
+import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo;
+
 import java.util.List;
 
 /**

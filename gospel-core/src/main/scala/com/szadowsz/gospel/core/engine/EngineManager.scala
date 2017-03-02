@@ -4,9 +4,10 @@ import alice.tuprolog.json.AbstractEngineState
 import java.util
 import java.util.concurrent.locks.ReentrantLock
 
-import alice.tuprolog.{Int, NoMoreSolutionException, SubGoalTree, Term, TermQueue, Var}
+import alice.tuprolog.{Int, NoMoreSolutionException, Term, TermQueue, Var}
 import com.szadowsz.gospel.core.{PrologEngine, Solution}
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
+import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalTree
 
 /**
   * Prolog Interpreter Execution Handler.

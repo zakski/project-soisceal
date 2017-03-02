@@ -1,11 +1,11 @@
 package alice.tuprolog;
 
-import alice.tuprolog.event.LibraryEvent;
-import alice.tuprolog.event.PrologEventAdapter;
-import alice.tuprolog.event.QueryEvent;
-import alice.tuprolog.event.TheoryEvent;
+import com.szadowsz.gospel.core.listener.PrologListener;
+import com.szadowsz.gospel.core.event.interpreter.LibraryEvent;
+import com.szadowsz.gospel.core.event.interpreter.QueryEvent;
+import com.szadowsz.gospel.core.event.interpreter.TheoryEvent;
 
-public class TestPrologEventAdapter extends PrologEventAdapter {
+public class TestPrologEventAdapter implements PrologListener {
 	String firstMessage = "";
 	String secondMessage = "";
     
@@ -15,8 +15,8 @@ public class TestPrologEventAdapter extends PrologEventAdapter {
     }
     
     public void newQueryResultAvailable(QueryEvent ev) {
-    	firstMessage = ev.getSolveInfo().getQuery().toString();
-    	secondMessage = ev.getSolveInfo().toString();
+    	firstMessage = ev.getSolution().getQuery().toString();
+    	secondMessage = ev.getSolution().toString();
     }
     
     public void libraryLoaded(LibraryEvent ev) {

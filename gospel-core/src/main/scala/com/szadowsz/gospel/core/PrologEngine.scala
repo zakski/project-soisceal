@@ -35,9 +35,7 @@ package com.szadowsz.gospel.core
 
 import java.util
 
-import alice.tuprolog.event.{QueryEvent, SpyEvent, TheoryEvent}
 import alice.tuprolog.{InvalidLibraryException, InvalidTermException, InvalidTheoryException, Library, MalformedGoalException, NoMoreSolutionException, Operator, Prolog, Term}
-import alice.tuprolog.interfaces._
 import alice.tuprolog.json.{AbstractEngineState, FullEngineState, JSONSerializerManager, ReducedEngineState}
 import alice.tuprolog.lib.{IOLibrary, ISOLibrary, OOLibrary}
 import com.szadowsz.gospel.core.db.LibraryManager
@@ -46,6 +44,7 @@ import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
 import com.szadowsz.gospel.core.db.theory.TheoryManager
 import com.szadowsz.gospel.core.engine.{Engine, EngineManager}
 import com.szadowsz.gospel.core.engine.flags.FlagManager
+import com.szadowsz.gospel.core.event.interpreter._
 import com.szadowsz.gospel.core.parser.Parser
 
 import scala.util.Try
@@ -391,6 +390,13 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
 
   /**
     * Notifies a spy information event
+    */
+  protected def spy(s: String) {
+    if (spy) notifySpy(new SpyEvent(this, s))
+  }
+
+  /**
+    * Notifies a spy information event
     *
     * @param s TODO
     */
@@ -405,6 +411,31 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
         g = ctx.fatherCtx.currentGoal.toString
       }
       notifySpy(new SpyEvent(this, e, "spy: " + i + "  " + s + "  " + g))
+    }
+  }
+
+  /**
+    * Notifies a warn information event
+    *
+    *
+    * @param m the warning message
+    */
+  def warn(m: String) {
+    if (warning) {
+      notifyWarning(new WarningEvent(this, m))
+      //log.warn(m);
+    }
+  }
+
+  /**
+    * Notifies a exception information event
+    *
+    *
+    * @param m the exception message
+    */
+  def exception(m: String) {
+    if (exception) {
+      notifyException(new ExceptionEvent(this, m))
     }
   }
 

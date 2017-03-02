@@ -36,8 +36,10 @@ package com.szadowsz.gospel.core.engine.state
 import alice.util.OneWayList
 import java.util
 
-import alice.tuprolog.{ChoicePointContext, ClauseInfo, ClauseStore, Struct, SubGoalStore, Var}
-import com.szadowsz.gospel.core.engine.context.ExecutionContext
+import alice.tuprolog.{Struct, Var}
+import com.szadowsz.gospel.core.engine.context.clause.{ClauseInfo, ClauseStore}
+import com.szadowsz.gospel.core.engine.context.subgoal.SubGoalStore
+import com.szadowsz.gospel.core.engine.context.{ChoicePointContext, ExecutionContext}
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
 
 /**
@@ -83,7 +85,7 @@ private[engine] final case class RuleSelectionState(override protected val runne
     //head and body with refresh variables (clause copied)
     clause.performCopy(ec.getId)
     ec.headClause = clause.getHeadCopy
-    ec.goalsToEval = new SubGoalStore
+    ec.goalsToEval = new SubGoalStore()
     ec.goalsToEval.load(clause.getBodyCopy)
     // The following block encodes cut functionalities, and hardcodes the
     // special treatment that ISO Standard reserves for goal disjunction:
@@ -117,13 +119,13 @@ private[engine] final case class RuleSelectionState(override protected val runne
     val curGoal: Struct = curCtx.currentGoal
     val unifiedVars: util.List[Var] = e.currentContext.trailingVars.getHead
     curGoal.unify(unifiedVars, unifiedVars, ec.headClause, runner.getMediator.getFlagManager.isOccursCheckEnabled)
-    ec.haveAlternatives = clauseStore.haveAlternatives
+    ec.haveAlternatives = clauseStore.hasAlternatives
     //creazione cpc
     if (ec.haveAlternatives && !fromBacktracking) {
       val cpc: ChoicePointContext = new ChoicePointContext
       cpc.compatibleGoals = clauseStore
       cpc.executionContext = curCtx
-      cpc.indexSubGoal = curCtx.goalsToEval.getCurrentGoalId
+      cpc.indexSubGoal = curCtx.goalsToEval.getCurrentIndex
       cpc.varsToDeunify = e.currentContext.trailingVars
       e.choicePointSelector.add(cpc)
     }

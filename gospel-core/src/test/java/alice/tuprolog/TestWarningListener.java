@@ -3,8 +3,8 @@
  */
 package alice.tuprolog;
 
-import alice.tuprolog.event.WarningEvent;
-import alice.tuprolog.event.WarningListener;
+import com.szadowsz.gospel.core.event.interpreter.WarningEvent;
+import com.szadowsz.gospel.core.listener.WarningListener;
 
 class TestWarningListener implements WarningListener {
 	public String warning;

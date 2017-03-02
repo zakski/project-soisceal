@@ -2,12 +2,15 @@ package com.szadowsz.gospel.core.db.theory
 
 import java.util
 
-import alice.tuprolog._
+import alice.tuprolog.{InvalidTermException, InvalidTheoryException, Struct, Term, Var}
 import alice.tuprolog.json.{AbstractEngineState, FullEngineState}
 import alice.util.Tools
 import com.szadowsz.gospel.core.PrologEngine
 import com.szadowsz.gospel.core.Theory
+import com.szadowsz.gospel.core.db.theory.clause.{ClauseDatabase, FamilyClausesList}
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
+import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
+import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalLeaf
 import com.szadowsz.gospel.core.parser.Parser
 import org.slf4j.LoggerFactory
 
@@ -270,7 +273,7 @@ final case class TheoryManager(private val wam: PrologEngine) {
   def rebindPrimitives(): Unit = {
     for (d <- dynamicDB.iterator.asScala) {
       for (sge <- d.getBody.asScala) {
-        val t: Term = sge.asInstanceOf[SubGoalElement].getValue
+        val t: Term = sge.asInstanceOf[SubGoalLeaf].getValue
         _primitiveManager.identifyPredicate(t)
       }
     }
@@ -295,7 +298,7 @@ final case class TheoryManager(private val wam: PrologEngine) {
       val allClauses: util.Iterator[ClauseInfo] = staticDB.iterator
       while (allClauses.hasNext) {
         val clause = allClauses.next
-        if (clause.getLibraryName != null && (libName == clause.getLibraryName)) {
+        if (clause.getLib != null && (libName == clause.getLib)) {
           try {
             allClauses.remove()
           }

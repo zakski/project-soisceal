@@ -1,9 +1,9 @@
 package alice.tuprologx.ide;
 
-import alice.tuprolog.event.SpyEvent;
-import alice.tuprolog.event.WarningEvent;
-import alice.tuprolog.event.SpyListener;
-import alice.tuprolog.event.WarningListener;
+import com.szadowsz.gospel.core.event.interpreter.WarningEvent;
+import com.szadowsz.gospel.core.event.interpreter.SpyEvent;
+import com.szadowsz.gospel.core.listener.SpyListener;
+import com.szadowsz.gospel.core.listener.WarningListener;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;

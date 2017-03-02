@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alice.tuprolog.*;
-import alice.tuprolog.event.ExceptionEvent;
-import alice.tuprolog.event.ExceptionListener;
+import com.szadowsz.gospel.core.event.interpreter.ExceptionEvent;
+import com.szadowsz.gospel.core.listener.ExceptionListener;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
