@@ -347,7 +347,9 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
   }
 
   @throws[InvalidTermException]
-  def toTerm(st: String): Term = Parser.parseSingleTerm(st, opManager)
+  def createTerm(st: String): Term = Parser.parseSingleTerm(st, opManager)
+
+  def createTerms(st: String): util.Iterator[Term] = new Parser(opManager,st).iterator
 
   /**
     * Unifies two terms using current demonstration context.
@@ -370,13 +372,9 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
   def termSolve(st: String): Term = {
     try {
       val p = new Parser(opManager, st)
-      val t = p.nextTerm(true)
-      t
+      p.nextTerm(true)
     } catch {
-      case e: InvalidTermException =>
-        val s = "null"
-        val t = Term.createTerm(s)
-        t
+      case e: InvalidTermException => createTerm("null")
     }
   }
 

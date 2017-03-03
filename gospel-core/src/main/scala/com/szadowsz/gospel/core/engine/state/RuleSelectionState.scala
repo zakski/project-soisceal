@@ -118,7 +118,7 @@ private[engine] final case class RuleSelectionState(override protected val runne
     }
     val curGoal: Struct = curCtx.currentGoal
     val unifiedVars: util.List[Var] = e.currentContext.trailingVars.getHead
-    curGoal.unify(unifiedVars, unifiedVars, ec.headClause, runner.getMediator.getFlagManager.isOccursCheckEnabled)
+    curGoal.unify(unifiedVars, unifiedVars, ec.headClause, runner.getWam.getFlagManager.isOccursCheckEnabled)
     ec.haveAlternatives = clauseStore.hasAlternatives
     //creazione cpc
     if (ec.haveAlternatives && !fromBacktracking) {

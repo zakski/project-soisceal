@@ -22,7 +22,6 @@ import alice.tuprolog.Int;
 import alice.tuprolog.Library;
 //import alice.tuprolog.MalformedGoalException;
 //import alice.tuprolog.NoSolutionException;
-import alice.tuprolog.Prolog;
 import alice.tuprolog.PrologError;
 import alice.tuprolog.Server_Socket;
 //import alice.tuprolog.SolveInfo;
@@ -679,7 +678,7 @@ private class ThreadReader extends Thread {
 				if(this.isInterrupted())return;
 				Term msg = (Term) in.readObject();
 				if(this.isInterrupted())return;					
-				Struct s = (Struct) Term.createTerm(msg.getTerm().toString());
+				Struct s = (Struct) mainEngine.createTerm(msg.getTerm().toString());
 				if (assertA)
 					mainEngine.getTheoryManager().assertA(s, true, "", false);
 				else

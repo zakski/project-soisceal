@@ -52,7 +52,7 @@ final case class TheoryManager(private val wam: PrologEngine) {
     * @return the identified clause.
     */
   private def toClause(clauseContainer: Struct): Struct = {
-    var term = Parser.parseSingleTerm(clauseContainer.toString, wam.getOperatorManager).asInstanceOf[Struct]
+    var term = wam.createTerm(clauseContainer.toString).asInstanceOf[Struct]
     if (!term.isClause) {
       term = new Struct(":-", term, new Struct("true"))
     }

@@ -769,7 +769,7 @@ public class ISOIOLibrary extends Library{
                 inputStreams.put(stream, element);
                 
                 if(value == -1){
-                    return unify(arg, Term.createTerm(value+""));
+                    return unify(arg, engine.createTerm(value+""));
                 }
                 c = new Character((char)value);
                 return unify(arg,new Struct(c.toString()));
@@ -957,11 +957,11 @@ public class ISOIOLibrary extends Library{
                 inputStreams.put(stream, element);
                 
                 if(value == -1){
-                    return unify(in_char, Term.createTerm(value+""));
+                    return unify(in_char, engine.createTerm(value+""));
                 }
                 
                 c = new Character((char)value);
-                return unify(in_char,Term.createTerm(c.toString()));
+                return unify(in_char,engine.createTerm(c.toString()));
         }catch(IOException ioe){
                 ioe.printStackTrace();
                 throw PrologError.system_error(new Struct("An I/O error has occurred."));
@@ -1213,11 +1213,11 @@ public class ISOIOLibrary extends Library{
             //}
             
             inputStreams.put(stream, element); 
-            return unify(in_byte,Term.createTerm(b.toString()));
+            return unify(in_byte,engine.createTerm(b.toString()));
         }
         catch(IOException ioe){
             element.put("end_of_stream", new Struct("past"));
-            return unify(in_byte, Term.createTerm("-1"));
+            return unify(in_byte, engine.createTerm("-1"));
         }
     }
     
@@ -1268,11 +1268,11 @@ public class ISOIOLibrary extends Library{
             } 
                         
             inputStreams.put(stream, element); 
-            return unify(in_byte,Term.createTerm(b.toString()));
+            return unify(in_byte,engine.createTerm(b.toString()));
         }
         catch(IOException e){
             element.put("end_of_stream", new Struct("past"));
-            return unify(in_byte, Term.createTerm("-1"));
+            return unify(in_byte, engine.createTerm("-1"));
         }
     }
     
@@ -1442,14 +1442,14 @@ public class ISOIOLibrary extends Library{
                 element.put("end_of_stream",new Struct("past"));
                 element.put("position",new Int(p2));
                 inputStreams.put(stream, element);
-                return unify(in_term,Term.createTerm(st));
+                return unify(in_term,engine.createTerm(st));
             }
                                     
             if(variables_bool == false && variable_names_bool == false && singletons_bool == false){
-                return unify(in_term, getEngine().toTerm(st));
+                return unify(in_term, getEngine().createTerm(st));
             }
             Var input_term = new Var();
-            unify(input_term,Term.createTerm(st));
+            unify(input_term,engine.createTerm(st));
                     
             //opzione variables + variables_name
             List<Term> variables_list = new ArrayList<Term>();
@@ -1509,17 +1509,17 @@ public class ISOIOLibrary extends Library{
                 option = (Struct)obj;
                 if(option.getName().equals("variables")){
                     variables = new Struct();
-                    variables = (Struct) Term.createTerm(vars.toString());
+                    variables = (Struct) engine.createTerm(vars.toString());
                     unify(option.getArg(0),variables);
                 }
                 else if(option.getName().equals("variable_name")){
                     variable_names = new Struct();
-                    variable_names = (Struct)Term.createTerm(associations_table.toString());
+                    variable_names = (Struct)engine.createTerm(associations_table.toString());
                     unify(option.getArg(0),variable_names);
                 }
                 else if(option.getName().equals("singletons")){
                     singletons = new Struct();
-                    singletons = (Struct)Term.createTerm(singl.toString());
+                    singletons = (Struct)engine.createTerm(singl.toString());
                     unify(option.getArg(0),singletons);
                 }
             }
@@ -1535,7 +1535,7 @@ public class ISOIOLibrary extends Library{
             //vado a modificare la posizione di lettura
             element.put("position",new Int(p2));
             inputStreams.put(stream, element); 
-            return unify(in_term, getEngine().toTerm(string_term));
+            return unify(in_term, getEngine().createTerm(string_term));
         } catch (Exception ex){
             return false;
         }

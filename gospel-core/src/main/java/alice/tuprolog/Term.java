@@ -298,51 +298,7 @@ public abstract class Term implements Serializable {
      * @param varsUnifiedArg2 Vars unified in term t
      */
     abstract boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t);
-    
-    /**
-     * Static service to create a Term from a string.
-     * @param st the string representation of the term
-     * @return the term represented by the string
-     * @throws InvalidTermException if the string does not represent a valid term
-     */
-    public static Term createTerm(String st) {
-        return Parser.parseSingleTerm(st);
-    }
-    
-    /**
-     * @deprecated Use {@link Term#createTerm(String)} instead.
-     */
-    public static Term parse(String st) {
-        return Term.createTerm(st);
-    }
-    
-    /**
-     * Static service to create a Term from a string, providing an
-     * external operator manager.
-     * @param st the string representation of the term
-     * @param op the operator manager used to build the term
-     * @return the term represented by the string
-     * @throws InvalidTermException if the string does not represent a valid term
-     */
-    public static Term createTerm(String st, OperatorManager op) {
-        return Parser.parseSingleTerm(st, op);
-    }
-    
-    /**
-     * @deprecated Use {@link Term#createTerm(String, OperatorManager)} instead.
-     */
-    public static Term parse(String st, OperatorManager op) {
-        return Term.createTerm(st, op);
-    }
-    
-    /**
-     * Gets an iterator providing
-     * a term stream from a source text
-     */
-    public static java.util.Iterator<Term> getIterator(String text) {
-        return new Parser(text).iterator();
-    }
-    
+
     // term representation
     
     /**

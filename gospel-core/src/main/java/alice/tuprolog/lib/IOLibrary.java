@@ -360,7 +360,7 @@ public class IOLibrary extends Library {
             }
         } while (true);
         try {
-            unify(arg0, getEngine().toTerm(st));
+            unify(arg0, getEngine().createTerm(st));
         } catch (InvalidTermException e) {
             /*Castagna 06/2011*/
         	//throw PrologError.syntax_error(engine.getEngineManager(), -1, -1, new Struct(st));

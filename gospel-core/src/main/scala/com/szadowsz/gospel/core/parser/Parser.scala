@@ -37,7 +37,7 @@ import java.io._
 import java.util
 import java.util.regex.Pattern
 
-import alice.tuprolog.{DefaultOperatorManager, Double, Int, InvalidTermException, Long, Number, OperatorManager, Struct, Term, TermIterator, Var}
+import alice.tuprolog.{DefaultOperatorManager, Double, Int, InvalidTermException, Long, Number, OperatorManager, Struct, Term, Var}
 
 /**
   * This class defines a parser of prolog terms and sentences.
@@ -48,14 +48,6 @@ import alice.tuprolog.{DefaultOperatorManager, Double, Int, InvalidTermException
   */
 @SerialVersionUID(1L)
 object Parser {
-
-  private val defaultOperatorManager: OperatorManager = new DefaultOperatorManager
-
-  /**
-    * Static service to get a term from its string representation
-    */
-  @throws[InvalidTermException]
-  def parseSingleTerm(st: String): Term = parseSingleTerm(st, null)
 
   /**
     * Static service to get a term from its string representation,
@@ -73,11 +65,8 @@ object Parser {
       if (!p.tokenizer.readToken.isEOF) throw new InvalidTermException("The entire string could not be read as one term")
       term.resolveTerm()
       return term
-    }
-    catch {
-      case ex: IOException => {
-        throw new InvalidTermException("An I/O error occured")
-      }
+    } catch {
+      case ex: IOException => throw new InvalidTermException("An I/O error occured")
     }
   }
 
@@ -104,69 +93,41 @@ object Parser {
   private val atom: Pattern = Pattern.compile("(!|[a-z][a-zA-Z_0-9]*)")
 }
 
-private case class IdentifiedTerm(priority: scala.Int, result: Term)
+
 
 
 @SerialVersionUID(1L)
-class Parser extends Serializable {
+private[core] class Parser(op : OperatorManager) extends Serializable {
   private var tokenizer: Tokenizer = null
-  private var opManager: OperatorManager = Parser.defaultOperatorManager
+  private var opManager: OperatorManager = op
   /*Castagna 06/2011*/ private var offsetsMap: util.HashMap[Term, Integer] = null
   private val tokenStart: scala.Int = 0
 
   /**
-    * creating a parser with default operator interpretation
-    */
-  def this(theoryText: String) {
-    this()
-    tokenizer = new Tokenizer(theoryText)
-    /*Castagna 06/2011*/ offsetsMap = null
-  }
-
-
-  /**
-    * creating a parser with default operator interpretation
-    */
-  def this(theoryText: String, mapping: util.HashMap[Term, Integer]) {
-    this()
-    tokenizer = new Tokenizer(theoryText)
-    offsetsMap = mapping
-  }
-
-  /**
-    * creating a parser with default operator interpretation
-    */
-  def this(theoryText: InputStream) {
-    this()
-    tokenizer = new Tokenizer(new BufferedReader(new InputStreamReader(theoryText)))
-  }
-
-
-  /**
-    * creating a Parser specifing how to handle operators
-    * and what text to parse
-    */
-  def this(op: OperatorManager, theoryText: InputStream) {
-    this(theoryText)
-    if (op != null) opManager = op
-  }
-
-  /**
-    * creating a Parser specifing how to handle operators
-    * and what text to parse
-    */
-  def this(op: OperatorManager, theoryText: String, mapping: util.HashMap[Term, Integer]) {
-    this(theoryText, mapping)
-    if (op != null) opManager = op
-  }
-
-  /**
-    * creating a Parser specifing how to handle operators
-    * and what text to parse
+    * creating a Parser specifing how to handle operators and what text to parse
     */
   def this(op: OperatorManager, theoryText: String) {
-    this(theoryText)
-    if (op != null) opManager = op
+    this(op)
+    tokenizer = new Tokenizer(theoryText)
+  }
+
+
+   /**
+    * creating a Parser specifing how to handle operators and what text to parse
+    */
+  def this(op: OperatorManager, theoryText: InputStream) {
+    this(op)
+    tokenizer = new Tokenizer(new BufferedReader(new InputStreamReader(theoryText)))
+
+  }
+
+  /**
+    * creating a Parser specifing how to handle operators and what text to parse
+    */
+  def this(op: OperatorManager, theoryText: String, mapping: util.HashMap[Term, Integer]) {
+    this(op)
+    tokenizer = new Tokenizer(theoryText)
+    offsetsMap = mapping
   }
 
   def iterator: util.Iterator[Term] = new TermIterator(this)

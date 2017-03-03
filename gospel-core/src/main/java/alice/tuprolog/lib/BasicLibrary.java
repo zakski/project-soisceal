@@ -759,7 +759,7 @@ public class BasicLibrary extends Library {
         } else {
             try {
                 String text = alice.util.Tools.removeApices(arg0.toString());
-                return unify(arg1, getEngine().toTerm(text));
+                return unify(arg1, getEngine().createTerm(text));
             } catch (Exception ex) {
                 return false;
             }

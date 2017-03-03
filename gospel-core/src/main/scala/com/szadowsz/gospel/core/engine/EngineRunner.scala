@@ -339,7 +339,7 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
 
   def getEngineMan: EngineManager = engineManager
 
-  private[engine] def getMediator: PrologEngine = wam
+  private[engine] def getWam: PrologEngine = wam
 
   def getQuery: Term = this.query
 }

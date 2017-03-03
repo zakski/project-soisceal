@@ -242,7 +242,7 @@ public class OOLibrary extends Library {
                 Object[] args_value = args.getValues();
                 Constructor<?> co = lookupConstructor(cl, args.getTypes(),args_value);
                 if (co == null) {
-                    getEngine().warn("Constructor not found: class " + clName);
+                    engine.warn("Constructor not found: class " + clName);
                     throw new JavaException(new NoSuchMethodException(
                             "Constructor not found: class " + clName));
                 }
@@ -253,21 +253,21 @@ public class OOLibrary extends Library {
                 else
                     throw new JavaException(new Exception());
             } catch (ClassNotFoundException ex) {
-                getEngine().warn("Java class not found: " + clName);
+                engine.warn("Java class not found: " + clName);
                 throw new JavaException(ex);
             } catch (InvocationTargetException ex) {
-                getEngine().warn("Invalid constructor arguments.");
+                engine.warn("Invalid constructor arguments.");
                 throw new JavaException(ex);
             } catch (NoSuchMethodException ex) {
-                getEngine().warn("Constructor not found: " + args.getTypes());
+                engine.warn("Constructor not found: " + args.getTypes());
                 throw new JavaException(ex);
             } catch (InstantiationException ex) {
-                getEngine().warn(
+                engine.warn(
                         "Objects of class " + clName
                                 + " cannot be instantiated");
                 throw new JavaException(ex);
             } catch (IllegalArgumentException ex) {
-                getEngine().warn("Illegal constructor arguments  " + args);
+                engine.warn("Illegal constructor arguments  " + args);
                 throw new JavaException(ex);
             }
         } catch (Exception ex) {
@@ -394,8 +394,8 @@ public class OOLibrary extends Library {
                 file.write(text);
                 file.close();
             } catch (IOException ex) {
-                getEngine().warn("Compilation of java sources failed");
-                getEngine().warn(
+                engine.warn("Compilation of java sources failed");
+                engine.warn(
                         "(creation of " + fullClassPath + ".java fail failed)");
                 throw new JavaException(ex);
             }
@@ -405,14 +405,14 @@ public class OOLibrary extends Library {
                 Process jc = Runtime.getRuntime().exec(cmd);
                 int res = jc.waitFor();
                 if (res != 0) {
-                    getEngine().warn("Compilation of java sources failed");
-                    getEngine().warn(
+                    engine.warn("Compilation of java sources failed");
+                    engine.warn(
                             "(java compiler (javac) has stopped with errors)");
                     throw new IOException("Compilation of java sources failed");
                 }
             } catch (IOException ex) {
-                getEngine().warn("Compilation of java sources failed");
-                getEngine().warn("(java compiler (javac) invocation failed)");
+                engine.warn("Compilation of java sources failed");
+                engine.warn("(java compiler (javac) invocation failed)");
                 throw new JavaException(ex);
             }
             try 
@@ -439,8 +439,8 @@ public class OOLibrary extends Library {
                 else
                     throw new JavaException(new Exception());
             } catch (ClassNotFoundException ex) {
-                getEngine().warn("Compilation of java sources failed");
-                getEngine().warn(
+                engine.warn("Compilation of java sources failed");
+                engine.warn(
                         "(Java Class compiled, but not created: "
                                 + fullClassName + " )");
                 throw new JavaException(ex);
@@ -505,11 +505,11 @@ public class OOLibrary extends Library {
 						m.setAccessible(true);
 						res = m.invoke(obj, args_values);
 					} catch (IllegalAccessException ex) {
-						getEngine().warn("Method invocation failed: " + methodName+ "( signature: " + args + " )");
+						engine.warn("Method invocation failed: " + methodName+ "( signature: " + args + " )");
 						throw new JavaException(ex);
 					}
 				} else {
-					getEngine().warn("Method not found: " + methodName + "( signature: "+ args + " )");
+					engine.warn("Method not found: " + methodName + "( signature: "+ args + " )");
 					throw new JavaException(new NoSuchMethodException("Method not found: " + methodName + "( signature: "+ args + " )"));
 				}
 			} else {
@@ -528,7 +528,7 @@ public class OOLibrary extends Library {
 						} catch (ClassNotFoundException ex) {
 							// if not found even as a class id -> consider as a
 							// String object value
-							getEngine().warn("Unknown class.");
+							engine.warn("Unknown class.");
 							throw new JavaException(ex);
 						}
 					}
@@ -551,23 +551,23 @@ public class OOLibrary extends Library {
 			else
 				throw new JavaException(new Exception());
 		} catch (InvocationTargetException ex) {
-			getEngine().warn(
+			engine.warn(
 					"Method failed: " + methodName + " - ( signature: " + args
 					+ " ) - Original Exception: "
 					+ ex.getTargetException());
 			throw new JavaException(new IllegalArgumentException());
 		} catch (NoSuchMethodException ex) {
-			getEngine().warn(
+			engine.warn(
 					"Method not found: " + methodName + " - ( signature: "
 							+ args + " )");
 			throw new JavaException(ex);
 		} catch (IllegalArgumentException ex) {
-			getEngine().warn(
+			engine.warn(
 					"Invalid arguments " + args + " - ( method: " + methodName
 					+ " )");
 			throw new JavaException(ex);
 		} catch (Exception ex) {
-			getEngine()
+			engine
 			.warn("Generic error in method invocation " + methodName);
 			throw new JavaException(ex);
 		}
@@ -593,7 +593,7 @@ public class OOLibrary extends Library {
         	return true;
     	}catch(IllegalArgumentException e)
         {
-        	getEngine().warn("Illegal list of paths " + paths);
+        	engine.warn("Illegal list of paths " + paths);
             throw new JavaException(e);
         }
         catch (Exception e) {
@@ -633,11 +633,11 @@ public class OOLibrary extends Library {
         	}
         	else
         		stringURLs = "[]";
-        	pathTerm = Term.createTerm(stringURLs);
+        	pathTerm =  engine.createTerm(stringURLs);
         	return unify(paths, pathTerm);
     	}catch(IllegalArgumentException e)
         {
-        	getEngine().warn("Illegal list of paths " + paths);
+        	engine.warn("Illegal list of paths " + paths);
             throw new JavaException(e);
         }
         catch (Exception e) {
@@ -667,10 +667,10 @@ public class OOLibrary extends Library {
             		try {
                         cl = Class.forName(clName, true, dynamicLoader);
                     } catch (ClassNotFoundException ex) {
-                        getEngine().warn("Java class not found: " + clName);
+                        engine.warn("Java class not found: " + clName);
                         return false;
                     } catch (Exception ex) {
-                        getEngine().warn(
+                        engine.warn(
                                 "Static field "
                                         + fieldName
                                         + " not found in class "
@@ -720,7 +720,7 @@ public class OOLibrary extends Library {
             }
             return true;
         } catch (NoSuchFieldException ex) {
-            getEngine().warn(
+            engine.warn(
                     "Field " + fieldName + " not found in class " + objId);
             return false;
         } catch (Exception ex) {
@@ -749,10 +749,10 @@ public class OOLibrary extends Library {
             		try {
                         cl = Class.forName(clName, true, dynamicLoader);
                     } catch (ClassNotFoundException ex) {
-                        getEngine().warn("Java class not found: " + clName);
+                        engine.warn("Java class not found: " + clName);
                         return false;
                     } catch (Exception ex) {
-                        getEngine().warn(
+                        engine.warn(
                                 "Static field "
                                         + fieldName
                                         + " not found in class "
@@ -794,11 +794,11 @@ public class OOLibrary extends Library {
             }
             
         } catch (NoSuchFieldException ex) {
-            getEngine().warn(
+            engine.warn(
                     "Field " + fieldName + " not found in class " + objId);
             return false;
         } catch (Exception ex) {
-            getEngine().warn("Generic error in accessing the field");
+            engine.warn("Generic error in accessing the field");
             return false;
         }
     }
@@ -1237,7 +1237,7 @@ public class OOLibrary extends Library {
                         try {
                             types[i] = Class.forName(castTo_name, true, dynamicLoader);
                         } catch (ClassNotFoundException ex) {
-                            getEngine().warn(
+                            engine.warn(
                                     "Java class not found: " + castTo_name);
                             return false;
                         }
@@ -1264,7 +1264,7 @@ public class OOLibrary extends Library {
                         try {
                             types[i] = Class.forName(castTo_name, true, dynamicLoader);
                         } catch (ClassNotFoundException ex) {
-                            getEngine().warn(
+                            engine.warn(
                                     "Java class not found: " + castTo_name);
                             return false;
                         }
@@ -1296,7 +1296,7 @@ public class OOLibrary extends Library {
                 }
             }
         } catch (Exception ex) {
-            getEngine().warn(
+            engine.warn(
                     "Casting " + castWhat + " to " + castTo + " failed");
             return false;
         }
@@ -1418,7 +1418,7 @@ public class OOLibrary extends Library {
         	return register((Struct)id, obj);
         }catch(InvalidObjectIdException e)
         {
-        	getEngine().warn("Illegal object id " + id.toString());
+        	engine.warn("Illegal object id " + id.toString());
             throw new JavaException(e);
         }
     }
@@ -1443,7 +1443,7 @@ public class OOLibrary extends Library {
         	return unregister((Struct)id);
         }catch(InvalidObjectIdException e)
         {
-        	getEngine().warn("Illegal object id " + id.toString());
+        	engine.warn("Illegal object id " + id.toString());
             throw new JavaException(e);
         }
     }

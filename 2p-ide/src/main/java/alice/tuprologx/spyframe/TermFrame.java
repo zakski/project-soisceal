@@ -1,8 +1,11 @@
 package alice.tuprologx.spyframe;
 
+import alice.tuprolog.DefaultOperatorManager;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 import alice.tuprolog.Var;
+import com.szadowsz.gospel.core.parser.Parser;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -86,9 +89,9 @@ public class TermFrame extends JFrame implements ActionListener{
    */
   public void setTerm(String sterm){
     Term term;
-    try{term=Term.createTerm(sterm);}
+    try{term= Parser.parseSingleTerm(sterm,new DefaultOperatorManager());}
     catch(Exception ex){
-      term=Term.createTerm("'>illegal prolog term<'");
+      term= Parser.parseSingleTerm("'>illegal prolog term<'",new DefaultOperatorManager());
     }
     setTerm(term);
   }
@@ -100,7 +103,7 @@ public class TermFrame extends JFrame implements ActionListener{
     if(args.length!=1)
       System.out.println("Pass exactly one prolog term!");
     else{
-      TermFrame tf=new TermFrame(Term.createTerm(args[0]));
+      TermFrame tf=new TermFrame(Parser.parseSingleTerm(args[0],new DefaultOperatorManager()));
       tf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
   }

@@ -1,6 +1,8 @@
 package alice.tuprologx.pj.meta;
 
 import java.lang.reflect.*;
+
+import alice.tuprolog.DefaultOperatorManager;
 import alice.tuprologx.pj.model.*;
 import alice.tuprologx.pj.annotations.*;
 import alice.tuprologx.pj.engine.*;
@@ -70,7 +72,7 @@ public class PrologMetaField {
         String init = _annotation.init();
         if (init != "") {
             try {
-                Term<?> t = Term.unmarshal(Parser.parseSingleTerm(init));
+                Term<?> t = Term.unmarshal(com.szadowsz.gospel.core.parser.Parser.parseSingleTerm(init,new DefaultOperatorManager()));
                 System.out.println("init field = "+t);
                 setValue(o, t);
             }

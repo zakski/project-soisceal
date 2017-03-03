@@ -49,7 +49,7 @@ public abstract class Prolog implements Serializable {
 	public static final boolean EXCLUDE_KB_IN_SERIALIZATION = false;
 
 	/* component managing operators */
-	protected OperatorManager opManager = new OperatorManager();
+	protected OperatorManager opManager = new DefaultOperatorManager();
 
 	/*  spying activated ?  */
 	protected boolean spy;

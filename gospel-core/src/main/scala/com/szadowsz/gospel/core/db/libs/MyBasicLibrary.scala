@@ -462,7 +462,7 @@ class MyBasicLibrary() extends BasicLibrary {
     if (!t0.isGround) {
       unify(t0, new Struct(t1.toString))
     } else {
-      Try(unify(t1, engine.toTerm(alice.util.Tools.removeApices(t0.toString)))).toOption.getOrElse(false)
+      Try(unify(t1, engine.createTerm(alice.util.Tools.removeApices(t0.toString)))).toOption.getOrElse(false)
     }
   }
 

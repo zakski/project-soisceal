@@ -14,8 +14,8 @@ import scala.collection.JavaConverters._
 private[engine] final case class ExceptionState(override protected val runner: EngineRunner) extends State {
   protected override val stateName = "Exception"
 
-  private val catchTerm: Term = Term.createTerm("catch(Goal, Catcher, Handler)")
-  private val javaCatchTerm: Term = Term.createTerm("java_catch(Goal, List, Finally)")
+  private val catchTerm: Term = runner.getWam.createTerm("catch(Goal, Catcher, Handler)")
+  private val javaCatchTerm: Term = runner.getWam.createTerm("java_catch(Goal, List, Finally)")
 
   private def prologError(e: Engine): Unit = {
     val errorTerm: Term = e.currentContext.currentGoal.getArg(0)
@@ -35,7 +35,7 @@ private[engine] final case class ExceptionState(override protected val runner: E
 
         // Unify the argument of throw / 1 with the second argument of Catch / 3
         val unifiedVars: util.List[Var] = e.currentContext.trailingVars.getHead
-        e.currentContext.currentGoal.getArg(1).unify(unifiedVars, unifiedVars, errorTerm, runner.getMediator.getFlagManager.isOccursCheckEnabled)
+        e.currentContext.currentGoal.getArg(1).unify(unifiedVars, unifiedVars, errorTerm, runner.getWam.getFlagManager.isOccursCheckEnabled)
 
 
         // insert the manager of the error to the head of the Subgoal list
@@ -195,7 +195,7 @@ private[engine] final case class ExceptionState(override protected val runner: E
       val element: Struct = nextTerm.asInstanceOf[Struct]
       if ((element.getName == ",") && element.getArity == 2) {
         if (element.getArg(0).`match`(exceptionTerm)) {
-          element.getArg(0).unify(unifiedVars, unifiedVars, exceptionTerm, runner.getMediator.getFlagManager.isOccursCheckEnabled)
+          element.getArg(0).unify(unifiedVars, unifiedVars, exceptionTerm, runner.getWam.getFlagManager.isOccursCheckEnabled)
           return element.getArg(1)
         }
       }
