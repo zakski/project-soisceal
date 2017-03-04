@@ -23,6 +23,7 @@ import alice.tuprolog.*;
 import alice.tuprolog.Number;
 import com.szadowsz.gospel.core.Theory;
 import com.szadowsz.gospel.core.db.libs.TheoryLibrary;
+import com.szadowsz.gospel.core.db.ops.Operator;
 
 /**
  * This class defines a set of basic built-in predicates for the tuProlog engine
@@ -131,8 +132,8 @@ public class BasicLibrary extends Library {
         java.util.Iterator<Operator> it = getEngine().getCurrentOperatorList().iterator();
         while (it.hasNext()) {
             Operator o = it.next();
-            list = new Struct(new Struct("op", new alice.tuprolog.Int(o.prio),
-                    new Struct(o.type), new Struct(o.name)), list);
+            list = new Struct(new Struct("op", new alice.tuprolog.Int(o.prio()),
+                    new Struct(o.type()), new Struct(o.name())), list);
         }
         return unify(arg, list);
     }

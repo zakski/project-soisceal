@@ -22,7 +22,7 @@ import java.io.{IOException, InputStream}
 import java.util
 
 import alice.tuprolog.json.JSONSerializerManager
-import alice.tuprolog.{InvalidTheoryException, Prolog, Struct, Term}
+import alice.tuprolog.{InvalidTheoryException, Struct, Term}
 import com.szadowsz.gospel.core.parser.Parser
 
 /**
@@ -83,7 +83,7 @@ class Theory private[core]()  {
     this.clauseList = clauseList
   }
 
-  def iterator(engine: Prolog): util.Iterator[_ <: Term] = {
+  def iterator(engine: PrologEngine): util.Iterator[_ <: Term] = {
     if (isTextual)
       new Parser(engine.getOperatorManager, theory).iterator
     else

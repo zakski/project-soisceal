@@ -3,7 +3,7 @@ package alice.tuprolog.json;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import alice.tuprolog.Operator;
+import com.szadowsz.gospel.core.db.ops.Operator;
 import alice.tuprolog.Term;
 
 //Alberto

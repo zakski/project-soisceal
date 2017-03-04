@@ -19,7 +19,7 @@ import javax.lang.model.element.*;
 import javax.annotation.processing.*;
 import static javax.tools.Diagnostic.Kind.*;
 
-import alice.tuprolog.DefaultOperatorManager;
+import com.szadowsz.gospel.core.db.ops.OperatorManager;
 import alice.tuprologx.pj.annotations.*;
 import alice.tuprologx.pj.model.*;
 import alice.tuprologx.pj.annotations.parser.PrologTree.*;
@@ -124,7 +124,7 @@ public class PJAnnotationProcessor extends ElementScanner6<Void,Void> implements
         if (init != "") {
             alice.tuprolog.Term t = null;
             try {                
-                t = com.szadowsz.gospel.core.parser.Parser.parseSingleTerm(init,new DefaultOperatorManager());
+                t = com.szadowsz.gospel.core.parser.Parser.parseSingleTerm(init,new OperatorManager());
             }
             catch (Throwable tw) {
                 env.getMessager().printMessage(ERROR,ERR_BAD_VAR_INIT,v);

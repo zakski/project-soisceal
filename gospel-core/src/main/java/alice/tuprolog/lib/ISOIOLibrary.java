@@ -7,6 +7,7 @@ package alice.tuprolog.lib;
 import alice.tuprolog.*;
 import alice.tuprolog.Number;
 import alice.tuprolog.Long;
+import com.szadowsz.gospel.core.db.ops.Operator;
 
 import java.util.*;
 import java.io.*;
@@ -1704,8 +1705,8 @@ public class ISOIOLibrary extends Library{
         String operator = "";
         int flagOp = 0;
         for(Operator op : operatorList){
-            if(op.name.equals(term.getName())){
-                operator = op.name;
+            if(op.name().equals(term.getName())){
+                operator = op.name();
                 flagOp = 1;
                 break;
             }

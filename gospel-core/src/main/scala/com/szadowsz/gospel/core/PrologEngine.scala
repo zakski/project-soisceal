@@ -35,19 +35,33 @@ package com.szadowsz.gospel.core
 
 import java.util
 
-import alice.tuprolog.{InvalidLibraryException, InvalidTermException, InvalidTheoryException, Library, MalformedGoalException, NoMoreSolutionException, Operator, Prolog, Term}
+import alice.tuprolog.{InvalidLibraryException, InvalidTermException, InvalidTheoryException, Library, MalformedGoalException, NoMoreSolutionException, Term}
 import alice.tuprolog.json.{AbstractEngineState, FullEngineState, JSONSerializerManager, ReducedEngineState}
 import alice.tuprolog.lib.{IOLibrary, ISOLibrary, OOLibrary}
 import com.szadowsz.gospel.core.db.LibraryManager
 import com.szadowsz.gospel.core.db.libs.MyBasicLibrary
+import com.szadowsz.gospel.core.db.ops.{Operator, OperatorManager}
 import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
 import com.szadowsz.gospel.core.db.theory.TheoryManager
 import com.szadowsz.gospel.core.engine.{Engine, EngineManager}
 import com.szadowsz.gospel.core.engine.flags.FlagManager
 import com.szadowsz.gospel.core.event.interpreter._
+import com.szadowsz.gospel.core.event.io.OutputEvent
+import com.szadowsz.gospel.core.listener._
 import com.szadowsz.gospel.core.parser.Parser
 
 import scala.util.Try
+import scala.collection.JavaConverters._
+
+
+object PrologEngine {
+
+  def getEngineStateFromJSON(jsonString: String): AbstractEngineState = {
+    if (jsonString.contains("FullEngineState")) JSONSerializerManager.fromJSON(jsonString, classOf[FullEngineState])
+    else if (jsonString.contains("ReducedEngineState")) JSONSerializerManager.fromJSON(jsonString, classOf[ReducedEngineState])
+    else null
+  }
+}
 
 /**
   * This class represents a tuProlog engine.
@@ -56,21 +70,45 @@ import scala.util.Try
   *
   * @version Gospel 2.0.0
   */
-class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy, warning) {
+class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
 
-  private lazy val engManager = EngineManager(this) // primitive prolog term manager.
+  protected lazy val engManager = EngineManager(this) // primitive prolog term manager.
 
-  private lazy val flagManager = new FlagManager() // engine flag manager.
+  protected lazy val flagManager = new FlagManager() // engine flag manager.
 
-  private lazy val libManager = LibraryManager(this) // manager of loaded libraries
+  protected lazy val libManager = LibraryManager(this) // manager of loaded libraries
 
-  private lazy val primManager = PrimitiveManager(this) // primitive prolog term manager.
+  protected lazy val opManager: OperatorManager = new OperatorManager // manager of operators
 
-  private lazy val theoryManager = TheoryManager(this) // manager of current theories
+  protected lazy val primManager = PrimitiveManager(this) // primitive prolog term manager.
+
+  protected lazy val theoryManager = TheoryManager(this) // manager of current theories
+
+  protected val outputListeners = new util.ArrayList[OutputListener]()
+
+  protected val spyListeners = new util.ArrayList[SpyListener]() // listeners registered for virtual machine internal events
+
+  protected val warningListeners = new util.ArrayList[WarningListener]() // listeners registered for virtual machine state change events
+
+  protected val exceptionListeners = new util.ArrayList[ExceptionListener]() // listeners registered for virtual machine state exception events
+
+  protected val theoryListeners = new util.ArrayList[TheoryListener]() // listeners to theory events
+
+  protected val libraryListeners = new util.ArrayList[LibraryListener]() // listeners to library events
+
+  protected val queryListeners = new util.ArrayList[QueryListener]() // listeners to query events
 
   private val engineState = new FullEngineState
 
-  //used in serialization
+  protected var spy = spyFlag
+
+  protected var warning = warningFlag //  warning activated ?
+
+  protected var exception = true // exception activated ?
+
+  protected var absolutePathList = new util.ArrayList[String]()
+  protected var lastPath: String = _
+
   /**
     * Builds a Prolog engine with loaded the specified libraries.
     *
@@ -111,6 +149,13 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
   protected def getLibraryFunctor(name: String, nArgs: Int): Library = primManager.getLibraryFunctor(name, nArgs) // TODO comment or remove
 
   /**
+    * Method to retrieve the db component that manages primitives.
+    *
+    * @return the primitive manager instance attached to this prolog engine.
+    */
+  def getEngineManager: EngineManager = engManager // TODO Make Internal only
+
+  /**
     * Method to retrieve the engine component managing flags.
     *
     * @return the flag manager instance attached to this prolog engine.
@@ -124,6 +169,14 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     */
   def getLibraryManager: LibraryManager = libManager // TODO Make Internal only
 
+
+  /**
+    * Method to retrieve the db component that manages operators.
+    *
+    * @return the operator manager instance attached to this prolog engine.
+    */
+  def getOperatorManager: OperatorManager = opManager // TODO Make Internal only
+
   /**
     * Method to retrieve the db component that manages primitives.
     *
@@ -133,18 +186,18 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
 
 
   /**
-    * Method to retrieve the db component that manages primitives.
-    *
-    * @return the primitive manager instance attached to this prolog engine.
-    */
-  def getEngineManager: EngineManager = engManager // TODO Make Internal only
-
-  /**
     * method to retrieve the component managing the theory.
     *
     * @return the theory manager instance attached to this prolog engine.
     */
   def getTheoryManager: TheoryManager = theoryManager // TODO Make Internal only
+
+  /**
+    * Gets the list of the operators currently defined
+    *
+    * @return the list of the operators
+    */
+  def getCurrentOperatorList: util.List[Operator] = opManager.getOperators
 
   /**
     * Gets the list of current libraries loaded
@@ -160,6 +213,214 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     * @return the reference to the library loaded, null if the library is not found
     */
   def getLibrary(name: String): Library = libManager.getLibrary(name)
+
+  /**
+    * Gets a copy of current listener list to output events
+    */
+  def getOutputListenerList = new util.ArrayList[OutputListener](outputListeners)
+
+  /**
+    * Gets a copy of current listener list to warning events
+    *
+    */
+  def getWarningListenerList = new util.ArrayList[WarningListener](warningListeners)
+
+  /*Castagna 06/2011*/
+  /**
+    * Gets a copy of current listener list to exception events
+    *
+    */
+  def getExceptionListenerList = new util.ArrayList[ExceptionListener](exceptionListeners)
+
+  /**/
+  /**
+    * Gets a copy of current listener list to spy events
+    *
+    */
+  def getSpyListenerList = new util.ArrayList[SpyListener](spyListeners)
+
+  /**
+    * Gets a copy of current listener list to theory events
+    *
+    */
+  def getTheoryListenerList = new util.ArrayList[TheoryListener](theoryListeners)
+
+  /**
+    * Gets a copy of current listener list to library events
+    *
+    */
+  def getLibraryListenerList: util.List[LibraryListener] = new util.ArrayList[LibraryListener](libraryListeners)
+
+  /**
+    * Gets a copy of current listener list to query events
+    *
+    */
+  def getQueryListenerList: util.List[QueryListener] = new util.ArrayList[QueryListener](queryListeners)
+
+  /**
+    * Adds a listener to output events
+    *
+    * @param l the listener
+    */
+  def addOutputListener(l: OutputListener): Unit = outputListeners.add(l)
+
+  /**
+    * Adds a listener to theory events
+    *
+    * @param l the listener
+    */
+  def addTheoryListener(l: TheoryListener): Unit = theoryListeners.add(l)
+
+  /**
+    * Adds a listener to library events
+    *
+    * @param l the listener
+    */
+  def addLibraryListener(l: LibraryListener): Unit = libraryListeners.add(l)
+
+  /**
+    * Adds a listener to theory events
+    *
+    * @param l the listener
+    */
+  def addQueryListener(l: QueryListener): Unit = queryListeners.add(l)
+
+  /**
+    * Adds a listener to spy events
+    *
+    * @param l the listener
+    */
+  def addSpyListener(l: SpyListener): Unit = spyListeners.add(l)
+
+  /**
+    * Adds a listener to warning events
+    *
+    * @param l the listener
+    */
+  def addWarningListener(l: WarningListener): Unit = warningListeners.add(l)
+
+  /**
+    * Adds a listener to exception events
+    *
+    * @param l the listener
+    */
+  def addExceptionListener(l: ExceptionListener): Unit = exceptionListeners.add(l)
+
+  /**/
+  /**
+    * Removes a listener to ouput events
+    *
+    * @param l the listener
+    */
+  def removeOutputListener(l: OutputListener): Unit = outputListeners.remove(l)
+
+  /**
+    * Removes a listener to theory events
+    *
+    * @param l the listener
+    */
+  def removeTheoryListener(l: TheoryListener): Unit = theoryListeners.remove(l)
+
+  /**
+    * Removes a listener to library events
+    *
+    * @param l the listener
+    */
+  def removeLibraryListener(l: LibraryListener): Unit = libraryListeners.remove(l)
+
+  /**
+    * Removes a listener to query events
+    *
+    * @param l the listener
+    */
+  def removeQueryListener(l: QueryListener): Unit = queryListeners.remove(l)
+
+  /**
+    * Removes a listener to spy events
+    *
+    * @param l the listener
+    */
+  def removeSpyListener(l: SpyListener): Unit = spyListeners.remove(l)
+
+  /**
+    * Removes a listener to warning events
+    *
+    * @param l the listener
+    */
+  def removeWarningListener(l: WarningListener): Unit = warningListeners.remove(l)
+
+  /**
+    * Removes a listener to exception events
+    *
+    * @param l the listener
+    */
+  def removeExceptionListener(l: ExceptionListener): Unit = exceptionListeners.remove(l)
+
+  /**
+    * Removes all spy event listeners
+    */
+  def removeAllSpyListeners(): Unit = spyListeners.clear()
+
+  /**
+    * Removes all output event listeners
+    */
+  def removeAllOutputListeners(): Unit = outputListeners.clear()
+
+  /**
+    * Removes all warning event listeners
+    */
+  def removeAllWarningListeners(): Unit = warningListeners.clear()
+
+  /**
+    * Removes all exception event listeners
+    */
+  def removeAllExceptionListeners(): Unit = exceptionListeners.clear()
+
+  /**
+    * Switches on/off the notification of spy information events
+    *
+    * @param state - true for enabling the notification of spy event
+    */
+  def setSpy(state: Boolean): Unit = spy = state
+
+  /**
+    * Checks the spy state of the engine
+    *
+    * @return true if the engine emits spy information
+    */
+  def isSpy: Boolean = spy
+
+  /**
+    * Switches on/off the notification of warning information events
+    *
+    * @param state - true for enabling warning information notification
+    */
+  def setWarning(state: Boolean): Unit = warning = state
+
+  /**
+    * Checks if warning information are notified
+    *
+    * @return true if the engine emits warning information
+    */
+  def isWarning: Boolean = warning
+
+  /**/
+  /*Castagna 06/2011*/
+  /**
+    * Checks if exception information are notified
+    *
+    * @return true if the engine emits exception information
+    */
+  def isException: Boolean = exception
+
+  /**/
+  /*Castagna 06/2011*/
+  /**
+    * Switches on/off the notification of exception information events
+    *
+    * @param state - true for enabling exception information notification
+    */
+  def setException(state: Boolean): Unit = exception = state
 
   /**
     * Identify any functors.
@@ -349,7 +610,16 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
   @throws[InvalidTermException]
   def createTerm(st: String): Term = Parser.parseSingleTerm(st, opManager)
 
-  def createTerms(st: String): util.Iterator[Term] = new Parser(opManager,st).iterator
+  def createTerms(st: String): util.Iterator[Term] = new Parser(opManager, st).iterator
+
+  /**
+    * Gets the string representation of a term, using operators
+    * currently defined by engine
+    *
+    * @param term the term to be represented as a string
+    * @return the string representing the term
+    */
+  def toString(term: Term): String = term.toStringAsArgY(opManager, OperatorManager.OP_HIGH)
 
   /**
     * Unifies two terms using current demonstration context.
@@ -413,6 +683,13 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
   }
 
   /**
+    * Produces an output information event
+    *
+    * @param m the output string
+    */
+  def stdOutput(m: String): Unit = notifyOutput(new OutputEvent(this, m))
+
+  /**
     * Notifies a warn information event
     *
     *
@@ -437,6 +714,101 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     }
   }
 
+  /**
+    * Notifies an output information event
+    *
+    * @param e the event
+    */
+  protected def notifyOutput(e: OutputEvent): Unit = outputListeners.asScala.foreach(sl => sl.onOutput(e))
+
+  /**
+    * Notifies a spy information event
+    *
+    * @param e the event
+    */
+  protected def notifySpy(e: SpyEvent): Unit = spyListeners.asScala.foreach(sl => sl.onSpy(e))
+
+  /**
+    * Notifies a warning information event
+    *
+    * @param e the event
+    */
+  protected def notifyWarning(e: WarningEvent): Unit = warningListeners.asScala.foreach(wl => wl.onWarning(e))
+
+  /**
+    * Notifies a exception information event
+    *
+    * @param e the event
+    */
+  protected def notifyException(e: ExceptionEvent): Unit = exceptionListeners.asScala.foreach(el => el.onException(e))
+
+  /**
+    * Notifies a new theory set or updated event
+    *
+    * @param e the event
+    */
+  protected def notifyChangedTheory(e: TheoryEvent): Unit = theoryListeners.asScala.foreach(tl => tl.theoryChanged(e))
+
+  /**
+    * Notifies a library loaded event
+    *
+    * @param e the event
+    */
+  def notifyLoadedLibrary(e: LibraryEvent): Unit = libraryListeners.asScala.foreach(ll => ll.libraryLoaded(e))
+
+  /**
+    * Notifies a library unloaded event
+    *
+    * @param e the event
+    */
+  protected def notifyUnloadedLibrary(e: LibraryEvent): Unit = libraryListeners.asScala.foreach(ll => ll.libraryUnloaded(e))
+
+  /**
+    * Notifies a new query result available event
+    *
+    * @param e the event
+    */
+  protected def notifyNewQueryResultAvailable(e: QueryEvent): Unit = queryListeners.asScala.foreach(ql => ql.newQueryResultAvailable(e))
+
+  /**
+    * Gets the last Element of the path list
+    */
+  def getCurrentDirectory: String = {
+    var directory = ""
+    if (absolutePathList.isEmpty) if (this.lastPath != null) directory = this.lastPath
+    else directory = System.getProperty("user.dir")
+    else directory = absolutePathList.get(absolutePathList.size - 1)
+    directory
+  }
+
+  /**
+    * Sets the last Element of the path list
+    */
+  def setCurrentDirectory(s: String): Unit = lastPath = s
+
+  /**
+    * Append a new path to directory list
+    *
+    */
+  def pushDirectoryToList(path: String): Unit = absolutePathList.add(path)
+
+  /**
+    *
+    * Retract an element from directory list
+    */
+  def popDirectoryFromList(): Unit = {
+    if (!absolutePathList.isEmpty) absolutePathList.remove(absolutePathList.size - 1)
+  }
+
+  /**
+    *
+    * Reset directory list
+    */
+  def resetDirectoryList(path: String): Unit = {
+    absolutePathList = new util.ArrayList[String]
+    absolutePathList.add(path)
+  }
+
   def toJSON(alsoKB: Boolean): String = {
     var brain: AbstractEngineState = null
     if (alsoKB) {
@@ -454,4 +826,8 @@ class PrologEngine protected(spy: Boolean, warning: Boolean) extends Prolog(spy,
     JSONSerializerManager.toJSON(brain)
   }
 
+  /**
+    * Gets the current version of the tuProlog system
+    */
+  def getVersion: String = alice.util.VersionInfo.getEngineVersion
 }

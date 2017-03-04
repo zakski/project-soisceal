@@ -17,6 +17,7 @@
  */
 package alice.tuprolog;
 
+import com.szadowsz.gospel.core.db.ops.OperatorManager;
 import com.szadowsz.gospel.core.parser.Parser;
 
 import java.util.AbstractMap;
@@ -782,7 +783,7 @@ public class Struct extends Term {
         }
         
         if (arity == 2) {
-            if ((p = op.opPrio(name,"xfx")) >= OperatorManager.OP_LOW) {
+            if ((p = op.opPrio(name,"xfx")) >= OperatorManager.OP_LOW()) {
                 return(
                         (((x && p >= prio) || (!x && p > prio)) ? "(" : "") +
                         arg[0].toStringAsArgX(op,p) +
@@ -790,7 +791,7 @@ public class Struct extends Term {
                         arg[1].toStringAsArgX(op,p) +
                         (((x && p >= prio) || (!x && p > prio)) ? ")" : ""));
             }
-            if ((p = op.opPrio(name,"yfx")) >= OperatorManager.OP_LOW) {
+            if ((p = op.opPrio(name,"yfx")) >= OperatorManager.OP_LOW()) {
                 return(
                         (((x && p >= prio) || (!x && p > prio)) ? "(" : "") +
                         arg[0].toStringAsArgY(op,p) +
@@ -798,7 +799,7 @@ public class Struct extends Term {
                         arg[1].toStringAsArgX(op,p) +
                         (((x && p >= prio) || (!x && p > prio)) ? ")" : ""));
             }
-            if ((p = op.opPrio(name,"xfy")) >= OperatorManager.OP_LOW) {
+            if ((p = op.opPrio(name,"xfy")) >= OperatorManager.OP_LOW()) {
                 if (!name.equals(",")) {
                     return(
                             (((x && p >= prio) || (!x && p > prio)) ? "(" : "") +
@@ -818,28 +819,28 @@ public class Struct extends Term {
             }
         }
         else if (arity == 1) {
-            if ((p = op.opPrio(name,"fx")) >= OperatorManager.OP_LOW) {
+            if ((p = op.opPrio(name,"fx")) >= OperatorManager.OP_LOW()) {
                 return(
                         (((x && p >= prio) || (!x && p > prio)) ? "(" : "") +
                         name + " "            +
                         arg[0].toStringAsArgX(op,p) +
                         (((x && p >= prio) || (!x && p > prio)) ? ")" : ""));
             }
-            if ((p = op.opPrio(name,"fy")) >= OperatorManager.OP_LOW) {
+            if ((p = op.opPrio(name,"fy")) >= OperatorManager.OP_LOW()) {
                 return(
                         (((x && p >= prio) || (!x && p > prio)) ? "(" : "") +
                         name + " "            +
                         arg[0].toStringAsArgY(op,p) +
                         (((x && p >= prio) || (!x && p > prio)) ? ")" : ""));
             }
-            if ((p = op.opPrio(name,"xf")) >= OperatorManager.OP_LOW) {
+            if ((p = op.opPrio(name,"xf")) >= OperatorManager.OP_LOW()) {
                 return(
                         (((x && p >= prio) || (!x && p > prio)) ? "(" : "") +
                         arg[0].toStringAsArgX(op,p) +
                         " " + name + " "      +
                         (((x && p >= prio) || (!x && p > prio)) ? ")" : ""));
             }
-            if ((p = op.opPrio(name,"yf")) >= OperatorManager.OP_LOW) {
+            if ((p = op.opPrio(name,"yf")) >= OperatorManager.OP_LOW()) {
                 return(
                         (((x && p >= prio) || (!x && p > prio)) ? "(" : "") +
                         arg[0].toStringAsArgY(op,p) +

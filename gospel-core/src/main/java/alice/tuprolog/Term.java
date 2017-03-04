@@ -29,9 +29,9 @@ import java.util.List;
 import alice.tuprolog.json.JSONSerializerManager;
 import alice.util.OneWayList;
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.db.ops.OperatorManager;
 import com.szadowsz.gospel.core.engine.EngineManager;
 import com.szadowsz.gospel.core.engine.context.ExecutionContext;
-import com.szadowsz.gospel.core.parser.Parser;
 
 /**
  * Term class is the root abstract class for prolog data type
@@ -305,7 +305,7 @@ public abstract class Term implements Serializable {
      * Gets the string representation of this term
      * as an X argument of an operator, considering the associative property.
      */
-    public String toStringAsArgX(OperatorManager op,int prio) {
+    public String toStringAsArgX(OperatorManager op, int prio) {
         return toStringAsArg(op,prio,true);
     }
     

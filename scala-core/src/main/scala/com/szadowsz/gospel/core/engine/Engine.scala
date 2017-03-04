@@ -94,7 +94,7 @@ class Engine(runner: EngineRunner, q: Term)  {
     return l
   }
 
-  private[gospel] def prepareGoal() = {
+  private[engine] def prepareGoal() = {
     val goals = new LinkedHashMap[Var, Var]
     startGoal = query.copy(goals, nDemoSteps).asInstanceOf[Struct]
     goalVars = goals.values

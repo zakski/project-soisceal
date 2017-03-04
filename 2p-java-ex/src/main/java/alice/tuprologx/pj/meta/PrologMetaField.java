@@ -2,11 +2,10 @@ package alice.tuprologx.pj.meta;
 
 import java.lang.reflect.*;
 
-import alice.tuprolog.DefaultOperatorManager;
+import com.szadowsz.gospel.core.db.ops.OperatorManager;
 import alice.tuprologx.pj.model.*;
 import alice.tuprologx.pj.annotations.*;
 import alice.tuprologx.pj.engine.*;
-import com.szadowsz.gospel.core.parser.Parser;
 
 /**
  *
@@ -72,7 +71,7 @@ public class PrologMetaField {
         String init = _annotation.init();
         if (init != "") {
             try {
-                Term<?> t = Term.unmarshal(com.szadowsz.gospel.core.parser.Parser.parseSingleTerm(init,new DefaultOperatorManager()));
+                Term<?> t = Term.unmarshal(com.szadowsz.gospel.core.parser.Parser.parseSingleTerm(init,new OperatorManager()));
                 System.out.println("init field = "+t);
                 setValue(o, t);
             }

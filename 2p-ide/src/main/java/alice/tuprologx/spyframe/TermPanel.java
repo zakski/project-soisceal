@@ -1,7 +1,7 @@
 package alice.tuprologx.spyframe;
 
 
-import alice.tuprolog.DefaultOperatorManager;
+import com.szadowsz.gospel.core.db.ops.OperatorManager;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 import alice.tuprolog.Var;
@@ -87,9 +87,9 @@ public class TermPanel extends JPanel implements ActionListener{
    */
   public void setTerm(String sterm){
     Term term;
-    try{term= Parser.parseSingleTerm(sterm,new DefaultOperatorManager());}
+    try{term= Parser.parseSingleTerm(sterm,new OperatorManager());}
     catch(Exception ex){
-      term=Parser.parseSingleTerm("'>illegal prolog term<'",new DefaultOperatorManager());
+      term=Parser.parseSingleTerm("'>illegal prolog term<'",new OperatorManager());
     }
     setTerm(term);
   }

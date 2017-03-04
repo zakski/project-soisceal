@@ -1,6 +1,6 @@
 package alice.tuprologx.spyframe;
 
-import alice.tuprolog.DefaultOperatorManager;
+import com.szadowsz.gospel.core.db.ops.OperatorManager;
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
@@ -237,7 +237,7 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener {
    */
   public static void main(String[] args) throws Exception{
     Theory theory=new Theory(new FileInputStream(args[0]));
-    Term goal= Parser.parseSingleTerm(args[1],new DefaultOperatorManager());
+    Term goal= Parser.parseSingleTerm(args[1],new OperatorManager());
     System.out.println("goal:"+goal);
     System.out.println("in given theory\n---------------\n"+theory);
     SpyFrame tf=new SpyFrame(theory, goal);
