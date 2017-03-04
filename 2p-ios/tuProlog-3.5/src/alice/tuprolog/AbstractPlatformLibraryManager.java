@@ -17,8 +17,8 @@ public abstract class AbstractPlatformLibraryManager implements ILibraryManager
 	private ArrayList<Library> currentLibraries = new ArrayList<Library>();
 
 	protected transient Prolog prolog;
-	private transient TheoryManager theoryManager;
-	private transient PrimitiveManager primitiveManager;
+	private TheoryManager theoryManager;
+	private PrimitiveManager primitiveManager;
 	protected Hashtable<String, URL> externalLibraries = new Hashtable<String, URL>();
 
 	@Override
