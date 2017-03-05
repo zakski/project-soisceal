@@ -24,6 +24,8 @@ import alice.tuprolog.Number;
 import com.szadowsz.gospel.core.Theory;
 import com.szadowsz.gospel.core.db.libs.TheoryLibrary;
 import com.szadowsz.gospel.core.db.ops.Operator;
+import com.szadowsz.gospel.core.error.InvalidTheoryException;
+import com.szadowsz.gospel.core.error.PrologError;
 
 /**
  * This class defines a set of basic built-in predicates for the tuProlog engine

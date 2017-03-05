@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
 
-import alice.tuprolog.InvalidTheoryException;
+import com.szadowsz.gospel.core.error.InvalidTheoryException;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Theory;
 

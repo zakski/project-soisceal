@@ -1,6 +1,6 @@
 package alice.tuprologx.ide;
 
-import alice.tuprolog.InvalidTheoryException;
+import com.szadowsz.gospel.core.error.InvalidTheoryException;
 import com.szadowsz.gospel.core.event.interpreter.QueryEvent;
 import com.szadowsz.gospel.core.listener.QueryListener;
 import alice.tuprolog.lib.IOLibrary;

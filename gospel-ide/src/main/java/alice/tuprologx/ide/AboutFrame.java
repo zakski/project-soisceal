@@ -1,8 +1,8 @@
 package alice.tuprologx.ide;
 
-import javax.swing.*;
+import com.szadowsz.gospel.core.PrologEngine;
 
-import alice.tuprolog.Prolog;
+import javax.swing.*;
 
 import java.awt.*;
 import java.net.URL;
@@ -24,7 +24,7 @@ public class AboutFrame extends GenericFrame
         URL urlImage = getClass().getResource("img/tuProlog.gif");
         icon.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         
-        JLabel versionSystem=new JLabel(" tuProlog engine version " + Prolog.getVersion() );
+        JLabel versionSystem=new JLabel(" tuProlog engine version " + PrologEngine.getVersion() );
         
         //String platformMessage = " " + alice.util.VersionInfo.getPlatform();
         //platformMessage += " platform version ";

@@ -15,7 +15,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import alice.tuprolog.InvalidLibraryException;
+import com.szadowsz.gospel.core.error.InvalidLibraryException;
 import com.szadowsz.gospel.core.event.interpreter.LibraryEvent;
 import com.szadowsz.gospel.core.listener.LibraryListener;
 

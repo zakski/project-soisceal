@@ -18,6 +18,8 @@
 package alice.tuprolog;
 
 import com.szadowsz.gospel.core.db.ops.OperatorManager;
+import com.szadowsz.gospel.core.db.primitives.PrimitiveInfo;
+import com.szadowsz.gospel.core.error.InvalidTermException;
 import com.szadowsz.gospel.core.parser.Parser;
 
 import java.util.AbstractMap;

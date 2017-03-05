@@ -52,7 +52,7 @@ public class JavaIDE
     private static ConsoleManager consoleManager;
 
     public JavaIDE() {
-        super("tuProlog "+Prolog.getVersion()+" IDE");
+        super("tuProlog "+PrologEngine.getVersion()+" IDE");
         initComponents();
     }
 
@@ -60,7 +60,7 @@ public class JavaIDE
      * Initialize the graphic components and set the dependencies among them.
      */
     private void initComponents() {
-        System.out.println("tuProlog system - release " + Prolog.getVersion());
+        System.out.println("tuProlog system - release " + PrologEngine.getVersion());
 
         final PrologEngine engine = new PrologEngine();
         

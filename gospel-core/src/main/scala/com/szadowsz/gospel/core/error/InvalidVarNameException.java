@@ -15,31 +15,20 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package alice.tuprolog;
+package com.szadowsz.gospel.core.error;
 
-import com.szadowsz.gospel.core.Solution;
+import alice.tuprolog.Var;
 
 /**
- * This exception is raised when an halt code is requested
- * and no halt predicate has been issued
+ * This exeption means that a not valid tuProlog variable has been specified.
  *
- * @see Solution
- *
+ * @see Var
+ * @deprecated Use InvalidTermException with a meaningful message instead. 
  */
-public class HaltException extends PrologException {
+public class InvalidVarNameException extends InvalidTermException {
 	private static final long serialVersionUID = 1L;
-    private int value;
-    
-    public HaltException() {
-        value = 0;
-    }
-    
-    public HaltException(int haltType) {
-        value = haltType;
-    }
-    
-    public int getValue() {
-        return value;
+    public InvalidVarNameException(String message) {
+        super(message);
     }
     
 }

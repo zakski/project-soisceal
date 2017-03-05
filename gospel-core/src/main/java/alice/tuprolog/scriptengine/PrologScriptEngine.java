@@ -19,10 +19,10 @@ import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import javax.script.SimpleScriptContext;
 
-import alice.tuprolog.InvalidTheoryException;
-import alice.tuprolog.MalformedGoalException;
-import alice.tuprolog.NoMoreSolutionException;
-import alice.tuprolog.NoSolutionException;
+import com.szadowsz.gospel.core.error.InvalidTheoryException;
+import com.szadowsz.gospel.core.error.MalformedGoalException;
+import com.szadowsz.gospel.core.error.NoMoreSolutionException;
+import com.szadowsz.gospel.core.error.NoSolutionException;
 import com.szadowsz.gospel.core.Solution;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Var;

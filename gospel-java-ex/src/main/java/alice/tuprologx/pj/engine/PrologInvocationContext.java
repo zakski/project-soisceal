@@ -4,6 +4,7 @@ import alice.tuprologx.pj.annotations.*;
 import alice.tuprologx.pj.annotations.parser.*;
 import alice.tuprologx.pj.annotations.parser.PrologTree.*;
 import alice.tuprologx.pj.model.*;
+import com.szadowsz.gospel.core.error.PrologException;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -342,7 +343,7 @@ public class PrologInvocationContext {
                 return result;
             }
         }
-        catch (alice.tuprolog.PrologException ex) {
+        catch (PrologException ex) {
             return null;
         }
     }

@@ -1,6 +1,6 @@
 package alice.tuprolog.interfaces;
 
-import alice.tuprolog.PrologError;
+import com.szadowsz.gospel.core.error.PrologError;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 

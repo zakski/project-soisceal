@@ -42,7 +42,7 @@ import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 import alice.tuprolog.Var;
 import alice.tuprolog.lib.annotations.OOLibraryEnableLambdas;
-import alice.tuprolog.JavaException;
+import com.szadowsz.gospel.core.error.JavaException;
 import alice.util.AbstractDynamicClassLoader;
 import alice.util.AndroidDynamicClassLoader;
 import alice.util.InspectionUtils;

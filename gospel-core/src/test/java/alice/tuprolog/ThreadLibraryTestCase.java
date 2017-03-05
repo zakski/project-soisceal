@@ -3,6 +3,10 @@ import static org.junit.Assert.*;
 
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.error.InvalidLibraryException;
+import com.szadowsz.gospel.core.error.InvalidTheoryException;
+import com.szadowsz.gospel.core.error.MalformedGoalException;
+import com.szadowsz.gospel.core.error.NoSolutionException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,9 +36,9 @@ public class ThreadLibraryTestCase {
 
 	/**
 	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#thread_id_1(Term)}.
-	 * @throws InvalidTheoryException 
-	 * @throws MalformedGoalException 
-	 * @throws NoSolutionException 
+	 * @throws InvalidTheoryException
+	 * @throws MalformedGoalException
+	 * @throws NoSolutionException
 	 */
 	@Test
 	public void testThread_id_1() throws InvalidTheoryException, MalformedGoalException, NoSolutionException {

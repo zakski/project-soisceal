@@ -15,15 +15,18 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package alice.tuprolog;
-
-import com.szadowsz.gospel.core.Solution;
+package com.szadowsz.gospel.core.error;
 
 /**
- * This exception means that a solution is asked, but actually none exists
- *
- * @see Solution
+ * Base class for tuProlog exceptions. Used
+ * also for representing generic 2P exceptions.
  */
-public class NoSolutionException extends PrologException {
+public class PrologException extends Exception {
 	private static final long serialVersionUID = 1L;
+    public PrologException() {}
+    
+    public PrologException(String st) {
+        super(st);
+    }
+    
 }

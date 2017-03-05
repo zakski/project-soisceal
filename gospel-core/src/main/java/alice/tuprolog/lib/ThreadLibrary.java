@@ -6,10 +6,10 @@
 package alice.tuprolog.lib;
 
 import alice.tuprolog.Int;
-import alice.tuprolog.InvalidTermException;
+import com.szadowsz.gospel.core.error.InvalidTermException;
 import alice.tuprolog.Library;
-import alice.tuprolog.NoSolutionException;
-import alice.tuprolog.PrologError;
+import com.szadowsz.gospel.core.error.NoSolutionException;
+import com.szadowsz.gospel.core.error.PrologError;
 import com.szadowsz.gospel.core.Solution;
 import alice.tuprolog.Term;
 import com.szadowsz.gospel.core.PrologEngine;

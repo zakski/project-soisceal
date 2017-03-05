@@ -15,7 +15,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package alice.tuprolog;
+package com.szadowsz.gospel.core.error;
 
 /**
  * This exception means that a not well formed goal has been specified.
@@ -23,6 +23,6 @@ package alice.tuprolog;
  *
  *
  */
-public class MalformedGoalException extends PrologException {
+public class UnknownVarException extends PrologException {
 	private static final long serialVersionUID = 1L;
 }

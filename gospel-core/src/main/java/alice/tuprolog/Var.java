@@ -19,8 +19,7 @@ package alice.tuprolog;
 
 import java.util.*;
 
-import alice.tuprolog.InvalidTermException;
-import alice.tuprolog.TermVisitor;
+import com.szadowsz.gospel.core.error.InvalidTermException;
 
 /**
  * This class represents a variable term.

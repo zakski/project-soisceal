@@ -18,6 +18,7 @@
 package alice.tuprolog.lib;
 
 import alice.tuprolog.*;
+import com.szadowsz.gospel.core.error.PrologError;
 
 /**
  * Library for managing DCGs.

@@ -10,6 +10,9 @@ import alice.tuprolog.lib.OOLibrary;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.db.primitives.PrimitiveInfo;
+import com.szadowsz.gospel.core.error.InvalidTheoryException;
+import com.szadowsz.gospel.core.error.PrologException;
 import junit.framework.TestCase;
 
 public class JavaLibraryTestCase extends TestCase {
@@ -28,7 +31,7 @@ public class JavaLibraryTestCase extends TestCase {
 		assertEquals(0, primitives.get(PrimitiveInfo.FUNCTOR).size());
 	}
 
-	public void testAnonymousObjectRegistration() throws InvalidTheoryException, InvalidObjectIdException {	
+	public void testAnonymousObjectRegistration() throws InvalidTheoryException, InvalidObjectIdException {
 		OOLibrary lib = (OOLibrary) engine.getLibrary("alice.tuprolog.lib.OOLibrary");
 		String theory = "demo(X) :- X <- update. \n";
 		engine.setTheory(new Theory(theory));

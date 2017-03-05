@@ -37,8 +37,9 @@ import java.io._
 import java.util
 import java.util.regex.Pattern
 
-import alice.tuprolog.{Double, Int, InvalidTermException, Long, Number, Struct, Term, Var}
+import alice.tuprolog.{Double, Int, Long, Number, Struct, Term, Var}
 import com.szadowsz.gospel.core.db.ops.OperatorManager
+import com.szadowsz.gospel.core.error.InvalidTermException
 
 /**
   * This class defines a parser of prolog terms and sentences.

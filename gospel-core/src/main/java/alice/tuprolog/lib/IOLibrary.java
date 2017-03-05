@@ -19,6 +19,8 @@ package alice.tuprolog.lib;
 
 import alice.tuprolog.*;
 import alice.tuprolog.Number;
+import com.szadowsz.gospel.core.error.InvalidTermException;
+import com.szadowsz.gospel.core.error.PrologError;
 
 import java.util.*;
 import java.io.*;

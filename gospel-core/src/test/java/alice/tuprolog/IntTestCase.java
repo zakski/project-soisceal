@@ -1,5 +1,6 @@
 package alice.tuprolog;
 
+import com.szadowsz.gospel.core.error.InvalidTermException;
 import junit.framework.TestCase;
 
 public class IntTestCase extends TestCase {

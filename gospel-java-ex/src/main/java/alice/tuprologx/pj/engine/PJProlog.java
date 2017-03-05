@@ -13,6 +13,8 @@ package alice.tuprologx.pj.engine;
 import alice.tuprologx.pj.model.*;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
+import com.szadowsz.gospel.core.error.InvalidTheoryException;
+import com.szadowsz.gospel.core.error.NoMoreSolutionException;
 
 import java.util.*;
 
@@ -63,15 +65,15 @@ public class PJProlog /*extends alice.tuprolog.Prolog*/ {
         return new PrologSolution<G,S>(retValue);
     }
 
-    public void setTheory(Theory theory) throws alice.tuprolog.InvalidTheoryException {
+    public void setTheory(Theory theory) throws InvalidTheoryException {
         engine.setTheory(new com.szadowsz.gospel.core.Theory(theory.marshal()));
     }
 
-    public void addTheory(Theory theory) throws alice.tuprolog.InvalidTheoryException {
+    public void addTheory(Theory theory) throws InvalidTheoryException {
         engine.addTheory(new com.szadowsz.gospel.core.Theory(theory.marshal()));
     }
     
-    public Theory getTheory() throws alice.tuprolog.InvalidTheoryException {
+    public Theory getTheory() throws InvalidTheoryException {
         return Theory.unmarshal(engine.getTheory());
     }
         
@@ -109,7 +111,7 @@ public class PJProlog /*extends alice.tuprolog.Prolog*/ {
                 try {
                     next = new PrologSolution<G,S>(engine.solveNext());                    
                 }
-                catch (alice.tuprolog.NoMoreSolutionException e) {
+                catch (NoMoreSolutionException e) {
                     next = null;
                 }
             }

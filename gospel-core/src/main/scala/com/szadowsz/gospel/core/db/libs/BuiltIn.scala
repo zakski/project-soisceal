@@ -36,10 +36,11 @@ package com.szadowsz.gospel.core.db.libs
 import java.io.{File, FileInputStream, FileNotFoundException, IOException}
 import java.util
 
-import alice.tuprolog.{Int, InvalidLibraryException, InvalidTheoryException, Library, Number, PrologError, Struct, Term, Var}
+import alice.tuprolog.{Int, Library, Number, Struct, Term, Var}
 import alice.util.Tools
 import com.szadowsz.gospel.core.db.ops.OperatorManager
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
+import com.szadowsz.gospel.core.error.{InvalidLibraryException, InvalidTheoryException, PrologError}
 import com.szadowsz.gospel.core.{PrologEngine, Theory}
 
 import scala.util.control.NonFatal

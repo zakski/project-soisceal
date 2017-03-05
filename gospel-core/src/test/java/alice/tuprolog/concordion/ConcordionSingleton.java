@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alice.tuprolog.*;
+import com.szadowsz.gospel.core.error.PrologException;
 import com.szadowsz.gospel.core.event.interpreter.ExceptionEvent;
 import com.szadowsz.gospel.core.listener.ExceptionListener;
 import com.szadowsz.gospel.core.PrologEngine;

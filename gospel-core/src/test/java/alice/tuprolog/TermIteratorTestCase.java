@@ -4,9 +4,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.error.InvalidTermException;
 import junit.framework.TestCase;
-
-import static alice.tuprolog.ISOIOLibraryTestCase.engine;
 
 /**
  * 

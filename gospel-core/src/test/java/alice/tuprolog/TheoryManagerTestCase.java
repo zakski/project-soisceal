@@ -8,6 +8,7 @@ import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 import com.szadowsz.gospel.core.db.theory.TheoryManager;
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo;
+import com.szadowsz.gospel.core.error.*;
 import junit.framework.TestCase;
 
 public class TheoryManagerTestCase extends TestCase {
@@ -54,7 +55,7 @@ public class TheoryManagerTestCase extends TestCase {
 		assertEquals(0, testClauses.size());
 	}
 
-	public void testAbolish2() throws InvalidTheoryException, MalformedGoalException{
+	public void testAbolish2() throws InvalidTheoryException, MalformedGoalException {
 		PrologEngine engine = new PrologEngine();
 		engine.setTheory(new Theory("fact(new).\n" +
 									"fact(other).\n"));

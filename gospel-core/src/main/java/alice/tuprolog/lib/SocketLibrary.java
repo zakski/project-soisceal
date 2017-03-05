@@ -22,7 +22,7 @@ import alice.tuprolog.Int;
 import alice.tuprolog.Library;
 //import alice.tuprolog.MalformedGoalException;
 //import alice.tuprolog.NoSolutionException;
-import alice.tuprolog.PrologError;
+import com.szadowsz.gospel.core.error.PrologError;
 import alice.tuprolog.Server_Socket;
 //import alice.tuprolog.SolveInfo;
 import alice.tuprolog.Struct;

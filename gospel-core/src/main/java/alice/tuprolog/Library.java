@@ -18,6 +18,7 @@
 package alice.tuprolog;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.db.primitives.PrimitiveInfo;
 
 import java.io.Serializable;
 import java.util.*;

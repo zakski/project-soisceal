@@ -4,9 +4,9 @@ import alice.util.*;
 import alice.tuprolog.*;
 import com.szadowsz.gospel.core.event.interpreter.ExceptionEvent;
 import com.szadowsz.gospel.core.event.interpreter.WarningEvent;
-import alice.tuprolog.InvalidTheoryException;
-import alice.tuprolog.MalformedGoalException;
-import alice.tuprolog.NoSolutionException;
+import com.szadowsz.gospel.core.error.InvalidTheoryException;
+import com.szadowsz.gospel.core.error.MalformedGoalException;
+import com.szadowsz.gospel.core.error.NoSolutionException;
 import com.szadowsz.gospel.core.listener.ExceptionListener;
 import com.szadowsz.gospel.core.event.interpreter.SpyEvent;
 import com.szadowsz.gospel.core.event.io.OutputEvent;
@@ -28,7 +28,7 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
 
 
     static final String incipit =
-            "tuProlog system - release " + Prolog.getVersion() + "\n";
+            "tuProlog system - release " + PrologEngine.getVersion() + "\n";
 
     static String sol = ""; //to do -> correct output of CUI console in order to show multiple results
 

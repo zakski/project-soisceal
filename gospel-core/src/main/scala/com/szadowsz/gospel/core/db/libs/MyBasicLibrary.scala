@@ -38,6 +38,7 @@ import java.util
 import alice.tuprolog._
 import alice.tuprolog.lib.BasicLibrary
 import com.szadowsz.gospel.core.Theory
+import com.szadowsz.gospel.core.error.{InvalidTheoryException, PrologError}
 
 import scala.util.control.NonFatal
 import scala.collection.JavaConverters._

@@ -18,7 +18,7 @@
 package com.szadowsz.gospel.core.parser;
 
 
-import alice.tuprolog.InvalidTermException;
+import com.szadowsz.gospel.core.error.InvalidTermException;
 import alice.tuprolog.Term;
 import com.szadowsz.gospel.core.parser.Parser;
 

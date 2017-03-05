@@ -33,8 +33,9 @@
  */
 package com.szadowsz.gospel.core.engine.state
 
-import alice.tuprolog.{HaltException, JavaException, PrologError, Struct}
+import alice.tuprolog.Struct
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
+import com.szadowsz.gospel.core.error.{JavaException, PrologError}
 
 /**
   * @author Alex Benini
@@ -49,7 +50,6 @@ private[engine] final case class GoalEvaluationState(override protected val runn
       try {
         e.nextState = if (primitive.evalAsPredicate(e.currentContext.currentGoal)) runner.GOAL_SELECTION else runner.BACKTRACK
       } catch {
-        case he: HaltException => e.nextState = runner.END_HALT
         case error: PrologError =>
           // sostituisco il gol in cui si ? verificato l'errore con il
           // subgoal throw/1

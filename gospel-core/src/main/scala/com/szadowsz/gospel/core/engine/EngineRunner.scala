@@ -6,13 +6,14 @@ import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
-import alice.tuprolog.{NoMoreSolutionException, Term, TermQueue}
+import alice.tuprolog.{Term, TermQueue}
 import com.szadowsz.gospel.core.{PrologEngine, Solution}
 import com.szadowsz.gospel.core.db.theory.TheoryManager
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
 import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalTree
 import com.szadowsz.gospel.core.engine.state._
+import com.szadowsz.gospel.core.error.NoMoreSolutionException
 
 /**
   * Prolog Interpreter Executor.

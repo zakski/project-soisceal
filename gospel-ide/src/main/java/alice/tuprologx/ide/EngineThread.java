@@ -19,8 +19,7 @@ package alice.tuprologx.ide;
 
 //import javax.swing.JOptionPane;
 
-import alice.tuprolog.*;
-import alice.tuprolog.MalformedGoalException;
+import com.szadowsz.gospel.core.error.MalformedGoalException;
 import com.szadowsz.gospel.core.PrologEngine;
 
 /**

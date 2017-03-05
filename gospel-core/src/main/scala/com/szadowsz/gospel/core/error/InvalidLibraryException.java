@@ -15,19 +15,48 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package alice.tuprolog.lib;
+package com.szadowsz.gospel.core.error;
+
+import alice.tuprolog.Library;
 import com.szadowsz.gospel.core.error.PrologException;
 
 /**
- * This exception is raised when a not valid identifier is used
- * to register an object in the JavaLibrary
+ * This exception means that a not valid tuProlog library has been specified.
  *
- * @see OOLibrary
- *
- *
- *
- *
+ * @see Library
  */
-public class InvalidObjectIdException extends PrologException {
+public class InvalidLibraryException extends PrologException {
 	private static final long serialVersionUID = 1L;
+    private String libraryName;
+    private int line;
+    private int pos;
+    
+    public InvalidLibraryException() {}
+    
+    public InvalidLibraryException(String libName, int line, int pos) {
+        libraryName = libName;
+        this.pos = pos;
+        this.line = line;
+    }
+    
+    public String getLibraryName() {
+        return libraryName;
+    }
+    
+    public int getLine() {
+        return line;
+    }
+    
+    public int getPos() {
+        return pos;
+    }
+    
+    public String getMessage() {
+        return toString();
+    }
+    
+    public String toString() {
+        return "InvalidLibraryException: " + libraryName + " at " + line + ":" + pos;
+    }
+    
 }

@@ -22,7 +22,8 @@ import java.io.{IOException, InputStream}
 import java.util
 
 import alice.tuprolog.json.JSONSerializerManager
-import alice.tuprolog.{InvalidTheoryException, Struct, Term}
+import alice.tuprolog.{Struct, Term}
+import com.szadowsz.gospel.core.error.InvalidTheoryException
 import com.szadowsz.gospel.core.parser.Parser
 
 /**

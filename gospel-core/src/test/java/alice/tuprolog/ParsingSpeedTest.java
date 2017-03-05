@@ -2,6 +2,7 @@ package alice.tuprolog;
 
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.db.ops.OperatorManager;
+import com.szadowsz.gospel.core.error.InvalidTermException;
 import com.szadowsz.gospel.core.parser.Parser;
 
 public class ParsingSpeedTest {

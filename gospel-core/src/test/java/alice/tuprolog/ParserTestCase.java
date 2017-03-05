@@ -1,6 +1,7 @@
 package alice.tuprolog;
 
 import com.szadowsz.gospel.core.db.ops.OperatorManager;
+import com.szadowsz.gospel.core.error.InvalidTermException;
 import junit.framework.TestCase;
 import com.szadowsz.gospel.core.parser.Parser;
 

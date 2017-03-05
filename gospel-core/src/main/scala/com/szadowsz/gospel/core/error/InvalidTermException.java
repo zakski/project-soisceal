@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2007 aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -15,19 +15,30 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package alice.tuprolog;
-
-import com.szadowsz.gospel.core.Solution;
+package com.szadowsz.gospel.core.error;
 
 /**
- * This exception means that other solutions are asked but
- * actually no other ones exist.
- *
- * @see Solution
- *
- *
- *
+ * This exception means that a method has been passed an argument
+ * containing an invalid Prolog term.
  */
-public class NoMoreSolutionException extends PrologException {
+public class InvalidTermException extends IllegalArgumentException {
+
 	private static final long serialVersionUID = 1L;
+    
+    /*Castagna 06/2011*/
+	public int line = -1;
+	public int pos = -1;
+	/**/	
+
+    public InvalidTermException(String message) {
+        super(message);
+    }
+    
+    /*Castagna 06/2011*/
+	public InvalidTermException(String message, int line, int pos) {
+		super(message);
+		this.line = line;
+		this.pos = pos;
+	}
+	/**/
 }

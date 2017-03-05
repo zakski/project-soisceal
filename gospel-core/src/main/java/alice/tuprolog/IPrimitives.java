@@ -17,6 +17,8 @@
  */
 package alice.tuprolog;
 
+import com.szadowsz.gospel.core.db.primitives.PrimitiveInfo;
+
 import java.util.Map;
 import java.util.List;
 

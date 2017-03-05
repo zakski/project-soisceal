@@ -15,18 +15,20 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package alice.tuprolog;
+package com.szadowsz.gospel.core.error;
+
+import com.szadowsz.gospel.core.Solution;
+import com.szadowsz.gospel.core.error.PrologException;
 
 /**
- * This exeption means that a not valid tuProlog variable has been specified.
+ * This exception means that other solutions are asked but
+ * actually no other ones exist.
  *
- * @see Var
- * @deprecated Use InvalidTermException with a meaningful message instead. 
+ * @see Solution
+ *
+ *
+ *
  */
-public class InvalidVarNameException extends InvalidTermException {
+public class NoMoreSolutionException extends PrologException {
 	private static final long serialVersionUID = 1L;
-    public InvalidVarNameException(String message) {
-        super(message);
-    }
-    
 }

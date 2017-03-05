@@ -8,6 +8,8 @@ import alice.tuprolog.*;
 import alice.tuprolog.Number;
 import alice.tuprolog.Long;
 import com.szadowsz.gospel.core.db.ops.Operator;
+import com.szadowsz.gospel.core.error.InvalidLibraryException;
+import com.szadowsz.gospel.core.error.PrologError;
 
 import java.util.*;
 import java.io.*;
@@ -39,7 +41,7 @@ public class ISOIOLibrary extends Library{
         
     }
     
-    public boolean open_4(Term source_sink, Term mode, Term stream, Term options)throws PrologError{
+    public boolean open_4(Term source_sink, Term mode, Term stream, Term options)throws PrologError {
         initLibrary();
         source_sink = source_sink.getTerm();
         mode = mode.getTerm();

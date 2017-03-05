@@ -1,7 +1,7 @@
 package alice.tuprologx.spyframe;
 
 import com.szadowsz.gospel.core.db.ops.OperatorManager;
-import alice.tuprolog.InvalidTheoryException;
+import com.szadowsz.gospel.core.error.InvalidTheoryException;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 import com.szadowsz.gospel.core.PrologEngine;

@@ -19,6 +19,7 @@ package alice.tuprolog.lib;
 
 import alice.tuprolog.*;
 import alice.tuprolog.Number;
+import com.szadowsz.gospel.core.error.PrologError;
 
 /**
  * This class represents a tuProlog library providing most of the built-ins

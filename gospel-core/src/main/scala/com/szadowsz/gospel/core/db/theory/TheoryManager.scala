@@ -2,7 +2,7 @@ package com.szadowsz.gospel.core.db.theory
 
 import java.util
 
-import alice.tuprolog.{InvalidTermException, InvalidTheoryException, Struct, Term, Var}
+import alice.tuprolog.{Struct, Term, Var}
 import alice.tuprolog.json.{AbstractEngineState, FullEngineState}
 import alice.util.Tools
 import com.szadowsz.gospel.core.PrologEngine
@@ -11,7 +11,7 @@ import com.szadowsz.gospel.core.db.theory.clause.{ClauseDatabase, FamilyClausesL
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
 import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalLeaf
-import com.szadowsz.gospel.core.parser.Parser
+import com.szadowsz.gospel.core.error.{InvalidTermException, InvalidTheoryException}
 import org.slf4j.LoggerFactory
 
 import scala.collection.JavaConverters._

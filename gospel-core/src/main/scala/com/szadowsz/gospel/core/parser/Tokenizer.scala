@@ -20,7 +20,7 @@ package com.szadowsz.gospel.core.parser
 import java.io._
 import java.util.{Arrays, LinkedList}
 
-import alice.tuprolog.InvalidTermException
+import com.szadowsz.gospel.core.error.InvalidTermException
 
 
 @SerialVersionUID(1L)

@@ -14,28 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *//*
- * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package com.szadowsz.gospel.core
 
 import java.util
 
-import alice.tuprolog.{InvalidLibraryException, InvalidTermException, InvalidTheoryException, Library, MalformedGoalException, NoMoreSolutionException, Term}
+import alice.tuprolog.{Library, Term}
 import alice.tuprolog.json.{AbstractEngineState, FullEngineState, JSONSerializerManager, ReducedEngineState}
 import alice.tuprolog.lib.{IOLibrary, ISOLibrary, OOLibrary}
 import com.szadowsz.gospel.core.db.LibraryManager
@@ -45,6 +29,7 @@ import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
 import com.szadowsz.gospel.core.db.theory.TheoryManager
 import com.szadowsz.gospel.core.engine.{Engine, EngineManager}
 import com.szadowsz.gospel.core.engine.flags.FlagManager
+import com.szadowsz.gospel.core.error._
 import com.szadowsz.gospel.core.event.interpreter._
 import com.szadowsz.gospel.core.event.io.OutputEvent
 import com.szadowsz.gospel.core.listener._
@@ -55,6 +40,11 @@ import scala.collection.JavaConverters._
 
 
 object PrologEngine {
+
+  /**
+    * Gets the current version of the tuProlog system
+    */
+  def getVersion: String = alice.util.VersionInfo.getEngineVersion
 
   def getEngineStateFromJSON(jsonString: String): AbstractEngineState = {
     if (jsonString.contains("FullEngineState")) JSONSerializerManager.fromJSON(jsonString, classOf[FullEngineState])
@@ -825,9 +815,4 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     flagManager.serializeFlags(brain)
     JSONSerializerManager.toJSON(brain)
   }
-
-  /**
-    * Gets the current version of the tuProlog system
-    */
-  def getVersion: String = alice.util.VersionInfo.getEngineVersion
 }

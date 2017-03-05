@@ -1,6 +1,9 @@
-package alice.tuprolog;
+package com.szadowsz.gospel.core.error;
 
 
+import alice.tuprolog.Int;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Term;
 import com.szadowsz.gospel.core.engine.EngineManager;
 
 /**

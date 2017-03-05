@@ -1,6 +1,6 @@
 package alice.tuprolog.concordion;
 
-import alice.tuprolog.PrologException;
+import com.szadowsz.gospel.core.error.PrologException;
 import alice.tuprolog.Term;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.extension.Extension;

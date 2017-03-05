@@ -1,5 +1,7 @@
 package alice.tuprolog;
 
+import com.szadowsz.gospel.core.error.InvalidLibraryException;
+import com.szadowsz.gospel.core.error.InvalidTheoryException;
 import com.szadowsz.gospel.core.listener.SpyListener;
 
 import com.szadowsz.gospel.core.PrologEngine;

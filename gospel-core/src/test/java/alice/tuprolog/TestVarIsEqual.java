@@ -3,6 +3,8 @@ package alice.tuprolog;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.error.InvalidTheoryException;
+import com.szadowsz.gospel.core.error.MalformedGoalException;
 import com.szadowsz.gospel.core.event.io.OutputEvent;
 import junit.framework.TestCase;
 import com.szadowsz.gospel.core.listener.OutputListener;

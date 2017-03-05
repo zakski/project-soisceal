@@ -1,4 +1,4 @@
-package alice.tuprolog;
+package com.szadowsz.gospel.core.engine.context;
 
 import com.szadowsz.gospel.core.engine.context.ChoicePointContext;
 import com.szadowsz.gospel.core.engine.context.clause.ClauseStore;

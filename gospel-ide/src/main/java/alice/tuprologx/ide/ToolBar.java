@@ -10,7 +10,7 @@ import java.awt.event.*;
 import java.awt.BorderLayout;
 import java.net.URL;
 
-import alice.tuprolog.InvalidTheoryException;
+import com.szadowsz.gospel.core.error.InvalidTheoryException;
 import alice.tuprolog.Term;
 import alice.tuprologx.spyframe.SpyFrame;
 import com.szadowsz.gospel.core.PrologEngine;

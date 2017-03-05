@@ -1,7 +1,7 @@
 package alice.tuprologx.ide;
 
 //import alice.tuprologx.spyframe.TermPanel;
-import alice.tuprolog.NoSolutionException;
+import com.szadowsz.gospel.core.error.NoSolutionException;
 import com.szadowsz.gospel.core.listener.ExceptionListener;
 import com.szadowsz.gospel.core.event.interpreter.ExceptionEvent;
 import com.szadowsz.gospel.core.event.interpreter.QueryEvent;

@@ -1,6 +1,5 @@
 package alice.tuprologx.ide;
 
-import alice.tuprolog.Prolog;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.event.interpreter.PrologEvent;

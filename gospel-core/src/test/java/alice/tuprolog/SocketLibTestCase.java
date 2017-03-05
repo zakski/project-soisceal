@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.error.*;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -4,6 +4,9 @@ import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 import com.szadowsz.gospel.core.db.libs.BuiltIn;
+import com.szadowsz.gospel.core.error.InvalidTermException;
+import com.szadowsz.gospel.core.error.InvalidTheoryException;
+import com.szadowsz.gospel.core.error.MalformedGoalException;
 import junit.framework.TestCase;
 
 public class BuiltInTestCase extends TestCase {

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import alice.tuprolog.lib.IOLibrary;
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.db.primitives.PrimitiveInfo;
+import com.szadowsz.gospel.core.error.MalformedGoalException;
 import junit.framework.TestCase;
 
 public class IOLibraryTestCase extends TestCase {

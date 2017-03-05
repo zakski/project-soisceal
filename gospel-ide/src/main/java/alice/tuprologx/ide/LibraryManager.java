@@ -18,7 +18,7 @@
 package alice.tuprologx.ide;
 
 import alice.tuprolog.*;
-import alice.tuprolog.InvalidLibraryException;
+import com.szadowsz.gospel.core.error.InvalidLibraryException;
 import alice.util.AssemblyCustomClassLoader;
 
 import java.io.File;
