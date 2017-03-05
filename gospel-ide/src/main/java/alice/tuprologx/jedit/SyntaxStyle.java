@@ -6,7 +6,7 @@
  * permitted, in both source and binary form, provided that this notice
  * remains intact in all source distributions of this package.
  */
-package alice.util.jedit;
+package alice.tuprologx.jedit;
 
 import java.awt.*;
 
