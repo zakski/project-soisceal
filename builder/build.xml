@@ -339,7 +339,7 @@
 
 		<!-- Project Structure - Android Fodler -->
 
-		<property name="android.dir" value="${basedir}/2p-android/trunk"/>
+		<property name="android.dir" value="${basedir}/gospel-android/trunk"/>
 
 		<property name="android.libs.dir" value="${android.dir}/libs"/>
 
