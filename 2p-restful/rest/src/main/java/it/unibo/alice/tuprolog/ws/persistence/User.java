@@ -37,7 +37,7 @@ public class User implements Serializable {
 	
 	
 	/**
-	 * Regular expression uset to test the validity of passwords.</br></br>
+	 * Regular expression used to test the validity of passwords.</br></br>
 	 * 
 	 * (?=.*\\d)	--> must contain at least one digit from 0-9</br>
 	 * (?=.*[a-z])	--> must contain at least one lowercase character</br>

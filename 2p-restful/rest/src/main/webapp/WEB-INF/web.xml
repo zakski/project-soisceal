@@ -10,12 +10,11 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
   <servlet>
-    <servlet-name>Jersey Web 2Prolog</servlet-name>
-    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <servlet-name>javax.ws.rs.core.Application</servlet-name>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
-    <servlet-name>Jersey Web 2Prolog</servlet-name>
+    <servlet-name>javax.ws.rs.core.Application</servlet-name>
     <url-pattern>/tuProlog/*</url-pattern>
   </servlet-mapping>
 </web-app>

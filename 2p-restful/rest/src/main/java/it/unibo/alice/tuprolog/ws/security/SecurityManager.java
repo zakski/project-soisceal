@@ -87,6 +87,8 @@ public class SecurityManager {
      */
     @Lock(LockType.READ)
 	public Role validate(String username, String password) {
+    	if (!User.validateUsername(username))
+    		return null;
     	User u = manager.getUser(username);
     	if (u == null)
     		return null;

@@ -31,6 +31,7 @@ import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
+
 import org.jose4j.lang.JoseException;
 
 import com.google.gson.Gson;
@@ -86,11 +87,13 @@ public class RestTuPrologService {
 	public String getInfo() {
 		Element root = new Element("Service");
 		Document doc = new Document();
+
 		Class service = this.getClass();
 		String classPath = ((Path)service.getAnnotation(Path.class)).value();
 		
 		Element serviceName = new Element("Name");
 		serviceName.addContent(service.getSimpleName());
+		
 		root.addContent(serviceName);
 		
 		Element serviceMethods = new Element("Methods");
@@ -144,6 +147,7 @@ public class RestTuPrologService {
 				Element queryParameters = new Element("QueryParams");
 				Element producesElement = new Element("Produces");
 				Element consumesElement = new Element("Consumes");
+				
 				name.addContent(cur.getName());
 				http.addContent(httpMethod);
 				methodUrl.addContent(url);
@@ -151,7 +155,7 @@ public class RestTuPrologService {
 				consumesElement.addContent(consumes);
 				methodElement.addContent(name);
 				methodElement.addContent(http);
-				methodElement.addContent(methodUrl);
+				methodElement.addContent(methodUrl);				
 				
 				if (dictionary.size()>0)
 				{
@@ -159,13 +163,20 @@ public class RestTuPrologService {
 						Element queryParam = new Element("Parameter");
 						Element queryName = new Element("Name");
 						Element queryValue = new Element("Value");
+			
 						queryName.addContent(key.toString());
 						queryValue.addContent(value.toString());
 						queryParam.addContent(queryName);
 						queryParam.addContent(queryValue);
 						queryParameters.addContent(queryParam);
+
 					});
 				}
+				methodElement.addContent(queryParameters);
+				
+				methodElement.addContent(producesElement);
+				methodElement.addContent(consumesElement);
+				serviceMethods.addContent(methodElement);
 				methodElement.addContent(queryParameters);
 				
 				methodElement.addContent(producesElement);
