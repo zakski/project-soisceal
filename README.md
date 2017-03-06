@@ -4,7 +4,7 @@
 
 tuProlog is a light-weight Prolog system for distributed applications and infrastructures, intentionally designed around a minimal core (containing only the most essential properties of a Prolog engine), to be later configured by (statically and dynamically) loading/unloading libraries of predicates. tuProlog also natively supports multi-paradigm programming, providing a clean, seamless integration model between Prolog and mainstream object-oriented languages -- namely Java, for tuProlog Java version, and any .NET-based language (C#, F#..), for tuProlog .NET version. It is also easily deployable, just requiring the presence of a Java/CLR virtual machine and an invocation upon a single self-contained archive file. Interoperability is further developed along the two main lines of Internet standard patterns and coordination models.
 
-**Current version: tuProlog 3.2.0 (released on January 25, 2017)**
+**Current version: tuProlog 3.2.1 (released on February 14, 2017)**
 
 ## **Highlights** ##
 
@@ -24,14 +24,17 @@ This version aims to provide a stable environment
 All tuProlog versions are now available from this site
 except for the Eclipse plugin which must be downloaded and installed directly from the Eclipse Update Manager - see detailed instructions.
 
-Java: tuProlog 3.2.0 (zip) (requires Java 8)
-Java: tuProlog 3.1.0 (zip) (requires Java 8)
-Java: tuProlog 3.0.1 (zip) (requires Java 8)
+Java: tuProlog 3.2.1 (zip) (requires Java 8)
+
 Java: tuProlog 2.9.2 (zip) (requires Java 7)
-.NET:tuProlog 3.0.0-NET (zip) (requires .NET framework 4)
+
+.NET:tuProlog 3.2.1-NET (zip) (requires .NET framework 4)
+
 Android:tuProlog 2.9.1 Android (apk) (requires Android 2.3.3)
+
 Eclipse:  install from Eclipse Update Manager -- see below for details.
-MANUAL: tuProlog 3.2.0 User Guide (pdf)
+
+MANUAL: tuProlog 3.2.1 User Guide (pdf)
 
 ### **Installation** ###
 
