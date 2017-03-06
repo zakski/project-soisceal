@@ -38,5 +38,5 @@ dependencies {
 test {
     testLogging.showStandardStreams = true   // display test output on console
     systemProperties['concordion.output.dir'] = "$reporting.baseDir/spec"  // write output to build/reports/spec
-    //outputs.upToDateWhen { false }   // force tests to run even if code hasn't changed
+    outputs.upToDateWhen { false }   // force tests to run even if code hasn't changed
 }
