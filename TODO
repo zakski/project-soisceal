@@ -1,4 +1,4 @@
-Add Unit test coverage for Flag class and manager
-Double Check Correctness of isEqual/isGreater for Numeric Types
-Figure out correctness of Client Socket unify
-Tidy Struct toStringAsArg method
+Remove Dilella & Colameo Branches
+Consider removing others
+Merge Rest into gospel (particular v4 branch)
+Finish conversion of core to scala from java
