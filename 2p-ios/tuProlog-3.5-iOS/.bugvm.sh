@@ -1,0 +1,1 @@
+./.BugVM_SDK/bin/bugvm -config ./.BugVM_SDK/bugvm-config/bugvm.xml -arch x86_64 -cp ./.BugVM_SDK/lib/bugvm-apple.jar:./.BugVM_SDK/lib/bugvm-rt.jar:./.bin-bugvm/:../tuProlog-4.0.0/bin/:./lib/gson-2.6.2.jar: -verbose -run
