@@ -37,11 +37,7 @@ package alice.tuprologx.pj.lib;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Finds methods and constructors that can be invoked by reflection.
@@ -49,31 +45,31 @@ import java.util.Map;
  * Class.getMethod() and Class.getConstructor(), and other JDK
  * reflective facilities.
  */
-public final class MethodFinder {
+final class MethodFinder {
 
     /**
-	 * The target class to look for methods and constructors in.
-	 */
+     * The target class to look for methods and constructors in.
+     */
     private final Class<?> clazz;
 
     /**
-	 * Mapping from method name to the Methods in the target class with that name.
-	 */
-    private final Map<String,List<Member>> methodMap = new HashMap<String, List<Member>>();
+     * Mapping from method name to the Methods in the target class with that name.
+     */
+    private final Map<String, List<Member>> methodMap = new HashMap<>();
 
     /**
-	 * List of the Constructors in the target class.
-	 */
-    private final List<Member> ctorList = new ArrayList<Member>();
+     * List of the Constructors in the target class.
+     */
+    private final List<Member> ctorList = new ArrayList<>();
 
     /**
-	 * Mapping from a Constructor or Method object to the Class objects representing its formal parameters.
-	 */
-    private final Map<Member,Class<?>[]> paramMap = new HashMap<Member, Class<?>[]>();
+     * Mapping from a Constructor or Method object to the Class objects representing its formal parameters.
+     */
+    private final Map<Member, Class<?>[]> paramMap = new HashMap<>();
 
     /**
-     * @param  clazz  Class in which I will look for methods and constructors
-     * throws  IllegalArgumentException if clazz is null, or represents a primitive, or represents an array type
+     * @param clazz Class in which I will look for methods and constructors
+     *              throws  IllegalArgumentException if clazz is null, or represents a primitive, or represents an array type
      */
     public MethodFinder(final Class<?> clazz) {
         if (clazz == null) {
@@ -88,6 +84,75 @@ public final class MethodFinder {
         this.clazz = clazz;
         loadMethods();
         loadConstructors();
+    }
+
+    /**
+     * @param args an Object array
+     * @return an array of Class objects representing the classes of the objects
+     * in the given Object array. If args is null, a zero-length Class
+     * array is returned. If an element in args is null, then Void.TYPE
+     * is the corresponding Class in the return array.
+     */
+    public static Class<?>[] getParameterTypesFrom(final Object[] args) {
+        if (args == null) {
+            return new Class[0];
+        }
+        Class<?>[] argTypes = new Class[args.length];
+        for (int i = 0; i < args.length; ++i) {
+            argTypes[i] = (args[i] == null) ? Void.TYPE : args[i].getClass();
+        }
+        return argTypes;
+    }
+
+    /**
+     * @param classNames String array of fully qualified names (FQNs) of classes
+     *                   or primitives. Represent an array type by using its JVM type
+     *                   descriptor, with dots instead of slashes (e.g. represent the
+     *                   type int[] with "[I", and Object[][] with
+     *                   "[[Ljava.lang.Object;").
+     * @return an array of Class objects representing the classes or primitives
+     * named by the FQNs in the given String array. If the String array
+     * is null, a zero-length Class array is returned. If an element in
+     * classNames is null, the empty string, "void", or "null", then
+     * Void.TYPE is the corresponding Class in the return array. If any
+     * classes require loading because of this operation, the loading is
+     * done by the ClassLoader that loaded this class. Such classes are
+     * not initialized, however.
+     * @throws ClassNotFoundException if any of the FQNs name an unknown
+     *                                class
+     */
+    public static Class<?>[] getParameterTypesFrom(final String[] classNames) throws ClassNotFoundException {
+        return getParameterTypesFrom(classNames, MethodFinder.class.getClassLoader());
+    }
+
+    /**
+     * @param classNames String array of fully qualified names (FQNs) of classes
+     *                   or primitives. Represent an array type by using its JVM type
+     *                   descriptor, with dots instead of slashes (e.g. represent the
+     *                   type int[] with "[I", and Object[][] with
+     *                   "[[Ljava.lang.Object;").
+     * @param loader     a ClassLoader
+     * @return an array of Class objects representing the classes or primitives
+     * named by the FQNs in the given String array. If the String array
+     * is null, a zero-length Class array is returned. If an element in
+     * classNames is null, the empty string, "void", or "null", then
+     * Void.TYPE is the corresponding Class in the return array. If any
+     * classes require loading because of this operation, the loading is
+     * done by the given ClassLoader. Such classes are not initialized,
+     * however.
+     * @throws ClassNotFoundException if any of the FQNs name an unknown
+     *                                class
+     */
+    private static Class<?>[] getParameterTypesFrom(final String[] classNames, final java.lang.ClassLoader loader)
+            throws ClassNotFoundException {
+        if (classNames == null) {
+            return new Class[0];
+        }
+        Class<?>[] types = new Class[classNames.length];
+        for (int i = 0; i < classNames.length; ++i) {
+            types[i] = ClassUtilities.classForNameOrPrimitive(classNames[i], loader);
+        }
+        return types;
     }
 
     /**
@@ -114,12 +179,12 @@ public final class MethodFinder {
      * formal parameter list, but not a primitive formal parameter.
      *
      * @param parameterTypes array representing the number and types of
-     *            parameters to look for in the constructor's signature. A null
-     *            array is treated as a zero-length array.
+     *                       parameters to look for in the constructor's signature. A null
+     *                       array is treated as a zero-length array.
      * @return Constructor object satisfying the conditions
      * @throws NoSuchMethodException if no constructors match the criteria,
-     *                or if the reflective call is ambiguous based on the
-     *                parameter types
+     *                               or if the reflective call is ambiguous based on the
+     *                               parameter types
      */
     public Constructor<?> findConstructor(final Class<?>[] parameterTypes) throws NoSuchMethodException {
         return (Constructor<?>) findMemberIn(ctorList, parameterTypes == null ? new Class[0] : parameterTypes);
@@ -130,8 +195,8 @@ public final class MethodFinder {
      * method will be either all Constructor objects or all Method objects.
      */
     private Member findMemberIn(final List<Member> memberList, final Class<?>[] parameterTypes) throws NoSuchMethodException {
-        List<Member> matchingMembers = new ArrayList<Member>();
-        for (Member member: memberList) {
+        List<Member> matchingMembers = new ArrayList<>();
+        for (Member member : memberList) {
             Class<?>[] methodParamTypes = paramMap.get(member);
 
             if (Arrays.equals(methodParamTypes, parameterTypes)) {
@@ -145,7 +210,7 @@ public final class MethodFinder {
             throw new NoSuchMethodException("no member in " + clazz.getName() + " matching given args");
         }
         if (matchingMembers.size() == 1) {
-            return (Member) matchingMembers.get(0);
+            return matchingMembers.get(0);
         }
         return findMostSpecificMemberIn(matchingMembers);
     }
@@ -157,14 +222,14 @@ public final class MethodFinder {
      * parameterTypes will match a corresponding Object or array reference in a
      * method's formal parameter list, but not a primitive formal parameter.
      *
-     * @param methodName name of the method to search for
+     * @param methodName     name of the method to search for
      * @param parameterTypes array representing the number and types of
-     *            parameters to look for in the method's signature. A null array
-     *            is treated as a zero-length array.
+     *                       parameters to look for in the method's signature. A null array
+     *                       is treated as a zero-length array.
      * @return Method object satisfying the conditions
      * @throws NoSuchMethodException if no methods match the criteria, or if
-     *                the reflective call is ambiguous based on the parameter
-     *                types, or if methodName is null
+     *                               the reflective call is ambiguous based on the parameter
+     *                               types, or if methodName is null
      */
     public Method findMethod(final String methodName, final Class<?>[] parameterTypes) throws NoSuchMethodException {
         List<Member> methodList = methodMap.get(methodName);
@@ -178,12 +243,12 @@ public final class MethodFinder {
      * @param a List of Members (either all Constructors or all Methods)
      * @return the most specific of all Members in the list
      * @throws NoSuchMethodException if there is an ambiguity as to which is
-     *                most specific
+     *                               most specific
      */
     private Member findMostSpecificMemberIn(final List<Member> memberList) throws NoSuchMethodException {
-        List<Member> mostSpecificMembers = new ArrayList<Member>();
+        List<Member> mostSpecificMembers = new ArrayList<>();
 
-        for (Member member: memberList) {
+        for (Member member : memberList) {
 
             if (mostSpecificMembers.isEmpty()) {
                 // First guy in is the most specific so far.
@@ -194,7 +259,7 @@ public final class MethodFinder {
 
                 // Is member more specific than everyone in the most-specific
                 // set?
-                for (Member moreSpecificMember: mostSpecificMembers) {
+                for (Member moreSpecificMember : mostSpecificMembers) {
 
                     if (!memberIsMoreSpecific(member, moreSpecificMember)) {
                         /*
@@ -232,76 +297,8 @@ public final class MethodFinder {
     }
 
     /**
-     * @param args an Object array
-     * @return an array of Class objects representing the classes of the objects
-     *         in the given Object array. If args is null, a zero-length Class
-     *         array is returned. If an element in args is null, then Void.TYPE
-     *         is the corresponding Class in the return array.
-     */
-    public static Class<?>[] getParameterTypesFrom(final Object[] args) {
-        if (args == null) {
-            return new Class[0];
-        }
-        Class<?>[] argTypes = new Class[args.length];
-        for (int i = 0; i < args.length; ++i) {
-            argTypes[i] = (args[i] == null) ? Void.TYPE : args[i].getClass();
-        }
-        return argTypes;
-    }
-
-    /**
-     * @param classNames String array of fully qualified names (FQNs) of classes
-     *            or primitives. Represent an array type by using its JVM type
-     *            descriptor, with dots instead of slashes (e.g. represent the
-     *            type int[] with "[I", and Object[][] with
-     *            "[[Ljava.lang.Object;").
-     * @return an array of Class objects representing the classes or primitives
-     *         named by the FQNs in the given String array. If the String array
-     *         is null, a zero-length Class array is returned. If an element in
-     *         classNames is null, the empty string, "void", or "null", then
-     *         Void.TYPE is the corresponding Class in the return array. If any
-     *         classes require loading because of this operation, the loading is
-     *         done by the ClassLoader that loaded this class. Such classes are
-     *         not initialized, however.
-     * @throws ClassNotFoundException if any of the FQNs name an unknown
-     *                class
-     */
-    public static Class<?>[] getParameterTypesFrom(final String[] classNames) throws ClassNotFoundException {
-        return getParameterTypesFrom(classNames, MethodFinder.class.getClassLoader());
-    }
-
-    /**
-     * @param classNames String array of fully qualified names (FQNs) of classes
-     *            or primitives. Represent an array type by using its JVM type
-     *            descriptor, with dots instead of slashes (e.g. represent the
-     *            type int[] with "[I", and Object[][] with
-     *            "[[Ljava.lang.Object;").
-     * @param loader a ClassLoader
-     * @return an array of Class objects representing the classes or primitives
-     *         named by the FQNs in the given String array. If the String array
-     *         is null, a zero-length Class array is returned. If an element in
-     *         classNames is null, the empty string, "void", or "null", then
-     *         Void.TYPE is the corresponding Class in the return array. If any
-     *         classes require loading because of this operation, the loading is
-     *         done by the given ClassLoader. Such classes are not initialized,
-     *         however.
-     * @throws ClassNotFoundException if any of the FQNs name an unknown
-     *                class
-     */
-    public static Class<?>[] getParameterTypesFrom(final String[] classNames, final java.lang.ClassLoader loader)
-            throws ClassNotFoundException {
-        if (classNames == null) {
-            return new Class[0];
-        }
-        Class<?>[] types = new Class[classNames.length];
-        for (int i = 0; i < classNames.length; ++i) {
-            types[i] = ClassUtilities.classForNameOrPrimitive(classNames[i], loader);
-        }
-        return types;
-    }
-
-    /**
      * {@inheritDoc}
+     *
      * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
@@ -313,9 +310,9 @@ public final class MethodFinder {
      */
     private void loadConstructors() {
         Constructor<?>[] ctors = clazz.getConstructors();
-        for (int i = 0; i < ctors.length; ++i) {
-            ctorList.add(ctors[i]);
-            paramMap.put(ctors[i], ctors[i].getParameterTypes());
+        for (Constructor<?> ctor : ctors) {
+            ctorList.add(ctor);
+            paramMap.put(ctor, ctor.getParameterTypes());
         }
     }
 
@@ -326,15 +323,11 @@ public final class MethodFinder {
         // Method[] methods = clazz.getMethods();
         List<Member> allMethods = getAllMethods();
         Method[] methods = allMethods.toArray(new Method[allMethods.size()]);
-        for (int i = 0; i < methods.length; ++i) {
-            Method m = methods[i];
+        for (Method method : methods) {
+            Method m = method;
             String methodName = m.getName();
             Class<?>[] paramTypes = m.getParameterTypes();
-            List<Member> list = methodMap.get(methodName);
-            if (list == null) {
-                list = new ArrayList<Member>();
-                methodMap.put(methodName, list);
-            }
+            List<Member> list = methodMap.computeIfAbsent(methodName, k -> new ArrayList<>());
             if (!ClassUtilities.classIsAccessible(clazz)) {
                 m = ClassUtilities.getAccessibleMethodFrom(clazz, methodName, paramTypes);
             }
@@ -346,7 +339,7 @@ public final class MethodFinder {
     }
 
     private List<Member> getAllMethods() {
-        List<Member> allMethods = new ArrayList<Member>();
+        List<Member> allMethods = new ArrayList<>();
         Class<?> c = clazz;
         while ((c != null)) {
             Method[] methods = c.getDeclaredMethods();
@@ -363,15 +356,15 @@ public final class MethodFinder {
     }
 
     /**
-     * @param  first  a Member
-     * @param  second  a Member
-     * @return  true if the first Member is more specific than the second,
+     * @param first  a Member
+     * @param second a Member
+     * @return true if the first Member is more specific than the second,
      * false otherwise.  Specificity is determined according to the
      * procedure in the Java Language Specification, section 15.12.2.
      */
     private boolean memberIsMoreSpecific(final Member first, final Member second) {
-        Class<?>[] firstParamTypes = (Class[]) paramMap.get(first);
-        Class<?>[] secondParamTypes = (Class[]) paramMap.get(second);
+        Class<?>[] firstParamTypes = paramMap.get(first);
+        Class<?>[] secondParamTypes = paramMap.get(second);
         return ClassUtilities.compatibleClasses(secondParamTypes, firstParamTypes);
     }
 }

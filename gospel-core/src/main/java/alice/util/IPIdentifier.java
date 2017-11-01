@@ -16,7 +16,7 @@ package alice.util;
  * <Name>@<IPAddress>:<port>
  *
  */
-public class IPIdentifier {
+class IPIdentifier {
 
     static public int getPort(String name){
         int index=name.indexOf(':');

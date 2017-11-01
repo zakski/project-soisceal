@@ -1,14 +1,12 @@
 package alice.tuprologx.ide;
-import java.util.*;
+
+import java.util.EventListener;
 
 /**
  * Listener for information to display in the console events
- *
- * 
  */
 
-public interface InformationToDisplayListener
-    extends EventListener
-{
+interface InformationToDisplayListener
+        extends EventListener {
     void onInformation(InformationToDisplayEvent e);
 }

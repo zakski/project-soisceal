@@ -5,8 +5,6 @@ import java.{util => ju}
 import alice.tuprolog.{Number, Struct, Term, Var}
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
 
-import scala.collection.JavaConverters._
-
 
 /**
   * <code>FamilyClausesList</code> is a common <code>LinkedList</code>
@@ -16,7 +14,6 @@ import scala.collection.JavaConverters._
   *
   * @author Paolo Contessi
   * @since 2.2
-  *
   * @see LinkedList
   */
 @SerialVersionUID(1L)
@@ -34,176 +31,6 @@ class FamilyClausesList extends ju.LinkedList[ClauseInfo] {
   override def addFirst(ci: ClauseInfo) {
     super.addFirst(ci)
     register(ci, true)
-  }
-
-  /**
-    * Adds the given clause as last of the family
-    *
-    * @param ci The clause to be added (with related informations)
-    */
-  override def addLast(ci: ClauseInfo) {
-    super.addLast(ci)
-    register(ci, false)
-  }
-
-  override def add(o: ClauseInfo): Boolean = {
-    addLast(o)
-    return true
-  }
-
-  @deprecated
-  override def addAll(index: scala.Int, c: ju.Collection[_ <: ClauseInfo]): Boolean = {
-    throw new UnsupportedOperationException("Not supported.")
-  }
-
-  @deprecated
-  override def add(index: scala.Int, element: ClauseInfo) {
-    throw new UnsupportedOperationException("Not supported.")
-  }
-
-  @deprecated
-  override def set(index: scala.Int, element: ClauseInfo): ClauseInfo = {
-    throw new UnsupportedOperationException("Not supported.")
-  }
-
-  override def removeFirst: ClauseInfo = {
-    val ci: ClauseInfo = getFirst
-    if (remove(ci)) {
-      ci
-    } else {
-      null
-    }
-  }
-
-  override def removeLast: ClauseInfo = {
-    val ci: ClauseInfo = getLast
-    if (remove(ci)) {
-      ci
-    } else {
-      null
-    }
-  }
-
-  override def remove: ClauseInfo = {
-    removeFirst
-  }
-
-  override def remove(index: scala.Int): ClauseInfo = {
-    val ci: ClauseInfo = super.get(index)
-    if (remove(ci)) {
-      ci
-    } else {
-      null
-    }
-  }
-
-  override def remove(ci: AnyRef): Boolean = {
-    if (super.remove(ci.asInstanceOf[ClauseInfo])) {
-      unregister(ci.asInstanceOf[ClauseInfo])
-      true
-    } else {
-      false
-    }
-  }
-
-  override def clear() {
-    while (size > 0) {
-      removeFirst
-    }
-  }
-
-  /**
-    * Retrieves a sublist of all the clauses of the same family as the goal
-    * and which, in all probability, could match with the given goal
-    *
-    * @param goal The goal to be resolved
-    * @return The list of goal-compatible predicates
-    */
-  def get(goal: Term): ju.List[ClauseInfo] = {
-    // Gets the correct list and encapsulates it in ReadOnlyLinkedList
-    if (goal.isInstanceOf[Struct]) {
-      val g: Struct = goal.getTerm.asInstanceOf[Struct]
-
-      /*
-      * If no arguments no optimization can be applied
-      * (and probably no optimization is needed)
-      */
-      if (g.getArity == 0) {
-        return this//.asScala.toList ::: List[ClauseInfo]()
-      }
-
-      /* Retrieves first argument and checks type */
-
-      val t = g.getArg(0).getTerm
-
-      if (t.isInstanceOf[Var]) {
-        /*
-         * if first argument is an unbounded variable,
-         * no reasoning is possible, all family must be returned
-         */
-        this//.asScala.toList ::: List[ClauseInfo]()
-
-      } else if (t.isAtomic) {
-        if (t.isInstanceOf[Number]) {
-          /* retrieves clauses whose first argument is numeric (or Var)
-           * and same as goal's first argument, if no clauses
-           * are retrieved, all clauses with a variable
-           * as first argument
-           */
-          numCompClausesIndex.get(t.asInstanceOf[Number])//.asScala.toList ::: List[ClauseInfo]()
-        } else {
-          /* retrieves clauses whose first argument is a constant (or Var)
-           * and same as goal's first argument, if no clauses
-           * are retrieved, all clauses with a variable
-           * as first argument
-           */
-          constantCompClausesIndex.get(t.asInstanceOf[Struct].getName)//.asScala.toList ::: List[ClauseInfo]()
-        }
-      } else if (t.isInstanceOf[Struct]) {
-        if (isAList(t.asInstanceOf[Struct])) {
-          /* retrieves clauses which has a list  (or Var) as first argument */
-          listCompClausesList//.asScala.toList ::: List[ClauseInfo]()
-        } else {
-          /* retrieves clauses whose first argument is a struct (or Var)
-           * and same as goal's first argument, if no clauses
-           * are retrieved, all clauses with a variable
-           * as first argument
-           */
-          structCompClausesIndex.get(t.asInstanceOf[Struct].getPredicateIndicator) //.asScala.toList ::: List[ClauseInfo]()
-        }
-      } else {
-        /* Default behaviour: no optimization done */
-        this //.asScala.toList ::: List[ClauseInfo]()
-      }
-    } else {
-      /* Default behaviour: no optimization done */
-      this//.asScala.toList ::: List[ClauseInfo]()
-    }
-  }
-
-  override def iterator: ju.Iterator[ClauseInfo] = {
-    listIterator(0)
-  }
-
-  override def listIterator: ju.ListIterator[ClauseInfo] = {
-    new ListItr(this, 0)
-  }
-
-  private def superListIterator(index: scala.Int): ju.ListIterator[ClauseInfo] = {
-    super.listIterator(index)
-  }
-
-  override def listIterator(index: scala.Int): ju.ListIterator[ClauseInfo] = {
-    new ListItr(this, index)
-  }
-
-  /*
-   * Checks if a Struct is also a list.
-   * A list can be an empty list, or a Struct with name equals to "."
-   * and arity equals to 2.
-   */
-  private def isAList(t: Struct): Boolean = {
-    t.isEmptyList || ((t.getName == ".") && t.getArity == 2)
   }
 
   // Updates indexes, storing informations about the last added clause
@@ -251,6 +78,85 @@ class FamilyClausesList extends ju.LinkedList[ClauseInfo] {
     }
   }
 
+  /*
+   * Checks if a Struct is also a list.
+   * A list can be an empty list, or a Struct with name equals to "."
+   * and arity equals to 2.
+   */
+  private def isAList(t: Struct): Boolean = {
+    t.isEmptyList || ((t.getName == ".") && t.getArity == 2)
+  }
+
+  override def add(o: ClauseInfo): Boolean = {
+    addLast(o)
+    true
+  }
+
+  /**
+    * Adds the given clause as last of the family
+    *
+    * @param ci The clause to be added (with related informations)
+    */
+  override def addLast(ci: ClauseInfo) {
+    super.addLast(ci)
+    register(ci, false)
+  }
+
+  @deprecated
+  override def addAll(index: scala.Int, c: ju.Collection[_ <: ClauseInfo]): Boolean = {
+    throw new UnsupportedOperationException("Not supported.")
+  }
+
+  @deprecated
+  override def add(index: scala.Int, element: ClauseInfo) {
+    throw new UnsupportedOperationException("Not supported.")
+  }
+
+  @deprecated
+  override def set(index: scala.Int, element: ClauseInfo): ClauseInfo = {
+    throw new UnsupportedOperationException("Not supported.")
+  }
+
+  override def removeLast: ClauseInfo = {
+    val ci: ClauseInfo = getLast
+    if (remove(ci)) {
+      ci
+    } else {
+      null
+    }
+  }
+
+  override def remove: ClauseInfo = {
+    removeFirst
+  }
+
+  override def removeFirst: ClauseInfo = {
+    val ci: ClauseInfo = getFirst
+    if (remove(ci)) {
+      ci
+    } else {
+      null
+    }
+  }
+
+  override def remove(index: scala.Int): ClauseInfo = {
+    val ci: ClauseInfo = super.get(index)
+    if (remove(ci)) {
+      ci
+    } else {
+      null
+    }
+  }
+
+  override def remove(ci: AnyRef): Boolean = {
+    if (super.remove(ci.asInstanceOf[ClauseInfo])) {
+      unregister(ci.asInstanceOf[ClauseInfo])
+      true
+    } else {
+      false
+    }
+  }
+
   // Updates indexes, deleting informations about the last removed clause
   def unregister(ci: ClauseInfo) {
     val clause: Term = ci.getHead
@@ -283,6 +189,97 @@ class FamilyClausesList extends ju.LinkedList[ClauseInfo] {
         }
       }
     }
+  }
+
+  override def clear() {
+    while (size > 0) {
+      removeFirst
+    }
+  }
+
+  /**
+    * Retrieves a sublist of all the clauses of the same family as the goal
+    * and which, in all probability, could match with the given goal
+    *
+    * @param goal The goal to be resolved
+    * @return The list of goal-compatible predicates
+    */
+  def get(goal: Term): ju.List[ClauseInfo] = {
+    // Gets the correct list and encapsulates it in ReadOnlyLinkedList
+    if (goal.isInstanceOf[Struct]) {
+      val g: Struct = goal.getTerm.asInstanceOf[Struct]
+
+      /*
+      * If no arguments no optimization can be applied
+      * (and probably no optimization is needed)
+      */
+      if (g.getArity == 0) {
+        return this //.asScala.toList ::: List[ClauseInfo]()
+      }
+
+      /* Retrieves first argument and checks type */
+
+      val t = g.getArg(0).getTerm
+
+      if (t.isInstanceOf[Var]) {
+        /*
+         * if first argument is an unbounded variable,
+         * no reasoning is possible, all family must be returned
+         */
+        this //.asScala.toList ::: List[ClauseInfo]()
+
+      } else if (t.isAtomic) {
+        if (t.isInstanceOf[Number]) {
+          /* retrieves clauses whose first argument is numeric (or Var)
+           * and same as goal's first argument, if no clauses
+           * are retrieved, all clauses with a variable
+           * as first argument
+           */
+          numCompClausesIndex.get(t.asInstanceOf[Number]) //.asScala.toList ::: List[ClauseInfo]()
+        } else {
+          /* retrieves clauses whose first argument is a constant (or Var)
+           * and same as goal's first argument, if no clauses
+           * are retrieved, all clauses with a variable
+           * as first argument
+           */
+          constantCompClausesIndex.get(t.asInstanceOf[Struct].getName) //.asScala.toList ::: List[ClauseInfo]()
+        }
+      } else if (t.isInstanceOf[Struct]) {
+        if (isAList(t.asInstanceOf[Struct])) {
+          /* retrieves clauses which has a list  (or Var) as first argument */
+          listCompClausesList //.asScala.toList ::: List[ClauseInfo]()
+        } else {
+          /* retrieves clauses whose first argument is a struct (or Var)
+           * and same as goal's first argument, if no clauses
+           * are retrieved, all clauses with a variable
+           * as first argument
+           */
+          structCompClausesIndex.get(t.asInstanceOf[Struct].getPredicateIndicator) //.asScala.toList ::: List[ClauseInfo]()
+        }
+      } else {
+        /* Default behaviour: no optimization done */
+        this //.asScala.toList ::: List[ClauseInfo]()
+      }
+    } else {
+      /* Default behaviour: no optimization done */
+      this //.asScala.toList ::: List[ClauseInfo]()
+    }
+  }
+
+  override def iterator: ju.Iterator[ClauseInfo] = {
+    listIterator(0)
+  }
+
+  override def listIterator(index: scala.Int): ju.ListIterator[ClauseInfo] = {
+    new ListItr(this, index)
+  }
+
+  override def listIterator: ju.ListIterator[ClauseInfo] = {
+    new ListItr(this, 0)
+  }
+
+  private def superListIterator(index: scala.Int): ju.ListIterator[ClauseInfo] = {
+    super.listIterator(index)
   }
 
   private class ListItr(list: FamilyClausesList, index: scala.Int) extends ju.ListIterator[ClauseInfo] {

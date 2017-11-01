@@ -27,19 +27,19 @@ public abstract class Automaton implements Runnable, java.io.Serializable {
     /**
 	 * method name representing state behaviour
 	 */
-    protected String state="boot";
+    private String state="boot";
 
     /**
 	 * arguments value eventually associated to state transition
 	 */
-    protected Object[] arguments=null;
+    private Object[] arguments=null;
 
     /**
 	 * arguments class eventually associated to state transition
 	 */
-    protected Class<?>[] argType;
+    private Class<?>[] argType;
 
-    public Automaton(){
+    protected Automaton(){
         try {
             argType=new Class[]{ Class.forName("[Ljava.lang.Object;") };
         } catch (Exception ex){
@@ -92,11 +92,11 @@ public abstract class Automaton implements Runnable, java.io.Serializable {
     }
 
     /** shutdown state */
-    public void end(){
+    private void end(){
     }
 
     /** error state */
-    public void error(){
+    private void error(){
         become("end");
     }
 }

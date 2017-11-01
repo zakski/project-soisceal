@@ -5,19 +5,17 @@ import java.util
 import alice.tuprolog.{Term, Var}
 import alice.util.OneWayList
 
-import scala.collection.JavaConverters._
-
 
 object ClauseStore {
 
   /**
-   * Upload a family of clauses
-   *
-   * Reviewed by Paolo Contessi:
-   * OneWayList.transform(List) -> OneWayList.transform2(List)
-   *
-   * @param familyClauses
-   */
+    * Upload a family of clauses
+    *
+    * Reviewed by Paolo Contessi:
+    * OneWayList.transform(List) -> OneWayList.transform2(List)
+    *
+    * @param familyClauses
+    */
   def build(goal: Term, vars: util.List[Var], familyClauses: util.List[ClauseInfo]): ClauseStore = {
     val clauseStore: ClauseStore = new ClauseStore(goal, vars)
     clauseStore.clauses = OneWayList.transform2(familyClauses)
@@ -29,17 +27,17 @@ object ClauseStore {
 }
 
 /**
- * A list of clauses belonging to the same family as a goal. A family is composed by clauses with the same functor and arity.
- */
+  * A list of clauses belonging to the same family as a goal. A family is composed by clauses with the same functor and arity.
+  */
 class ClauseStore(goalTerm: Term, varList: util.List[Var]) {
   private val goal: Term = goalTerm
   private val vars: util.List[Var] = varList
-  private var clauses: OneWayList[ClauseInfo] = null
+  private var clauses: OneWayList[ClauseInfo] = _
   private var haveAlternatives: Boolean = false
 
   /**
-   * Returns the clause to load
-   */
+    * Returns the clause to load
+    */
   def fetch: ClauseInfo = {
     if (clauses == null)
       return null
@@ -55,24 +53,12 @@ class ClauseStore(goalTerm: Term, varList: util.List[Var]) {
     clause
   }
 
-  def hasAlternatives(): Boolean = haveAlternatives
-
   /**
-   * Verify if there is a term in compatibleGoals compatible with goal.
-   * @return true if compatible or false otherwise.
-   */
-  protected[core] def existCompatibleClause: Boolean = {
-    val saveUnifications: util.List[Term] = deunify(vars)
-    val found: Boolean = checkCompatibility(goal)
-    reunify(vars, saveUnifications)
-    found
-  }
-
-  /**
-   * Save the unifications of the variables to deunify
-   * @param varsToDeunify
-   * @return Unification of variables
-   */
+    * Save the unifications of the variables to deunify
+    *
+    * @param varsToDeunify
+    * @return Unification of variables
+    */
   private def deunify(varsToDeunify: util.List[Var]): util.List[Term] = {
     val saveUnifications: util.List[Term] = new util.ArrayList[Term]
     val it: util.Iterator[Var] = varsToDeunify.iterator
@@ -85,29 +71,12 @@ class ClauseStore(goalTerm: Term, varList: util.List[Var]) {
   }
 
   /**
-   * Restore previous unifications into variables.
-   * @param varsToReunify
-   * @param saveUnifications
-   */
-  private def reunify(varsToReunify: util.List[Var], saveUnifications: util.List[Term]) {
-    val size: Int = varsToReunify.size
-    val it1 = varsToReunify.listIterator(size)
-    val it2 = saveUnifications.listIterator(size)
-    // Only the first occurrence of a variable gets its binding saved;
-    // following occurrences get a null instead. So, to avoid clashes
-    // between those values, and avoid random variable deunification,
-    // the reunification is made starting from the end of the list.
-    while (it1.hasPrevious) {
-      it1.previous.setLink(it2.previous)
-    }
-  }
-
-  /**
-   * Verify if a clause exists that is compatible with goal.
-   * As a side effect, clauses that are not compatible get
-   * discarded from the currently examined family.
-   * @param goal
-   */
+    * Verify if a clause exists that is compatible with goal.
+    * As a side effect, clauses that are not compatible get
+    * discarded from the currently examined family.
+    *
+    * @param goal
+    */
   private def checkCompatibility(goal: Term): Boolean = {
     if (clauses == null)
       return false
@@ -125,6 +94,8 @@ class ClauseStore(goalTerm: Term, varList: util.List[Var]) {
     false
   }
 
+  def hasAlternatives(): Boolean = haveAlternatives
+
   override def toString: String = {
     "clauses: " + clauses + "\n" + "goal: " + goal + "\n" + "vars: " + vars + "\n"
   }
@@ -141,6 +112,36 @@ class ClauseStore(goalTerm: Term, varList: util.List[Var]) {
 
   def getMatchGoal: Term = goal
 
-
   def getVarsForMatch: util.List[Var] = vars
+
+  /**
+    * Verify if there is a term in compatibleGoals compatible with goal.
+    *
+    * @return true if compatible or false otherwise.
+    */
+  protected[core] def existCompatibleClause: Boolean = {
+    val saveUnifications: util.List[Term] = deunify(vars)
+    val found: Boolean = checkCompatibility(goal)
+    reunify(vars, saveUnifications)
+    found
+  }
+
+  /**
+    * Restore previous unifications into variables.
+    *
+    * @param varsToReunify
+    * @param saveUnifications
+    */
+  private def reunify(varsToReunify: util.List[Var], saveUnifications: util.List[Term]) {
+    val size: Int = varsToReunify.size
+    val it1 = varsToReunify.listIterator(size)
+    val it2 = saveUnifications.listIterator(size)
+    // Only the first occurrence of a variable gets its binding saved;
+    // following occurrences get a null instead. So, to avoid clashes
+    // between those values, and avoid random variable deunification,
+    // the reunification is made starting from the end of the list.
+    while (it1.hasPrevious) {
+      it1.previous.setLink(it2.previous)
+    }
+  }
 }

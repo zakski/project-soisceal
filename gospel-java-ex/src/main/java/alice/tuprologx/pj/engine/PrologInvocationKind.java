@@ -10,11 +10,10 @@
 package alice.tuprologx.pj.engine;
 
 /**
- *
  * @author maurizio
  */
 public enum PrologInvocationKind {
-    RELATIONAL,    
+    RELATIONAL,
     FUNCTIONAL,
     BOOLEAN
 }

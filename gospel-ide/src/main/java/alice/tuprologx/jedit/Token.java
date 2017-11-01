@@ -18,8 +18,7 @@ package alice.tuprologx.jedit;
  * @author Slava Pestov
  * @version $Id: Token.java,v 1.12 1999/12/13 03:40:30 sp Exp $
  */
-public class Token
-{
+public class Token {
     /**
      * Normal text token id. This should be used to mark
      * normal text.
@@ -113,27 +112,27 @@ public class Token
     public static final byte END = 127;
 
     /**
-	 * The length of this token.
-	 */
+     * The length of this token.
+     */
     public int length;
 
     /**
-	 * The id of this token.
-	 */
+     * The id of this token.
+     */
     public byte id;
 
     /**
-	 * The next token in the linked list.
-	 */
+     * The next token in the linked list.
+     */
     public Token next;
 
     /**
      * Creates a new token.
+     *
      * @param length The length of the token
-     * @param id The id of the token
+     * @param id     The id of the token
      */
-    public Token(int length, byte id)
-    {
+    public Token(int length, byte id) {
         this.length = length;
         this.id = id;
     }
@@ -141,8 +140,7 @@ public class Token
     /**
      * Returns a string representation of this token.
      */
-    public String toString()
-    {
+    public String toString() {
         return "[id=" + id + ",length=" + length + "]";
     }
 }

@@ -17,51 +17,52 @@
  */
 package com.szadowsz.gospel.core.engine.context;
 
-import java.util.*;
-
-import com.szadowsz.gospel.core.engine.context.clause.ClauseStore;
 import alice.tuprolog.Var;
 import alice.util.OneWayList;
+import com.szadowsz.gospel.core.engine.context.clause.ClauseStore;
 import com.szadowsz.gospel.core.engine.context.subgoal.SubGoalId;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Alex Benini
  */
 public class ChoicePointContext {
-    
+
     public ClauseStore compatibleGoals;
     public ExecutionContext executionContext;
     public ChoicePointContext prevChoicePointContext;
     public SubGoalId indexSubGoal;
     public OneWayList<List<Var>> varsToDeunify;
-    
-    
-    public String toString(){
-        return "     ChoicePointId: "+executionContext.getId()+":"+indexSubGoal+"\n"+
-               //"varsToDeunify: "+getVarsToDeunify()+"\n"+
-               "     compGoals:     "+compatibleGoals+"\n";
+
+
+    public String toString() {
+        return "     ChoicePointId: " + executionContext.getId() + ":" + indexSubGoal + "\n" +
+                //"varsToDeunify: "+getVarsToDeunify()+"\n"+
+                "     compGoals:     " + compatibleGoals + "\n";
     }
     
     /*
      * Methods for spyListeners
      */
-    
-   
+
+
     public ClauseStore getCompatibleGoals() {
         return compatibleGoals;
     }
-    
-    
+
+
     public ExecutionContext getExecutionContext() {
         return executionContext;
     }
-    
+
     public SubGoalId getIndexBack() {
         return indexSubGoal;
     }
-    
+
     public List<List<Var>> getVarsToDeunify() {
-        ArrayList<List<Var>> l = new ArrayList<List<Var>>();
+        ArrayList<List<Var>> l = new ArrayList<>();
         OneWayList<List<Var>> t = varsToDeunify;
         while (t != null) {
             l.add(t.getHead());

@@ -5,7 +5,7 @@ import com.szadowsz.gospel.core.event.interpreter.LibraryEvent;
 import com.szadowsz.gospel.core.event.interpreter.QueryEvent;
 import com.szadowsz.gospel.core.event.interpreter.TheoryEvent;
 
-public class TestPrologEventAdapter implements PrologListener {
+class TestPrologEventAdapter implements PrologListener {
 	String firstMessage = "";
 	String secondMessage = "";
     

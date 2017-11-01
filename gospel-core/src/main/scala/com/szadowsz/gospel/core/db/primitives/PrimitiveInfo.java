@@ -22,7 +22,8 @@ import alice.tuprolog.Library;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 
 /**
@@ -32,39 +33,39 @@ import java.lang.reflect.*;
  * @see Struct
  */
 public class PrimitiveInfo {
-    
-    public final static int DIRECTIVE  = 0;
-    public final static int PREDICATE  = 1;
-    public final static int FUNCTOR    = 2;
-    
+
+    public final static int DIRECTIVE = 0;
+    public final static int PREDICATE = 1;
+    public final static int FUNCTOR = 2;
+
     private int type;
     /**
-	 * method to be call when evaluating the built-in
-	 */
+     * method to be call when evaluating the built-in
+     */
     private Method method;
     /**
-	 * lib object where the builtin is defined
-	 */
+     * lib object where the builtin is defined
+     */
     private IPrimitives source;
     /**
-	 * for optimization purposes
-	 */
+     * for optimization purposes
+     */
     private Object[] primitive_args;
     private String primitive_key;
-    
-    
+
+
     public PrimitiveInfo(int type, String key, Library lib, Method m, int arity) throws NoSuchMethodException {
-        if (m==null) {
+        if (m == null) {
             throw new NoSuchMethodException();
         }
         this.type = type;
         primitive_key = key;
         source = lib;
         method = m;
-        primitive_args=new Term[arity];
+        primitive_args = new Term[arity];
     }
-    
-    
+
+
     /**
      * Method to invalidate primitives. It's called just mother library removed
      */
@@ -73,85 +74,87 @@ public class PrimitiveInfo {
         primitive_key = null;
         return key;
     }
-    
-    
+
+
     public String getKey() {
         return primitive_key;
     }
-    
+
     public boolean isDirective() {
         return (type == DIRECTIVE);
     }
-    
+
     public boolean isFunctor() {
         return (type == FUNCTOR);
     }
-    
+
     public boolean isPredicate() {
         return (type == PREDICATE);
     }
-    
-    
+
+
     public int getType() {
         return type;
     }
-    
+
     public IPrimitives getSource() {
         return source;
     }
-    
-    
+
+
     /**
      * evaluates the primitive as a directive
-     * @throws InvocationTargetException 
-     * @throws IllegalAccessException 
-     * @throws Exception if invocation directive failure
+     *
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     * @throws Exception                 if invocation directive failure
      */
     public synchronized void evalAsDirective(Struct g) throws IllegalAccessException, InvocationTargetException {
-        for (int i=0; i<primitive_args.length; i++) {
+        for (int i = 0; i < primitive_args.length; i++) {
             primitive_args[i] = g.getTerm(i);
         }
-        method.invoke(source,primitive_args);
+        method.invoke(source, primitive_args);
     }
-    
-    
+
+
     /**
      * evaluates the primitive as a predicate
+     *
      * @throws Exception if invocation primitive failure
      */
     public synchronized boolean evalAsPredicate(Struct g) throws Throwable {
-        for (int i=0; i<primitive_args.length; i++) {
+        for (int i = 0; i < primitive_args.length; i++) {
             primitive_args[i] = g.getArg(i);
         }
         try {
-        	//System.out.println("PRIMITIVE INFO evalAsPredicate sto invocando metodo "+method.getName());
-            return ((Boolean)method.invoke(source,primitive_args)).booleanValue();
+            //System.out.println("PRIMITIVE INFO evalAsPredicate sto invocando metodo "+method.getName());
+            return (Boolean) method.invoke(source, primitive_args);
         } catch (InvocationTargetException e) {
             // throw new Exception(e.getCause());
             throw e.getCause();
         }
     }
-    
-    
+
+
     /**
      * evaluates the primitive as a functor
-     * @throws Throwable 
+     *
+     * @throws Throwable
      */
     public synchronized Term evalAsFunctor(Struct g) throws Throwable {
         try {
-            for (int i=0; i<primitive_args.length; i++) {
+            for (int i = 0; i < primitive_args.length; i++) {
                 primitive_args[i] = g.getTerm(i);
             }
-            return ((Term)method.invoke(source,primitive_args));
+            return ((Term) method.invoke(source, primitive_args));
         } catch (Exception ex) {
             throw ex.getCause();
         }
     }
-    
-    
-    
+
+
     public String toString() {
-        return "[ primitive: method "+method.getName()+" - "+primitive_args+" - N args: "+primitive_args.length+" - "+source.getClass().getName()+" ]\n";
+        return "[ primitive: method " + method.getName() + " - " + primitive_args + " - N args: " + primitive_args.length + " - " + source.getClass().getName() + " ]\n";
     }
-    
+
 }

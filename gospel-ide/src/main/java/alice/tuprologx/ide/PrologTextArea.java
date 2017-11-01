@@ -9,12 +9,11 @@
 package alice.tuprologx.ide;
 
 import alice.tuprologx.jedit.*;
-import java.awt.Color;
 
-public class PrologTextArea extends TextAreaDefaults
-{
-    public PrologTextArea()
-    {
+import java.awt.*;
+
+class PrologTextArea extends TextAreaDefaults {
+    public PrologTextArea() {
         inputHandler = new DefaultInputHandler();
         inputHandler.addDefaultKeyBindings();
         document = new SyntaxDocument();
@@ -39,8 +38,7 @@ public class PrologTextArea extends TextAreaDefaults
         paintInvalid = false;
     }
 
-    private SyntaxStyle[] getSyntaxStyles()
-    {
+    private SyntaxStyle[] getSyntaxStyles() {
         /* Annotated comment for hardcoded changes from the default colors
          * used in tuProlog IDE until version 1.1.2 */
 

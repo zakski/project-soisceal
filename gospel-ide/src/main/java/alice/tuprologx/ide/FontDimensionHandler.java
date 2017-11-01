@@ -1,20 +1,20 @@
 package alice.tuprologx.ide;
 
-public interface FontDimensionHandler {
+interface FontDimensionHandler {
 
     /**
-     * Increment the font dimension of the IDE's editor 
+     * Increment the font dimension of the IDE's editor
      */
-    public void incFontDimension();
+    void incFontDimension();
 
     /**
-     * Increment the font dimension of the IDE's editor 
+     * Increment the font dimension of the IDE's editor
      */
-    public void decFontDimension();
+    void decFontDimension();
 
-    public void setFontDimension(int dimension);
+    int getFontDimension();
 
-    public int getFontDimension();
+    void setFontDimension(int dimension);
 
-    
+
 }

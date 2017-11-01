@@ -15,9 +15,9 @@ import java.io.Writer;
  * @author Andrea Bucaletti
  *
  */
-public class OutputStreamAdapter extends OutputStream {
+class OutputStreamAdapter extends OutputStream {
 	
-	private Writer writer;
+	private final Writer writer;
 	
 	public OutputStreamAdapter(Writer wr) {
 		writer = wr;

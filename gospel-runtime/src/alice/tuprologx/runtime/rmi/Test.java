@@ -1,35 +1,28 @@
 package alice.tuprologx.runtime.rmi;
 
-import alice.tuprolog.*;
-
-import java.rmi.*;
-import java.rmi.registry.*;
-
-public class Test
-{
+public class Test {
     @SuppressWarnings("deprecation")
-	public static void main(String args[])
-    {
-        if (args.length<2){
+    public static void main(String args[]) {
+        if (args.length < 2) {
             System.err.println("args:  <host> <goal>");
             System.exit(-1);
         }
-        try{
+        try {
             System.setSecurityManager(new RMISecurityManager());
             try {
                 LocateRegistry.createRegistry(1099);
-            } catch (Exception ex){
+            } catch (Exception ex) {
             }
-            String rmiName="rmi://"+args[0]+"/prolog";
+            String rmiName = "rmi://" + args[0] + "/prolog";
             alice.tuprologx.runtime.rmi.Prolog engine =
-                (alice.tuprologx.runtime.rmi.Prolog)Naming.lookup(rmiName);
+                    (alice.tuprologx.runtime.rmi.Prolog) Naming.lookup(rmiName);
 
-            SolveInfo info=engine.solve(args[1]);
+            SolveInfo info = engine.solve(args[1]);
             if (info.isSuccess())
-                System.out.println("yes: "+info.getSolution());
+                System.out.println("yes: " + info.getSolution());
             else
                 System.out.println("no.");
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.err.println("ERROR: " + e);
             e.printStackTrace(System.out);
         }

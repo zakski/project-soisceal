@@ -19,8 +19,9 @@ package alice.tuprologx.ide;
 
 /**
  * A common interface to an IDE. This interface is not public, since it is intended for internal use, and could be subject to several changes in future releases.
- * @author     <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version     1.0 - 1-gen-03
+ *
+ * @author <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version 1.0 - 1-gen-03
  */
 
 interface IDE {
@@ -30,7 +31,7 @@ interface IDE {
      *
      * @param flag true if the commands have to be enabled, false otherwise.
      */
-    public void enableTheoryCommands(boolean flag);
+    void enableTheoryCommands(boolean flag);
 
     /**
      * Check if the theory contained in the edit area of the IDE has been feeded
@@ -39,33 +40,34 @@ interface IDE {
      * @return <code>true</code> if the current theory has been feeded to the engine,
      * <code>false</code> otherwise.
      */
-    public boolean isFeededTheory();
-    
+    boolean isFeededTheory();
+
     /**
      * Set the status of the theory contained in the edit area of the IDE.
-     * 
+     *
      * @param flag <code>true</code> if the theory has been feeded to the engine,
-     * <code>false</code> otherwise.
+     *             <code>false</code> otherwise.
      */
-    public void setFeededTheory(boolean flag);
+    void setFeededTheory(boolean flag);
 
     /**
-	 * Get the content of the IDE's editor.
-	 * @return  the content of the edit area in the IDE's editor.
-	 */
-    public String getEditorContent();
-    
+     * Get the content of the IDE's editor.
+     *
+     * @return the content of the edit area in the IDE's editor.
+     */
+    String getEditorContent();
+
     /**
-	 * Set the content of the IDE's editor.
-	 */
-    public void setEditorContent(String text);
+     * Set the content of the IDE's editor.
+     */
+    void setEditorContent(String text);
 
 
-    public void newTheory();
+    void newTheory();
 
-    public void loadTheory();
+    void loadTheory();
 
-    public void saveTheory();
+    void saveTheory();
 
-    public void getTheory();
+    void getTheory();
 } // end IDE interface

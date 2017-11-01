@@ -23,59 +23,65 @@ import com.szadowsz.gospel.core.Solution;
  * @author <a href="mailto:simone.pellegrini@studio.unibo.it">Simone Pellegrini</a>
  */
 
-public class EngineStatus{
+class EngineStatus {
     private Solution info = null;
     private boolean hasAlternatives = false;
     private String error = null;
-    
+
     private boolean _isFirstSolution = false;
     private boolean _isAccepted = false;
+
     public String getError() {
         return error;
     }
+
     /**
-	 * @param error  The error to set.
-	 */
+     * @param error The error to set.
+     */
     public void setError(String error) {
         this.error = error;
     }
-    
-    public boolean isFirstSolution(){
+
+    public boolean isFirstSolution() {
         return _isFirstSolution;
     }
-    
-    public void setFirstSolution(boolean value){
+
+    public void setFirstSolution(boolean value) {
         this._isFirstSolution = value;
     }
-    
-    public boolean isAccepted(){
+
+    public boolean isAccepted() {
         return _isAccepted;
     }
-    
-    public void setAccepted(boolean value){
+
+    public void setAccepted(boolean value) {
         this._isAccepted = value;
     }
+
     /**
      * @return Returns the hasAlternatives.
      */
     public boolean hasAlternatives() {
         return hasAlternatives;
     }
+
     /**
      * @param hasAlternatives The hasAlternatives to set.
      */
     public void hasAlternatives(boolean hasAlternatives) {
         this.hasAlternatives = hasAlternatives;
     }
+
     /**
-	 * @return  Returns the info.
-	 */
+     * @return Returns the info.
+     */
     public Solution getInfo() {
         return info;
     }
+
     /**
-	 * @param info  The info to set.
-	 */
+     * @param info The info to set.
+     */
     public void setInfo(Solution info) {
         this.info = info;
     }

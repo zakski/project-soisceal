@@ -12,24 +12,26 @@ package alice.tuprologx.pj.model;
 import alice.tuprolog.Struct;
 
 /**
- *
  * @author maurizio
  */
-public class Clause<H extends Term<?>, B extends Term<?>> extends Compound2<H,B> {
-    
-    private boolean isFact;
-    
-    /** Creates a new instance of Clause */
+public class Clause<H extends Term<?>, B extends Term<?>> extends Compound2<H, B> {
+
+    private final boolean isFact;
+
+    /**
+     * Creates a new instance of Clause
+     */
     @SuppressWarnings("unchecked")
-	public Clause(H head, B body) {
-        super(":-", head, body == null ? (B)new Bool(true) : body);        
+    public Clause(H head, B body) {
+        super(":-", head, body == null ? (B) new Bool(true) : body);
         isFact = (body == null || body instanceof Bool);
     }
-    
+
     @SuppressWarnings("unchecked")
-	public Clause(Struct s) { 
-        this(s.getName().equals(":-") ? (H)Term.unmarshal(s.getArg(0)) : (H)Term.unmarshal(s), s.getName().equals(":-") ? (B)Term.unmarshal(s.getArg(1)) : null);        
+    public Clause(Struct s) {
+        this(s.getName().equals(":-") ? (H) Term.unmarshal(s.getArg(0)) : (H) Term.unmarshal(s), s.getName().equals(":-") ? (B) Term.unmarshal(s.getArg(1)) : null);
     }
+
     /*
     public Clause(String s) {
         this((H)parseClause(s).get0(), (B)parseClause(s).get1());
@@ -49,31 +51,27 @@ public class Clause<H extends Term<?>, B extends Term<?>> extends Compound2<H,B>
         return null;
     }
     */
-    public B getBody() {
+    private B getBody() {
         return get1();
     }
-    
-    public boolean isFact() {
+
+    private boolean isFact() {
         return isFact;
     }
-    
+
     public String toString() {
-        return "Clause{"+getHead()+(isFact() ? "" : " :- "+getBody())+"}";
+        return "Clause{" + getHead() + (isFact() ? "" : " :- " + getBody()) + "}";
     }
 
     public Struct marshal() {
         if (!isFact()) {
             return super.marshal();
-        }
-        else {
-            return (Struct)getHead().marshal();
+        } else {
+            return (Struct) getHead().marshal();
         }
     }
-    
+
     public boolean match(String name, int arity) {
-        if (getHead() instanceof Compound<?>) {
-            return ((Compound<?>)getHead()).getName().equals(name) && arity == ((Compound<?>)getHead()).arity();
-        }
-        return false;
+        return getHead() instanceof Compound<?> && ((Compound<?>) getHead()).getName().equals(name) && arity == ((Compound<?>) getHead()).arity();
     }
 }

@@ -17,6 +17,11 @@ private[engine] final case class ExceptionState(override protected val runner: E
   private val catchTerm: Term = runner.getWam.createTerm("catch(Goal, Catcher, Handler)")
   private val javaCatchTerm: Term = runner.getWam.createTerm("java_catch(Goal, List, Finally)")
 
+  override def doJob(e: Engine): Unit = {
+    val errorType: String = e.currentContext.currentGoal.getName
+    if (errorType == "throw") prologError(e) else javaException(e)
+  }
+
   private def prologError(e: Engine): Unit = {
     val errorTerm: Term = e.currentContext.currentGoal.getArg(0)
     e.currentContext = e.currentContext.fatherCtx
@@ -184,7 +189,7 @@ private[engine] final case class ExceptionState(override protected val runner: E
         }
       }
     }
-    return false
+    false
   }
 
   //  Unifies the predicate of java_throw/1 with the right catch statement and returns the corresponding handler
@@ -200,11 +205,6 @@ private[engine] final case class ExceptionState(override protected val runner: E
         }
       }
     }
-    return null
-  }
-
-  override def doJob(e: Engine): Unit = {
-    val errorType: String = e.currentContext.currentGoal.getName
-    if (errorType == "throw") prologError(e) else javaException(e)
+    null
   }
 }

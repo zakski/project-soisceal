@@ -8,7 +8,7 @@ import alice.tuprolog.Term;
 //Alberto
 public class JSONSerializerManager {
 	
-	static Gson gson = new GsonBuilder()
+	private static final Gson gson = new GsonBuilder()
 			.registerTypeAdapter(Term.class, new JSONMarshaller()) //Mandatory for serializing query!
 	        .create();
 	

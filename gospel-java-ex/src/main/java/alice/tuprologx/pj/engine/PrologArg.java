@@ -1,30 +1,33 @@
 package alice.tuprologx.pj.engine;
 
-import alice.tuprologx.pj.model.*;
+import alice.tuprologx.pj.model.Term;
+
 /**
- *
  * @author maurizio
  */
-public class PrologArg<X extends Term<X>> {
-    
+class PrologArg<X extends Term<X>> {
+
     private Term<X> _theArg;
-    private TermKind[] _annotations;    
-    
-    /** Creates a new instance of PrologArg */
-    public PrologArg(Term<X> arg, TermKind[] annotations) {        
+    private final TermKind[] _annotations;
+
+    /**
+     * Creates a new instance of PrologArg
+     */
+    public PrologArg(Term<X> arg, TermKind[] annotations) {
         this(annotations);
-        _theArg = arg;      
+        _theArg = arg;
     }
-    
-    public PrologArg(TermKind[] annotations) {     
+
+    private PrologArg(TermKind[] annotations) {
         _annotations = annotations;
     }
-    
+
     public boolean isInputArgument() {
         for (TermKind tk : _annotations) {
             switch (tk) {
-                case INPUT : return true;
-                default: continue; // ED 2013-05-21
+                case INPUT:
+                    return true;
+                default:
             }
         }
         return false;
@@ -33,37 +36,40 @@ public class PrologArg<X extends Term<X>> {
     public boolean isOutputArgument() {
         for (TermKind tk : _annotations) {
             switch (tk) {
-                case OUTPUT : return true;
-                default: continue; // ED 2013-05-21
+                case OUTPUT:
+                    return true;
+                default:
             }
         }
         return false;
     }
 
-    public boolean isIsGround() {        
+    public boolean isIsGround() {
         for (TermKind tk : _annotations) {
             switch (tk) {
-                case GROUND : return true;
-                default: continue; // ED 2013-05-21
+                case GROUND:
+                    return true;
+                default:
             }
         }
         return false;
     }
-    
-    public boolean isIsHidden() {        
+
+    public boolean isIsHidden() {
         for (TermKind tk : _annotations) {
             switch (tk) {
-                case HIDE : return true;
-                default: continue; // ED 2013-05-21
+                case HIDE:
+                    return true;
+                default:
             }
         }
         return false;
     }
-    
+
     public Term<X> getTerm() {
         return _theArg;
     }
-    
+
     protected void setTerm(Term<X> o) {
         _theArg = o;
     }

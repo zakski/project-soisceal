@@ -1,9 +1,9 @@
 package alice.tuprologx.pj.lib;
 
 /**
- *
  * @author maurizio
  */
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -17,7 +17,15 @@ import java.util.Set;
 final class ClassUtilities {
 
     /** Mapping from primitive wrapper Classes to their corresponding primitive Classes. */
-    private static final Map<Class<?>,Class<?>> OBJECT_PRIMITIVE_MAP = new HashMap<Class<?>, Class<?>>(13);
+    private static final Map<Class<?>, Class<?>> OBJECT_PRIMITIVE_MAP = new HashMap<>(13);
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_OBJECT_MAP = new HashMap<>(13);
+    /** Mapping from primitive names to primitive Classes. */
+    private static final Map<String, Class<?>> PRIMITIVE_NAME_MAP = new HashMap<>(13);
+    /**
+     * Mapping from primitive wrapper Classes to the sets of primitive classes
+     * whose instances can be assigned an instance of the first.
+     */
+    private static final Map<Class<?>, Set<Class<?>>> PRIMITIVE_WIDENINGS_MAP = new HashMap<>(11);
 
     static {
         OBJECT_PRIMITIVE_MAP.put(Boolean.class, Boolean.TYPE);
@@ -30,8 +38,6 @@ final class ClassUtilities {
         OBJECT_PRIMITIVE_MAP.put(Short.class, Short.TYPE);
     }
 
-    private static final Map<Class<?>,Class<?>> PRIMITIVE_OBJECT_MAP = new HashMap<Class<?>,Class<?>>(13);
-
     static {
         PRIMITIVE_OBJECT_MAP.put(Boolean.TYPE, Boolean.class);
         PRIMITIVE_OBJECT_MAP.put(Byte.TYPE, Byte.class);
@@ -42,9 +48,6 @@ final class ClassUtilities {
         PRIMITIVE_OBJECT_MAP.put(Long.TYPE, Long.class);
         PRIMITIVE_OBJECT_MAP.put(Short.TYPE, Short.class);
     }
-
-    /** Mapping from primitive names to primitive Classes. */
-    private static final Map<String,Class<?>> PRIMITIVE_NAME_MAP = new HashMap<String,Class<?>>(13);
 
     static {
         PRIMITIVE_NAME_MAP.put("boolean", Boolean.TYPE);
@@ -60,14 +63,8 @@ final class ClassUtilities {
         PRIMITIVE_NAME_MAP.put("", Void.TYPE);
     }
 
-    /**
-     * Mapping from primitive wrapper Classes to the sets of primitive classes
-     * whose instances can be assigned an instance of the first.
-     */
-    private static final Map<Class<?>,Set<Class<?>>> PRIMITIVE_WIDENINGS_MAP = new HashMap<Class<?>,Set<Class<?>>>(11);
-
     static {
-        Set<Class<?>> set = new HashSet<Class<?>>();
+        Set<Class<?>> set = new HashSet<>();
         set.add(Short.TYPE);
         set.add(Integer.TYPE);
         set.add(Long.TYPE);
@@ -75,7 +72,7 @@ final class ClassUtilities {
         set.add(Double.TYPE);
         PRIMITIVE_WIDENINGS_MAP.put(Byte.TYPE, set);
 
-        set = new HashSet<Class<?>>();
+        set = new HashSet<>();
         set.add(Integer.TYPE);
         set.add(Long.TYPE);
         set.add(Float.TYPE);
@@ -83,18 +80,18 @@ final class ClassUtilities {
         PRIMITIVE_WIDENINGS_MAP.put(Short.TYPE, set);
         PRIMITIVE_WIDENINGS_MAP.put(Character.TYPE, set);
 
-        set = new HashSet<Class<?>>();
+        set = new HashSet<>();
         set.add(Long.TYPE);
         set.add(Float.TYPE);
         set.add(Double.TYPE);
         PRIMITIVE_WIDENINGS_MAP.put(Integer.TYPE, set);
 
-        set = new HashSet<Class<?>>();
+        set = new HashSet<>();
         set.add(Float.TYPE);
         set.add(Double.TYPE);
         PRIMITIVE_WIDENINGS_MAP.put(Long.TYPE, set);
 
-        set = new HashSet<Class<?>>();
+        set = new HashSet<>();
         set.add(Double.TYPE);
         PRIMITIVE_WIDENINGS_MAP.put(Float.TYPE, set);
     }
@@ -181,7 +178,7 @@ final class ClassUtilities {
     public static Method getAccessibleMethodFrom(final Class<?> aClass, final String methodName, final Class<?>[] parameterTypes) {
         // Look for overridden method in the superclass.
         Class<?> superclass = aClass.getSuperclass();
-        Method overriddenMethod = null;
+        Method overriddenMethod;
         if (superclass != null && classIsAccessible(superclass)) {
             overriddenMethod = getMethod(methodName, parameterTypes, superclass);
             if (overriddenMethod != null) {
@@ -191,16 +188,14 @@ final class ClassUtilities {
         // If here, then aClass represents Object, or an interface, or
         // the superclass did not have an override. Check implemented interfaces.
         Class<?>[] interfaces = aClass.getInterfaces();
-        for (int i = 0; i < interfaces.length; ++i) {
-            overriddenMethod = null;
-            if (classIsAccessible(interfaces[i])) {
-                overriddenMethod = getMethod(methodName, parameterTypes, interfaces[i]);
+        for (Class<?> anInterface1 : interfaces) {
+            if (classIsAccessible(anInterface1)) {
+                overriddenMethod = getMethod(methodName, parameterTypes, anInterface1);
                 if (overriddenMethod != null) {
                     return overriddenMethod;
                 }
             }
         }
-        overriddenMethod = null;
         // Try superclass's superclass and implemented interfaces.
         if (superclass != null) {
             overriddenMethod = getAccessibleMethodFrom(superclass, methodName, parameterTypes);
@@ -209,8 +204,8 @@ final class ClassUtilities {
             }
         }
         // Try implemented interfaces' extended interfaces...
-        for (int i = 0; i < interfaces.length; ++i) {
-            overriddenMethod = getAccessibleMethodFrom(interfaces[i], methodName, parameterTypes);
+        for (Class<?> anInterface : interfaces) {
+            overriddenMethod = getAccessibleMethodFrom(anInterface, methodName, parameterTypes);
             if (overriddenMethod != null) {
                 return overriddenMethod;
             }
@@ -233,7 +228,7 @@ final class ClassUtilities {
      *         wrapper. If aClass is primitive, returns aClass. Otherwise,
      *         returns null.
      */
-    public static Class<?> primitiveEquivalentOf(final Class<?> aClass) {
+    private static Class<?> primitiveEquivalentOf(final Class<?> aClass) {
         return aClass.isPrimitive() ? aClass : OBJECT_PRIMITIVE_MAP.get(aClass);
     }
 
@@ -243,7 +238,7 @@ final class ClassUtilities {
      *         type. If aClass is primitive, returns its wrapper, otherwise,
      *         returns the type itself.
      */
-    public static Class<?> classEquivalentOf(final Class<?> aClass) {
+    private static Class<?> classEquivalentOf(final Class<?> aClass) {
         return !aClass.isPrimitive() ? aClass : PRIMITIVE_OBJECT_MAP.get(aClass);
     }
 
@@ -257,7 +252,7 @@ final class ClassUtilities {
      *         <code>null</code>, or one of the parameters does not represent
      *         a primitive (e.g. Byte.TYPE), returns false.
      */
-    public static boolean primitiveIsAssignableFrom(final Class<?> lhs, final Class<?> rhs) {
+    private static boolean primitiveIsAssignableFrom(final Class<?> lhs, final Class<?> rhs) {
         if (lhs == null || rhs == null) {
             return false;
         }
@@ -268,9 +263,6 @@ final class ClassUtilities {
             return true;
         }
         Set<Class<?>> wideningSet = PRIMITIVE_WIDENINGS_MAP.get(rhs);
-        if (wideningSet == null) {
-            return false;
-        }
-        return wideningSet.contains(lhs);
+        return wideningSet != null && wideningSet.contains(lhs);
     }
 }

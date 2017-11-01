@@ -1,38 +1,35 @@
 package alice.tuprologx.ide;
 
-import alice.util.*;
-import alice.tuprolog.*;
-import com.szadowsz.gospel.core.event.interpreter.ExceptionEvent;
-import com.szadowsz.gospel.core.event.interpreter.WarningEvent;
-import com.szadowsz.gospel.core.error.InvalidTheoryException;
-import com.szadowsz.gospel.core.error.MalformedGoalException;
-import com.szadowsz.gospel.core.error.NoSolutionException;
-import com.szadowsz.gospel.core.listener.ExceptionListener;
-import com.szadowsz.gospel.core.event.interpreter.SpyEvent;
-import com.szadowsz.gospel.core.event.io.OutputEvent;
-import com.szadowsz.gospel.core.listener.OutputListener;
-import com.szadowsz.gospel.core.listener.SpyListener;
-import com.szadowsz.gospel.core.listener.WarningListener;
+import alice.tuprolog.Var;
 import alice.tuprolog.lib.IOLibrary;
+import alice.util.Automaton;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.error.InvalidTheoryException;
+import com.szadowsz.gospel.core.error.MalformedGoalException;
+import com.szadowsz.gospel.core.error.NoSolutionException;
+import com.szadowsz.gospel.core.event.interpreter.ExceptionEvent;
+import com.szadowsz.gospel.core.event.interpreter.SpyEvent;
+import com.szadowsz.gospel.core.event.interpreter.WarningEvent;
+import com.szadowsz.gospel.core.event.io.OutputEvent;
+import com.szadowsz.gospel.core.listener.ExceptionListener;
+import com.szadowsz.gospel.core.listener.OutputListener;
+import com.szadowsz.gospel.core.listener.SpyListener;
+import com.szadowsz.gospel.core.listener.WarningListener;
 
 import java.io.*;
 
 @SuppressWarnings("serial")
 public class CUIConsole extends Automaton implements Serializable, OutputListener, SpyListener, WarningListener, ExceptionListener/**/ {
 
-    BufferedReader stdin;
-    PrologEngine engine;
-
-
-    static final String incipit =
+    private static final String incipit =
             "tuProlog system - release " + PrologEngine.getVersion() + "\n";
-
     static String sol = ""; //to do -> correct output of CUI console in order to show multiple results
+    private final BufferedReader stdin;
+    private final PrologEngine engine;
 
-    public CUIConsole(String[] args) {
+    private CUIConsole(String[] args) {
 
         if (args.length > 1) {
             System.err.println("args: { theory file }");
@@ -68,6 +65,10 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
         }
     }
 
+    public static void main(String[] args) {
+        new Thread(new CUIConsole(args)).start();
+    }
+
     public void boot() {
         System.out.println(incipit);
         become("goalRequest");
@@ -86,12 +87,11 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
         solveGoal(goal);
     }
 
-
-    void solveGoal(String goal) {
+    private void solveGoal(String goal) {
 
         try {
             Solution info = engine.solve(goal);
-   
+
             /*Castagna 06/2011*/
             //if (engine.isHalted())
             //	System.exit(0);
@@ -101,7 +101,7 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
                 if (info.isHalted())
                     System.out.println("halt.");
                 else
-        		/**/
+                /**/
                     System.out.println("no.");
                 become("goalRequest");
             } else if (!engine.hasOpenAlternatives()) {
@@ -185,14 +185,10 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
     public void onWarning(WarningEvent e) {
         System.out.println(e.getMsg());
     }
+	/**/
 
     /*Castagna 06/2011*/
     public void onException(ExceptionEvent e) {
         System.out.println(e.getMsg());
-    }
-	/**/
-
-    public static void main(String[] args) {
-        new Thread(new CUIConsole(args)).start();
     }
 }

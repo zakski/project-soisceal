@@ -10,15 +10,16 @@
 package alice.tuprologx.pj.annotations.parser;
 
 /**
- *
  * @author maurizio
  */
 @SuppressWarnings("serial")
-public class MalformedExpressionException extends RuntimeException {
-    
-    /** Creates a new instance of MalformedExpressionException */
+class MalformedExpressionException extends RuntimeException {
+
+    /**
+     * Creates a new instance of MalformedExpressionException
+     */
     public MalformedExpressionException() {
         super();
     }
-    
+
 }

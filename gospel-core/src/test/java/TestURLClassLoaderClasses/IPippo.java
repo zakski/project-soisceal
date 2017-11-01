@@ -1,5 +1,5 @@
 package TestURLClassLoaderClasses;
-public interface IPippo 
-{
-	public void met();
+
+public interface IPippo {
+    void met();
 }

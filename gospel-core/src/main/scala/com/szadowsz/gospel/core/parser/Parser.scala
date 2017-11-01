@@ -51,6 +51,8 @@ import com.szadowsz.gospel.core.error.InvalidTermException
 @SerialVersionUID(1L)
 object Parser {
 
+  private val atom: Pattern = Pattern.compile("(!|[a-z][a-zA-Z_0-9]*)")
+
   /**
     * Static service to get a term from its string representation,
     * providing a specific operator manager
@@ -66,18 +68,16 @@ object Parser {
       if (term == null) throw new InvalidTermException("Term is null")
       if (!p.tokenizer.readToken.isEOF) throw new InvalidTermException("The entire string could not be read as one term")
       term.resolveTerm()
-      return term
+      term
     } catch {
       case ex: IOException => throw new InvalidTermException("An I/O error occured")
     }
   }
 
-  private[core] def parseInteger(s: String): Number = {
-    val num: scala.Long = java.lang.Long.parseLong(s)
-    if (num > Integer.MIN_VALUE && num < Integer.MAX_VALUE) new Int(num.toInt) else new Long(num)
-  }
-
-  private[core] def parseFloat(s: String): Double = new Double(s.toDouble)
+  /**
+    * @return true if the String could be a prolog atom
+    */
+  def isAtom(s: String): Boolean = atom.matcher(s).matches
 
   private[core] def createNumber(s: String): Number = {
     try {
@@ -87,23 +87,21 @@ object Parser {
     }
   }
 
-  /**
-    * @return true if the String could be a prolog atom
-    */
-  def isAtom(s: String): Boolean = atom.matcher(s).matches
+  private[core] def parseInteger(s: String): Number = {
+    val num: scala.Long = java.lang.Long.parseLong(s)
+    if (num > Integer.MIN_VALUE && num < Integer.MAX_VALUE) new Int(num.toInt) else new Long(num)
+  }
 
-  private val atom: Pattern = Pattern.compile("(!|[a-z][a-zA-Z_0-9]*)")
+  private[core] def parseFloat(s: String): Double = new Double(s.toDouble)
 }
 
 
-
-
 @SerialVersionUID(1L)
-private[core] class Parser(op : OperatorManager) extends Serializable {
-  private var tokenizer: Tokenizer = null
-  private var opManager: OperatorManager = op
-  /*Castagna 06/2011*/ private var offsetsMap: util.HashMap[Term, Integer] = null
+private[core] class Parser(op: OperatorManager) extends Serializable {
   private val tokenStart: scala.Int = 0
+  private var tokenizer: Tokenizer = _
+  private var opManager: OperatorManager = op
+  /*Castagna 06/2011*/ private var offsetsMap: util.HashMap[Term, Integer] = _
 
   /**
     * creating a Parser specifing how to handle operators and what text to parse
@@ -114,7 +112,7 @@ private[core] class Parser(op : OperatorManager) extends Serializable {
   }
 
 
-   /**
+  /**
     * creating a Parser specifing how to handle operators and what text to parse
     */
   def this(op: OperatorManager, theoryText: InputStream) {
@@ -155,7 +153,7 @@ private[core] class Parser(op : OperatorManager) extends Serializable {
       //throw new InvalidTermException("The term " + term + " is not ended with a period.");
         throw new InvalidTermException("The term '" + term + "' is not ended with a period.", tokenizer.offsetToRowColumn(getCurrentOffset)(0), tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1)
       /**/ term.resolveTerm()
-      return term
+      term
     }
     catch {
       case ex: IOException => {
@@ -166,6 +164,14 @@ private[core] class Parser(op : OperatorManager) extends Serializable {
       }
     }
   }
+
+  def getTextMapping: util.HashMap[Term, Integer] = offsetsMap
+
+  def getCurrentLine: scala.Int = tokenizer.lineno
+
+  def getCurrentOffset: scala.Int = tokenizer.tokenOffset
+
+  def offsetToRowColumn(offset: scala.Int): Array[scala.Int] = tokenizer.offsetToRowColumn(offset)
 
   @throws[InvalidTermException]
   @throws[IOException]
@@ -181,36 +187,36 @@ private[core] class Parser(op : OperatorManager) extends Serializable {
     var t: Token = tokenizer.readToken
     var break = false
     while (!break && t.isOperator(commaIsEndMarker)) {
-        var cont = false
-        var YFX: scala.Int = opManager.opPrio(t.seq, "yfx")
-        var YF: scala.Int = opManager.opPrio(t.seq, "yf")
-        //YF and YFX has a higher priority than the left side expr and less then top limit
-        // if (YF < leftSide.priority && YF > OperatorManager.OP_HIGH) YF = -1;
-        if (YF < leftSide.priority || YF > maxPriority) YF = -1
-        // if (YFX < leftSide.priority && YFX > OperatorManager.OP_HIGH) YFX = -1;
-        if (YFX < leftSide.priority || YFX > maxPriority) YFX = -1
-        //YFX has priority over YF
-        if (YFX >= YF && YFX >= OperatorManager.OP_LOW) {
-          val ta: IdentifiedTerm = exprA(YFX - 1, commaIsEndMarker)
-          if (ta != null) {
-            /*Castagna 06/2011*/
-            //leftSide = new IdentifiedTerm(YFX, new Struct(t.seq, leftSide.result, ta.result));
-            leftSide = identifyTerm(YFX, new Struct(t.seq, leftSide.result, ta.result), tokenStart)
-            cont = true
-          }
-        }
-        //either YF has priority over YFX or YFX failed
-        if (!cont && YF >= OperatorManager.OP_LOW) {
+      var cont = false
+      var YFX: scala.Int = opManager.opPrio(t.seq, "yfx")
+      var YF: scala.Int = opManager.opPrio(t.seq, "yf")
+      //YF and YFX has a higher priority than the left side expr and less then top limit
+      // if (YF < leftSide.priority && YF > OperatorManager.OP_HIGH) YF = -1;
+      if (YF < leftSide.priority || YF > maxPriority) YF = -1
+      // if (YFX < leftSide.priority && YFX > OperatorManager.OP_HIGH) YFX = -1;
+      if (YFX < leftSide.priority || YFX > maxPriority) YFX = -1
+      //YFX has priority over YF
+      if (YFX >= YF && YFX >= OperatorManager.OP_LOW) {
+        val ta: IdentifiedTerm = exprA(YFX - 1, commaIsEndMarker)
+        if (ta != null) {
           /*Castagna 06/2011*/
-          //leftSide = new IdentifiedTerm(YF, new Struct(t.seq, leftSide.result));
-          leftSide = identifyTerm(YF, new Struct(t.seq, leftSide.result), tokenStart)
+          //leftSide = new IdentifiedTerm(YFX, new Struct(t.seq, leftSide.result, ta.result));
+          leftSide = identifyTerm(YFX, new Struct(t.seq, leftSide.result, ta.result), tokenStart)
           cont = true
         }
-        if (!cont){
-          break = true
-        } else {
-          t = tokenizer.readToken
-        }
+      }
+      //either YF has priority over YFX or YFX failed
+      if (!cont && YF >= OperatorManager.OP_LOW) {
+        /*Castagna 06/2011*/
+        //leftSide = new IdentifiedTerm(YF, new Struct(t.seq, leftSide.result));
+        leftSide = identifyTerm(YF, new Struct(t.seq, leftSide.result), tokenStart)
+        cont = true
+      }
+      if (!cont) {
+        break = true
+      } else {
+        t = tokenizer.readToken
+      }
     }
     tokenizer.unreadToken(t)
     leftSide
@@ -225,66 +231,66 @@ private[core] class Parser(op : OperatorManager) extends Serializable {
     var operator: Token = tokenizer.readToken
     var break = false
     while (!break & operator.isOperator(commaIsEndMarker)) {
-        var cont = false
-        var XFX: scala.Int = opManager.opPrio(operator.seq, "xfx")
-        var XFY: scala.Int = opManager.opPrio(operator.seq, "xfy")
-        var XF: scala.Int = opManager.opPrio(operator.seq, "xf")
-        //check that no operator has a priority higher than permitted
-        //or a lower priority than the left side expression
-        if (XFX > maxPriority || XFX < OperatorManager.OP_LOW) XFX = -1
-        if (XFY > maxPriority || XFY < OperatorManager.OP_LOW) XFY = -1
-        if (XF > maxPriority || XF < OperatorManager.OP_LOW) XF = -1
-        //XFX
-        var haveAttemptedXFX: Boolean = false
-        if (XFX >= XFY && XFX >= XF && XFX >= left.priority) {
-          //XFX has priority
-          val found: IdentifiedTerm = exprA(XFX - 1, commaIsEndMarker)
-          if (found != null) {
-            /*Castagna 06/2011*/
-            //Struct xfx = new Struct(operator.seq, left.result, found.result);
-            //left = new IdentifiedTerm(XFX, xfx);
-            left = identifyTerm(XFX, new Struct(operator.seq, left.result, found.result), tokenStart)
-            cont = true
-          }
-          else haveAttemptedXFX = true
+      var cont = false
+      var XFX: scala.Int = opManager.opPrio(operator.seq, "xfx")
+      var XFY: scala.Int = opManager.opPrio(operator.seq, "xfy")
+      var XF: scala.Int = opManager.opPrio(operator.seq, "xf")
+      //check that no operator has a priority higher than permitted
+      //or a lower priority than the left side expression
+      if (XFX > maxPriority || XFX < OperatorManager.OP_LOW) XFX = -1
+      if (XFY > maxPriority || XFY < OperatorManager.OP_LOW) XFY = -1
+      if (XF > maxPriority || XF < OperatorManager.OP_LOW) XF = -1
+      //XFX
+      var haveAttemptedXFX: Boolean = false
+      if (XFX >= XFY && XFX >= XF && XFX >= left.priority) {
+        //XFX has priority
+        val found: IdentifiedTerm = exprA(XFX - 1, commaIsEndMarker)
+        if (found != null) {
+          /*Castagna 06/2011*/
+          //Struct xfx = new Struct(operator.seq, left.result, found.result);
+          //left = new IdentifiedTerm(XFX, xfx);
+          left = identifyTerm(XFX, new Struct(operator.seq, left.result, found.result), tokenStart)
+          cont = true
         }
-        //XFY
-        if (!cont && XFY >= XF && XFY >= left.priority) {
-          //XFY has priority, or XFX has failed
-          val found: IdentifiedTerm = exprA(XFY, commaIsEndMarker)
-          if (found != null) {
-            /*Castagna 06/2011*/
-            //Struct xfy = new Struct(operator.seq, left.result, found.result);
-            //left = new IdentifiedTerm(XFY, xfy);
-            left = identifyTerm(XFY, new Struct(operator.seq, left.result, found.result), tokenStart)
-            cont = true //todo: continue is not supported
-          }
+        else haveAttemptedXFX = true
+      }
+      //XFY
+      if (!cont && XFY >= XF && XFY >= left.priority) {
+        //XFY has priority, or XFX has failed
+        val found: IdentifiedTerm = exprA(XFY, commaIsEndMarker)
+        if (found != null) {
+          /*Castagna 06/2011*/
+          //Struct xfy = new Struct(operator.seq, left.result, found.result);
+          //left = new IdentifiedTerm(XFY, xfy);
+          left = identifyTerm(XFY, new Struct(operator.seq, left.result, found.result), tokenStart)
+          cont = true //todo: continue is not supported
         }
-        //XF
-        if (!cont && XF >= left.priority) //XF has priority, or XFX and/or XFY has failed
-        /*Castagna 06/2011*/
-        //return new IdentifiedTerm(XF, new Struct(operator.seq, left.result));
-          return identifyTerm(XF, new Struct(operator.seq, left.result), tokenStart)
-        /**/
-        //XFX did not have top priority, but XFY failed
-        if (!cont && !haveAttemptedXFX && XFX >= left.priority) {
-          val found: IdentifiedTerm = exprA(XFX - 1, commaIsEndMarker)
-          if (found != null) {
-            /*Castagna 06/2011*/
-            //Struct xfx = new Struct(operator.seq, left.result, found.result);
-            //left = new IdentifiedTerm(XFX, xfx);
-            left = identifyTerm(XFX, new Struct(operator.seq, left.result, found.result), tokenStart)
-            cont = true
-          }
+      }
+      //XF
+      if (!cont && XF >= left.priority) //XF has priority, or XFX and/or XFY has failed
+      /*Castagna 06/2011*/
+      //return new IdentifiedTerm(XF, new Struct(operator.seq, left.result));
+        return identifyTerm(XF, new Struct(operator.seq, left.result), tokenStart)
+      /**/
+      //XFX did not have top priority, but XFY failed
+      if (!cont && !haveAttemptedXFX && XFX >= left.priority) {
+        val found: IdentifiedTerm = exprA(XFX - 1, commaIsEndMarker)
+        if (found != null) {
+          /*Castagna 06/2011*/
+          //Struct xfx = new Struct(operator.seq, left.result, found.result);
+          //left = new IdentifiedTerm(XFX, xfx);
+          left = identifyTerm(XFX, new Struct(operator.seq, left.result, found.result), tokenStart)
+          cont = true
         }
-        if (!cont){
-          break = true
-        } else {
-          operator = tokenizer.readToken
-        }
+      }
+      if (!cont) {
+        break = true
+      } else {
+        operator = tokenizer.readToken
+      }
     }
     tokenizer.unreadToken(operator)
-    return left
+    left
   }
 
   /**
@@ -343,7 +349,7 @@ private[core] class Parser(op : OperatorManager) extends Serializable {
     }
     tokenizer.unreadToken(f)
     //2. expr0
-    return new IdentifiedTerm(0, expr0)
+    IdentifiedTerm(0, expr0)
   }
 
   /**
@@ -507,12 +513,4 @@ private[core] class Parser(op : OperatorManager) extends Serializable {
   private def map(term: Term, offset: scala.Int) {
     if (offsetsMap != null) offsetsMap.put(term, offset)
   }
-
-  def getTextMapping: util.HashMap[Term, Integer] = offsetsMap
-
-  def getCurrentLine: scala.Int = tokenizer.lineno
-
-  def getCurrentOffset: scala.Int = tokenizer.tokenOffset
-
-  def offsetToRowColumn(offset: scala.Int): Array[scala.Int] = tokenizer.offsetToRowColumn(offset)
 }

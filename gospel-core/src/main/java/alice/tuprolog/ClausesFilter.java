@@ -29,7 +29,7 @@ import java.util.List;
  * @since 2.2
  */
 class ClausesFilter {
-    public static boolean OPTIMIZATION_ENABLED = true;
+    private static final boolean OPTIMIZATION_ENABLED = true;
 
     /**
      * Iterates familyClauses and select those claues which, in all probability,
@@ -38,37 +38,37 @@ class ClausesFilter {
      * @param familyClauses The list of clauses whose head predicate
      *                      as same name and same arity
      * @param goal          The goal to be resolved
-     * @return              The list of clauses (subset of
-     *                      <code>familyClauses</code>) which more probably
-     *                      match with <code>goal</code>
+     * @return The list of clauses (subset of
+     * <code>familyClauses</code>) which more probably
+     * match with <code>goal</code>
      */
-    public static OneWayList<ClauseInfo> filterClauses(List<ClauseInfo> familyClauses, Term goal){
-        if(OPTIMIZATION_ENABLED && goal instanceof Struct){
+    public static OneWayList<ClauseInfo> filterClauses(List<ClauseInfo> familyClauses, Term goal) {
+        if (OPTIMIZATION_ENABLED && goal instanceof Struct) {
             Struct g = (Struct) goal.getTerm();
 
             /* If no arguments no optimization can be applied */
-            if(g.getArity() < 2){
+            if (g.getArity() < 2) {
                 return returnAllClauses(familyClauses);
             }
 
             /* Retrieves first argument and checks type */
             Term t = g.getArg(1).getTerm();
-            if(t instanceof Var){
+            if (t instanceof Var) {
                 /* 
                  * if first argument is an unbounded variable,
                  * no reasoning is possible
                  */
                 return returnAllClauses(familyClauses);
-            } else if(t.isAtomic()){
-                if(t instanceof Number){
+            } else if (t.isAtomic()) {
+                if (t instanceof Number) {
                     /* selects clauses which has a numeric first argument */
                     return selectNumeric(familyClauses, (Number) t);
                 }
 
                 /* selects clauses which has an atomic first argument */
                 return selectConstant(familyClauses, t);
-            } else if(t instanceof Struct){
-                if(isAList(t)){
+            } else if (t instanceof Struct) {
+                if (isAList(t)) {
                     /* select clauses which has a list as first argument */
                     return selectList(familyClauses);
                 }
@@ -86,7 +86,7 @@ class ClausesFilter {
     /*
      * Returns all the family clauses, no optimization performed.
      */
-    private static OneWayList<ClauseInfo> returnAllClauses(List<ClauseInfo> familyClauses){
+    private static OneWayList<ClauseInfo> returnAllClauses(List<ClauseInfo> familyClauses) {
         return OneWayList.transform2(familyClauses);
     }
 
@@ -98,15 +98,15 @@ class ClausesFilter {
         OneWayList<ClauseInfo> result = null;
         OneWayList<ClauseInfo> p = null;
 
-        for(Object obj : familyClauses){
+        for (Object obj : familyClauses) {
             ClauseInfo clause = (ClauseInfo) obj;
             Term arg = clause.getHead().getArg(0).getTerm();
 
-            if((arg instanceof Var) ||
-                    (arg instanceof Number && ((Number) arg).isEqual(t))){
-                OneWayList<ClauseInfo> l = new OneWayList<ClauseInfo>(clause, null);
-            
-                if(result == null){
+            if ((arg instanceof Var) ||
+                    (arg instanceof Number && arg.isEqual(t))) {
+                OneWayList<ClauseInfo> l = new OneWayList<>(clause, null);
+
+                if (result == null) {
                     result = p = l;
                 } else {
                     p.setTail(l);
@@ -126,15 +126,15 @@ class ClausesFilter {
         OneWayList<ClauseInfo> result = null;
         OneWayList<ClauseInfo> p = null;
 
-        for(Object obj : familyClauses){
+        for (Object obj : familyClauses) {
             ClauseInfo clause = (ClauseInfo) obj;
             Term arg = clause.getHead().getArg(0).getTerm();
 
-            if(arg instanceof Var ||
-                    ((Struct) arg).getPredicateIndicator().equals(predIndicator)){
-                OneWayList<ClauseInfo> l = new OneWayList<ClauseInfo>(clause, null);
+            if (arg instanceof Var ||
+                    ((Struct) arg).getPredicateIndicator().equals(predIndicator)) {
+                OneWayList<ClauseInfo> l = new OneWayList<>(clause, null);
 
-                if(result == null){
+                if (result == null) {
                     result = p = l;
                 } else {
                     p.setTail(l);
@@ -152,7 +152,7 @@ class ClausesFilter {
          * A list can be an empty list, or a Struct with name equals to "."
          * and arity equals to 2.
          */
-        if(t instanceof Struct){
+        if (t instanceof Struct) {
             Struct s = (Struct) t;
             return s.isEmptyList() || (s.getName().equals(".") && s.getArity() == 2);
         }
@@ -160,7 +160,7 @@ class ClausesFilter {
         return false;
 
     }
-    
+
     /*
      * Returns only the clauses whose first argument is a list
      * (as the goal's first argument)
@@ -169,14 +169,14 @@ class ClausesFilter {
         OneWayList<ClauseInfo> result = null;
         OneWayList<ClauseInfo> p = null;
 
-        for(Object obj : familyClauses){
+        for (Object obj : familyClauses) {
             ClauseInfo clause = (ClauseInfo) obj;
             Term arg = clause.getHead().getArg(0).getTerm();
 
-            if(arg instanceof Var || isAList(arg)){
-                OneWayList<ClauseInfo> l = new OneWayList<ClauseInfo>(clause, null);
+            if (arg instanceof Var || isAList(arg)) {
+                OneWayList<ClauseInfo> l = new OneWayList<>(clause, null);
 
-                if(result == null){
+                if (result == null) {
                     result = p = l;
                 } else {
                     p.setTail(l);
@@ -196,14 +196,14 @@ class ClausesFilter {
         OneWayList<ClauseInfo> result = null;
         OneWayList<ClauseInfo> p = null;
 
-        for(Object obj : familyClauses){
+        for (Object obj : familyClauses) {
             ClauseInfo clause = (ClauseInfo) obj;
             Term arg = clause.getHead().getArg(0).getTerm();
 
-            if(arg instanceof Var || arg.isAtomic()){
-                OneWayList<ClauseInfo> l = new OneWayList<ClauseInfo>(clause, null);
+            if (arg instanceof Var || arg.isAtomic()) {
+                OneWayList<ClauseInfo> l = new OneWayList<>(clause, null);
 
-                if(result == null){
+                if (result == null) {
                     result = p = l;
                 } else {
                     p.setTail(l);
@@ -214,5 +214,5 @@ class ClausesFilter {
 
         return result;
     }
-    
+
 }

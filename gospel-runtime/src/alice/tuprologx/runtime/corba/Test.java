@@ -1,12 +1,9 @@
 package alice.tuprologx.runtime.corba;
 
-import org.omg.CosNaming.*;
-import org.omg.CORBA.*;
-
-public class Test{
-    public static void main(String args[]){
-        try{
-            if (args.length<1){
+public class Test {
+    public static void main(String args[]) {
+        try {
+            if (args.length < 1) {
                 System.err.println("args: <goal>");
                 System.exit(-1);
             }
@@ -19,12 +16,12 @@ public class Test{
             NameComponent nc = new NameComponent("Prolog", " ");
             NameComponent path[] = {nc};
             Prolog engine = PrologHelper.narrow(ncRef.resolve(path));
-            SolveInfo info=engine.solve(args[0]);
+            SolveInfo info = engine.solve(args[0]);
             if (info.success)
-                System.out.println("yes: "+info.solution);
+                System.out.println("yes: " + info.solution);
             else
                 System.out.println("no.");
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.err.println("ERROR: " + e);
             e.printStackTrace(System.out);
         }

@@ -12,27 +12,26 @@ package alice.util;
 /**
  * this class defines services useful for
  * managing of IP extended address:
- *
+ * <p>
  * <IPAddress>:<port>
- *
  */
-public class IPAddress extends Object {
+class IPAddress {
 
-    static public int getPort(String address){
-        int index=address.indexOf(':');
-        if (index!=-1){
+    static public int getPort(String address) {
+        int index = address.indexOf(':');
+        if (index != -1) {
             try {
-                return Integer.parseInt(address.substring(index+1,address.length()));
-            } catch (Exception ex){
+                return Integer.parseInt(address.substring(index + 1, address.length()));
+            } catch (Exception ex) {
             }
         }
         return -1;
     }
 
-    static public String getHost(String address){
-        int index=address.indexOf(':');
-        if (index!=-1){
-            return address.substring(0,index);
+    static public String getHost(String address) {
+        int index = address.indexOf(':');
+        if (index != -1) {
+            return address.substring(0, index);
         }
         return address;
     }

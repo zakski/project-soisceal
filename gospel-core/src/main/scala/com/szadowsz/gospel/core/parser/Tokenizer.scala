@@ -47,13 +47,13 @@ object Tokenizer {
   /* private[parser] */ val GRAPHIC_CHARS: Array[Char] = Array('\\', '$', '&', '?', '^', '@', '#', '.', ',', ':', ';', '=', '<', '>', '+', '-', '*', '/', '~')
 
   /**
-   *
-   *
-   * @param typec
-   * @param svalc
-   * @return the intValue of the next character token, -1 if invalid
-   *         todo needs a lookahead if typec is \
-   */
+    *
+    *
+    * @param typec
+    * @param svalc
+    * @return the intValue of the next character token, -1 if invalid
+    *         todo needs a lookahead if typec is \
+    */
   private def isCharacterCodeConstantToken(typec: Int, svalc: String): Int = {
     if (svalc != null) {
       if (svalc.length == 1) return svalc.charAt(0).toInt
@@ -62,19 +62,19 @@ object Tokenizer {
       }
     }
     if (typec == ' ' || Arrays.binarySearch(GRAPHIC_CHARS, typec.toChar) >= 0) return typec
-    return -1
+    -1
   }
 
   private def isWhite(`type`: Int): Boolean = {
-    return `type` == ' ' || `type` == '\r' || `type` == '\n' || `type` == '\t' || `type` == '\f'
+    `type` == ' ' || `type` == '\r' || `type` == '\n' || `type` == '\t' || `type` == '\f'
   }
 
   /**
-   * used to implement lookahead for two tokens, super.pushBack() only handles one pushBack..
-   */
+    * used to implement lookahead for two tokens, super.pushBack() only handles one pushBack..
+    */
   private class PushBack {
     private[parser] var typea: Int = 0
-    private[parser] var svala: String = null
+    private[parser] var svala: String = _
 
     def this(i: Int, s: String) {
       this()
@@ -89,20 +89,20 @@ object Tokenizer {
 }
 
 /**
- * creating a tokenizer for the source stream
+  * creating a tokenizer for the source stream
   *
   * Created on 19/02/2017.
   *
   * @version Gospel 2.0.0
- */
+  */
 @SerialVersionUID(1L)
 class Tokenizer(theReader: Reader) extends StreamTokenizer(theReader) with Serializable {
+  private val tokenList: LinkedList[Token] = new LinkedList[Token]
   private var _tokenOffset: Int = 0
   private var _tokenStart: Int = 0
   private var tokenLength: Int = 0
   private var text: String = _
-  private val tokenList: LinkedList[Token] = new LinkedList[Token]
-  private var pushBack2: Tokenizer.PushBack = null
+  private var pushBack2: Tokenizer.PushBack = _
 
   {
     resetSyntax
@@ -142,33 +142,90 @@ class Tokenizer(theReader: Reader) extends StreamTokenizer(theReader) with Seria
 
 
   /**
-   * reads next available token
-   */
+    * reads next available token
+    */
   @throws(classOf[InvalidTermException])
   @throws(classOf[IOException])
   def readToken: Token = {
-    return if (!tokenList.isEmpty) tokenList.removeFirst else readNextToken
+    if (!tokenList.isEmpty) tokenList.removeFirst else readNextToken
+  }
+
+  override def lineno: Int = {
+    offsetToRowColumn(_tokenOffset)(0)
+  }
+
+  def offsetToRowColumn(offset: Int): Array[Int] = {
+    if (text == null || text.length <= 0) return Array[Int](super.lineno, -1)
+    val newText: String = removeTrailing(text, _tokenOffset)
+    var lno: Int = 0
+    var lastNewline: Int = -1
+
+    var i: Int = 0
+    while (i < newText.length && i < offset) {
+      if (newText.charAt(i) == '\n') {
+        lno += 1
+        lastNewline = i
+      }
+      i += 1
+    }
+
+    Array[Int](lno + 1, offset - lastNewline)
   }
 
   /**
-   * puts back token to be read again
-   */
+    * Marco Prati
+    * 19/04/11
+    *
+    * remove Trailing spaces from last token, where
+    * tokenizer stopped itself to correct the offset
+    *
+    */
+  private[parser] def removeTrailing(input: String, tokenOffset: Int): String = {
+    var i: Int = tokenOffset
+    var out: String = input
+    try {
+      var c: Char = input.charAt(tokenOffset - 1)
+      while (c == '\n') {
+        out = input.substring(0, i)
+        i -= 1
+        c = input.charAt(i)
+      }
+      out = out.concat(input.substring(tokenOffset))
+      out
+    }
+    catch {
+      case e: Exception => {
+        input
+      }
+    }
+  }
+
+  def tokenOffset: Int = {
+    _tokenOffset
+  }
+
+  def tokenStart: Int = {
+    _tokenStart
+  }
+
+  /**
+    * puts back token to be read again
+    */
   private[parser] def unreadToken(token: Token) {
     tokenList.addFirst(token)
   }
 
-
-  private def evaluateTokens(qType: Int, quote: StringBuffer) :(Boolean,Int,String) = {
+  private def evaluateTokens(qType: Int, quote: StringBuffer): (Boolean, Int, String) = {
     val typea = tokenConsume
     val svala = sval
     if (typea == '\\') {
       val typeb: Int = tokenConsume
-      if (typeb == '\n') return (true,typea,svala) //todo: continue is not supported
+      if (typeb == '\n') return (true, typea, svala) //todo: continue is not supported
       if (typeb == '\r') {
         val typec: Int = tokenConsume
-        if (typec == '\n')  return (true,typea,svala) //todo: continue is not supported
+        if (typec == '\n') return (true, typea, svala) //todo: continue is not supported
         tokenPushBack
-        return (true,typea,svala) //todo: continue is not supported
+        return (true, typea, svala) //todo: continue is not supported
       }
       tokenPushBack
     }
@@ -176,11 +233,11 @@ class Tokenizer(theReader: Reader) extends StreamTokenizer(theReader) with Seria
       val typeb: Int = tokenConsume
       if (typeb == qType) {
         quote.append(qType.toChar)
-        return (true,typea,svala) //todo: continue is not supported
+        return (true, typea, svala) //todo: continue is not supported
       }
       else {
         tokenPushBack
-        return (false,typea,svala) //todo: break is not supported
+        return (false, typea, svala) //todo: break is not supported
       }
     }
     if (typea == '\n' || typea == '\r') throw new InvalidTermException("Line break in quote not allowed")
@@ -189,7 +246,7 @@ class Tokenizer(theReader: Reader) extends StreamTokenizer(theReader) with Seria
       if (typea < 0) throw new InvalidTermException("Invalid string")
       quote.append(typea.toChar)
     }
-    (true,typea,svala)
+    (true, typea, svala)
   }
 
   @throws(classOf[IOException])
@@ -265,7 +322,7 @@ class Tokenizer(theReader: Reader) extends StreamTokenizer(theReader) with Seria
       val quote: StringBuffer = new StringBuffer
       var continue = true
       while (continue) {
-        val  temp = evaluateTokens(qType, quote)
+        val temp = evaluateTokens(qType, quote)
         typea = temp._2
         svala = temp._3
         continue = temp._1
@@ -308,7 +365,8 @@ class Tokenizer(theReader: Reader) extends StreamTokenizer(theReader) with Seria
           val svalc: String = sval
           var intVal: Int = 0
           if ((({
-            intVal = Tokenizer.isCharacterCodeConstantToken(typec, svalc); intVal
+            intVal = Tokenizer.isCharacterCodeConstantToken(typec, svalc)
+            intVal
           })) != -1) return new Token("" + intVal, Tokenizer.INTEGER)
           throw new InvalidTermException("Character code constant starting with 0'<X> cannot be recognized.")
         }
@@ -349,82 +407,25 @@ class Tokenizer(theReader: Reader) extends StreamTokenizer(theReader) with Seria
     throw new InvalidTermException("Unknown Unicode character: " + typea + "  (" + svala + ")")
   }
 
-  override def lineno: Int = {
-    return offsetToRowColumn(_tokenOffset)(0)
+  /**
+    * Read a token from the stream, and increase tokenOffset
+    *
+    * @return the readed token
+    * @throws IOException
+    */
+  @throws(classOf[IOException])
+  private def tokenConsume: Int = {
+    val t: Int = super.nextToken
+    tokenLength = (if (sval == null) 1 else sval.length)
+    _tokenOffset += tokenLength
+    t
   }
 
-  def tokenOffset: Int = {
-    return _tokenOffset
+  /**
+    * Push back the last readed token
+    */
+  private def tokenPushBack {
+    super.pushBack
+    _tokenOffset -= tokenLength
   }
-
-  def tokenStart: Int = {
-    return _tokenStart
-  }
-
-  def offsetToRowColumn(offset: Int): Array[Int] = {
-    if (text == null || text.length <= 0) return Array[Int](super.lineno, -1)
-    val newText: String = removeTrailing(text, _tokenOffset)
-    var lno: Int = 0
-    var lastNewline: Int = -1
-
-    var i: Int = 0
-    while (i < newText.length && i < offset) {
-        if (newText.charAt(i) == '\n') {
-          lno += 1
-          lastNewline = i
-        }
-        i += 1
-      }
-
-      return Array[Int](lno + 1, offset - lastNewline)
-    }
-
-    /**
-     * Marco Prati
-     * 19/04/11
-     *
-     * remove Trailing spaces from last token, where
-     * tokenizer stopped itself to correct the offset
-     *
-     */
-    private[parser] def removeTrailing(input: String, tokenOffset: Int): String = {
-      var i: Int = tokenOffset
-      var out: String = input
-      try {
-        var c: Char = input.charAt(tokenOffset - 1)
-        while (c == '\n') {
-          out = input.substring(0, i)
-          i -= 1
-          c = input.charAt(i)
-        }
-        out = out.concat(input.substring(tokenOffset))
-        return out
-      }
-      catch {
-        case e: Exception => {
-          return input
-        }
-      }
-    }
-
-    /**
-     * Read a token from the stream, and increase tokenOffset
-     * @return the readed token
-     * @throws IOException
-     */
-    @throws(classOf[IOException])
-    private def tokenConsume: Int = {
-      val t: Int = super.nextToken
-      tokenLength = (if (sval == null) 1 else sval.length)
-      _tokenOffset += tokenLength
-      return t
-    }
-
-    /**
-     * Push back the last readed token
-     */
-    private def tokenPushBack {
-      super.pushBack
-      _tokenOffset -= tokenLength
-    }
-  }
+}

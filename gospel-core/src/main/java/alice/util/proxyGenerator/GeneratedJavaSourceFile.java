@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.*;
 
 class GeneratedJavaSourceFile extends SimpleJavaFileObject {
-  private CharSequence javaSource;
+  private final CharSequence javaSource;
 
   public GeneratedJavaSourceFile(String className, CharSequence javaSource) {
     super(URI.create(className + ".java"), Kind.SOURCE);

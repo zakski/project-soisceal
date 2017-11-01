@@ -12,7 +12,7 @@ import com.szadowsz.gospel.core.engine.EngineManager;
 public class PrologError extends Throwable {
 	private static final long serialVersionUID = 1L;
 	// termine Prolog che rappresenta l'argomento di throw/1
-	private Term error;
+	private final Term error;
 	/*Castagna 06/2011*/
 	private String descriptionError;
 	/**/
@@ -38,8 +38,8 @@ public class PrologError extends Throwable {
 	}
 	/**/
 
-	/*Castagna 06/2011*/	
-	public PrologError(Term error, String descriptionError) {
+	/*Castagna 06/2011*/
+    private PrologError(Term error, String descriptionError) {
 		this.error = error;	
 		this.descriptionError = descriptionError;
 	}

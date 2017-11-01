@@ -1,6 +1,7 @@
 package alice.tuprolog;
 
-import static org.junit.Assert.*;
+import alice.util.JavaDynamicClassLoader;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,9 +10,8 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.junit.Test;
-
-import alice.util.JavaDynamicClassLoader;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * JavaDynamicClassLoader Test Case
@@ -21,10 +21,10 @@ import alice.util.JavaDynamicClassLoader;
 public class JavaDynamicClassLoaderTestCase {
 
     final static int PATHS_NUMBER = 2;
-    String[] paths = new String[PATHS_NUMBER];
+    final String[] paths = new String[PATHS_NUMBER];
 
     @Test
-    public void ConstructorTest() throws MalformedURLException, IOException, ClassNotFoundException {
+    public void ConstructorTest() throws IOException, ClassNotFoundException {
         JavaDynamicClassLoader loader = new JavaDynamicClassLoader();
         assertNotNull(loader);
 
@@ -35,9 +35,9 @@ public class JavaDynamicClassLoaderTestCase {
     }
 
     @Test
-    public void LoadClassTest() throws MalformedURLException,
+    public void LoadClassTest() throws
             IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException {
-        JavaDynamicClassLoader loader = null;
+        JavaDynamicClassLoader loader;
         setPath(true);
         URL[] urls = getURLsFromStringArray(paths);
         loader = new JavaDynamicClassLoader(urls, this.getClass().getClassLoader());
@@ -45,20 +45,20 @@ public class JavaDynamicClassLoaderTestCase {
 
         Class<?> cl = loader.loadClass("Counter");
         assertNotNull(cl);
-        Method m = cl.getMethod("inc", new Class[]{});
+        Method m = cl.getMethod("inc");
         m.setAccessible(true);
         Object obj = cl.newInstance();
-        m.invoke(obj, new Object[]{});
-        Method m1 = cl.getMethod("getValue", new Class[]{});
+        m.invoke(obj);
+        Method m1 = cl.getMethod("getValue");
         m1.setAccessible(true);
-        Object res_obj = m1.invoke(obj, new Object[]{});
-        int res = new Integer(res_obj.toString()).intValue();
+        Object res_obj = m1.invoke(obj);
+        int res = new Integer(res_obj.toString());
         assertEquals(1, res);
     }
 
     @Test(expected = ClassNotFoundException.class)
     public void LoadClassNotFoundTest() throws ClassNotFoundException, IOException {
-        JavaDynamicClassLoader loader = null;
+        JavaDynamicClassLoader loader;
         setPath(true);
         URL[] urls = getURLsFromStringArray(paths);
         loader = new JavaDynamicClassLoader(urls, this.getClass().getClassLoader());
@@ -67,15 +67,15 @@ public class JavaDynamicClassLoaderTestCase {
 
     @Test(expected = ClassNotFoundException.class)
     public void InvalidPathTest() throws ClassNotFoundException, IOException {
-        JavaDynamicClassLoader loader = null;
+        JavaDynamicClassLoader loader;
         URL url = new File(".").toURI().toURL();
         loader = new JavaDynamicClassLoader(new URL[]{url}, this.getClass().getClassLoader());
         loader.loadClass("Counter");
     }
 
     @Test
-    public void URLHandling() throws ClassNotFoundException, MalformedURLException, IOException {
-        JavaDynamicClassLoader loader = null;
+    public void URLHandling() throws ClassNotFoundException, IOException {
+        JavaDynamicClassLoader loader;
         URL url = new File(".").toURI().toURL();
         loader = new JavaDynamicClassLoader(new URL[]{url}, this.getClass().getClassLoader());
         assertEquals(1, loader.getURLs().length);
@@ -90,7 +90,7 @@ public class JavaDynamicClassLoaderTestCase {
 
     @Test(expected = ClassNotFoundException.class)
     public void TestNestedPackage() throws ClassNotFoundException, IOException {
-        JavaDynamicClassLoader loader = null;
+        JavaDynamicClassLoader loader;
         File file = new File(".");
         String tempPath = file.getCanonicalPath()
                 + File.separator + "test"

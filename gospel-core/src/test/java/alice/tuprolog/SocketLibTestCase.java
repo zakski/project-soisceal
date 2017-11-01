@@ -17,7 +17,7 @@ import org.junit.Test;
 
 public class SocketLibTestCase {
 	
-	PrologEngine engine = null;
+	private PrologEngine engine = null;
 	String theory;
 	
 	

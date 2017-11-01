@@ -5,8 +5,8 @@ import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 
 class PrologThread extends Thread {
-	PrologEngine core;
-	String goal;
+	private final PrologEngine core;
+	private final String goal;
 	PrologThread(PrologEngine core, String goal){
 		this.core = core;
 		this.goal = goal;

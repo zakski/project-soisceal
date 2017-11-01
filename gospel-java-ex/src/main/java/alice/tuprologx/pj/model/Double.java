@@ -10,35 +10,36 @@
 package alice.tuprologx.pj.model;
 
 /**
- *
  * @author maurizio
  */
 public class Double extends Term<Double> {
-	java.lang.Double _theDouble;
+    private final java.lang.Double _theDouble;
 
-	public <Z> Z/*java.lang.Double*/ toJava() {
-		//return (Z)_theDouble;
-		return uncheckedCast(_theDouble);
-	}
-	
-	public Double (java.lang.Double d) {_theDouble = d;}
-           
-        public alice.tuprolog.Double marshal() {
-            return new alice.tuprolog.Double(_theDouble);
-        }
-        
-        static Double unmarshal(alice.tuprolog.Double d) {
-            if (!matches(d))
-                throw new UnsupportedOperationException();
-            return new Double(d.doubleValue());
-        }
-        
-        static boolean matches(alice.tuprolog.Term t) {
-            return (t instanceof alice.tuprolog.Double);
-        }
-        
-	public String toString() {
-		return "Double("+_theDouble+")";
-	}
+    public Double(java.lang.Double d) {
+        _theDouble = d;
+    }
+
+    static Double unmarshal(alice.tuprolog.Double d) {
+        if (!matches(d))
+            throw new UnsupportedOperationException();
+        return new Double(d.doubleValue());
+    }
+
+    static boolean matches(alice.tuprolog.Term t) {
+        return (t instanceof alice.tuprolog.Double);
+    }
+
+    public <Z> Z/*java.lang.Double*/ toJava() {
+        //return (Z)_theDouble;
+        return uncheckedCast(_theDouble);
+    }
+
+    public alice.tuprolog.Double marshal() {
+        return new alice.tuprolog.Double(_theDouble);
+    }
+
+    public String toString() {
+        return "Double(" + _theDouble + ")";
+    }
 
 }

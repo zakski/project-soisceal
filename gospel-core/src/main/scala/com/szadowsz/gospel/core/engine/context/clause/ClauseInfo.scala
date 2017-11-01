@@ -19,13 +19,22 @@ package com.szadowsz.gospel.core.engine.context.clause
 
 import java.util
 
-import scala.collection.JavaConverters._
 import alice.tuprolog.{Struct, Term, Var}
 import com.szadowsz.gospel.core.db.ops.OperatorManager
 import com.szadowsz.gospel.core.engine.context.subgoal.tree.{SubGoalLeaf, SubGoalTree}
 
+import scala.collection.JavaConverters._
+
 
 object ClauseInfo {
+
+  /**
+    * Gets a clause from a generic Term
+    */
+
+  /* TODO renable private[gospel]*/ def extractBody(body: Term): SubGoalTree = {
+    extractBody(new SubGoalTree, body)
+  }
 
   private def canExtractStruct(body: Term) = body.isInstanceOf[Struct] && body.asInstanceOf[Struct].getName == ","
 
@@ -34,14 +43,6 @@ object ClauseInfo {
     */
   private def extractHead(clause: Struct): Struct = {
     clause.getArg(0).asInstanceOf[Struct]
-  }
-
-  /**
-    * Gets a clause from a generic Term
-    */
-
-  /* TODO renable private[gospel]*/ def extractBody(body: Term): SubGoalTree = {
-    extractBody(new SubGoalTree, body)
   }
 
   private def extractBody(parent: SubGoalTree, body: Term): SubGoalTree = {
@@ -125,9 +126,9 @@ object ClauseInfo {
   */
 case class ClauseInfo protected(clause: Struct, head: Struct, body: SubGoalTree, libName: String) {
 
-  private var headCopy: Struct = null
+  private var headCopy: Struct = _
 
-  private var bodyCopy: SubGoalTree = null
+  private var bodyCopy: SubGoalTree = _
 
   def this(clause: Struct, Lib: String) {
     this(clause, ClauseInfo.extractHead(clause), ClauseInfo.extractBody(clause.getArg(1)), Lib)
@@ -140,6 +141,70 @@ case class ClauseInfo protected(clause: Struct, head: Struct, body: SubGoalTree,
   def getBody: SubGoalTree = body
 
   def getClause: Struct = clause
+
+  /**
+    * Gets the string representation with default operator representation
+    */
+  override def toString: String = {
+    clause.getArg(0).toString + " :-\n\t" + ClauseInfo.indentPredicates(clause.getArg(1)) + ".\n"
+  }
+
+  /**
+    * Gets the string representation
+    * recognizing operators stored by
+    * the operator manager
+    */
+  def toString(op: OperatorManager): String = {
+    var p: scala.Int = 0
+    if ( {
+      p = op.opPrio(":-", "xfx")
+      p
+    } >= OperatorManager.OP_LOW) {
+      val st: String = ClauseInfo.indentPredicatesAsArgX(clause.getArg(1), op, p)
+      val head: String = clause.getArg(0).toStringAsArgX(op, p)
+      if (st == "true") {
+        return head + ".\n"
+      }
+      else {
+        return head + " :-\n\t" + st + ".\n"
+      }
+    }
+    if ( {
+      p = op.opPrio(":-", "yfx");
+      p
+    } >= OperatorManager.OP_LOW) {
+      val st: String = ClauseInfo.indentPredicatesAsArgX(clause.getArg(1), op, p)
+      val head: String = clause.getArg(0).toStringAsArgY(op, p)
+      if (st == "true") {
+        return head + ".\n"
+      }
+      else {
+        return head + " :-\n\t" + st + ".\n"
+      }
+    }
+    if ( {
+      p = op.opPrio(":-", "xfy");
+      p
+    } >= OperatorManager.OP_LOW) {
+      val st: String = ClauseInfo.indentPredicatesAsArgY(clause.getArg(1), op, p)
+      val head: String = clause.getArg(0).toStringAsArgX(op, p)
+      if (st == "true") {
+        return head + ".\n"
+      }
+      else {
+        return head + " :-\n\t" + st + ".\n"
+      }
+    }
+    clause.toString
+  }
+
+  protected[gospel] def getHeadCopy: Struct = {
+    headCopy
+  }
+
+  protected[gospel] def getBodyCopy: SubGoalTree = {
+    bodyCopy
+  }
 
   private[gospel] def performCopy(ExecCtx: Int) = {
     val vars = new util.IdentityHashMap[Var, Var]
@@ -160,66 +225,5 @@ case class ClauseInfo protected(clause: Struct, head: Struct, body: SubGoalTree,
       }
     }
     Dest
-  }
-
-  protected[gospel] def getHeadCopy: Struct = {
-    headCopy
-  }
-
-  protected[gospel] def getBodyCopy: SubGoalTree = {
-    bodyCopy
-  }
-
-  /**
-    * Gets the string representation with default operator representation
-    */
-  override def toString: String = {
-    clause.getArg(0).toString + " :-\n\t" + ClauseInfo.indentPredicates(clause.getArg(1)) + ".\n"
-  }
-
-  /**
-    * Gets the string representation
-    * recognizing operators stored by
-    * the operator manager
-    */
-  def toString(op: OperatorManager): String = {
-    var p: scala.Int = 0
-    if ( {
-      p = op.opPrio(":-", "xfx"); p
-    } >= OperatorManager.OP_LOW) {
-      val st: String = ClauseInfo.indentPredicatesAsArgX(clause.getArg(1), op, p)
-      val head: String = clause.getArg(0).toStringAsArgX(op, p)
-      if (st == "true") {
-        return head + ".\n"
-      }
-      else {
-        return head + " :-\n\t" + st + ".\n"
-      }
-    }
-    if ( {
-      p = op.opPrio(":-", "yfx"); p
-    } >= OperatorManager.OP_LOW) {
-      val st: String = ClauseInfo.indentPredicatesAsArgX(clause.getArg(1), op, p)
-      val head: String = clause.getArg(0).toStringAsArgY(op, p)
-      if (st == "true") {
-        return head + ".\n"
-      }
-      else {
-        return head + " :-\n\t" + st + ".\n"
-      }
-    }
-    if ( {
-      p = op.opPrio(":-", "xfy"); p
-    } >= OperatorManager.OP_LOW) {
-      val st: String = ClauseInfo.indentPredicatesAsArgY(clause.getArg(1), op, p)
-      val head: String = clause.getArg(0).toStringAsArgX(op, p)
-      if (st == "true") {
-        return head + ".\n"
-      }
-      else {
-        return head + " :-\n\t" + st + ".\n"
-      }
-    }
-    clause.toString
   }
 }

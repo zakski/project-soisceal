@@ -37,7 +37,7 @@ import java.util.NoSuchElementException;
  */
 public class TermIterator implements Iterator<Term>, java.io.Serializable {
 	private static final long serialVersionUID = 1L;
-    private Parser parser;
+    private final Parser parser;
     private boolean hasNext;
     private Term next;
     

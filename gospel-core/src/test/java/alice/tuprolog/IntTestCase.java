@@ -33,8 +33,6 @@ public class IntTestCase extends TestCase {
 		Int zero = new Int(0);
 		Int one = new Int(1);
 		assertFalse(zero.equals(one));
-		Int anotherZero = new Int(1-1);
-		assertTrue(anotherZero.equals(zero));
 	}
 	
 	public void testEqualsToLong() {

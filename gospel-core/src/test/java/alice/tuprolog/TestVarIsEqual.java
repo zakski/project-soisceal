@@ -17,9 +17,9 @@ import com.szadowsz.gospel.core.listener.OutputListener;
  */
 public class TestVarIsEqual extends TestCase {
   
-  PrologEngine core;
+  private PrologEngine core;
   String yes = "yes.\n";
-  private SysoutListener sysoutListener = new SysoutListener();
+  private final SysoutListener sysoutListener = new SysoutListener();
   
   protected void setUp() throws Exception {
     super.setUp();
@@ -28,12 +28,12 @@ public class TestVarIsEqual extends TestCase {
   }
   
   private class SysoutListener implements OutputListener {
-    public StringBuilder builder = new StringBuilder("");
+    final StringBuilder builder = new StringBuilder("");
     
     public void onOutput(OutputEvent ev) {
       builder.append(ev.getMsg());
     }
-    public String getAllOutput() {
+    String getAllOutput() {
       return builder.toString();
     }
   }

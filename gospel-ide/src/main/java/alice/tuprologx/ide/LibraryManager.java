@@ -17,9 +17,11 @@
  */
 package alice.tuprologx.ide;
 
-import alice.tuprolog.*;
-import com.szadowsz.gospel.core.error.InvalidLibraryException;
+import alice.tuprolog.Library;
 import alice.util.AssemblyCustomClassLoader;
+import cli.System.Reflection.Assembly;
+import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.error.InvalidLibraryException;
 
 import java.io.File;
 import java.net.URL;
@@ -27,58 +29,64 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
-import cli.System.Reflection.Assembly;
-import com.szadowsz.gospel.core.PrologEngine;
 
 /**
  * A dynamic manager for tuProlog libraries.
  *
- * @author    <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version    1.1 - 27-may-05
+ * @author <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version 1.1 - 27-may-05
  */
 
-public final class LibraryManager
-{
+public final class LibraryManager {
 
     /**
-	 * The Prolog engine referenced by the Library Manager. 
-	 */
+     * The Prolog engine referenced by the Library Manager.
+     */
     private PrologEngine engine;
     /**
-	 * Stores classnames for managed libraries.
-	 */
+     * Stores classnames for managed libraries.
+     */
     private ArrayList<String> libraries;
-    private Hashtable<String, URL> externalLibraries = new Hashtable<String, URL>();
+    private final Hashtable<String, URL> externalLibraries = new Hashtable<>();
 
     public LibraryManager() {
-    	libraries = new ArrayList<String>();
+        libraries = new ArrayList<>();
     }
 
-    /**
-	 * Set the engine to be referenced by the library manager.
-	 * @param engine  The engine to be referenced by the library manager.
-	 */
-    public void setEngine(PrologEngine engine) {
-        this.engine = engine;
-        initialize();
+    private static URL getClassResource(Class<?> klass) {
+        if (klass == null)
+            return null;
+        return klass.getClassLoader().getResource(
+                klass.getName().replace('.', '/') + ".class");
     }
-    
+
     /**
      * Initialize the repository for managed libraries using the
      * standard libraries which come loaded with the tuProlog engine.
      */
-    void initialize() {
-            String[] loadedLibraries = engine.getCurrentLibraries();
-            for (int i = loadedLibraries.length - 1; i >= 0; i--)
+    private void initialize() {
+        String[] loadedLibraries = engine.getCurrentLibraries();
+        for (int i = loadedLibraries.length - 1; i >= 0; i--)
             libraries.add(loadedLibraries[i]);
     }
 
     /**
-	 * Get the engine referenced by the library manager.
-	 * @return  the engine referenced by the library manager.
-	 */
+     * Get the engine referenced by the library manager.
+     *
+     * @return the engine referenced by the library manager.
+     */
     public PrologEngine getEngine() {
         return engine;
+    }
+
+    /**
+     * Set the engine to be referenced by the library manager.
+     *
+     * @param engine The engine to be referenced by the library manager.
+     */
+    public void setEngine(PrologEngine engine) {
+        this.engine = engine;
+        initialize();
     }
 
     /**
@@ -95,20 +103,20 @@ public final class LibraryManager
      * Add a library to the manager.
      *
      * @param libraryClassname The name of the .class of the library to be added.
-     * @throws ClassNotFoundException if the library class cannot be found.
+     * @throws ClassNotFoundException  if the library class cannot be found.
      * @throws InvalidLibraryException if the library is not a valid tuProlog library.
      */
     public void addLibrary(String libraryClassname) throws ClassNotFoundException, InvalidLibraryException {
         if (libraryClassname.equals(""))
             throw new ClassNotFoundException();
-        /** 
+        /**
          * check for classpath without uppercase at the first char of the last word
          */
-        StringTokenizer st=new StringTokenizer(libraryClassname, "");
-        String str=null;
-        while(st.hasMoreTokens())
-            str=st.nextToken();
-        if ((str.charAt(0)>'Z') ||(str.charAt(0)<'A'))
+        StringTokenizer st = new StringTokenizer(libraryClassname, "");
+        String str = null;
+        while (st.hasMoreTokens())
+            str = st.nextToken();
+        if ((str.charAt(0) > 'Z') || (str.charAt(0) < 'A'))
             throw new ClassNotFoundException();
 
 //        Class<?> library = getClass().getClassLoader().loadClass(libraryClassname);
@@ -116,80 +124,71 @@ public final class LibraryManager
 //            libraries.add(libraryClassname);
 //        else
 //            throw new InvalidLibraryException(libraryClassname,-1,-1);
-        
-        Library lib = null;
-        try
-        {
-        	lib = (Library) Class.forName(libraryClassname).newInstance();
-        	libraries.add(lib.getName());
-        }
-        catch(Exception ex)
-        {
-        	throw new InvalidLibraryException(libraryClassname,-1,-1);
+
+        Library lib;
+        try {
+            lib = (Library) Class.forName(libraryClassname).newInstance();
+            libraries.add(lib.getName());
+        } catch (Exception ex) {
+            throw new InvalidLibraryException(libraryClassname, -1, -1);
         }
     }
 
+    /**
+     * Add a library to the manager.
+     *
+     * @param libraryClassname The name of the .class of the library to be added.
+     * @param path             The path where is contained the library.
+     * @throws ClassNotFoundException  if the library class cannot be found.
+     * @throws InvalidLibraryException if the library is not a valid tuProlog library.
+     */
+    public void addLibrary(String libraryClassname, File file) throws ClassNotFoundException, InvalidLibraryException {
+        if (libraryClassname.equals(""))
+            throw new ClassNotFoundException();
         /**
-	     * Add a library to the manager.
-	     *
-	     * @param libraryClassname The name of the .class of the library to be added.
-	     * @param path The path where is contained the library.
-	     * @throws ClassNotFoundException if the library class cannot be found.
-	     * @throws InvalidLibraryException if the library is not a valid tuProlog library.
-	     */
-		public void addLibrary(String libraryClassname, File file) throws ClassNotFoundException, InvalidLibraryException {
-	        if (libraryClassname.equals(""))
-	            throw new ClassNotFoundException();
-	        /** 
-	         * check for classpath without uppercase at the first char of the last word
-	         */
-	        Library lib = null;
-	        try
-	        {
-	        	String path = file.getPath();
-	        	
-	        	if(path.contains(".class"))
-	        		file = new File(file.getPath().substring(0, file.getPath().lastIndexOf(File.separator) + 1));
-	        	
-	        	URL url = file.toURI().toURL();
-	        	ClassLoader loader = null;
-	        	
-	        	// .NET
-	        	if(System.getProperty("java.vm.name").equals("IKVM.NET"))
-	        	{
-	        		Assembly asm = Assembly.LoadFrom(file.getPath());
-	        		loader = new AssemblyCustomClassLoader(asm, new URL[]{url});
-	        		libraryClassname = "cli." + libraryClassname.substring(0, 
-	        				libraryClassname.indexOf(",")).trim();
-	        	}
-	        	// JVM
-	        	else
-	        	{
-	        		loader = URLClassLoader.newInstance(
-	        				new URL[]{ url } ,
-	        				getClass().getClassLoader());
-	        	}	
-	        	
-				lib = (Library) Class.forName(libraryClassname, true, loader).newInstance();
-				libraries.add(lib.getName());
-				externalLibraries.put(libraryClassname, getClassResource(lib.getClass()));
-	        }
-	        catch(Exception ex)
-	        {
-	        	throw new InvalidLibraryException(libraryClassname,-1,-1);
-	        }
-	    }
-    
+         * check for classpath without uppercase at the first char of the last word
+         */
+        Library lib;
+        try {
+            String path = file.getPath();
+
+            if (path.contains(".class"))
+                file = new File(file.getPath().substring(0, file.getPath().lastIndexOf(File.separator) + 1));
+
+            URL url = file.toURI().toURL();
+            ClassLoader loader;
+
+            // .NET
+            if (System.getProperty("java.vm.name").equals("IKVM.NET")) {
+                Assembly asm = Assembly.LoadFrom(file.getPath());
+                loader = new AssemblyCustomClassLoader(asm, new URL[]{url});
+                libraryClassname = "cli." + libraryClassname.substring(0,
+                        libraryClassname.indexOf(",")).trim();
+            }
+            // JVM
+            else {
+                loader = URLClassLoader.newInstance(
+                        new URL[]{url},
+                        getClass().getClassLoader());
+            }
+
+            lib = (Library) Class.forName(libraryClassname, true, loader).newInstance();
+            libraries.add(lib.getName());
+            externalLibraries.put(libraryClassname, getClassResource(lib.getClass()));
+        } catch (Exception ex) {
+            throw new InvalidLibraryException(libraryClassname, -1, -1);
+        }
+    }
+
     /**
      * Remove a library to the manager.
      *
      * @param libraryClassname The name of the .class of the library to be removed.
-     * @throws ClassNotFoundException if the library class cannot be found.
+     * @throws ClassNotFoundException  if the library class cannot be found.
      * @throws InvalidLibraryException if the library is not a valid tuProlog library.
      */
-    public void removeLibrary(String libraryClassname) throws InvalidLibraryException
-    {
-             libraries.remove(libraryClassname);
+    public void removeLibrary(String libraryClassname) throws InvalidLibraryException {
+        libraries.remove(libraryClassname);
     }
 
     /**
@@ -202,23 +201,19 @@ public final class LibraryManager
         return libraries.toArray();
     }
 
-    public void setLibraries(ArrayList<String> libraries)
-    {
-        this.libraries=libraries;
+    public void setLibraries(ArrayList<String> libraries) {
+        this.libraries = libraries;
     }
 
-    public void resetLibraries()
-    {
-        this.libraries=new ArrayList<String>();
+    public void resetLibraries() {
+        this.libraries = new ArrayList<>();
     }
 
-    public String toString()
-    {
+    public String toString() {
         String result = "";
         Object[] array = getLibraries();
-        for (int i=0;i<array.length;i++)
-        {
-            result=result+array[i]+"\n";
+        for (Object anArray : array) {
+            result = result + anArray + "\n";
         }
         return result;
     }
@@ -232,19 +227,17 @@ public final class LibraryManager
     public void loadLibrary(String library) throws InvalidLibraryException {
         engine.loadLibrary(library);
     }
-    
+
     /**
      * Load a library from the Library Manager into the engine.
      *
      * @param library The library to be loaded into the engine.
-     * @param path The library path where is contained the library.
+     * @param path    The library path where is contained the library.
      * @throws InvalidLibraryException
      */
     public void loadLibrary(String library, File file) throws InvalidLibraryException {
-        engine.loadLibrary(library, new String[] { file.getAbsolutePath()});
+        engine.loadLibrary(library, new String[]{file.getAbsolutePath()});
     }
-    
-    
 
     /**
      * Unload a library from the Library Manager out of the engine.
@@ -256,40 +249,30 @@ public final class LibraryManager
     public void unloadLibrary(String library) throws InvalidLibraryException {
         engine.unloadLibrary(library);
     }
-    
+
     public void unloadExternalLibrary(String library) throws InvalidLibraryException {
-    	if(externalLibraries.containsKey(library))
-			externalLibraries.remove(library);
-    	if(engine.getLibrary(library) != null)
-    		engine.unloadLibrary(library);
+        if (externalLibraries.containsKey(library))
+            externalLibraries.remove(library);
+        if (engine.getLibrary(library) != null)
+            engine.unloadLibrary(library);
     }
-    
+
     /**
      * Check if a library is contained in the manager.
-     * 
+     *
      * @param library The name of the library we want to check the load status on.
      * @since 1.3.0
      */
     public boolean contains(String library) {
-            return libraries.contains(library);
+        return libraries.contains(library);
     }
-    
-    public synchronized URL getExternalLibraryURL(String name)
-	{
-		return isExternalLibrary(name) ? externalLibraries.get(name) : null;
-	}
-	
-	public synchronized boolean isExternalLibrary(String name)
-	{
-		return externalLibraries.containsKey(name);
-	}
-    
-    private static URL getClassResource(Class<?> klass) 
-	{
-		if(klass == null)
-			return null;
-		return klass.getClassLoader().getResource(
-				klass.getName().replace('.', '/') + ".class");
-	}
+
+    public synchronized URL getExternalLibraryURL(String name) {
+        return isExternalLibrary(name) ? externalLibraries.get(name) : null;
+    }
+
+    public synchronized boolean isExternalLibrary(String name) {
+        return externalLibraries.containsKey(name);
+    }
 
 } // end LibraryManager class

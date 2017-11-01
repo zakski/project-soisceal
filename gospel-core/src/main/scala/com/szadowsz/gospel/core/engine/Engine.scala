@@ -40,6 +40,7 @@ import com.szadowsz.gospel.core.engine.context.{ChoicePointContext, ChoicePointS
 import com.szadowsz.gospel.core.engine.state.{EndState, State}
 
 import scala.util.Try
+
 /**
   * @author Alex Benini
   */
@@ -50,11 +51,11 @@ class Engine(val manager: EngineRunner, var query: Term) {
   var hasOpenAlts: Boolean = false
   var mustStop: Boolean = false
   var nextState: State = manager.INIT
-  var startGoal: Struct = null
-  var goalVars: util.Collection[Var] = null
-  var currentContext: ExecutionContext = null
-  var currentAlternative: ChoicePointContext = null
-  var choicePointSelector: ChoicePointStore = null
+  var startGoal: Struct = _
+  var goalVars: util.Collection[Var] = _
+  var currentContext: ExecutionContext = _
+  var currentAlternative: ChoicePointContext = _
+  var choicePointSelector: ChoicePointStore = _
 
   //Alberto
   def getNDemoSteps: scala.Int = nDemoSteps
@@ -79,13 +80,13 @@ class Engine(val manager: EngineRunner, var query: Term) {
   def run(): EndState = {
     var action: String = null
     do {
-          if (mustStop) {
-            nextState = manager.END_FALSE
-          } else {
-            action = nextState.toString
-            nextState.doJob(this)
-            manager.spy(action, this)
-          }
+      if (mustStop) {
+        nextState = manager.END_FALSE
+      } else {
+        action = nextState.toString
+        nextState.doJob(this)
+        manager.spy(action, this)
+      }
     } while (!nextState.isInstanceOf[EndState])
     nextState.doJob(this)
     nextState.asInstanceOf[EndState]

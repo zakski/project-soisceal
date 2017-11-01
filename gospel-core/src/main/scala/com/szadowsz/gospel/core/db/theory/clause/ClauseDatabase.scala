@@ -26,91 +26,90 @@ import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
 import scala.collection.JavaConverters._
 
 /**
- * Customized HashMap for storing clauses in the TheoryManager
- *
- * @author ivar.orstavik@hist.no
- *
- *         Reviewed by Paolo Contessi
- */
+  * Customized HashMap for storing clauses in the TheoryManager
+  *
+  * @author ivar.orstavik@hist.no
+  *
+  *         Reviewed by Paolo Contessi
+  */
 @SerialVersionUID(1L)
 class ClauseDatabase extends ju.HashMap[String, FamilyClausesList] with Iterable[ClauseInfo] {
 
-  private class CompleteIterator(clauseDatabase: ClauseDatabase) extends ju.Iterator[ClauseInfo] {
-    private[gospel] val values: ju.Iterator[FamilyClausesList] = clauseDatabase.values.iterator
-    private[gospel] var workingList: ju.Iterator[ClauseInfo] = null
-
-    def hasNext: Boolean = {
-      if (workingList != null && workingList.hasNext) return true
-      if (values.hasNext) {
-        workingList = values.next.iterator
-        return hasNext//start again on next workingList
-      }
-      return false
-    }
-
-    def next: ClauseInfo = {
-      if (workingList.hasNext) return workingList.next
-      else return null
-    }
-
-    override def remove {
-      workingList.remove
-    }
+  def iterator: ju.Iterator[ClauseInfo] = {
+    new CompleteIterator(this)
   }
-
 
   private[gospel] def addFirst(key: String, d: ClauseInfo) {
     var family: FamilyClausesList = get(key)
-    if (family == null){
+    if (family == null) {
       family = new FamilyClausesList
-      put(key,family )
+      put(key, family)
     }
     family.addFirst(d)
   }
 
   private[gospel] def addLast(key: String, d: ClauseInfo) {
     var family: FamilyClausesList = get(key)
-    if (family == null){
+    if (family == null) {
       family = new FamilyClausesList
-      put(key,family )
+      put(key, family)
     }
     family.addLast(d)
   }
 
   private[gospel] def abolish(key: String): FamilyClausesList = {
-    return remove(key)
+    remove(key)
   }
 
   /**
-   * Retrieves a list of the predicates which has the same name and arity
-   * as the goal and which has a compatible first-arg for matching.
-   *
-   * @param headt The goal
-   * @return  The list of matching-compatible predicates
-   */
+    * Retrieves a list of the predicates which has the same name and arity
+    * as the goal and which has a compatible first-arg for matching.
+    *
+    * @param headt The goal
+    * @return The list of matching-compatible predicates
+    */
   private[gospel] def getPredicates(headt: Term): ju.List[ClauseInfo] = {
     val family: FamilyClausesList = get((headt.asInstanceOf[Struct]).getPredicateIndicator)
     if (family == null) {
       return new ju.ArrayList[ClauseInfo]()
     }
-    return family.get(headt)
+    family.get(headt)
   }
 
   /**
-   * Retrieves the list of clauses of the requested family
-   *
-   * @param key   Goal's Predicate Indicator
-   * @return      The family clauses
-   */
+    * Retrieves the list of clauses of the requested family
+    *
+    * @param key Goal's Predicate Indicator
+    * @return The family clauses
+    */
   private[gospel] def getPredicates(key: String): List[ClauseInfo] = {
     val family: FamilyClausesList = get(key)
     if (family == null) {
       return List[ClauseInfo]()
     }
-    return family.asScala.toList ::: List[ClauseInfo]()
+    family.asScala.toList ::: List[ClauseInfo]()
   }
 
-  def iterator: ju.Iterator[ClauseInfo] = {
-    return new CompleteIterator(this)
+  private class CompleteIterator(clauseDatabase: ClauseDatabase) extends ju.Iterator[ClauseInfo] {
+    private[gospel] val values: ju.Iterator[FamilyClausesList] = clauseDatabase.values.iterator
+    private[gospel] var workingList: ju.Iterator[ClauseInfo] = _
+
+    def hasNext: Boolean = {
+      if (workingList != null && workingList.hasNext) return true
+      if (values.hasNext) {
+        workingList = values.next.iterator
+        return hasNext //start again on next workingList
+      }
+      false
+    }
+
+    def next: ClauseInfo = {
+      if (workingList.hasNext) workingList.next
+      else null
+    }
+
+    override def remove {
+      workingList.remove
+    }
   }
 }

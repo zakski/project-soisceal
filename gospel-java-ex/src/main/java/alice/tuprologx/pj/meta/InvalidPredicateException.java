@@ -10,15 +10,16 @@
 package alice.tuprologx.pj.meta;
 
 /**
- *
  * @author maurizio
  */
 @SuppressWarnings("serial")
-public class InvalidPredicateException extends RuntimeException {
-    
-    /** Creates a new instance of InvalidPredicateException */
+class InvalidPredicateException extends RuntimeException {
+
+    /**
+     * Creates a new instance of InvalidPredicateException
+     */
     public InvalidPredicateException(String s) {
         super(s);
     }
-    
+
 }

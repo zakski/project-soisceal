@@ -1,95 +1,94 @@
 package alice.tuprologx.ide;
 
-import com.szadowsz.gospel.core.error.InvalidTheoryException;
-import com.szadowsz.gospel.core.event.interpreter.QueryEvent;
-import com.szadowsz.gospel.core.listener.QueryListener;
 import alice.tuprolog.lib.IOLibrary;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.error.InvalidTheoryException;
+import com.szadowsz.gospel.core.event.interpreter.QueryEvent;
+import com.szadowsz.gospel.core.listener.QueryListener;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 public class ConsoleManager
-    implements QueryListener, Console, PropertyChangeListener
-{
+        implements QueryListener, Console, PropertyChangeListener {
     private ConsoleDialog dialog;
     private InputField inputField;
-   private PrologEngine engine;
+    private PrologEngine engine;
     //private PJProlog pjengine;
-    private IDE ide;
-    private ArrayList<QueryEvent> queryEventList;
-    private ArrayList<String> queryEventListString;
+    private final IDE ide;
+    private final ArrayList<QueryEvent> queryEventList;
+    private final ArrayList<String> queryEventListString;
     private int solveType;
-    private long timeFromBeginSolving=-1;
+    private long timeFromBeginSolving = -1;
     private int millsStopEngine;
     /* listeners registrated for virtual machine information to display events */
-    private ArrayList<InformationToDisplayListener> informationToDisplayListeners;
+    private final ArrayList<InformationToDisplayListener> informationToDisplayListeners;
 
-    public ConsoleManager(IDE ide)
-    {
+    public ConsoleManager(IDE ide) {
         this.ide = ide;
-        informationToDisplayListeners = new ArrayList<InformationToDisplayListener>();
-        queryEventList = new ArrayList<QueryEvent>();
-        queryEventListString = new ArrayList<String>();
+        informationToDisplayListeners = new ArrayList<>();
+        queryEventList = new ArrayList<>();
+        queryEventListString = new ArrayList<>();
     }
 
-    public void setDialog(ConsoleDialog dialog){this.dialog = dialog;}
+    private int getSolveType() {
+        return solveType;
+    }
 
-    public void setSolveType(int solveType){this.solveType = solveType;}
+    public void setSolveType(int solveType) {
+        this.solveType = solveType;
+    }
 
-    public int getSolveType(){return solveType;}
+    public void setEngine(PrologEngine engine) {
+        this.engine = engine;
+    }
 
-    public void setEngine(PrologEngine engine){this.engine = engine;}
+    public void setInputField(InputField inputField) {
+        this.inputField = inputField;
+    }
 
-    public void setInputField(InputField inputField){this.inputField = inputField;}
+    public ConsoleDialog getDialog() {
+        return dialog;
+    }
 
-    public ConsoleDialog getDialog(){return dialog;}
+    public void setDialog(ConsoleDialog dialog) {
+        this.dialog = dialog;
+    }
 
-    public void solve()
-    {
-    	ConsoleDialog.sol = ""; //Alberto
-    	resetInputStream();
+    public void solve() {
+        ConsoleDialog.sol = ""; //Alberto
+        resetInputStream();
         dialog.clearResults();
-        if (!getGoal().equals(""))
-        {
-            if (!ide.isFeededTheory())
-            {
-                try
-                {
+        if (!getGoal().equals("")) {
+            if (!ide.isFeededTheory()) {
+                try {
                     engine.setTheory(new Theory(ide.getEditorContent()));
                     ide.setFeededTheory(true);
-                }
-                catch (InvalidTheoryException e)
-                {
+                } catch (InvalidTheoryException e) {
                     dialog.setStatusMessage("Error setting theory: Syntax Error at/before line " + e.line);
                     return;
                 }
             }
             dialog.enableStopButton(true);
-            try
-            {
+            try {
                 ide.enableTheoryCommands(false);
                 dialog.setStatusMessage("Solving...");
                 new EngineThread(engine, getGoal(), this).start();
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 dialog.setStatusMessage("Error: " + e);
             }
-        
-        }
-        else//if (getGoal.equals(""))
-            /**
-             * without this setStatusMessage if getGoal is void still remains
-             * status message of the precedent solve operation
-             */ 
+
+        } else//if (getGoal.equals(""))
+        /**
+         * without this setStatusMessage if getGoal is void still remains
+         * status message of the precedent solve operation
+         */
             dialog.setStatusMessage("Ready.");
     }
 
-    public void solveAll()
-    {
+    public void solveAll() {
         dialog.enableStopButton(true);
         dialog.enableSolutionCommands(false);
         timeFromBeginSolving = System.currentTimeMillis();
@@ -97,114 +96,100 @@ public class ConsoleManager
     }
 
     // method of QueryListener interface
-    public void newQueryResultAvailable(QueryEvent event)
-    {
+    public void newQueryResultAvailable(QueryEvent event) {
         queryEventList.add(event);
         queryEventListString.add(event.getSolution().toString());
         boolean display = false;
-        if (getSolveType()==1)//if there is information about a solveAll operation
+        if (getSolveType() == 1)//if there is information about a solveAll operation
         {
-            if (System.currentTimeMillis() - timeFromBeginSolving > millsStopEngine && millsStopEngine!=0)
-            {
+            if (System.currentTimeMillis() - timeFromBeginSolving > millsStopEngine && millsStopEngine != 0) {
                 stopEngine();
-                dialog.setStatusMessage("Time overflow: "+(System.currentTimeMillis() - timeFromBeginSolving));
+                dialog.setStatusMessage("Time overflow: " + (System.currentTimeMillis() - timeFromBeginSolving));
                 display = true;
-            }
-            else
-            {
-                if(engine.hasOpenAlternatives())
-                {
+            } else {
+                if (engine.hasOpenAlternatives()) {
                     getNextSolution();
-                }
-                else
-                {
+                } else {
                     stopEngine();
                     display = true;
                     setStatusMessage("Ready.");
                 }
             }
         }
-        if (getSolveType()==0)//if there is information about a solve operation
+        if (getSolveType() == 0)//if there is information about a solve operation
         {
             display = true;
             setStatusMessage("Yes.");
         }
-        if (display)
-        {
+        if (display) {
             //notifyInformationToDisplayEvent(new InformationToDisplayEvent(engine, queryEventList, getSolveType()));
-        	notifyInformationToDisplayEvent(new InformationToDisplayEvent(engine, queryEventList,queryEventListString, getSolveType()));
+            notifyInformationToDisplayEvent(new InformationToDisplayEvent(engine, queryEventList, queryEventListString, getSolveType()));
             queryEventList.clear();
             queryEventListString.clear();
         }
     }
 
     //methods of Console interface
-    public boolean hasOpenAlternatives()
-    {
+    public boolean hasOpenAlternatives() {
         return engine.hasOpenAlternatives();
     }
-    public void enableTheoryCommands(boolean flag)
-    {
+
+    public void enableTheoryCommands(boolean flag) {
         ide.enableTheoryCommands(flag);
     }
-    public void getNextSolution()
-    {
+
+    public void getNextSolution() {
         new EngineThread(engine).start();
     }
-    public void acceptSolution()
-    {
+
+    public void acceptSolution() {
         engine.solveEnd();
     }
-    public void stopEngine()
-    {
+
+    public void stopEngine() {
         // stop the tuProlog engine
         engine.solveHalt();
     }
-    public String getGoal()
-    {
+
+    public String getGoal() {
         return inputField.getGoal();
     }
 
-    public void addInformationToDisplayListener(InformationToDisplayListener listener)
-    {
+    public void addInformationToDisplayListener(InformationToDisplayListener listener) {
         informationToDisplayListeners.add(listener);
     }
-    public void removeInformationToDisplayListener(InformationToDisplayListener listener)
-    {
+
+    public void removeInformationToDisplayListener(InformationToDisplayListener listener) {
         informationToDisplayListeners.remove(listener);
     }
-    public void notifyInformationToDisplayEvent(InformationToDisplayEvent e)
-    {
-        for(InformationToDisplayListener itdl: informationToDisplayListeners){
+
+    private void notifyInformationToDisplayEvent(InformationToDisplayEvent e) {
+        for (InformationToDisplayListener itdl : informationToDisplayListeners) {
             itdl.onInformation(e);
         }
     }
 
-    public void enableStopButton(boolean flag)
-    {
+    public void enableStopButton(boolean flag) {
         dialog.enableStopButton(flag);
     }
-    public void setStatusMessage(String message)
-    {
+
+    public void setStatusMessage(String message) {
         dialog.setStatusMessage(message);
     }
-    
-    public void resetInputStream()
-    {
-    	IOLibrary IO = (IOLibrary)engine.getLibrary("alice.tuprolog.lib.IOLibrary");
-    	IO.getUserContextInputStream().setCounter();
+
+    private void resetInputStream() {
+        IOLibrary IO = (IOLibrary) engine.getLibrary("alice.tuprolog.lib.IOLibrary");
+        IO.getUserContextInputStream().setCounter();
     }
 
     public void propertyChange(PropertyChangeEvent event) {
         String propertyName = event.getPropertyName();
-        if (propertyName.equals("millsStopEngine"))
-        {
-            millsStopEngine=((Integer)event.getNewValue()).intValue();
+        if (propertyName.equals("millsStopEngine")) {
+            millsStopEngine = (Integer) event.getNewValue();
         }
-        /*Castagna 06/2011*/  
-        if (propertyName.equals("notifyExceptionEvent"))
-        {
-        	engine.setException(((Boolean)event.getNewValue()).booleanValue());
+        /*Castagna 06/2011*/
+        if (propertyName.equals("notifyExceptionEvent")) {
+            engine.setException((Boolean) event.getNewValue());
         }
         /**/
     }

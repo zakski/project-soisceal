@@ -1,21 +1,18 @@
 package alice.tuprologx.runtime.rmi;
-import alice.tuprolog.*;
+
 import alice.tuprolog.interfaces.ITheory;
 
-import  java.io.*;
-
-import java.rmi.*;
 import java.rmi.server.UnicastRemoteObject;
 
 @SuppressWarnings("serial")
 public class PrologImpl extends UnicastRemoteObject implements alice.tuprologx.runtime.rmi.Prolog, Serializable {
 
-   private alice.tuprolog.Prolog imp;
+    private alice.tuprolog.Prolog imp;
 
     public PrologImpl() throws RemoteException {
         try {
-            imp=new alice.tuprolog.Prolog();
-        } catch (Exception ex){
+            imp = new alice.tuprolog.Prolog();
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -24,7 +21,7 @@ public class PrologImpl extends UnicastRemoteObject implements alice.tuprologx.r
         imp.clearTheory();
     }
 
-    public ITheory getTheory() throws RemoteException{
+    public ITheory getTheory() throws RemoteException {
         return imp.getTheory();
     }
 
@@ -37,11 +34,11 @@ public class PrologImpl extends UnicastRemoteObject implements alice.tuprologx.r
     }
 
 
-    public SolveInfo   solve(Term g) throws RemoteException {
+    public SolveInfo solve(Term g) throws RemoteException {
         return imp.solve(g);
     }
 
-    public SolveInfo   solve(String g) throws MalformedGoalException, RemoteException{
+    public SolveInfo solve(String g) throws MalformedGoalException, RemoteException {
         return imp.solve(g);
     }
 
@@ -49,7 +46,7 @@ public class PrologImpl extends UnicastRemoteObject implements alice.tuprologx.r
         return imp.hasOpenAlternatives();
     }
 
-    public SolveInfo   solveNext() throws NoMoreSolutionException, RemoteException {
+    public SolveInfo solveNext() throws NoMoreSolutionException, RemoteException {
         return imp.solveNext();
     }
 
@@ -57,7 +54,7 @@ public class PrologImpl extends UnicastRemoteObject implements alice.tuprologx.r
         imp.solveHalt();
     }
 
-    public void solveEnd() throws RemoteException{
+    public void solveEnd() throws RemoteException {
         imp.solveEnd();
     }
 

@@ -22,7 +22,7 @@ public class VersionInfo
 			throw new RuntimeException();
 	}
 	
-	public static String getSpecificVersion()
+	private static String getSpecificVersion()
 	{
 		String vmName = System.getProperty("java.vm.name");
 		if(vmName.contains("Java")) //"Java HotSpot(TM) Client VM"

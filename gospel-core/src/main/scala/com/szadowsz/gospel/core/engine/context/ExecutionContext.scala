@@ -33,10 +33,10 @@
  */
 package com.szadowsz.gospel.core.engine.context
 
-import alice.util.OneWayList
 import java.util
 
 import alice.tuprolog.{Struct, Var}
+import alice.util.OneWayList
 import com.szadowsz.gospel.core.engine.Engine
 import com.szadowsz.gospel.core.engine.context.subgoal.{SubGoalId, SubGoalStore}
 
@@ -46,15 +46,15 @@ import com.szadowsz.gospel.core.engine.context.subgoal.{SubGoalId, SubGoalStore}
   */
 final case class ExecutionContext(id: scala.Int) {
   var depth: scala.Int = 0
-  var currentGoal: Struct = null
-  var fatherCtx: ExecutionContext = null
-  var fatherGoalId: SubGoalId = null
-  var clause: Struct = null
-  var headClause: Struct = null
-  var goalsToEval: SubGoalStore = null
-  var trailingVars: OneWayList[util.List[Var]] = null
-  var fatherVarsList: OneWayList[util.List[Var]] = null
-  var choicePointAfterCut: ChoicePointContext = null
+  var currentGoal: Struct = _
+  var fatherCtx: ExecutionContext = _
+  var fatherGoalId: SubGoalId = _
+  var clause: Struct = _
+  var headClause: Struct = _
+  var goalsToEval: SubGoalStore = _
+  var trailingVars: OneWayList[util.List[Var]] = _
+  var fatherVarsList: OneWayList[util.List[Var]] = _
+  var choicePointAfterCut: ChoicePointContext = _
   var haveAlternatives: Boolean = false
 
   def getId: scala.Int = id

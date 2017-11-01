@@ -19,53 +19,50 @@ package alice.tuprologx.ide;
 
 //import javax.swing.JOptionPane;
 
-import com.szadowsz.gospel.core.error.MalformedGoalException;
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.error.MalformedGoalException;
 
 /**
- * 
- *
  * @author aricci
- *
  */
-public class EngineThread extends Thread {
- 
+class EngineThread extends Thread {
+
     private String goal;
-    private PrologEngine engine;
+    private final PrologEngine engine;
     private ConsoleManager console;
-    private int actionToDo;
-    
-    public EngineThread(PrologEngine engine, String goal, ConsoleManager c){
+    private final int actionToDo;
+
+    public EngineThread(PrologEngine engine, String goal, ConsoleManager c) {
         this.engine = engine;
         console = c;
         this.goal = goal;
         actionToDo = 1;
     }
 
-    public EngineThread(PrologEngine engine){
+    public EngineThread(PrologEngine engine) {
         this.engine = engine;
         actionToDo = 2;
     }
-    
+
     public void run() {
-        if (actionToDo==1){
+        if (actionToDo == 1) {
             try {
                 engine.solve(goal);
-            } catch (MalformedGoalException ex){
+            } catch (MalformedGoalException ex) {
                 console.setStatusMessage("Syntax Error: malformed goal.");
-                
+
                 /**rows added by Castellani Juri to enable toolbars and stop bottons
                  * when there is a malformed goal
                  */
                 console.enableTheoryCommands(true);
                 console.enableStopButton(false);
-                
+
             }
-        } else if (actionToDo==2){
+        } else if (actionToDo == 2) {
             try {
                 engine.solveNext();
-            } catch (Exception ex){
-                    ex.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
         }
     }

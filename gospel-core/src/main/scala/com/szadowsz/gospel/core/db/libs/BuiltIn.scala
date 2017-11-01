@@ -43,8 +43,8 @@ import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
 import com.szadowsz.gospel.core.error.{InvalidLibraryException, InvalidTheoryException, PrologError}
 import com.szadowsz.gospel.core.{PrologEngine, Theory}
 
-import scala.util.control.NonFatal
 import scala.collection.JavaConverters._
+import scala.util.control.NonFatal
 
 /**
   * Library of built-in predicates
@@ -69,7 +69,7 @@ object BuiltIn {
     * bodies. Also note that if T is a number, then there is no goal which
     * corresponds to T.
     */
- def convertTermToGoal(term: Term): Term = {
+  def convertTermToGoal(term: Term): Term = {
     term match {
       case n: Number => null
       case v1: Var if v1.getLink.isInstanceOf[Number] => null
@@ -108,25 +108,6 @@ class BuiltIn(mediator: PrologEngine) extends Library {
   private lazy val primitiveManager = engine.getPrimitiveManager
 
   private lazy val operatorManager = engine.getOperatorManager
-
-
-  /**
-    * A callable term is an atom of a compound term. See the ISO Standard
-    * definition in section 3.24.
-    */
-  private def isCallable(goal: Term): Boolean = goal.isAtom || goal.isCompound
-
-  @throws[PrologError]
-  private def handleError(t: Throwable) {
-    // errore durante la valutazione
-    if (t.isInstanceOf[ArithmeticException]) {
-      val cause: ArithmeticException = t.asInstanceOf[ArithmeticException]
-      if (cause.getMessage == "/ by zero") throw PrologError.evaluation_error(engineManager, 2, "zero_divisor")
-    }
-  }
-
-
-  private def getStringArrayFromStruct(list: Struct): Array[String] = list.listIterator().asScala.map(s => Tools.removeApices(s.toString)).toArray
 
   /**
     * Defines some synonyms
@@ -222,7 +203,6 @@ class BuiltIn(mediator: PrologEngine) extends Library {
     }
   }
 
-
   /**
     * Asserts a fact or clause in the database. Term is asserted as the last fact or clause of the corresponding predicate. Equivalent to assert/1, but Term
     * is asserted as first clause or fact of the predicate.
@@ -304,7 +284,6 @@ class BuiltIn(mediator: PrologEngine) extends Library {
     }
   }
 
-
   /**
     * loads a prolog library, given its class name.
     *
@@ -326,7 +305,6 @@ class BuiltIn(mediator: PrologEngine) extends Library {
       case t: Term => throw PrologError.type_error(engineManager, 1, "atom", t)
     }
   }
-
 
   /**
     * loads a prolog library, given its class name. Directive version.
@@ -395,6 +373,12 @@ class BuiltIn(mediator: PrologEngine) extends Library {
     }
   }
 
+  /**
+    * A callable term is an atom of a compound term. See the ISO Standard
+    * definition in section 3.24.
+    */
+  private def isCallable(goal: Term): Boolean = goal.isAtom || goal.isCompound
+
   @throws[PrologError]
   def is_2(arg0: Term, arg1: Term): Boolean = {
     if (arg1.getTerm.isInstanceOf[Var]) throw PrologError.instantiation_error(engineManager, 2)
@@ -408,7 +392,16 @@ class BuiltIn(mediator: PrologEngine) extends Library {
       }
     }
     if (val1 == null) throw PrologError.type_error(engineManager, 2, "evaluable", arg1.getTerm)
-    else return unify(arg0.getTerm, val1)
+    else unify(arg0.getTerm, val1)
+  }
+
+  @throws[PrologError]
+  private def handleError(t: Throwable) {
+    // errore durante la valutazione
+    if (t.isInstanceOf[ArithmeticException]) {
+      val cause: ArithmeticException = t.asInstanceOf[ArithmeticException]
+      if (cause.getMessage == "/ by zero") throw PrologError.evaluation_error(engineManager, 2, "zero_divisor")
+    }
   }
 
   def unify_2(arg0: Term, arg1: Term): Boolean = unify(arg0, arg1)
@@ -470,11 +463,11 @@ class BuiltIn(mediator: PrologEngine) extends Library {
   def $find_2(arg0: Term, arg1: Term): Boolean = {
     // look for clauses whose head unifies with arg0 and enqueue them to list arg1
     (arg0.getTerm, arg1.getTerm) match {
-      case(a : Var, _) => throw PrologError.instantiation_error(engineManager, 1)
-      case(_, b : Term)  if !b.isList => throw PrologError.type_error(engineManager, 2, "list", b)
-      case (a,b: Struct) =>
-        theoryManager.find(a).asScala.foreach{ c =>
-          if (`match`(a, c.getHead)){
+      case (a: Var, _) => throw PrologError.instantiation_error(engineManager, 1)
+      case (_, b: Term) if !b.isList => throw PrologError.type_error(engineManager, 2, "list", b)
+      case (a, b: Struct) =>
+        theoryManager.find(a).asScala.foreach { c =>
+          if (`match`(a, c.getHead)) {
             c.getClause.resolveTerm()
             b.append(c.getClause)
           }
@@ -489,7 +482,7 @@ class BuiltIn(mediator: PrologEngine) extends Library {
     (arg0.getTerm, arg1.getTerm) match {
       case (a: Var, _) => throw PrologError.instantiation_error(engineManager, 1)
       case (_, b: Var) => throw PrologError.instantiation_error(engineManager, 2)
-      case (a: Term, _) if !a.isAtom && !a.isInstanceOf[Struct] => throw PrologError.type_error (engineManager, 1, "struct", a)
+      case (a: Term, _) if !a.isAtom && !a.isInstanceOf[Struct] => throw PrologError.type_error(engineManager, 1, "struct", a)
       case (_, b: Term) if !b.isGround => throw PrologError.type_error(engineManager, 2, "ground", b)
       case (a, b) =>
         val name: String = a.toString
@@ -510,17 +503,20 @@ class BuiltIn(mediator: PrologEngine) extends Library {
   @throws[PrologError]
   def get_prolog_flag_2(arg0: Term, arg1: Term): Boolean = {
     arg0.getTerm match {
-      case v : Var => throw PrologError.instantiation_error (engineManager, 1)
-      case t : Term if !t.isAtom && !t.isInstanceOf[Struct] => throw PrologError.type_error (engineManager, 1, "struct", t)
-      case s : Struct =>
+      case v: Var => throw PrologError.instantiation_error(engineManager, 1)
+      case t: Term if !t.isAtom && !t.isInstanceOf[Struct] => throw PrologError.type_error(engineManager, 1, "struct", t)
+      case s: Struct =>
         val name: String = s.toString()
-        val value: Term = flagManager.getFlag (name)
+        val value: Term = flagManager.getFlag(name)
         if (value == null) {
-          throw PrologError.domain_error (engineManager, 1, "prolog_flag", s)
+          throw PrologError.domain_error(engineManager, 1, "prolog_flag", s)
         }
-        unify (value, arg1.getTerm)
+        unify(value, arg1.getTerm)
     }
   }
+
+  @throws[PrologError]
+  def op_3(arg0: Term, arg1: Term, arg2: Term): Unit = $op_3(arg0, arg1, arg2)
 
   @throws[PrologError]
   def $op_3(arg0: Term, arg1: Term, arg2: Term): Boolean = {
@@ -554,9 +550,6 @@ class BuiltIn(mediator: PrologEngine) extends Library {
     }
   }
 
-  @throws[PrologError]
-  def op_3(arg0: Term, arg1: Term, arg2: Term): Unit = $op_3(arg0, arg1, arg2)
-
   def flag_4(arg0: Term, arg1: Term, arg2: Term, arg3: Term) {
     val flagName = arg0.getTerm
     val flagSet = arg1.getTerm
@@ -589,4 +582,6 @@ class BuiltIn(mediator: PrologEngine) extends Library {
     engine.addTheory(new Theory(new FileInputStream(path)))
     engine.popDirectoryFromList
   }
+
+  private def getStringArrayFromStruct(list: Struct): Array[String] = list.listIterator().asScala.map(s => Tools.removeApices(s.toString)).toArray
 }

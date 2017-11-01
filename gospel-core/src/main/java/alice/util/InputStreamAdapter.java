@@ -16,7 +16,7 @@ import java.io.Reader;
  */
 public class InputStreamAdapter extends InputStream {
 	
-	private Reader reader;
+	private final Reader reader;
 	
 	public InputStreamAdapter(Reader rd) {
 		this.reader = rd;

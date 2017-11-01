@@ -1,33 +1,28 @@
 package alice.tuprolog;
 
-import static org.junit.Assert.*;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 import com.szadowsz.gospel.core.error.InvalidTheoryException;
 import com.szadowsz.gospel.core.error.MalformedGoalException;
 import com.szadowsz.gospel.core.event.io.OutputEvent;
+import com.szadowsz.gospel.core.listener.OutputListener;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.szadowsz.gospel.core.listener.OutputListener;
+import java.io.*;
+
+import static org.junit.Assert.*;
 
 // Based on the work of Sara Sabioni
 public class ISOIOLibraryTestCase {
 
-    static PrologEngine engine = null;
-    String theory = null;
-    Solution info = null;
-    static String writePath = null;
-    static String readPath = null;
-    static String binPath = null;
+    private static PrologEngine engine = null;
+    private static String writePath = null;
+    private static String readPath = null;
+    private static String binPath = null;
+    private String theory = null;
+    private Solution info = null;
 
     @BeforeClass
     public static void initTest() {
@@ -134,13 +129,7 @@ public class ISOIOLibraryTestCase {
         final String dataToRead = "ciao";
         // Per beccare l'output
         //TODO Da rivedere
-        OutputListener listener = new OutputListener() {
-
-            @Override
-            public void onOutput(OutputEvent e) {
-                assertEquals("", dataToRead, e.getMsg());
-            }
-        };
+        OutputListener listener = e -> assertEquals("", dataToRead, e.getMsg());
 
         engine.addOutputListener(listener);
 
@@ -194,13 +183,7 @@ public class ISOIOLibraryTestCase {
         final String dataToRead = "c";
         // Per beccare l'output
         //TODO Da rivedere
-        OutputListener listener = new OutputListener() {
-
-            @Override
-            public void onOutput(OutputEvent e) {
-                assertEquals("", dataToRead, e.getMsg());
-            }
-        };
+        OutputListener listener = e -> assertEquals("", dataToRead, e.getMsg());
 
         engine.addOutputListener(listener);
 
@@ -217,13 +200,7 @@ public class ISOIOLibraryTestCase {
         final int dataToRead = 51;
         // Per beccare l'output
         //TODO Da rivedere
-        OutputListener listener = new OutputListener() {
-
-            @Override
-            public void onOutput(OutputEvent e) {
-                assertEquals("", dataToRead + "", e.getMsg());
-            }
-        };
+        OutputListener listener = e -> assertEquals("", dataToRead + "", e.getMsg());
 
         engine.addOutputListener(listener);
 

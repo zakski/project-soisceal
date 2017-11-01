@@ -1,11 +1,8 @@
 package alice.tuprologx.runtime.corba;
 
-import org.omg.CosNaming.*;
-import org.omg.CORBA.*;
-
-public class Daemon{
-    public static void main(String args[]){
-        try{
+public class Daemon {
+    public static void main(String args[]) {
+        try {
             // Create and initialize the ORB
             ORB orb = ORB.init(args, null);
             // Create the servant and register it with the ORB
@@ -21,10 +18,10 @@ public class Daemon{
             System.out.println("prolog CORBA daemon waiting requests.");
             // Wait for invocations from clients
             java.lang.Object sync = new java.lang.Object();
-            synchronized(sync){
+            synchronized (sync) {
                 sync.wait();
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.err.println("ERROR: " + e);
             e.printStackTrace(System.out);
         }

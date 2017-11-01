@@ -1,18 +1,15 @@
 package alice.tuprologx.ide;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class StatusBar extends JLabel implements PropertyChangeListener
-{
-    
+public class StatusBar extends JLabel implements PropertyChangeListener {
+
     private static final long serialVersionUID = 1L;
 
-    public StatusBar()
-    {
+    public StatusBar() {
         super();
         setPreferredSize(new Dimension(100, 16));
     }
@@ -23,22 +20,19 @@ public class StatusBar extends JLabel implements PropertyChangeListener
         setPreferredSize(new Dimension(x, y));
     }*/
 
-    public void propertyChange(PropertyChangeEvent event)
-    {
+    public void propertyChange(PropertyChangeEvent event) {
         String propertyName = event.getPropertyName();
         if (propertyName.equals("StatusMessage"))
             setStatusMessage(event.getNewValue().toString());
     }
 
-    public void setStatusMessage(String message)
-    {
-        setText(""+message);
+    public void setStatusMessage(String message) {
+        setText("" + message);
     }
 
-    public void setFontDimension(int dimension)
-    {
-        Font font = new Font(this.getFont().getName(),this.getFont().getStyle(),dimension);
+    public void setFontDimension(int dimension) {
+        Font font = new Font(this.getFont().getName(), this.getFont().getStyle(), dimension);
         this.setFont(font);
-        setPreferredSize(new Dimension(100, dimension+4));
+        setPreferredSize(new Dimension(100, dimension + 4));
     }
 }

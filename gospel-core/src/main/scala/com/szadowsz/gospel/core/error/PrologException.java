@@ -23,9 +23,9 @@ package com.szadowsz.gospel.core.error;
  */
 public class PrologException extends Exception {
 	private static final long serialVersionUID = 1L;
-    public PrologException() {}
+    protected PrologException() {}
     
-    public PrologException(String st) {
+    PrologException(String st) {
         super(st);
     }
     

@@ -13,7 +13,7 @@ public abstract class AbstractSocket extends Term{
 	
 	public abstract Object getSocket();
 	
-	public abstract InetAddress getAddress();
+	protected abstract InetAddress getAddress();
 	
 	@Override
 	public boolean isNumber() {

@@ -16,11 +16,11 @@ import com.szadowsz.gospel.core.error.PrologException;
 import junit.framework.TestCase;
 
 public class JavaLibraryTestCase extends TestCase {
-	String theory = null;
-	PrologEngine engine = new PrologEngine();
-	Solution info = null;
-	String result = null;
-	String paths = null;
+	private String theory = null;
+	private final PrologEngine engine = new PrologEngine();
+	private Solution info = null;
+	private String result = null;
+	private String paths = null;
 	
 	public void testGetPrimitives() {
 		Library library = new OOLibrary();

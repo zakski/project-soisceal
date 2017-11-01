@@ -33,10 +33,10 @@
  */
 package com.szadowsz.gospel.core.engine.state
 
-import alice.util.OneWayList
 import java.util
 
 import alice.tuprolog.{Struct, Var}
+import alice.util.OneWayList
 import com.szadowsz.gospel.core.engine.context.clause.{ClauseInfo, ClauseStore}
 import com.szadowsz.gospel.core.engine.context.subgoal.SubGoalStore
 import com.szadowsz.gospel.core.engine.context.{ChoicePointContext, ExecutionContext}
@@ -79,7 +79,7 @@ private[engine] final case class RuleSelectionState(override protected val runne
      * Build ExecutionContext and ChoicePointContext
      */
     e.nDemoSteps += 1
-    val ec: ExecutionContext = new ExecutionContext(e.nDemoSteps - 1)
+    val ec: ExecutionContext = ExecutionContext(e.nDemoSteps - 1)
     val curCtx: ExecutionContext = e.currentContext
     ec.clause = clause.getClause
     //head and body with refresh variables (clause copied)
@@ -97,23 +97,23 @@ private[engine] final case class RuleSelectionState(override protected val runne
       ec.choicePointAfterCut = choicePoint.prevChoicePointContext
       var currentGoal: Struct = choicePoint.executionContext.currentGoal
       var shouldBreak = false
-      while (!shouldBreak&& currentGoal.getName == ";" && currentGoal.getArity == 2) {
-          if (choicePoint.prevChoicePointContext != null) {
-            val distance: Int = depth - choicePoint.prevChoicePointContext.executionContext.depth
-            while (distance == 0 && choicePoint.prevChoicePointContext != null) {
-                ec.choicePointAfterCut = choicePoint.prevChoicePointContext.prevChoicePointContext
-                choicePoint = choicePoint.prevChoicePointContext
-            }
-            if (distance == 1 && choicePoint.prevChoicePointContext != null) {
-              ec.choicePointAfterCut = choicePoint.prevChoicePointContext.prevChoicePointContext
-              currentGoal = choicePoint.prevChoicePointContext.executionContext.currentGoal
-              choicePoint = choicePoint.prevChoicePointContext
-            } else {
-              shouldBreak = true
-            } //todo: break is not supported
+      while (!shouldBreak && currentGoal.getName == ";" && currentGoal.getArity == 2) {
+        if (choicePoint.prevChoicePointContext != null) {
+          val distance: Int = depth - choicePoint.prevChoicePointContext.executionContext.depth
+          while (distance == 0 && choicePoint.prevChoicePointContext != null) {
+            ec.choicePointAfterCut = choicePoint.prevChoicePointContext.prevChoicePointContext
+            choicePoint = choicePoint.prevChoicePointContext
+          }
+          if (distance == 1 && choicePoint.prevChoicePointContext != null) {
+            ec.choicePointAfterCut = choicePoint.prevChoicePointContext.prevChoicePointContext
+            currentGoal = choicePoint.prevChoicePointContext.executionContext.currentGoal
+            choicePoint = choicePoint.prevChoicePointContext
           } else {
             shouldBreak = true
           } //todo: break is not supported
+        } else {
+          shouldBreak = true
+        } //todo: break is not supported
       }
     }
     val curGoal: Struct = curCtx.currentGoal

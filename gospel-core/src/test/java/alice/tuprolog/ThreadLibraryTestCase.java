@@ -21,8 +21,8 @@ import com.szadowsz.gospel.core.Solution;
  */
 public class ThreadLibraryTestCase {
 	
-	PrologEngine engine = null;
-	String theory;
+	private PrologEngine engine = null;
+	private String theory;
 	
 	@Before
 	public void before() {

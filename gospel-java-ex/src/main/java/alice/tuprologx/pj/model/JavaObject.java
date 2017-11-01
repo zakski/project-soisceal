@@ -12,16 +12,30 @@ package alice.tuprologx.pj.model;
 import alice.tuprologx.pj.engine.PJ;
 
 /**
- *
  * @author maurizio
  */
 public class JavaObject<O> extends Term<JavaObject<O>> {
-    
-    O _theObject;
-    
-    /** Creates a new instance of JavaObject */
+
+    private final O _theObject;
+
+    /**
+     * Creates a new instance of JavaObject
+     */
     public JavaObject(O o) {
         _theObject = o;
+    }
+
+    static boolean matches(alice.tuprolog.Term t) {
+        return (t instanceof alice.tuprolog.Struct && PJ.getRegisteredJavaObject((alice.tuprolog.Struct) t) != null);
+    }
+
+    static <Z> JavaObject<Z> unmarshalObject(alice.tuprolog.Struct s) {
+        if (matches(s)) {
+            //return new JavaObject<Z>((Z)(PJ.getRegisteredJavaObject(s)));
+            Z auxJavaObject = uncheckedCast(PJ.getRegisteredJavaObject(s));
+            return new JavaObject<>(auxJavaObject);
+        } else
+            throw new UnsupportedOperationException();
     }
 
     public alice.tuprolog.Term marshal() {
@@ -32,25 +46,10 @@ public class JavaObject<O> extends Term<JavaObject<O>> {
         //return (Z)_theObject;
         return uncheckedCast(_theObject);
     }
-    
-    static boolean matches(alice.tuprolog.Term t) {        
-        return (t instanceof alice.tuprolog.Struct && PJ.getRegisteredJavaObject((alice.tuprolog.Struct)t) != null);        
-    }
-    
-    static <Z> JavaObject<Z> unmarshalObject(alice.tuprolog.Struct s) {
-        if (matches(s)) {           
-            //return new JavaObject<Z>((Z)(PJ.getRegisteredJavaObject(s)));
-        	Z auxJavaObject = uncheckedCast(PJ.getRegisteredJavaObject(s));
-            return new JavaObject<Z>( auxJavaObject );
-        }
-        else
-            throw new UnsupportedOperationException();
+
+    public String toString() {
+        return "JavaObject{" + _theObject + "}";
     }
 
-    public String toString() {        
-        return "JavaObject{"+_theObject+"}";
-    }
-    
-    
-    
+
 }

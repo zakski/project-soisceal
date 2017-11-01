@@ -11,7 +11,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 //Alberto
-public class JSONMarshaller implements JsonSerializer<Object>, JsonDeserializer<Object> {
+class JSONMarshaller implements JsonSerializer<Object>, JsonDeserializer<Object> {
 
 	private static final String TYPE_INFO = "TYPE_INFO";
 

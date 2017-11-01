@@ -10,12 +10,11 @@
 package alice.tuprologx.pj.engine;
 
 /**
- *
  * @author Maurizio
  */
 public enum TermKind {
     INPUT,
     OUTPUT,
     GROUND,
-    HIDE;
+    HIDE
 }

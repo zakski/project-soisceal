@@ -2,18 +2,16 @@ package com.szadowsz.gospel.core.engine
 
 import java.util
 import java.util.NoSuchElementException
-import java.util.concurrent.locks.Condition
-import java.util.concurrent.locks.Lock
-import java.util.concurrent.locks.ReentrantLock
+import java.util.concurrent.locks.{Condition, Lock, ReentrantLock}
 
 import alice.tuprolog.{Term, TermQueue}
-import com.szadowsz.gospel.core.{PrologEngine, Solution}
 import com.szadowsz.gospel.core.db.theory.TheoryManager
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
 import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalTree
 import com.szadowsz.gospel.core.engine.state._
 import com.szadowsz.gospel.core.error.NoMoreSolutionException
+import com.szadowsz.gospel.core.{PrologEngine, Solution}
 
 /**
   * Prolog Interpreter Executor.
@@ -35,36 +33,31 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
   final private[engine] val END_TRUE_CP = EndState(this, ExecutionResultType.TRUE_CP)
   final private[engine] val END_HALT = EndState(this, ExecutionResultType.HALT)
 
-  private lazy val theoryManager  = wam.getTheoryManager
+  private lazy val theoryManager = wam.getTheoryManager
   private lazy val primitiveManager = wam.getPrimitiveManager
   private lazy val ILibraryManager = wam.getLibraryManager
   private lazy val engineManager = wam.getEngineManager
+  /* Last environment used */
+  private val stackEnv: util.LinkedList[Engine] = new util.LinkedList[Engine]
+  var env: Engine = _
   private var pid: scala.Int = 0
   private var detached: Boolean = false
   private var solving: Boolean = false
-  private var query: Term = null
+  private var query: Term = _
   private var msgs = new TermQueue
   private var next = new util.ArrayList[Boolean]
   private var countNext: scala.Int = 0
   private var lockVar: Lock = new ReentrantLock
   private var cond: Condition = lockVar.newCondition
   private var semaphore: AnyRef = new AnyRef
-  var env: Engine = null /* Current environment */
-  private var last_env: Engine = null /* Last environment used */
-  private val stackEnv: util.LinkedList[Engine] = new util.LinkedList[Engine] /* Stack environments of nidicate solving */
-  private var sinfo: Solution = null
+  /* Current environment */
+  private var last_env: Engine = _
+  /* Stack environments of nidicate solving */
+  private var sinfo: Solution = _
 
 
   def spy(action: String, env: Engine) {
     wam.spy(action, env)
-  }
-
-  private[engine] def warn(message: String) {
-    wam.warn(message)
-  }
-
-  private[engine] def exception(message: String) {
-    wam.exception(message)
   }
 
   def detach() {
@@ -72,6 +65,58 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
   }
 
   def isDetached: Boolean = detached
+
+  /**
+    * Halts current solve computation
+    */
+  def solveHalt() {
+    env.requestStop()
+    ILibraryManager.onSolveHalt()
+  }
+
+  def identify(t: Term) {
+    primitiveManager.identifyPredicate(t)
+  }
+
+  def pushSubGoal(goal: SubGoalTree) {
+    env.currentContext.goalsToEval.pushSubGoal(goal)
+  }
+
+  def cut() {
+    env.choicePointSelector.cut(env.currentContext.choicePointAfterCut)
+  }
+
+  def getCurrentContext: ExecutionContext = {
+    if (env == null) null else env.currentContext
+  }
+
+  /**
+    * Checks if the demonstration process was stopped by an halt command.
+    *
+    * @return true if the demonstration was stopped
+    */
+  def isHalted: Boolean = {
+    if (sinfo == null) {
+      false
+    } else {
+      sinfo.isHalted
+    }
+  }
+
+  def run() {
+    solving = true
+    pid = Thread.currentThread.getId.toInt
+    if (sinfo == null) {
+      threadSolve()
+    }
+    try {
+      while (hasOpenAlternatives) {
+        if (next.get(countNext)) threadSolveNext()
+      }
+    } catch {
+      case e: NoMoreSolutionException => e.printStackTrace()
+    }
+  }
 
   /**
     * Solves a query
@@ -117,12 +162,37 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
       if (!sinfo.hasOpenAlternatives) solveEnd()
       //Alberto
       env.nResultAsked = 0
-      return sinfo
+      sinfo
     } catch {
       case ex: Exception =>
         ex.printStackTrace()
         new Solution(query)
     }
+  }
+
+  /**
+    * Accepts current solution
+    */
+  def solveEnd() {
+    ILibraryManager.onSolveEnd()
+  }
+
+  private def freeze() {
+    if (env == null) return
+    try {
+      if (stackEnv.getLast eq env) return
+    }
+    catch {
+      case e: NoSuchElementException => {
+      }
+    }
+    stackEnv.addLast(env)
+  }
+
+  private def defreeze() {
+    last_env = env
+    if (stackEnv.isEmpty) return
+    env = stackEnv.removeLast()
   }
 
   /**
@@ -179,60 +249,9 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
     }
   }
 
-  /**
-    * Halts current solve computation
-    */
-  def solveHalt() {
-    env.requestStop()
-    ILibraryManager.onSolveHalt()
-  }
-
-  /**
-    * Accepts current solution
-    */
-  def solveEnd() {
-    ILibraryManager.onSolveEnd()
-  }
-
-  private def freeze() {
-    if (env == null) return
-    try {
-      if (stackEnv.getLast eq env) return
-    }
-    catch {
-      case e: NoSuchElementException => {
-      }
-    }
-    stackEnv.addLast(env)
-  }
-
   private def refreeze() {
     freeze()
     env = last_env
-  }
-
-  private def defreeze() {
-    last_env = env
-    if (stackEnv.isEmpty) return
-    env = stackEnv.removeLast()
-  }
-
-  private[engine] def find(t: Term): util.List[ClauseInfo] = theoryManager.find(t)
-
-  def identify(t: Term) {
-    primitiveManager.identifyPredicate(t)
-  }
-
-  def pushSubGoal(goal: SubGoalTree) {
-    env.currentContext.goalsToEval.pushSubGoal(goal)
-  }
-
-  def cut() {
-    env.choicePointSelector.cut(env.currentContext.choicePointAfterCut)
-  }
-
-  def getCurrentContext: ExecutionContext = {
-    if (env == null) null else env.currentContext
   }
 
   /**
@@ -246,34 +265,6 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
       false
     } else {
       sinfo.hasOpenAlternatives
-    }
-  }
-
-  /**
-    * Checks if the demonstration process was stopped by an halt command.
-    *
-    * @return true if the demonstration was stopped
-    */
-  def isHalted: Boolean = {
-    if (sinfo == null) {
-      false
-    } else {
-      sinfo.isHalted
-    }
-  }
-
-  def run() {
-    solving = true
-    pid = Thread.currentThread.getId.toInt
-    if (sinfo == null) {
-      threadSolve()
-    }
-    try {
-      while (hasOpenAlternatives) {
-        if (next.get(countNext)) threadSolveNext()
-      }
-    } catch {
-      case e: NoMoreSolutionException => e.printStackTrace()
     }
   }
 
@@ -340,7 +331,17 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
 
   def getEngineMan: EngineManager = engineManager
 
-  private[engine] def getWam: PrologEngine = wam
-
   def getQuery: Term = this.query
+
+  private[engine] def warn(message: String) {
+    wam.warn(message)
+  }
+
+  private[engine] def exception(message: String) {
+    wam.exception(message)
+  }
+
+  private[engine] def find(t: Term): util.List[ClauseInfo] = theoryManager.find(t)
+
+  private[engine] def getWam: PrologEngine = wam
 }

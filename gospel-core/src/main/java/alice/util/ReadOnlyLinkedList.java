@@ -5,16 +5,12 @@
 
 package alice.util;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 /**
  * ReadOnlyLinkedList<E> encapsulate a {@link LinkedList<E>}
  * and ensures that the given list is navigated only.
- *
+ * <p>
  * Even if ReadOnlyLinkedList<E> implements {@link List<E>} it doesn't
  * support modifiers methods, and throws {@link UnsupportedOperationException}
  * if invoked.
@@ -22,38 +18,38 @@ import java.util.ListIterator;
  * @author Paolo Contessi
  * @since 2.2
  */
-public class ReadOnlyLinkedList<E> implements List<E>{
-    protected LinkedList<E> list;
+class ReadOnlyLinkedList<E> implements List<E> {
+    private final LinkedList<E> list;
 
-    public ReadOnlyLinkedList(){
-        list = new LinkedList<E>();
+    public ReadOnlyLinkedList() {
+        list = new LinkedList<>();
     }
-    
-    public ReadOnlyLinkedList(LinkedList<E> llist){
-        if(llist != null){
+
+    public ReadOnlyLinkedList(LinkedList<E> llist) {
+        if (llist != null) {
             list = llist;
         } else {
-            list = new LinkedList<E>();
+            list = new LinkedList<>();
         }
     }
 
-    public boolean add(E o){
+    public boolean add(E o) {
         throw new UnsupportedOperationException("This is a read-only list");
     }
 
-    public void add(int index, E element){
+    public void add(int index, E element) {
         throw new UnsupportedOperationException("This is a read-only list");
     }
 
-    public boolean addAll(Collection<? extends E> c){
+    public boolean addAll(Collection<? extends E> c) {
         throw new UnsupportedOperationException("This is a read-only list");
     }
 
-    public boolean addAll(int index, Collection<? extends E> c){
+    public boolean addAll(int index, Collection<? extends E> c) {
         throw new UnsupportedOperationException("This is a read-only list");
     }
 
-    public void clear(){
+    public void clear() {
         throw new UnsupportedOperationException("This is a read-only list");
     }
 
@@ -134,15 +130,15 @@ public class ReadOnlyLinkedList<E> implements List<E>{
      *
      * @return A copy of the wrapped list
      */
-    public LinkedList<E> getEditableCopy(){
-        return new LinkedList<E>(list);
+    public LinkedList<E> getEditableCopy() {
+        return new LinkedList<>(list);
     }
 
 
     private class ListItr implements ListIterator<E> {
-        private ListIterator<E> it;
+        private final ListIterator<E> it;
 
-        public ListItr(LinkedList<E> list, int index){
+        ListItr(LinkedList<E> list, int index) {
             it = list.listIterator(index);
         }
 

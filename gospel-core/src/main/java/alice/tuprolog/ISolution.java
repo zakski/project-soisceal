@@ -3,21 +3,21 @@ package alice.tuprolog;
 import com.szadowsz.gospel.core.error.NoSolutionException;
 import com.szadowsz.gospel.core.error.UnknownVarException;
 
-public interface ISolution<Q,S,T> {
-    
-    public <Z extends T> Z agetVarValue(String varName) throws NoSolutionException;
+public interface ISolution<Q, S, T> {
 
-    public <Z extends T> Z getTerm(String varName) throws NoSolutionException, UnknownVarException;
+    <Z extends T> Z agetVarValue(String varName) throws NoSolutionException;
 
-    public boolean isSuccess();
+    <Z extends T> Z getTerm(String varName) throws NoSolutionException, UnknownVarException;
 
-    public boolean isHalted();
+    boolean isSuccess();
 
-    public boolean hasOpenAlternatives();
+    boolean isHalted();
 
-    public S getSolution() throws NoSolutionException;
+    boolean hasOpenAlternatives();
 
-    public Q getQuery();
+    S getSolution() throws NoSolutionException;
 
-    public java.util.List<? extends T> getBindingVars() throws NoSolutionException;
+    Q getQuery();
+
+    java.util.List<? extends T> getBindingVars() throws NoSolutionException;
 }

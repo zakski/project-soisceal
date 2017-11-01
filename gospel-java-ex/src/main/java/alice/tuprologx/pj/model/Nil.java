@@ -1,9 +1,11 @@
 package alice.tuprologx.pj.model;
 
 public class Nil extends Compound<Nil> {
-    public int arity() {return 0;}
-       
-        
+    public int arity() {
+        return 0;
+    }
+
+
     public <Z> Z/*Object*/ toJava() {
         throw new UnsupportedOperationException();
     }
