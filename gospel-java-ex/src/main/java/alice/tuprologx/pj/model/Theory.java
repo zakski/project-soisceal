@@ -26,9 +26,9 @@ public class Theory extends List<Clause<?, ?>> {
     static {
         engine = new PrologEngine();
         try {
-            engine.unloadLibrary("alice.tuprolog.lib.OOLibrary");
+            engine.unloadLibrary("com.szadowsz.gospel.core.db.libs.OOLibrary");
             engine.loadLibrary("alice.tuprologx.pj.lib.PJLibrary");
-            engine.loadLibrary("alice.tuprolog.lib.DCGLibrary");
+            engine.loadLibrary("com.szadowsz.gospel.core.db.libs.DCGLibrary");
         } catch (Exception e) {
             e.printStackTrace();
         }

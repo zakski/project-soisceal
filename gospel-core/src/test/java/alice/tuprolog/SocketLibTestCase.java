@@ -26,8 +26,8 @@ public class SocketLibTestCase {
 	public void before() throws InvalidLibraryException, MalformedGoalException, NoSolutionException, UnknownVarException {
 		try {
 			engine = new PrologEngine();
-			engine.loadLibrary("alice.tuprolog.lib.SocketLibrary");
-			engine.loadLibrary("alice.tuprolog.lib.ThreadLibrary");
+			engine.loadLibrary("com.szadowsz.gospel.core.db.libs.SocketLibrary");
+			engine.loadLibrary("com.szadowsz.gospel.core.db.libs.ThreadLibrary");
 		} catch (InvalidLibraryException e) {
 			e.printStackTrace();
 		}

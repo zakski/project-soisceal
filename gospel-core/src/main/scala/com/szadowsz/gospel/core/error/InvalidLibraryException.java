@@ -17,8 +17,7 @@
  */
 package com.szadowsz.gospel.core.error;
 
-import alice.tuprolog.Library;
-import com.szadowsz.gospel.core.error.PrologException;
+import com.szadowsz.gospel.core.db.Library;
 
 /**
  * This exception means that a not valid tuProlog library has been specified.

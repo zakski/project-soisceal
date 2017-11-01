@@ -1,13 +1,13 @@
-package alice.tuprolog.lib;
+package com.szadowsz.gospel.core.db.libs;
 
 /**
  * @author: Sara Sabioni
  */
 
-import alice.tuprolog.*;
 import com.szadowsz.gospel.core.data.*;
 import com.szadowsz.gospel.core.data.Long;
 import com.szadowsz.gospel.core.data.Number;
+import com.szadowsz.gospel.core.db.Library;
 import com.szadowsz.gospel.core.db.ops.Operator;
 import com.szadowsz.gospel.core.error.InvalidLibraryException;
 import com.szadowsz.gospel.core.error.PrologError;
@@ -764,7 +764,7 @@ public class ISOIOLibrary extends Library {
         }
 
         //se file_name e' stdin leggo il codice del carattere normalmente
-        //senza preoccuparmi di controllare tutte le opzioni dello stream. 
+        //senza preoccuparmi di controllare tutte le opzioni dello stream.
         Struct struct_name = (Struct) element.get("file_name");
         String file_name = struct_name.toString();
         if (file_name.equals("stdin")) {
@@ -1383,7 +1383,7 @@ public class ISOIOLibrary extends Library {
 
             Hashtable<Term, String> associations_table = new Hashtable<>(variables_list.size());
 
-            //la hashtable sottostante la costruisco per avere le associazioni 
+            //la hashtable sottostante la costruisco per avere le associazioni
             //con le variabili '_' Queste infatti non andrebbero inserite all'interno della
             //read_option variable_name, ma vanno sostituite comunque da variabili nel termine letto.
             Hashtable<Term, String> association_for_replace = new Hashtable<>(variables_list.size());
@@ -1816,17 +1816,17 @@ public class ISOIOLibrary extends Library {
         return write_term_3(stream_or_alias, out_term, options);
     }
 
-    //per forzare il caricamento dell'I/O library 
+    //per forzare il caricamento dell'I/O library
     private void initLibrary() {
         if (flag == 1)
             return;
 
         Library library;
 
-        library = engine.getLibrary("alice.tuprolog.lib.IOLibrary");
+        library = engine.getLibrary("com.szadowsz.gospel.core.db.libs.IOLibrary");
         if (library == null) {
             try {
-                library = engine.loadLibrary("alice.tuprolog.lib.IOLibrary");
+                library = engine.loadLibrary("com.szadowsz.gospel.core.db.libs.IOLibrary");
             } catch (InvalidLibraryException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

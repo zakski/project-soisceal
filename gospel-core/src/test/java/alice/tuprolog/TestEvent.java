@@ -51,9 +51,9 @@ public class TestEvent {
         engine.addQueryListener(l);
         engine.addLibraryListener(l);
 
-        engine.loadLibrary("alice.tuprolog.lib.BasicLibrary");
-        engine.loadLibrary("alice.tuprolog.lib.OOLibrary");
-        engine.loadLibrary("alice.tuprolog.lib.IOLibrary");
+        engine.loadLibrary("com.szadowsz.gospel.core.db.libs.BasicLibrary");
+        engine.loadLibrary("com.szadowsz.gospel.core.db.libs.OOLibrary");
+        engine.loadLibrary("com.szadowsz.gospel.core.db.libs.IOLibrary");
         
         Theory th = new Theory(
                 	"a(1).\n"+
@@ -67,7 +67,7 @@ public class TestEvent {
             sinfo = engine.solveNext();
         }
         
-        engine.unloadLibrary("alice.tuprolog.lib.IOLibrary");
+        engine.unloadLibrary("com.szadowsz.gospel.core.db.libs.IOLibrary");
         
         th = new Theory(
             	"a(3).\n"+

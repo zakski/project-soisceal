@@ -28,9 +28,9 @@ public class ISOIOLibraryTestCase {
     public static void initTest() {
         try {
             engine = new PrologEngine(new String[]{
-                    "alice.tuprolog.lib.BasicLibrary",
-                    //"alice.tuprolog.lib.IOLibrary",
-                    "alice.tuprolog.lib.ISOIOLibrary"});
+                    "com.szadowsz.gospel.core.db.libs.BasicLibrary",
+                    //"com.szadowsz.gospel.core.db.libs.IOLibrary",
+                    "com.szadowsz.gospel.core.db.libs.ISOIOLibrary"});
 
             File file = new File(".");
             writePath = file.getCanonicalPath()

@@ -1,7 +1,7 @@
 package alice.tuprologx.ide;
 
 import com.szadowsz.gospel.core.data.Var;
-import alice.tuprolog.lib.IOLibrary;
+import com.szadowsz.gospel.core.db.libs.IOLibrary;
 import alice.util.Automaton;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
@@ -42,7 +42,7 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
          * Added the method setExecution to conform
          * the operation of CUIConsole as that of JavaIDE
          */
-        IOLibrary IO = (IOLibrary) engine.getLibrary("alice.tuprolog.lib.IOLibrary");
+        IOLibrary IO = (IOLibrary) engine.getLibrary("com.szadowsz.gospel.core.db.libs.IOLibrary");
         IO.setExecutionType(IOLibrary.consoleExecution);
         /***/
         stdin = new BufferedReader(new InputStreamReader(System.in));

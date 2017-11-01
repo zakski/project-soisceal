@@ -1,9 +1,9 @@
-package alice.tuprolog.lib;
+package com.szadowsz.gospel.core.db.libs;
 
-import alice.tuprolog.*;
 import alice.tuprolog.interfaces.ISocketLib;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.data.*;
+import com.szadowsz.gospel.core.db.Library;
 import com.szadowsz.gospel.core.error.PrologError;
 
 import java.io.ByteArrayOutputStream;

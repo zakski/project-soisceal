@@ -3,7 +3,6 @@ package com.szadowsz.gospel.core.db
 import java.io.File
 import java.net.{URL, URLClassLoader}
 
-import alice.tuprolog._
 import com.szadowsz.gospel.core.data.Term
 import com.szadowsz.gospel.core.error.{InvalidLibraryException, InvalidTheoryException}
 import com.szadowsz.gospel.core.event.interpreter.LibraryEvent

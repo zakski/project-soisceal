@@ -1,6 +1,6 @@
 package alice.tuprologx.ide;
 
-import alice.tuprolog.lib.IOLibrary;
+import com.szadowsz.gospel.core.db.libs.IOLibrary;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Theory;
 import com.szadowsz.gospel.core.error.InvalidTheoryException;
@@ -178,7 +178,7 @@ public class ConsoleManager
     }
 
     private void resetInputStream() {
-        IOLibrary IO = (IOLibrary) engine.getLibrary("alice.tuprolog.lib.IOLibrary");
+        IOLibrary IO = (IOLibrary) engine.getLibrary("com.szadowsz.gospel.core.db.libs.IOLibrary");
         IO.getUserContextInputStream().setCounter();
     }
 

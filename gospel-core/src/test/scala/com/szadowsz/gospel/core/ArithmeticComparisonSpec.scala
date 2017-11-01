@@ -1,7 +1,6 @@
 package com.szadowsz.gospel.core
 
-import alice.tuprolog.lib.{IOLibrary, ISOLibrary, OOLibrary}
-import alice.tuprolog.{Library, StringLibrary}
+import alice.tuprolog.StringLibrary
 import com.szadowsz.gospel.core.db.libs.MyBasicLibrary
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec

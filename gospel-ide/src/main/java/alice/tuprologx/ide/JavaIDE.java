@@ -17,7 +17,7 @@
  */
 package alice.tuprologx.ide;
 
-import alice.tuprolog.lib.IOLibrary;
+import com.szadowsz.gospel.core.db.libs.IOLibrary;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.event.interpreter.SpyEvent;
 import com.szadowsz.gospel.core.event.interpreter.WarningEvent;
@@ -167,7 +167,7 @@ public class JavaIDE
         setIconImage(icon.getImage());
 
         //Aggiunto Mastrovito 12/2013
-        IOLibrary IO = (IOLibrary) engine.getLibrary("alice.tuprolog.lib.IOLibrary");
+        IOLibrary IO = (IOLibrary) engine.getLibrary("com.szadowsz.gospel.core.db.libs.IOLibrary");
         IO.setExecutionType(IOLibrary.graphicExecution); // changed from IO.graphicExecution to IOLibrary.graphicExecution
         /**
          * consoleDialog is registered as a listener for a read operation

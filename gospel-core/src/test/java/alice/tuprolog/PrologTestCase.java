@@ -16,11 +16,11 @@ public class PrologTestCase extends TestCase {
 
     public void testUnloadLibraryAfterLoadingTheory() throws Exception {
         PrologEngine engine = new PrologEngine();
-        assertNotNull(engine.getLibrary("alice.tuprolog.lib.IOLibrary"));
+        assertNotNull(engine.getLibrary("com.szadowsz.gospel.core.db.libs.IOLibrary"));
         Theory t = new Theory("a(1).\na(2).\n");
         engine.setTheory(t);
-        engine.unloadLibrary("alice.tuprolog.lib.IOLibrary");
-        assertNull(engine.getLibrary("alice.tuprolog.lib.IOLibrary"));
+        engine.unloadLibrary("com.szadowsz.gospel.core.db.libs.IOLibrary");
+        assertNull(engine.getLibrary("com.szadowsz.gospel.core.db.libs.IOLibrary"));
     }
 
     public void testAddTheory() throws InvalidTheoryException {
@@ -47,14 +47,14 @@ public class PrologTestCase extends TestCase {
 
     public void testLibraryListener() throws InvalidLibraryException {
         PrologEngine engine = new PrologEngine(new String[]{});
-        engine.loadLibrary("alice.tuprolog.lib.BasicLibrary");
-        engine.loadLibrary("alice.tuprolog.lib.IOLibrary");
+        engine.loadLibrary("com.szadowsz.gospel.core.db.libs.BasicLibrary");
+        engine.loadLibrary("com.szadowsz.gospel.core.db.libs.IOLibrary");
         TestPrologEventAdapter a = new TestPrologEventAdapter();
         engine.addLibraryListener(a);
-        engine.loadLibrary("alice.tuprolog.lib.JavaLibrary");
-        assertEquals("alice.tuprolog.lib.JavaLibrary", a.firstMessage);
-        engine.unloadLibrary("alice.tuprolog.lib.JavaLibrary");
-        assertEquals("alice.tuprolog.lib.JavaLibrary", a.firstMessage);
+        engine.loadLibrary("com.szadowsz.gospel.core.db.libs.OOLibrary");
+        assertEquals("com.szadowsz.gospel.core.db.libs.OOLibrary", a.firstMessage);
+        engine.unloadLibrary("com.szadowsz.gospel.core.db.libs.OOLibrary");
+        assertEquals("com.szadowsz.gospel.core.db.libs.OOLibrary", a.firstMessage);
     }
 
     public void testTheoryListener() throws InvalidTheoryException {

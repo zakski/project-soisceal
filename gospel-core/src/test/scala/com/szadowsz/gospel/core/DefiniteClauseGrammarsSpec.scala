@@ -1,6 +1,6 @@
 package com.szadowsz.gospel.core
 
-import alice.tuprolog.lib.DCGLibrary
+import com.szadowsz.gospel.core.db.libs.DCGLibrary
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner

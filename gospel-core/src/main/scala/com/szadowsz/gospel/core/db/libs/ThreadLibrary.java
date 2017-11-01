@@ -2,10 +2,10 @@
  * @author Eleonora Cau
  */
 
-package alice.tuprolog.lib;
+package com.szadowsz.gospel.core.db.libs;
 
 import com.szadowsz.gospel.core.data.Int;
-import alice.tuprolog.Library;
+import com.szadowsz.gospel.core.db.Library;
 import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;

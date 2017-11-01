@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import alice.tuprolog.lib.InvalidObjectIdException;
-import alice.tuprolog.lib.OOLibrary;
+import com.szadowsz.gospel.core.db.libs.OOLibrary;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
 import com.szadowsz.gospel.core.data.Number;
 import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.db.Library;
 import com.szadowsz.gospel.core.db.primitives.PrimitiveInfo;
 import com.szadowsz.gospel.core.error.InvalidTheoryException;
 import com.szadowsz.gospel.core.error.PrologException;
@@ -34,7 +35,7 @@ public class JavaLibraryTestCase extends TestCase {
 	}
 
 	public void testAnonymousObjectRegistration() throws InvalidTheoryException, InvalidObjectIdException {
-		OOLibrary lib = (OOLibrary) engine.getLibrary("alice.tuprolog.lib.OOLibrary");
+		OOLibrary lib = (OOLibrary) engine.getLibrary("com.szadowsz.gospel.core.db.libs.OOLibrary");
 		String theory = "demo(X) :- X <- update. \n";
 		engine.setTheory(new Theory(theory));
 		TestCounter counter = new TestCounter();
@@ -50,7 +51,7 @@ public class JavaLibraryTestCase extends TestCase {
 
 	public void testDynamicObjectsRetrival() throws PrologException {
 		PrologEngine engine = new PrologEngine();
-		OOLibrary lib = (OOLibrary) engine.getLibrary("alice.tuprolog.lib.OOLibrary");
+		OOLibrary lib = (OOLibrary) engine.getLibrary("com.szadowsz.gospel.core.db.libs.OOLibrary");
 		String theory = "demo(C) :- \n" +
 				"java_object('alice.tuprolog.TestCounter', [], C), \n" +
 				"C <- update, \n" +
@@ -283,7 +284,7 @@ public class JavaLibraryTestCase extends TestCase {
 		engine.setTheory(new Theory(theory));
 		info = engine.solve("demo(Res).");
 		assertEquals(true, info.isSuccess());
-		OOLibrary lib = (OOLibrary) engine.getLibrary("alice.tuprolog.lib.OOLibrary");
+		OOLibrary lib = (OOLibrary) engine.getLibrary("com.szadowsz.gospel.core.db.libs.OOLibrary");
 		Struct id = (Struct) info.getTerm("Res");
 		Object obj = lib.getRegisteredObject(id);
 		assertNull(obj);

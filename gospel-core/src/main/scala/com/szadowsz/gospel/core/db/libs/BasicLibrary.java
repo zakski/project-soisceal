@@ -15,7 +15,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package alice.tuprolog.lib;
+package com.szadowsz.gospel.core.db.libs;
 
 import alice.tuprolog.*;
 import com.szadowsz.gospel.core.data.*;
@@ -24,6 +24,7 @@ import com.szadowsz.gospel.core.data.Double;
 import com.szadowsz.gospel.core.data.Float;
 import com.szadowsz.gospel.core.data.Long;
 import com.szadowsz.gospel.core.data.Number;
+import com.szadowsz.gospel.core.db.Library;
 import com.szadowsz.gospel.core.db.libs.TheoryLibrary;
 import com.szadowsz.gospel.core.db.ops.Operator;
 import com.szadowsz.gospel.core.error.InvalidTheoryException;

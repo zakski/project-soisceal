@@ -1,7 +1,7 @@
 package spyframe;
 // franz.beslmeisl at googlemail.com
 
-import alice.tuprolog.Library;
+import com.szadowsz.gospel.core.db.Library;
 import alice.tuprologx.spyframe.TermFrame;
 import com.szadowsz.gospel.core.data.Term;
 

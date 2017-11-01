@@ -1,8 +1,8 @@
 package com.szadowsz.gospel.core
 
-import alice.tuprolog.{Library, StringLibrary}
-import alice.tuprolog.lib.{IOLibrary, ISOLibrary, OOLibrary}
-import com.szadowsz.gospel.core.db.libs.MyBasicLibrary
+import alice.tuprolog.StringLibrary
+import com.szadowsz.gospel.core.db.Library
+import com.szadowsz.gospel.core.db.libs._
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner
@@ -37,6 +37,6 @@ class PrologEngineSpec extends FlatSpec with BaseEngineSpec {
 
     val javaLibrary: Library = new OOLibrary
     prolog.loadLibrary(javaLibrary)
-    javaLibrary eq prolog.getLibrary("alice.tuprolog.lib.OOLibrary") shouldBe true
+    javaLibrary eq prolog.getLibrary("com.szadowsz.gospel.core.db.libs.OOLibrary") shouldBe true
   }
 }

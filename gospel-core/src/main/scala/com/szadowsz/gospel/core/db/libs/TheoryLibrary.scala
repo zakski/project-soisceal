@@ -33,8 +33,8 @@
  */
 package com.szadowsz.gospel.core.db.libs
 
-import alice.tuprolog.Library
 import com.szadowsz.gospel.core.Theory
+import com.szadowsz.gospel.core.db.Library
 
 /**
   * Library built solely from Prolog theory.

@@ -15,6 +15,8 @@ import alice.tuprologx.pj.model.Theory;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.db.Library;
+import com.szadowsz.gospel.core.db.libs.OOLibrary;
 import com.szadowsz.gospel.core.error.InvalidTheoryException;
 import com.szadowsz.gospel.core.error.NoMoreSolutionException;
 
@@ -31,9 +33,9 @@ public class PJProlog /*extends alice.tuprolog.Prolog*/ {
     public PJProlog() {
         engine = new PrologEngine();
         try {
-            engine.unloadLibrary("alice.tuprolog.lib.OOLibrary");
+            engine.unloadLibrary("com.szadowsz.gospel.core.db.libs.OOLibrary");
             engine.loadLibrary("alice.tuprologx.pj.lib.PJLibraryNew");
-            engine.loadLibrary("alice.tuprolog.lib.DCGLibrary");
+            engine.loadLibrary("com.szadowsz.gospel.core.db.libs.DCGLibrary");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,18 +80,18 @@ public class PJProlog /*extends alice.tuprolog.Prolog*/ {
     }
 
     public Struct registerJavaObject(Object o) {
-        return ((alice.tuprolog.lib.OOLibrary) engine.getLibrary("alice.tuprologx.pj.lib.PJLibraryNew")).register(o);
+        return ((OOLibrary) engine.getLibrary("alice.tuprologx.pj.lib.PJLibraryNew")).register(o);
     }
 
     public Object getJavaObject(Struct t) {
         try {
-            return ((alice.tuprolog.lib.OOLibrary) engine.getLibrary("alice.tuprologx.pj.lib.PJLibraryNew")).getRegisteredObject(t);
+            return ((OOLibrary) engine.getLibrary("alice.tuprologx.pj.lib.PJLibraryNew")).getRegisteredObject(t);
         } catch (Exception e) {
             return null;
         }
     }
 
-    public void loadLibrary(alice.tuprolog.Library library) {
+    public void loadLibrary(Library library) {
         try {
             engine.loadLibrary(library);
         } catch (Exception e) {

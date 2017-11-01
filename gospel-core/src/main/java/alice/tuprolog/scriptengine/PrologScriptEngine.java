@@ -6,9 +6,9 @@ package alice.tuprolog.scriptengine;
 
 import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.Var;
-import alice.tuprolog.lib.IOLibrary;
+import com.szadowsz.gospel.core.db.libs.IOLibrary;
 import alice.tuprolog.lib.InvalidObjectIdException;
-import alice.tuprolog.lib.OOLibrary;
+import com.szadowsz.gospel.core.db.libs.OOLibrary;
 import alice.util.InputStreamAdapter;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
@@ -161,7 +161,7 @@ class PrologScriptEngine implements ScriptEngine, ExceptionListener, OutputListe
         forwarded, and the Object won't be registered.
          */
 
-        OOLibrary ooLib = (OOLibrary) prolog.getLibrary("alice.tuprolog.lib.OOLibrary");
+        OOLibrary ooLib = (OOLibrary) prolog.getLibrary("com.szadowsz.gospel.core.db.libs.OOLibrary");
 
         if (ooLib != null) {
             for (Map.Entry<String, Object> keyPair : bindings.entrySet()) {
@@ -273,7 +273,7 @@ class PrologScriptEngine implements ScriptEngine, ExceptionListener, OutputListe
      * @param sc the ScriptContext to use for the next evaluation
      */
     private void setupStandardIO(ScriptContext sc) {
-        IOLibrary ioLib = (IOLibrary) prolog.getLibrary("alice.tuprolog.lib.IOLibrary");
+        IOLibrary ioLib = (IOLibrary) prolog.getLibrary("com.szadowsz.gospel.core.db.libs.IOLibrary");
 
         if (ioLib != null) {
             ioLib.setStandardInput(new InputStreamAdapter(sc.getReader()));

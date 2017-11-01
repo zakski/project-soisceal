@@ -21,6 +21,7 @@
 package alice.tuprolog;
 
 import com.szadowsz.gospel.core.data.Term;
+import com.szadowsz.gospel.core.db.Library;
 
 import java.util.HashMap;
 

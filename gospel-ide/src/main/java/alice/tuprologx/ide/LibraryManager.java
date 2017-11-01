@@ -17,7 +17,7 @@
  */
 package alice.tuprologx.ide;
 
-import alice.tuprolog.Library;
+import com.szadowsz.gospel.core.db.Library;
 import alice.util.AssemblyCustomClassLoader;
 import cli.System.Reflection.Assembly;
 import com.szadowsz.gospel.core.PrologEngine;
@@ -120,7 +120,7 @@ public final class LibraryManager {
             throw new ClassNotFoundException();
 
 //        Class<?> library = getClass().getClassLoader().loadClass(libraryClassname);
-//        if (library.getSuperclass().equals(alice.tuprolog.Library.class))
+//        if (library.getSuperclass().equals(com.szadowsz.gospel.core.db.Library.class))
 //            libraries.add(libraryClassname);
 //        else
 //            throw new InvalidLibraryException(libraryClassname,-1,-1);

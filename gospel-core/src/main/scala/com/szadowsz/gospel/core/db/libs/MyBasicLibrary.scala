@@ -35,8 +35,7 @@ package com.szadowsz.gospel.core.db.libs
 
 import java.util
 
-import alice.tuprolog._
-import alice.tuprolog.lib.BasicLibrary
+import alice.tuprolog.Agent
 import com.szadowsz.gospel.core.{Theory, data}
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.error.{InvalidTheoryException, PrologError}
@@ -481,7 +480,7 @@ class MyBasicLibrary() extends BasicLibrary {
 
   //  @throws[PrologError]
   //  def num_atom_2(a0: Term, a1: Term): Boolean = {
-  //    val result = alice.tuprolog.lib.BasicLibrary.numAtom(engine,a0,a1)
+  //    val result = com.szadowsz.gospel.core.db.libs.BasicLibrary.numAtom(engine,a0,a1)
   //    unify(result.head, result.last)
   //  }
   //

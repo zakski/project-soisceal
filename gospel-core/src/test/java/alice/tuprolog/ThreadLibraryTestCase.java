@@ -6,6 +6,7 @@ import com.szadowsz.gospel.core.Theory;
 import com.szadowsz.gospel.core.data.Int;
 import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.Term;
+import com.szadowsz.gospel.core.db.libs.ThreadLibrary;
 import com.szadowsz.gospel.core.error.InvalidLibraryException;
 import com.szadowsz.gospel.core.error.InvalidTheoryException;
 import com.szadowsz.gospel.core.error.MalformedGoalException;
@@ -31,14 +32,14 @@ public class ThreadLibraryTestCase {
 	public void before() {
 		try {
 			engine = new PrologEngine();
-			engine.loadLibrary("alice.tuprolog.lib.ThreadLibrary");
+			engine.loadLibrary("com.szadowsz.gospel.core.db.libs.ThreadLibrary");
 		} catch (InvalidLibraryException e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#thread_id_1(Term)}.
+	 * Test method for {@link ThreadLibrary#thread_id_1(Term)}.
 	 * @throws InvalidTheoryException
 	 * @throws MalformedGoalException
 	 * @throws NoSolutionException
@@ -52,7 +53,7 @@ public class ThreadLibraryTestCase {
 	}
 
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#thread_create_2(Term, Term)}.
+	 * Test method for {@link ThreadLibrary#thread_create_2(Term, Term)}.
 	 * @throws MalformedGoalException 
 	 * @throws InvalidTheoryException 
 	 */
@@ -72,7 +73,7 @@ public class ThreadLibraryTestCase {
 	}
 	
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#thread_next_sol_1(Term)}.
+	 * Test method for {@link ThreadLibrary#thread_next_sol_1(Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -100,7 +101,7 @@ public class ThreadLibraryTestCase {
 	}
 
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#thread_join_2(Term, Term)}.
+	 * Test method for {@link ThreadLibrary#thread_join_2(Term, Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -125,7 +126,7 @@ public class ThreadLibraryTestCase {
 	}
 
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#thread_read_2(Term, Term)}.
+	 * Test method for {@link ThreadLibrary#thread_read_2(Term, Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -156,7 +157,7 @@ public class ThreadLibraryTestCase {
 	}
 
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#thread_has_next_1(Term)}.
+	 * Test method for {@link ThreadLibrary#thread_has_next_1(Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -182,7 +183,7 @@ public class ThreadLibraryTestCase {
 	
 
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#thread_detach_1(Term)}.
+	 * Test method for {@link ThreadLibrary#thread_detach_1(Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 */
@@ -197,7 +198,7 @@ public class ThreadLibraryTestCase {
 	}
 
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#thread_sleep_1(Term)}.
+	 * Test method for {@link ThreadLibrary#thread_sleep_1(Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 */
@@ -212,7 +213,7 @@ public class ThreadLibraryTestCase {
 	}
 
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#thread_send_msg_2(Term, Term)}.
+	 * Test method for {@link ThreadLibrary#thread_send_msg_2(Term, Term)}.
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
 	 * @throws InvalidTheoryException 
@@ -245,7 +246,7 @@ public class ThreadLibraryTestCase {
 	}
 
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#thread_get_msg_2(Term, Term)}.
+	 * Test method for {@link ThreadLibrary#thread_get_msg_2(Term, Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -266,7 +267,7 @@ public class ThreadLibraryTestCase {
 	}
 
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#thread_peek_msg_2(Term, Term)}.
+	 * Test method for {@link ThreadLibrary#thread_peek_msg_2(Term, Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -304,7 +305,7 @@ public class ThreadLibraryTestCase {
 	}
 
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#thread_wait_msg_2(Term, Term)}.
+	 * Test method for {@link ThreadLibrary#thread_wait_msg_2(Term, Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -345,7 +346,7 @@ public class ThreadLibraryTestCase {
 	/**
 	 * Il metodo peek non riesce a prelevare la soluzione perch il messaggio stato rimosso
 	 * 
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#thread_remove_msg_2(Term, Term)}.
+	 * Test method for {@link ThreadLibrary#thread_remove_msg_2(Term, Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 */
@@ -364,7 +365,7 @@ public class ThreadLibraryTestCase {
 	/**
 	 * start(X) -> prelevo la soluzione, poi distruggo la coda.
 	 * start2(X) -> distruggo la coda, poi prelevo la soluzione.
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#message_queue_destroy_1(Term)}.
+	 * Test method for {@link ThreadLibrary#message_queue_destroy_1(Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 */
@@ -385,7 +386,7 @@ public class ThreadLibraryTestCase {
 	}
 
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#msg_queue_size_2(Term, Term)}.
+	 * Test method for {@link ThreadLibrary#msg_queue_size_2(Term, Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 * @throws NoSolutionException 
@@ -409,7 +410,7 @@ public class ThreadLibraryTestCase {
 	}
 
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#mutex_destroy_1(Term)}.
+	 * Test method for {@link ThreadLibrary#mutex_destroy_1(Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 */
@@ -443,7 +444,7 @@ public class ThreadLibraryTestCase {
 	}
 
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#mutex_trylock_1(Term)}.
+	 * Test method for {@link ThreadLibrary#mutex_trylock_1(Term)}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 */
@@ -460,7 +461,7 @@ public class ThreadLibraryTestCase {
 	}
 
 	/**
-	 * Test method for {@link alice.tuprolog.lib.ThreadLibrary#mutex_unlock_all_0()}.
+	 * Test method for {@link ThreadLibrary#mutex_unlock_all_0()}.
 	 * @throws InvalidTheoryException 
 	 * @throws MalformedGoalException 
 	 */

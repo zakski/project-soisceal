@@ -36,9 +36,9 @@ package com.szadowsz.gospel.core.db.libs
 import java.io.{File, FileInputStream, FileNotFoundException, IOException}
 import java.util
 
-import alice.tuprolog.Library
 import alice.util.Tools
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
+import com.szadowsz.gospel.core.db.Library
 import com.szadowsz.gospel.core.db.ops.OperatorManager
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
 import com.szadowsz.gospel.core.error.{InvalidLibraryException, InvalidTheoryException, PrologError}
