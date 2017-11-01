@@ -60,41 +60,7 @@ public abstract class Number extends Term implements Comparable<Number> {
     /** is this term a prolog real term? */
     public abstract boolean isReal();
     
-    //
-    
-    /** is an int Integer number? 
-     * @deprecated Use <tt>instanceof Int</tt> instead. */
-    public abstract boolean isTypeInt();
-
-    /** is an int Integer number?
-     * @deprecated Use <tt>instanceof Int</tt> instead. */
-    public abstract boolean isInt();
-    
-    /** is a float Real number? 
-     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Float</tt> instead. */
-    public abstract boolean isTypeFloat();
-
-    /** is a float Real number?
-     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Float</tt> instead. */
-    public abstract boolean isFloat();
-    
-    /** is a double Real number? 
-     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Double</tt> instead.*/
-    public abstract boolean isTypeDouble();
-
-    /** is a double Real number?
-     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Double</tt> instead. */
-    public abstract boolean isDouble();
-    
-    /** is a long Integer number? 
-     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Long</tt> instead. */
-    public abstract boolean isTypeLong();
-
-    /** is a long Integer number?
-     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Long</tt> instead. */
-    public abstract boolean isLong();
-    
-    /**
+   /**
      * Gets the actual term referred by this Term.
      */
     public Term getTerm() {

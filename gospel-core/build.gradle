@@ -17,6 +17,11 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    main.scala.srcDirs = ['src/main/scala', 'src/main/java']
+    main.java.srcDirs = []
+}
+
 dependencies {
 
     compile group: 'org.scala-lang', name: 'scala-compiler', version: scalaVersion

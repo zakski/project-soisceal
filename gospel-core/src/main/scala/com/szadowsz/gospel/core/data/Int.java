@@ -66,7 +66,6 @@ public class Int extends Number {
         return value;
     }
 
-
     /**
      * is this term a prolog integer term?
      */
@@ -78,79 +77,6 @@ public class Int extends Number {
      * is this term a prolog real term?
      */
     final public boolean isReal() {
-        return false;
-    }
-
-
-    /**
-     * is an int Integer number?
-     *
-     * @deprecated Use <tt>instanceof Int</tt> instead.
-     */
-    final public boolean isTypeInt() {
-        return true;
-    }
-
-    /**
-     * is an int Integer number?
-     *
-     * @deprecated Use <tt>instanceof Int</tt> instead.
-     */
-    final public boolean isInt() {
-        return true;
-    }
-
-    /**
-     * is a float Real number?
-     *
-     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Float</tt> instead.
-     */
-    final public boolean isTypeFloat() {
-        return false;
-    }
-
-    /**
-     * is a float Real number?
-     *
-     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Float</tt> instead.
-     */
-    final public boolean isFloat() {
-        return false;
-    }
-
-    /**
-     * is a double Real number?
-     *
-     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Double</tt> instead.
-     */
-    final public boolean isTypeDouble() {
-        return false;
-    }
-
-    /**
-     * is a double Real number?
-     *
-     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Double</tt> instead.
-     */
-    final public boolean isDouble() {
-        return false;
-    }
-
-    /**
-     * is a long Integer number?
-     *
-     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Long</tt> instead.
-     */
-    final public boolean isTypeLong() {
-        return false;
-    }
-
-    /**
-     * is a long Integer number?
-     *
-     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Long</tt> instead.
-     */
-    final public boolean isLong() {
         return false;
     }
 

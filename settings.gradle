@@ -1,4 +1,4 @@
 rootProject.name = 'project-soisceal'
 
-include ':scala-core',':gospel-core',':gospel-ide', ':gospel-java-ex', ':gospel-runtime'//,':2p-android'
+include ':gospel-core',':gospel-ide', ':gospel-java-ex', ':gospel-runtime'//,':2p-android'
 
