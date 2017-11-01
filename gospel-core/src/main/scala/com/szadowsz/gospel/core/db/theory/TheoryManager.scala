@@ -2,11 +2,11 @@ package com.szadowsz.gospel.core.db.theory
 
 import java.util
 
-import alice.tuprolog.{Struct, Term, Var}
 import alice.tuprolog.json.{AbstractEngineState, FullEngineState}
 import alice.util.Tools
 import com.szadowsz.gospel.core.PrologEngine
 import com.szadowsz.gospel.core.Theory
+import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.db.theory.clause.{ClauseDatabase, FamilyClausesList}
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo

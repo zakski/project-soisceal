@@ -10,6 +10,8 @@ import alice.tuprolog.lib.OOLibrary;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.data.Number;
+import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.db.primitives.PrimitiveInfo;
 import com.szadowsz.gospel.core.error.InvalidTheoryException;
 import com.szadowsz.gospel.core.error.PrologException;

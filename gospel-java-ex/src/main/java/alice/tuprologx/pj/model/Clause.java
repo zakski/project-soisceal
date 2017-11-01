@@ -9,7 +9,7 @@
 
 package alice.tuprologx.pj.model;
 
-import alice.tuprolog.Struct;
+import com.szadowsz.gospel.core.data.Struct;
 
 /**
  * @author maurizio

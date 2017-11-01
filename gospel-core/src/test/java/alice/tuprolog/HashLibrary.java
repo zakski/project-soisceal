@@ -20,6 +20,8 @@
  */
 package alice.tuprolog;
 
+import com.szadowsz.gospel.core.data.Term;
+
 import java.util.HashMap;
 
 public class HashLibrary extends Library {

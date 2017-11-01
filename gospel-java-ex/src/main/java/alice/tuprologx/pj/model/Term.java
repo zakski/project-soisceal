@@ -1,6 +1,7 @@
 package alice.tuprologx.pj.model;
 
 import alice.tuprologx.pj.annotations.Termifiable;
+import com.szadowsz.gospel.core.data.Struct;
 
 /**
  * @author maurizio
@@ -49,34 +50,34 @@ public abstract class Term<X extends Term<?>> {
         }
     }
 
-    public static <Z extends Term<?>> Z unmarshal(alice.tuprolog.Term t) {
+    public static <Z extends Term<?>> Z unmarshal(com.szadowsz.gospel.core.data.Term t) {
         if (Int.matches(t)) {
-            // return (Z)Int.unmarshal((alice.tuprolog.Int)t);
-            return uncheckedCast(Int.unmarshal((alice.tuprolog.Int) t));
+            // return (Z)Int.unmarshal((com.szadowsz.gospel.core.data.Int)t);
+            return uncheckedCast(Int.unmarshal((com.szadowsz.gospel.core.data.Int) t));
         } else if (Double.matches(t)) {
-            //return (Z)Double.unmarshal((alice.tuprolog.Double)t);
-            return uncheckedCast(Double.unmarshal((alice.tuprolog.Double) t));
+            //return (Z)Double.unmarshal((com.szadowsz.gospel.core.data.Double)t);
+            return uncheckedCast(Double.unmarshal((com.szadowsz.gospel.core.data.Double) t));
         } else if (JavaObject.matches(t)) {
-            //return (Z)JavaObject.unmarshalObject((alice.tuprolog.Struct)t);
-            return uncheckedCast(JavaObject.unmarshalObject((alice.tuprolog.Struct) t));
+            //return (Z)JavaObject.unmarshalObject((com.szadowsz.gospel.core.data.Struct)t);
+            return uncheckedCast(JavaObject.unmarshalObject((Struct) t));
         } else if (Atom.matches(t)) {
-            //return (Z)Atom.unmarshal((alice.tuprolog.Struct)t);
-            return uncheckedCast(Atom.unmarshal((alice.tuprolog.Struct) t));
+            //return (Z)Atom.unmarshal((com.szadowsz.gospel.core.data.Struct)t);
+            return uncheckedCast(Atom.unmarshal((Struct) t));
         } else if (Bool.matches(t)) {
-            //return (Z)Bool.unmarshal((alice.tuprolog.Struct)t);
-            return uncheckedCast(Bool.unmarshal((alice.tuprolog.Struct) t));
+            //return (Z)Bool.unmarshal((com.szadowsz.gospel.core.data.Struct)t);
+            return uncheckedCast(Bool.unmarshal((Struct) t));
         } else if (List.matches(t)) {
-            //return (Z)List.unmarshal((alice.tuprolog.Struct)t);
-            return uncheckedCast(List.unmarshal((alice.tuprolog.Struct) t));
+            //return (Z)List.unmarshal((com.szadowsz.gospel.core.data.Struct)t);
+            return uncheckedCast(List.unmarshal((Struct) t));
         } else if (JavaTerm.matches(t)) {
-            //return (Z)JavaTerm.unmarshalObject((alice.tuprolog.Struct)t.getTerm());
-            return uncheckedCast(JavaTerm.unmarshalObject((alice.tuprolog.Struct) t.getTerm()));
+            //return (Z)JavaTerm.unmarshalObject((com.szadowsz.gospel.core.data.Struct)t.getTerm());
+            return uncheckedCast(JavaTerm.unmarshalObject((Struct) t.getTerm()));
         } else if (Cons.matches(t)) {
-            //return (Z)Cons.unmarshal((alice.tuprolog.Struct)t);
-            return uncheckedCast(Cons.unmarshal((alice.tuprolog.Struct) t));
+            //return (Z)Cons.unmarshal((com.szadowsz.gospel.core.data.Struct)t);
+            return uncheckedCast(Cons.unmarshal((Struct) t));
         } else if (Var.matches(t)) {
-            //return (Z)Var.unmarshal((alice.tuprolog.Var)t);
-            return uncheckedCast(Var.unmarshal((alice.tuprolog.Var) t));
+            //return (Z)Var.unmarshal((com.szadowsz.gospel.core.data.Var)t);
+            return uncheckedCast(Var.unmarshal((com.szadowsz.gospel.core.data.Var) t));
         } else {
             System.out.println(t);
             throw new UnsupportedOperationException();
@@ -85,7 +86,7 @@ public abstract class Term<X extends Term<?>> {
 
     protected abstract <Z> Z toJava(); // {return null;}
 
-    public abstract alice.tuprolog.Term marshal() /*{
+    public abstract com.szadowsz.gospel.core.data.Term marshal() /*{
             throw new UnsupportedOperationException();
         }*/;
 }

@@ -2,8 +2,8 @@ package com.szadowsz.gospel.core.engine.context.clause
 
 import java.util
 
-import alice.tuprolog.{Term, Var}
 import alice.util.OneWayList
+import com.szadowsz.gospel.core.data.{Term, Var}
 
 
 object ClauseStore {

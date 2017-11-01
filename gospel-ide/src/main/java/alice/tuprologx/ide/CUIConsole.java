@@ -1,6 +1,6 @@
 package alice.tuprologx.ide;
 
-import alice.tuprolog.Var;
+import com.szadowsz.gospel.core.data.Var;
 import alice.tuprolog.lib.IOLibrary;
 import alice.util.Automaton;
 import com.szadowsz.gospel.core.PrologEngine;

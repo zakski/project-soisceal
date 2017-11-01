@@ -18,7 +18,11 @@
 package alice.tuprolog.lib;
 
 import alice.tuprolog.*;
-import alice.tuprolog.Number;
+import com.szadowsz.gospel.core.data.*;
+import com.szadowsz.gospel.core.data.Double;
+import com.szadowsz.gospel.core.data.Float;
+import com.szadowsz.gospel.core.data.Long;
+import com.szadowsz.gospel.core.data.Number;
 import com.szadowsz.gospel.core.error.PrologError;
 
 /**
@@ -111,7 +115,7 @@ public class ISOLibrary extends Library {
                 throw PrologError.type_error(engine.getEngineManager(), 1,
                         "character", arg0);
         } else if ((arg1 instanceof Int)
-                || (arg1 instanceof alice.tuprolog.Long)) {
+                || (arg1 instanceof Long)) {
             char c = (char) ((Number) arg1).intValue();
             return unify(arg0, new Struct("" + c));
         } else
@@ -131,7 +135,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number)
-            return new alice.tuprolog.Double(Math.sin(((Number) val0)
+            return new Double(Math.sin(((Number) val0)
                     .doubleValue()));
         return null;
     }
@@ -144,7 +148,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number)
-            return new alice.tuprolog.Double(Math.cos(((Number) val0)
+            return new Double(Math.cos(((Number) val0)
                     .doubleValue()));
         return null;
     }
@@ -157,7 +161,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number)
-            return new alice.tuprolog.Double(Math.exp(((Number) val0)
+            return new Double(Math.exp(((Number) val0)
                     .doubleValue()));
         return null;
     }
@@ -170,7 +174,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number)
-            return new alice.tuprolog.Double(Math.atan(((Number) val0)
+            return new Double(Math.atan(((Number) val0)
                     .doubleValue()));
         return null;
     }
@@ -183,7 +187,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number)
-            return new alice.tuprolog.Double(Math.log(((Number) val0)
+            return new Double(Math.log(((Number) val0)
                     .doubleValue()));
         return null;
     }
@@ -196,7 +200,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number)
-            return new alice.tuprolog.Double(Math.sqrt(((Number) val0)
+            return new Double(Math.sqrt(((Number) val0)
                     .doubleValue()));
         return null;
     }
@@ -208,11 +212,11 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Int || val0 instanceof alice.tuprolog.Long)
-            return new alice.tuprolog.Int(Math.abs(((Number) val0).intValue()));
-        if (val0 instanceof alice.tuprolog.Double
-                || val0 instanceof alice.tuprolog.Float)
-            return new alice.tuprolog.Double(Math.abs(((Number) val0)
+        if (val0 instanceof Int || val0 instanceof Long)
+            return new Int(Math.abs(((Number) val0).intValue()));
+        if (val0 instanceof Double
+                || val0 instanceof Float)
+            return new Double(Math.abs(((Number) val0)
                     .doubleValue()));
         return null;
     }
@@ -224,12 +228,12 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Int || val0 instanceof alice.tuprolog.Long)
-            return new alice.tuprolog.Double(
+        if (val0 instanceof Int || val0 instanceof Long)
+            return new Double(
                     ((Number) val0).intValue() > 0 ? 1.0 : -1.0);
-        if (val0 instanceof alice.tuprolog.Double
-                || val0 instanceof alice.tuprolog.Float)
-            return new alice.tuprolog.Double(
+        if (val0 instanceof Double
+                || val0 instanceof Float)
+            return new Double(
                     ((Number) val0).doubleValue() > 0 ? 1.0 : -1.0);
         return null;
     }
@@ -242,7 +246,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number)
-            return new alice.tuprolog.Double((long) Math.rint(((Number) val0)
+            return new Double((long) Math.rint(((Number) val0)
                     .doubleValue()));
         return null;
     }
@@ -256,7 +260,7 @@ public class ISOLibrary extends Library {
         }
         if (val0 instanceof Number) {
             double fl = ((Number) val0).doubleValue();
-            return new alice.tuprolog.Double(Math.abs(fl - Math.rint(fl)));
+            return new Double(Math.abs(fl - Math.rint(fl)));
         }
         return null;
     }
@@ -269,7 +273,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number)
-            return new alice.tuprolog.Double(((Number) val0).doubleValue());
+            return new Double(((Number) val0).doubleValue());
         return null;
     }
 
@@ -293,7 +297,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number)
-            return new alice.tuprolog.Long(Math.round(((Number) val0)
+            return new Long(Math.round(((Number) val0)
                     .doubleValue()));
         return null;
     }
@@ -332,7 +336,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number && val1 instanceof Number)
-            return new alice.tuprolog.Int(((Number) val0).intValue()
+            return new Int(((Number) val0).intValue()
                     / ((Number) val1).intValue());
         return null;
     }
@@ -366,7 +370,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number && val1 instanceof Number) {
-            return new alice.tuprolog.Double(Math.IEEEremainder(((Number) val0)
+            return new Double(Math.IEEEremainder(((Number) val0)
                     .doubleValue(), ((Number) val1).doubleValue()));
         }
         return null;

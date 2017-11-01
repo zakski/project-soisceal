@@ -33,7 +33,7 @@
  */
 package com.szadowsz.gospel.core.engine.state
 
-import alice.tuprolog.Struct
+import com.szadowsz.gospel.core.data.Struct
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
 import com.szadowsz.gospel.core.engine.context.subgoal.SubGoalStore

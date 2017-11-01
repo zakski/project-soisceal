@@ -38,7 +38,7 @@ import java.util
 
 import scala.collection.JavaConverters._
 import alice.tuprolog.json.JSONSerializerManager
-import alice.tuprolog.{Struct, Term, Var}
+import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.engine.ExecutionResultType
 import com.szadowsz.gospel.core.error.{NoSolutionException, UnknownVarException}
 

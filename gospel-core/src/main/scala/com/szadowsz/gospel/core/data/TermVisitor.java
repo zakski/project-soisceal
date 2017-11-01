@@ -1,5 +1,5 @@
 /*Castagna 06/2011*/
-package alice.tuprolog;
+package com.szadowsz.gospel.core.data;
 
 interface TermVisitor {
 	void visit(Struct s);

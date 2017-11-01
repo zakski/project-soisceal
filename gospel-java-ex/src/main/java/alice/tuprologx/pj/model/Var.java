@@ -17,7 +17,7 @@ public class Var<X extends Term<?>> extends Term<X> {
 
     static {
         try {
-            _setLink = alice.tuprolog.Var.class.getDeclaredMethod("setLink", alice.tuprolog.Term.class);
+            _setLink = com.szadowsz.gospel.core.data.Var.class.getDeclaredMethod("setLink", com.szadowsz.gospel.core.data.Term.class);
             _setLink.setAccessible(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,18 +37,18 @@ public class Var<X extends Term<?>> extends Term<X> {
         _theValue = uncheckedCast(val);
     }
 
-    static Term<?> unmarshal(alice.tuprolog.Var a) {
+    static Term<?> unmarshal(com.szadowsz.gospel.core.data.Var a) {
         if (!matches(a))
             throw new UnsupportedOperationException();
         //return new Var<Term<?>>(a.getName(),a.isBound() ? Term.unmarshal(a.getTerm()) : null);
         return a.isBound() ? Term.unmarshal(a.getTerm()) : new Var<>(a.getName(), null);
     }
 
-    static boolean matches(alice.tuprolog.Term t) {
-        return (t instanceof alice.tuprolog.Var);
+    static boolean matches(com.szadowsz.gospel.core.data.Term t) {
+        return (t instanceof com.szadowsz.gospel.core.data.Var);
     }
 
-    private static void setLink(alice.tuprolog.Var v, Object o) {
+    private static void setLink(com.szadowsz.gospel.core.data.Var v, Object o) {
         try {
             _setLink.invoke(v, o);
         } catch (Exception e) {
@@ -65,9 +65,9 @@ public class Var<X extends Term<?>> extends Term<X> {
         return _theValue;
     }
 
-    public alice.tuprolog.Var marshal() {
+    public com.szadowsz.gospel.core.data.Var marshal() {
         try {
-            alice.tuprolog.Var v = new alice.tuprolog.Var(_theName);
+            com.szadowsz.gospel.core.data.Var v = new com.szadowsz.gospel.core.data.Var(_theName);
             if (_theValue != null) {
                 setLink(v, _theValue.marshal());
             }

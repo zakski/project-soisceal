@@ -19,14 +19,14 @@ public class Int extends Term<Int> {
         _theInt = i;
     }
 
-    static Int unmarshal(alice.tuprolog.Int i) {
+    static Int unmarshal(com.szadowsz.gospel.core.data.Int i) {
         if (!matches(i))
             throw new UnsupportedOperationException();
         return new Int(i.intValue());
     }
 
-    static boolean matches(alice.tuprolog.Term t) {
-        return (t instanceof alice.tuprolog.Int);
+    static boolean matches(com.szadowsz.gospel.core.data.Term t) {
+        return (t instanceof com.szadowsz.gospel.core.data.Int);
     }
 
     public <Z> Z/*Integer*/ toJava() {
@@ -34,8 +34,8 @@ public class Int extends Term<Int> {
         return uncheckedCast(_theInt);
     }
 
-    public alice.tuprolog.Int marshal() {
-        return new alice.tuprolog.Int(_theInt);
+    public com.szadowsz.gospel.core.data.Int marshal() {
+        return new com.szadowsz.gospel.core.data.Int(_theInt);
     }
 
     public String toString() {

@@ -130,7 +130,7 @@ class PJAnnotationProcessor extends ElementScanner6<Void, Void> implements Proce
         PrologField pf = v.getAnnotation(PrologField.class);
         String init = pf.init();
         if (!init.equals("")) {
-            alice.tuprolog.Term t;
+            com.szadowsz.gospel.core.data.Term t;
             try {
                 t = com.szadowsz.gospel.core.parser.Parser.parseSingleTerm(init, new OperatorManager());
             } catch (Throwable tw) {

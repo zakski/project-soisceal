@@ -2,6 +2,11 @@ package alice.tuprolog;
 
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
+import com.szadowsz.gospel.core.data.Double;
+import com.szadowsz.gospel.core.data.Int;
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Term;
+import com.szadowsz.gospel.core.data.Var;
 import junit.framework.TestCase;
 
 import java.lang.*;
@@ -167,7 +172,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
 		assertTrue(argNo.intValue() == 1);
 		Struct validType = (Struct) info.getTerm("ValidType");
 		assertTrue(validType.isEqual(new Struct("integer")));
-		Double culprit = (Double) info.getTerm("Culprit");
+		com.szadowsz.gospel.core.data.Double culprit = (com.szadowsz.gospel.core.data.Double) info.getTerm("Culprit");
 		assertTrue(culprit.doubleValue() == 1.5);
 	}
 

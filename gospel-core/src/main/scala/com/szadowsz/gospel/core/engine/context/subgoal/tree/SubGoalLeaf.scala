@@ -1,6 +1,6 @@
 package com.szadowsz.gospel.core.engine.context.subgoal.tree
 
-import alice.tuprolog.Term
+import com.szadowsz.gospel.core.data.Term
 
 private[core] class SubGoalLeaf(t: Term) extends SubGoalNode {
   private val term: Term = t

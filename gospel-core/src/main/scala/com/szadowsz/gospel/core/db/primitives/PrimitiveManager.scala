@@ -20,8 +20,9 @@ package com.szadowsz.gospel.core.db.primitives
 import java.lang.reflect.InvocationTargetException
 import java.{util => ju}
 
-import alice.tuprolog.{IPrimitives, Library, Struct, Term}
+import alice.tuprolog.{IPrimitives, Library}
 import com.szadowsz.gospel.core.PrologEngine
+import com.szadowsz.gospel.core.data.{Struct, Term}
 import com.szadowsz.gospel.core.db.libs.BuiltIn
 
 import scala.collection.mutable

@@ -9,6 +9,9 @@
 
 package alice.tuprologx.pj.model;
 
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Var;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
@@ -32,18 +35,18 @@ public class List<X extends Term<?>> extends Term<List<X>> implements Iterable<X
         }
     }
 
-    static <Z extends Term<?>> List<Z> unmarshal(alice.tuprolog.Struct s) {
+    static <Z extends Term<?>> List<Z> unmarshal(Struct s) {
         if (!matches(s))
             throw new UnsupportedOperationException();
-        Iterator<? extends alice.tuprolog.Term> listIt = s.listIterator();
+        Iterator<? extends com.szadowsz.gospel.core.data.Term> listIt = s.listIterator();
         Vector<Term<?>> termList = new Vector<>();
         while (listIt.hasNext())
             termList.add(Term.unmarshal(listIt.next()));
         return new List<Z>(termList);
     }
 
-    static boolean matches(alice.tuprolog.Term t) {
-        return (!(t instanceof alice.tuprolog.Var) && t.isList() && t instanceof alice.tuprolog.Struct);
+    static boolean matches(com.szadowsz.gospel.core.data.Term t) {
+        return (!(t instanceof Var) && t.isList() && t instanceof Struct);
     }
 
     public static List<Atom> tokenize(java.util.StringTokenizer stok) {
@@ -80,13 +83,13 @@ public class List<X extends Term<?>> extends Term<List<X>> implements Iterable<X
         return new List<>(tail);
     }
 
-    public alice.tuprolog.Struct marshal() {
-        alice.tuprolog.Term[] termArray = new alice.tuprolog.Term[_theList.size()];
+    public Struct marshal() {
+        com.szadowsz.gospel.core.data.Term[] termArray = new com.szadowsz.gospel.core.data.Term[_theList.size()];
         int i = 0;
         for (Term<?> t : _theList) {
             termArray[i++] = t.marshal();
         }
-        return new alice.tuprolog.Struct(termArray);
+        return new Struct(termArray);
     }
 
     public Iterator<X> iterator() {

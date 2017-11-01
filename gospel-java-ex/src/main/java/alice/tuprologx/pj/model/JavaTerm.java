@@ -10,6 +10,7 @@
 package alice.tuprologx.pj.model;
 
 import alice.tuprologx.pj.annotations.Termifiable;
+import com.szadowsz.gospel.core.data.Struct;
 
 import java.util.HashMap;
 import java.util.Vector;
@@ -83,17 +84,17 @@ public class JavaTerm<O> extends Compound<JavaTerm<O>> {
         return termArr;
     }
 
-    static boolean matches(alice.tuprolog.Term t) {
+    static boolean matches(com.szadowsz.gospel.core.data.Term t) {
 //        try {
-//            return (!(t instanceof alice.tuprolog.Var) && t.isCompound() && !t.isList() && Class.forName(((alice.tuprolog.Struct)t).getName())!=null);
+//            return (!(t instanceof com.szadowsz.gospel.core.data.Var) && t.isCompound() && !t.isList() && Class.forName(((com.szadowsz.gospel.core.data.Struct)t).getName())!=null);
 //        }
 //        catch (Exception e) {
 //            return false;
 //        }
-        return (t instanceof TermifiableStruct<?>) || ((t.getTerm() instanceof alice.tuprolog.Struct) && hashtable.containsKey(((alice.tuprolog.Struct) t.getTerm()).getName()));
+        return (t instanceof TermifiableStruct<?>) || ((t.getTerm() instanceof Struct) && hashtable.containsKey(((Struct) t.getTerm()).getName()));
     }
 
-    static <Z> JavaTerm<Z> unmarshalObject(alice.tuprolog.Struct s) {
+    static <Z> JavaTerm<Z> unmarshalObject(Struct s) {
         if (!matches(s))
             throw new UnsupportedOperationException();
         Class<?> termKlass = hashtable.get(s.getName());
@@ -120,10 +121,10 @@ public class JavaTerm<O> extends Compound<JavaTerm<O>> {
     /**
      * Creates a new instance of JavaTerm
      */
-    public alice.tuprolog.Struct marshal() {
+    public Struct marshal() {
         try {
 
-            alice.tuprolog.Term[] termArr = new alice.tuprolog.Term[_properties.size()];
+            com.szadowsz.gospel.core.data.Term[] termArr = new com.szadowsz.gospel.core.data.Term[_properties.size()];
             int count = 0;
             for (Term<?> term : _properties) {
                 //only read-write properties are translated into a compound
@@ -181,10 +182,10 @@ public class JavaTerm<O> extends Compound<JavaTerm<O>> {
     }
 
     @SuppressWarnings("serial")
-    static class TermifiableStruct<O> extends alice.tuprolog.Struct {
+    static class TermifiableStruct<O> extends Struct {
         JavaTerm<O> _term;
 
-        TermifiableStruct(String name, alice.tuprolog.Term[] arr) {
+        TermifiableStruct(String name, com.szadowsz.gospel.core.data.Term[] arr) {
             super(name, arr);
         }
 

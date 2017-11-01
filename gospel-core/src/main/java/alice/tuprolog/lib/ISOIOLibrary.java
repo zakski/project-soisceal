@@ -5,8 +5,9 @@ package alice.tuprolog.lib;
  */
 
 import alice.tuprolog.*;
-import alice.tuprolog.Long;
-import alice.tuprolog.Number;
+import com.szadowsz.gospel.core.data.*;
+import com.szadowsz.gospel.core.data.Long;
+import com.szadowsz.gospel.core.data.Number;
 import com.szadowsz.gospel.core.db.ops.Operator;
 import com.szadowsz.gospel.core.error.InvalidLibraryException;
 import com.szadowsz.gospel.core.error.PrologError;

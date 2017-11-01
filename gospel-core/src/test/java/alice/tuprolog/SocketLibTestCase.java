@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.error.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,7 +62,7 @@ public class SocketLibTestCase {
 		Var serverSock = (Var) result.getTerm("SS");	
 		System.out.println("[SocketLibTest] Server Socket: "+ serverSock);*/
 		
-		Struct msg = (Struct) result.getTerm("Msg");	
+		Struct msg = (Struct) result.getTerm("Msg");
 		assertEquals(engine.createTerm("'msg inviato dal server'"), msg);
 	
 	}

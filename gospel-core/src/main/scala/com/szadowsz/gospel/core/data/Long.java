@@ -15,7 +15,12 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package alice.tuprolog;
+package com.szadowsz.gospel.core.data;
+
+import com.szadowsz.gospel.core.data.Number;
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Term;
+import com.szadowsz.gospel.core.data.Var;
 
 import java.util.List;
 
@@ -97,7 +102,7 @@ public class Long extends Number {
     /**
      * is a float Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead.
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Float</tt> instead.
      */
     final public boolean isTypeFloat() {
         return false;
@@ -106,7 +111,7 @@ public class Long extends Number {
     /**
      * is a float Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead.
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Float</tt> instead.
      */
     final public boolean isFloat() {
         return false;
@@ -115,7 +120,7 @@ public class Long extends Number {
     /**
      * is a double Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead.
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Double</tt> instead.
      */
     final public boolean isTypeDouble() {
         return false;
@@ -124,7 +129,7 @@ public class Long extends Number {
     /**
      * is a double Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead.
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Double</tt> instead.
      */
     final public boolean isDouble() {
         return false;
@@ -133,7 +138,7 @@ public class Long extends Number {
     /**
      * is a long Integer number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead.
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Long</tt> instead.
      */
     final public boolean isTypeLong() {
         return true;
@@ -142,7 +147,7 @@ public class Long extends Number {
     /**
      * is a long Integer number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead.
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Long</tt> instead.
      */
     final public boolean isLong() {
         return true;

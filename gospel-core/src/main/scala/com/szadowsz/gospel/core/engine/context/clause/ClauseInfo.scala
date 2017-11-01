@@ -19,7 +19,7 @@ package com.szadowsz.gospel.core.engine.context.clause
 
 import java.util
 
-import alice.tuprolog.{Struct, Term, Var}
+import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.db.ops.OperatorManager
 import com.szadowsz.gospel.core.engine.context.subgoal.tree.{SubGoalLeaf, SubGoalTree}
 

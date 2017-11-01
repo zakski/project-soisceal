@@ -2,6 +2,7 @@ package alice.tuprolog;
 
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
+import com.szadowsz.gospel.core.data.Int;
 import com.szadowsz.gospel.core.error.PrologException;
 import junit.framework.TestCase;
 

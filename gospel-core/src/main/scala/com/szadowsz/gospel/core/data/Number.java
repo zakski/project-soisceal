@@ -15,7 +15,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package alice.tuprolog;
+package com.szadowsz.gospel.core.data;
 
 import java.util.*;
 
@@ -71,27 +71,27 @@ public abstract class Number extends Term implements Comparable<Number> {
     public abstract boolean isInt();
     
     /** is a float Real number? 
-     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead. */
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Float</tt> instead. */
     public abstract boolean isTypeFloat();
 
     /** is a float Real number?
-     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead. */
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Float</tt> instead. */
     public abstract boolean isFloat();
     
     /** is a double Real number? 
-     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead.*/
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Double</tt> instead.*/
     public abstract boolean isTypeDouble();
 
     /** is a double Real number?
-     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead. */
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Double</tt> instead. */
     public abstract boolean isDouble();
     
     /** is a long Integer number? 
-     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead. */
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Long</tt> instead. */
     public abstract boolean isTypeLong();
 
     /** is a long Integer number?
-     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead. */
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Long</tt> instead. */
     public abstract boolean isLong();
     
     /**
@@ -196,7 +196,7 @@ public abstract class Number extends Term implements Comparable<Number> {
     
 /*Castagna 06/2011*/
     @Override    
-    public void accept(TermVisitor tv) {		 
+    public void accept(TermVisitor tv) {
     	tv.visit(this);		 
     }
 /**/

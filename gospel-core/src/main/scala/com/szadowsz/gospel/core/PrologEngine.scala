@@ -19,9 +19,10 @@ package com.szadowsz.gospel.core
 
 import java.util
 
-import alice.tuprolog.{Library, Term}
+import alice.tuprolog.Library
 import alice.tuprolog.json.{AbstractEngineState, FullEngineState, JSONSerializerManager, ReducedEngineState}
 import alice.tuprolog.lib.{IOLibrary, ISOLibrary, OOLibrary}
+import com.szadowsz.gospel.core.data.Term
 import com.szadowsz.gospel.core.db.LibraryManager
 import com.szadowsz.gospel.core.db.libs.MyBasicLibrary
 import com.szadowsz.gospel.core.db.ops.{Operator, OperatorManager}

@@ -1,7 +1,7 @@
 package alice.tuprolog.interfaces;
 
-import alice.tuprolog.Struct;
-import alice.tuprolog.Term;
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.error.PrologError;
 
 public interface ISocketLib {

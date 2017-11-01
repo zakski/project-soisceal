@@ -15,50 +15,55 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package alice.tuprolog;
+package com.szadowsz.gospel.core.data;
+
+import com.szadowsz.gospel.core.data.Number;
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Term;
+import com.szadowsz.gospel.core.data.Var;
 
 import java.util.List;
 
 /**
- * Int class represents the integer prolog data type
+ * Double class represents the double prolog data type
  */
-public class Int extends Number {
+public class Double extends Number {
     private static final long serialVersionUID = 1L;
-    private final int value;
+    private final double value;
 
     @SuppressWarnings("unused")
-    private String type = "Int";
+    private String type = "Double";
 
-    public Int(int v) {
+    public Double(double v) {
         value = v;
     }
 
     /**
-     * Returns the value of the Integer as int
+     * Returns the value of the Double as int
      */
     final public int intValue() {
-        return value;
+        return (int) value;
     }
 
     /**
-     * Returns the value of the Integer as float
+     * Returns the value of the Double as float
      */
     final public float floatValue() {
         return (float) value;
     }
 
     /**
-     * Returns the value of the Integer as double
+     * Returns the value of the Double as double
      */
     final public double doubleValue() {
-        return (double) value;
+        return value;
     }
 
     /**
-     * Returns the value of the Integer as long
+     * Returns the value of the Double as long
      */
     final public long longValue() {
-        return value;
+        return (long) value;
     }
 
 
@@ -66,16 +71,15 @@ public class Int extends Number {
      * is this term a prolog integer term?
      */
     final public boolean isInteger() {
-        return true;
+        return false;
     }
 
     /**
      * is this term a prolog real term?
      */
     final public boolean isReal() {
-        return false;
+        return true;
     }
-
 
     /**
      * is an int Integer number?
@@ -83,7 +87,7 @@ public class Int extends Number {
      * @deprecated Use <tt>instanceof Int</tt> instead.
      */
     final public boolean isTypeInt() {
-        return true;
+        return false;
     }
 
     /**
@@ -92,13 +96,13 @@ public class Int extends Number {
      * @deprecated Use <tt>instanceof Int</tt> instead.
      */
     final public boolean isInt() {
-        return true;
+        return false;
     }
 
     /**
      * is a float Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead.
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Float</tt> instead.
      */
     final public boolean isTypeFloat() {
         return false;
@@ -107,7 +111,7 @@ public class Int extends Number {
     /**
      * is a float Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead.
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Float</tt> instead.
      */
     final public boolean isFloat() {
         return false;
@@ -116,25 +120,25 @@ public class Int extends Number {
     /**
      * is a double Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead.
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Double</tt> instead.
      */
     final public boolean isTypeDouble() {
-        return false;
+        return true;
     }
 
     /**
      * is a double Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead.
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Double</tt> instead.
      */
     final public boolean isDouble() {
-        return false;
+        return true;
     }
 
     /**
      * is a long Integer number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead.
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Long</tt> instead.
      */
     final public boolean isTypeLong() {
         return false;
@@ -143,20 +147,20 @@ public class Int extends Number {
     /**
      * is a long Integer number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead.
+     * @deprecated Use <tt>instanceof com.szadowsz.gospel.core.data.Long</tt> instead.
      */
     final public boolean isLong() {
         return false;
     }
 
     /**
-     * Returns true if this integer term is grater that the term provided.
+     * Returns true if this Double term is grater that the term provided.
      * For number term argument, the int value is considered.
      */
     public boolean isGreater(Term t) {
         t = t.getTerm();
         if (t instanceof Number) {
-            return value > ((Number) t).intValue();
+            return value > ((Number) t).doubleValue();
         } else
             return !(t instanceof Struct) && t instanceof Var;
     }
@@ -170,19 +174,23 @@ public class Int extends Number {
         if (t instanceof Var) {
             return t.unify(vl2, vl1, this, isOccursCheckEnabled);
         } else {
-            return t instanceof Number && ((Number) t).isInteger() && value == ((Number) t).intValue();
+            return t instanceof Number && ((Number) t).isReal() && value == ((Number) t).doubleValue();
         }
     }
 
     public String toString() {
-        return Integer.toString(value);
+        return java.lang.Double.toString(value);
+    }
+
+    public int resolveVariables(int count) {
+        return count;
     }
 
     /**
      * @author Paolo Contessi
      */
     public int compareTo(Number o) {
-        return (new java.lang.Integer(value)).compareTo(o.intValue());
+        return (new java.lang.Double(value)).compareTo(o.doubleValue());
     }
 
     @Override

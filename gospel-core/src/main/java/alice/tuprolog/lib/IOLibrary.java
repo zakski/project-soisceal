@@ -18,7 +18,9 @@
 package alice.tuprolog.lib;
 
 import alice.tuprolog.*;
-import alice.tuprolog.Number;
+import com.szadowsz.gospel.core.data.*;
+import com.szadowsz.gospel.core.data.Double;
+import com.szadowsz.gospel.core.data.Number;
 import com.szadowsz.gospel.core.error.InvalidTermException;
 import com.szadowsz.gospel.core.error.PrologError;
 
@@ -465,11 +467,11 @@ public class IOLibrary extends Library {
     }
 
     public boolean rand_float_1(Term t) {
-        return unify(t, new alice.tuprolog.Double(gen.nextFloat()));
+        return unify(t, new Double(gen.nextFloat()));
     }
 
     public boolean rand_int_2(Term argNum, Term num) {
-        alice.tuprolog.Number arg = (alice.tuprolog.Number) argNum.getTerm();
+        Number arg = (Number) argNum.getTerm();
         return unify(num, new Int(gen.nextInt(arg.intValue())));
     }
 

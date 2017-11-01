@@ -2,7 +2,7 @@ package com.szadowsz.gospel.core.engine.state
 
 import java.util
 
-import alice.tuprolog.{Struct, Term, Var}
+import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalTree
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
 

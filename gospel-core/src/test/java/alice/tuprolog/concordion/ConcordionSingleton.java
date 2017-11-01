@@ -1,7 +1,7 @@
 package alice.tuprolog.concordion;
 
-import alice.tuprolog.Term;
-import alice.tuprolog.Var;
+import com.szadowsz.gospel.core.data.Term;
+import com.szadowsz.gospel.core.data.Var;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;

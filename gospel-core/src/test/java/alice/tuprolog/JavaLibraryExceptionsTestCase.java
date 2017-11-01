@@ -4,6 +4,8 @@ import java.io.File;
 
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
+import com.szadowsz.gospel.core.data.Term;
+import com.szadowsz.gospel.core.data.Var;
 import junit.framework.TestCase;
 
 /**

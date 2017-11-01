@@ -33,7 +33,7 @@
  */
 package com.szadowsz.gospel.core.engine.state
 
-import alice.tuprolog.Struct
+import com.szadowsz.gospel.core.data.Struct
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
 import com.szadowsz.gospel.core.error.{JavaException, PrologError}
 

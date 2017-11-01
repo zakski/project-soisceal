@@ -17,7 +17,7 @@
  */
 package com.szadowsz.gospel.core.engine.context;
 
-import alice.tuprolog.Var;
+import com.szadowsz.gospel.core.data.Var;
 import alice.util.OneWayList;
 import com.szadowsz.gospel.core.engine.context.clause.ClauseStore;
 import com.szadowsz.gospel.core.engine.context.subgoal.SubGoalId;

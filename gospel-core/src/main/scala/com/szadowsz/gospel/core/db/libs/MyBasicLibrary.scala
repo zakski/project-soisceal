@@ -37,7 +37,8 @@ import java.util
 
 import alice.tuprolog._
 import alice.tuprolog.lib.BasicLibrary
-import com.szadowsz.gospel.core.Theory
+import com.szadowsz.gospel.core.{Theory, data}
+import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.error.{InvalidTheoryException, PrologError}
 
 import scala.util.control.NonFatal
@@ -52,21 +53,21 @@ import scala.util.Try
 class MyBasicLibrary() extends BasicLibrary {
 
   @throws[PrologError]
-  private def evalNumExpression(arg: Term, argNum: scala.Int): Number = {
+  private def evalNumExpression(arg: Term, argNum: scala.Int): data.Number = {
     val evaled = try {
       evalExpression(arg)
     } catch {
       case e: ArithmeticException if e.getMessage == "/ by zero" => throw PrologError.evaluation_error(engine.getEngineManager, argNum, "zero_divisor")
       case _ => throw PrologError.type_error(engine.getEngineManager, 1, "evaluable", arg.getTerm)
     }
-    if (!evaled.isInstanceOf[Number]) {
+    if (!evaled.isInstanceOf[data.Number]) {
       throw PrologError.type_error(engine.getEngineManager, argNum, "evaluable", arg.getTerm)
     } else {
-      evaled.asInstanceOf[Number]
+      evaled.asInstanceOf[data.Number]
     }
   }
 
-  private def expression_greater_than(num0: Number, num1: Number): Boolean = {
+  private def expression_greater_than(num0: data.Number, num1: data.Number): Boolean = {
     if (num0.isInteger && num1.isInteger) {
       num0.longValue > num1.longValue
     } else {
@@ -74,7 +75,7 @@ class MyBasicLibrary() extends BasicLibrary {
     }
   }
 
-  private def expression_less_than(num0: Number, num1: Number): Boolean = {
+  private def expression_less_than(num0: data.Number, num1: data.Number): Boolean = {
     if (num0.isInteger && num1.isInteger) {
       num0.longValue < num1.longValue
     } else {
@@ -82,8 +83,8 @@ class MyBasicLibrary() extends BasicLibrary {
     }
   }
 
-  override def getIntegerNumber(num: scala.Long): Number = {
-    if (num > Integer.MIN_VALUE && num < Integer.MAX_VALUE) new Int(num.toInt) else new Long(num)
+  override def getIntegerNumber(num: scala.Long): data.Number = {
+    if (num > Integer.MIN_VALUE && num < Integer.MAX_VALUE) new data.Int(num.toInt) else new data.Long(num)
   }
 
 
@@ -173,7 +174,7 @@ class MyBasicLibrary() extends BasicLibrary {
   override def get_operators_list_1(argument: Term): Boolean = {
     val arg: Term = argument.getTerm
     val list: Struct = engine.getCurrentOperatorList.asScala.foldLeft(new Struct) { case (l, o) =>
-      new Struct(new Struct("op", new Int(o.prio), new Struct(o.`type`), new Struct(o.name)), l)
+      new Struct(new Struct("op", new data.Int(o.prio), new Struct(o.`type`), new Struct(o.name)), l)
     }
     unify(arg, list)
   }
@@ -250,11 +251,11 @@ class MyBasicLibrary() extends BasicLibrary {
 
   override def constant_1(t: Term): Boolean = t.getTerm.isAtomic
 
-  override def number_1(t: Term): Boolean = t.getTerm.isInstanceOf[Number]
+  override def number_1(t: Term): Boolean = t.getTerm.isInstanceOf[data.Number]
 
-  override def integer_1(t: Term): Boolean = t.getTerm.isInstanceOf[Number] && t.getTerm.asInstanceOf[Number].isInteger
+  override def integer_1(t: Term): Boolean = t.getTerm.isInstanceOf[data.Number] && t.getTerm.asInstanceOf[data.Number].isInteger
 
-  override def float_1(t: Term): Boolean = t.getTerm.isInstanceOf[Number] && t.getTerm.asInstanceOf[Number].isReal
+  override def float_1(t: Term): Boolean = t.getTerm.isInstanceOf[data.Number] && t.getTerm.asInstanceOf[data.Number].isReal
 
   override def atom_1(t: Term): Boolean = t.getTerm.isAtom
 
@@ -347,108 +348,108 @@ class MyBasicLibrary() extends BasicLibrary {
   @throws[PrologError]
   override def term_less_than_2(arg0: Term, arg1: Term): Boolean = !(arg0.getTerm.isGreater(arg1.getTerm) || arg0.getTerm.isEqual(arg1.getTerm))
 
-  override def expression_plus_1(arg0: Term): Term = Try(evalExpression(arg0).asInstanceOf[Number]).toOption.orNull
+  override def expression_plus_1(arg0: Term): Term = Try(evalExpression(arg0).asInstanceOf[data.Number]).toOption.orNull
 
   override def expression_minus_1(arg0: Term): Term = {
-    Try(evalExpression(arg0).asInstanceOf[Number]).toOption match {
-      case Some(i: Int) => new Int(i.intValue * -1)
-      case Some(d: Double) => new Double(d.doubleValue * -1)
-      case Some(l: Long) => new Long(l.longValue * -1)
-      case Some(f: Float) => new Float(f.floatValue * -1)
+    Try(evalExpression(arg0).asInstanceOf[data.Number]).toOption match {
+      case Some(i: data.Int) => new data.Int(i.intValue * -1)
+      case Some(d: data.Double) => new data.Double(d.doubleValue * -1)
+      case Some(l: data.Long) => new data.Long(l.longValue * -1)
+      case Some(f: data.Float) => new data.Float(f.floatValue * -1)
       case _ => null
     }
   }
 
   override def expression_bitwise_not_1(arg0: Term): Term = {
-    Try(evalExpression(arg0).asInstanceOf[Number]).toOption.map(n => new Long(~n.longValue)).orNull
+    Try(evalExpression(arg0).asInstanceOf[data.Number]).toOption.map(n => new data.Long(~n.longValue)).orNull
   }
 
   override def expression_plus_2(arg0: Term, arg1: Term): Term = {
-    Try((evalExpression(arg0).asInstanceOf[Number], evalExpression(arg1).asInstanceOf[Number])).toOption match {
+    Try((evalExpression(arg0).asInstanceOf[data.Number], evalExpression(arg1).asInstanceOf[data.Number])).toOption match {
       case Some((val0, val1)) =>
         if (val0.isInteger && val1.isInteger) {
           getIntegerNumber(val0.longValue + val1.longValue)
         } else {
-          new Double(val0.doubleValue + val1.doubleValue)
+          new data.Double(val0.doubleValue + val1.doubleValue)
         }
       case None => null
     }
   }
 
   override def expression_minus_2(arg0: Term, arg1: Term): Term = {
-    Try((evalExpression(arg0).asInstanceOf[Number], evalExpression(arg1).asInstanceOf[Number])).toOption match {
+    Try((evalExpression(arg0).asInstanceOf[data.Number], evalExpression(arg1).asInstanceOf[data.Number])).toOption match {
       case Some((val0, val1)) =>
         if (val0.isInteger && val1.isInteger) {
           getIntegerNumber(val0.longValue - val1.longValue)
         } else {
-          new Double(val0.doubleValue - val1.doubleValue)
+          new data.Double(val0.doubleValue - val1.doubleValue)
         }
       case None => null
     }
   }
 
   override def expression_multiply_2(arg0: Term, arg1: Term): Term = {
-    Try((evalExpression(arg0).asInstanceOf[Number], evalExpression(arg1).asInstanceOf[Number])).toOption match {
+    Try((evalExpression(arg0).asInstanceOf[data.Number], evalExpression(arg1).asInstanceOf[data.Number])).toOption match {
       case Some((val0, val1)) =>
         if (val0.isInteger && val1.isInteger) {
           getIntegerNumber(val0.longValue * val1.longValue)
         } else {
-          new Double(val0.doubleValue * val1.doubleValue)
+          new data.Double(val0.doubleValue * val1.doubleValue)
         }
       case None => null
     }
   }
 
   override def expression_div_2(arg0: Term, arg1: Term): Term = {
-    Try((evalExpression(arg0).asInstanceOf[Number], evalExpression(arg1).asInstanceOf[Number])).toOption match {
+    Try((evalExpression(arg0).asInstanceOf[data.Number], evalExpression(arg1).asInstanceOf[data.Number])).toOption match {
       case Some((val0, val1)) =>
         if (val0.isInteger && val1.isInteger) {
           getIntegerNumber(val0.longValue / val1.longValue)
         } else {
-          new Double(val0.doubleValue / val1.doubleValue)
+          new data.Double(val0.doubleValue / val1.doubleValue)
         }
       case None => null
     }
   }
 
   override def expression_integer_div_2(arg0: Term, arg1: Term): Term = {
-    Try((evalExpression(arg0).asInstanceOf[Number], evalExpression(arg1).asInstanceOf[Number])).toOption match {
+    Try((evalExpression(arg0).asInstanceOf[data.Number], evalExpression(arg1).asInstanceOf[data.Number])).toOption match {
       case Some((val0, val1)) => getIntegerNumber(val0.longValue / val1.longValue)
       case None => null
     }
   }
 
   override def expression_pow_2(arg0: Term, arg1: Term): Term = {
-    Try((evalExpression(arg0).asInstanceOf[Number], evalExpression(arg1).asInstanceOf[Number])).toOption match {
-      case Some((val0, val1)) => new Double(Math.pow(val0.doubleValue, val1.doubleValue))
+    Try((evalExpression(arg0).asInstanceOf[data.Number], evalExpression(arg1).asInstanceOf[data.Number])).toOption match {
+      case Some((val0, val1)) => new data.Double(Math.pow(val0.doubleValue, val1.doubleValue))
       case None => null
     }
   }
 
   override def expression_bitwise_shift_right_2(arg0: Term, arg1: Term): Term = {
-    Try((evalExpression(arg0).asInstanceOf[Number], evalExpression(arg1).asInstanceOf[Number])).toOption match {
-      case Some((val0, val1)) => new Long(val0.longValue >> val1.longValue)
+    Try((evalExpression(arg0).asInstanceOf[data.Number], evalExpression(arg1).asInstanceOf[data.Number])).toOption match {
+      case Some((val0, val1)) => new data.Long(val0.longValue >> val1.longValue)
       case None => null
     }
   }
 
   override def expression_bitwise_shift_left_2(arg0: Term, arg1: Term): Term = {
-    Try((evalExpression(arg0).asInstanceOf[Number], evalExpression(arg1).asInstanceOf[Number])).toOption match {
-      case Some((val0, val1)) => new Long(val0.longValue << val1.longValue)
+    Try((evalExpression(arg0).asInstanceOf[data.Number], evalExpression(arg1).asInstanceOf[data.Number])).toOption match {
+      case Some((val0, val1)) => new data.Long(val0.longValue << val1.longValue)
       case None => null
     }
   }
 
   override def expression_bitwise_and_2(arg0: Term, arg1: Term): Term = {
-    Try((evalExpression(arg0).asInstanceOf[Number], evalExpression(arg1).asInstanceOf[Number])).toOption match {
-      case Some((val0, val1)) => new Long(val0.longValue & val1.longValue)
+    Try((evalExpression(arg0).asInstanceOf[data.Number], evalExpression(arg1).asInstanceOf[data.Number])).toOption match {
+      case Some((val0, val1)) => new data.Long(val0.longValue & val1.longValue)
       case None => null
     }
   }
 
   override def expression_bitwise_or_2(arg0: Term, arg1: Term): Term = {
-    Try((evalExpression(arg0).asInstanceOf[Number], evalExpression(arg1).asInstanceOf[Number])).toOption match {
-      case Some((val0, val1)) => new Long(val0.longValue | val1.longValue)
+    Try((evalExpression(arg0).asInstanceOf[data.Number], evalExpression(arg1).asInstanceOf[data.Number])).toOption match {
+      case Some((val0, val1)) => new data.Long(val0.longValue | val1.longValue)
       case None => null
     }
   }
@@ -736,9 +737,9 @@ class MyBasicLibrary() extends BasicLibrary {
     val arg1 = a1.getTerm
     if (arg0.isInstanceOf[Var]) throw PrologError.instantiation_error(engine.getEngineManager, 1)
     if (arg1.isInstanceOf[Var]) throw PrologError.instantiation_error(engine.getEngineManager, 2)
-    if (!arg0.isInstanceOf[Int]) throw PrologError.type_error(engine.getEngineManager, 1, "integer", arg0)
+    if (!arg0.isInstanceOf[data.Int]) throw PrologError.type_error(engine.getEngineManager, 1, "integer", arg0)
     if (!arg1.isCompound) throw PrologError.type_error(engine.getEngineManager, 2, "compound", arg1)
-    val arg0int: Int = arg0.asInstanceOf[Int]
+    val arg0int: data.Int = arg0.asInstanceOf[data.Int]
     if (arg0int.intValue < 1) throw PrologError.domain_error(engine.getEngineManager, 1, "greater_than_zero", arg0)
     true
   }

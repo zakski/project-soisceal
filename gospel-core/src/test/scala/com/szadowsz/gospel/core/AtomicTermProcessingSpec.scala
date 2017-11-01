@@ -1,6 +1,6 @@
 package com.szadowsz.gospel.core
 
-import alice.tuprolog.{Number, Struct}
+import com.szadowsz.gospel.core.data.Struct
 import org.junit.runner.RunWith
 import org.scalatest.FunSpec
 import org.scalatest.junit.JUnitRunner
@@ -23,7 +23,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_length('enchanted evening', N).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("N").asInstanceOf[Number]
+      val result = solution.getVarValue("N").asInstanceOf[data.Number]
       replaceUnderscore(result.toString) shouldBe "17"
     }
 
@@ -31,7 +31,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_length('enchanted\\evening', N).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("N").asInstanceOf[Number]
+      val result = solution.getVarValue("N").asInstanceOf[data.Number]
       replaceUnderscore(result.toString) shouldBe "17"
     }
 
@@ -39,7 +39,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_length('', N).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("N").asInstanceOf[Number]
+      val result = solution.getVarValue("N").asInstanceOf[data.Number]
       replaceUnderscore(result.toString) shouldBe "0"
     }
 
@@ -168,7 +168,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("sub_atom(abracadabra, 3, L, 3, S2).")
       solution.isSuccess shouldBe true
 
-      val result1 = solution.getVarValue("L").asInstanceOf[Number]
+      val result1 = solution.getVarValue("L").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "5"
 
       val result2 = solution.getVarValue("S2").asInstanceOf[Struct]
@@ -179,18 +179,18 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("sub_atom(abracadabra, B, 2, A, ab).")
       solution.isSuccess shouldBe true
 
-      var result1 = solution.getVarValue("B").asInstanceOf[Number]
+      var result1 = solution.getVarValue("B").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "0"
 
-      var result2 = solution.getVarValue("A").asInstanceOf[Number]
+      var result2 = solution.getVarValue("A").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "9"
 
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("B").asInstanceOf[Number]
+      result1 = solution.getVarValue("B").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "7"
 
-      result2 = solution.getVarValue("A").asInstanceOf[Number]
+      result2 = solution.getVarValue("A").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "2"
     }
 
@@ -230,45 +230,45 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("sub_atom('ab', Start, Length, _, Sub_atom).")
       solution.isSuccess shouldBe true
 
-      var result1 = solution.getVarValue("Start").asInstanceOf[Number]
+      var result1 = solution.getVarValue("Start").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "0"
 
-      var result2 = solution.getVarValue("Length").asInstanceOf[Number]
+      var result2 = solution.getVarValue("Length").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "0"
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("Start").asInstanceOf[Number]
+      result1 = solution.getVarValue("Start").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "0"
 
-      result2 = solution.getVarValue("Length").asInstanceOf[Number]
+      result2 = solution.getVarValue("Length").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "1"
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("Start").asInstanceOf[Number]
+      result1 = solution.getVarValue("Start").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "0"
 
-      result2 = solution.getVarValue("Length").asInstanceOf[Number]
+      result2 = solution.getVarValue("Length").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "2"
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("Start").asInstanceOf[Number]
+      result1 = solution.getVarValue("Start").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "1"
 
-      result2 = solution.getVarValue("Length").asInstanceOf[Number]
+      result2 = solution.getVarValue("Length").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "0"
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("Start").asInstanceOf[Number]
+      result1 = solution.getVarValue("Start").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "1"
 
-      result2 = solution.getVarValue("Length").asInstanceOf[Number]
+      result2 = solution.getVarValue("Length").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "1"
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("Start").asInstanceOf[Number]
+      result1 = solution.getVarValue("Start").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "2"
 
-      result2 = solution.getVarValue("Length").asInstanceOf[Number]
+      result2 = solution.getVarValue("Length").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "0"
     }
   }
@@ -410,7 +410,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("char_code('a', Code).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("Code").asInstanceOf[Number]
+      val result = solution.getVarValue("Code").asInstanceOf[data.Number]
       replaceUnderscore(result.toString) shouldBe "97"
     }
 

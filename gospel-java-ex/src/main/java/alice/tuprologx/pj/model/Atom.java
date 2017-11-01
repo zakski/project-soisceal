@@ -9,6 +9,9 @@
 
 package alice.tuprologx.pj.model;
 
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Var;
+
 /**
  * @author maurizio
  */
@@ -19,14 +22,14 @@ public class Atom extends Term<Atom> {
         _theAtom = s;
     }
 
-    static Atom unmarshal(alice.tuprolog.Struct a) {
+    static Atom unmarshal(Struct a) {
         if (!matches(a))
             throw new UnsupportedOperationException();
         return new Atom(a.getName());
     }
 
-    static boolean matches(alice.tuprolog.Term t) {
-        return (!(t instanceof alice.tuprolog.Var) && t.isAtom() && !t.isList() && !Bool.matches(t));
+    static boolean matches(com.szadowsz.gospel.core.data.Term t) {
+        return (!(t instanceof Var) && t.isAtom() && !t.isList() && !Bool.matches(t));
     }
 
     public <Z> Z toJava() {
@@ -38,8 +41,8 @@ public class Atom extends Term<Atom> {
         return "Atom(" + _theAtom + ")";
     }
 
-    public alice.tuprolog.Struct marshal() {
-        return new alice.tuprolog.Struct(_theAtom);
+    public Struct marshal() {
+        return new Struct(_theAtom);
     }
 
     public List<Atom> toCharList() {

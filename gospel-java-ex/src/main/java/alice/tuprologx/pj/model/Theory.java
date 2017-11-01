@@ -10,6 +10,8 @@
 package alice.tuprologx.pj.model;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Term;
 
 import java.util.Collection;
 import java.util.Vector;
@@ -64,8 +66,8 @@ public class Theory extends List<Clause<?, ?>> {
 
     public static Theory unmarshal(com.szadowsz.gospel.core.Theory t) {
         Vector<Clause<?, ?>> clauses = new Vector<>();
-        for (java.util.Iterator<? extends alice.tuprolog.Term> it = t.iterator(engine); it.hasNext(); ) {
-            alice.tuprolog.Struct st = (alice.tuprolog.Struct) it.next();
+        for (java.util.Iterator<? extends Term> it = t.iterator(engine); it.hasNext(); ) {
+            Struct st = (Struct) it.next();
             //Clause<?,?> clause = new Clause(Term.unmarshal(st.getArg(0)),Term.unmarshal(st.getArg(1)));
             Clause<?, ?> clause = new Clause<>(st);
             clauses.add(clause);
@@ -86,8 +88,8 @@ public class Theory extends List<Clause<?, ?>> {
         } catch (Exception e) {
             throw new UnsupportedOperationException(e);
         }
-        for (java.util.Iterator<? extends alice.tuprolog.Term> it = t.iterator(engine); it.hasNext(); ) {
-            alice.tuprolog.Struct st = (alice.tuprolog.Struct) it.next();
+        for (java.util.Iterator<? extends Term> it = t.iterator(engine); it.hasNext(); ) {
+            Struct st = (Struct) it.next();
             //Clause<?,?> clause = new Clause(Term.unmarshal(st.getArg(0)),Term.unmarshal(st.getArg(1)));
             Clause<?, ?> clause = new Clause<>(st);
             clauses.add(clause);
@@ -112,9 +114,9 @@ public class Theory extends List<Clause<?, ?>> {
         return temp.toArray(new Clause<?, ?>[temp.size()]);
     }
 
-    public alice.tuprolog.Struct marshal() {
-        alice.tuprolog.Struct s = super.marshal();
-        java.util.Iterator<? extends alice.tuprolog.Term> listIterator = s.listIterator();
+    public Struct marshal() {
+        Struct s = super.marshal();
+        java.util.Iterator<? extends Term> listIterator = s.listIterator();
         while (listIterator.hasNext()) {
             listIterator.next().resolveTerm();
         }

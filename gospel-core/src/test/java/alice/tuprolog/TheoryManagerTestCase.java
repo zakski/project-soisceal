@@ -6,6 +6,8 @@ import java.util.List;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.data.Int;
+import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.db.theory.TheoryManager;
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo;
 import com.szadowsz.gospel.core.error.*;

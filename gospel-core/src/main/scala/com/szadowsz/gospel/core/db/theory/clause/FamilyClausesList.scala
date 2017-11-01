@@ -2,7 +2,7 @@ package com.szadowsz.gospel.core.db.theory.clause
 
 import java.{util => ju}
 
-import alice.tuprolog.{Number, Struct, Term, Var}
+import com.szadowsz.gospel.core.data.{Number, Struct, Term, Var}
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
 
 

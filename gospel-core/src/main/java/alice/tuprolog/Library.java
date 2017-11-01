@@ -18,6 +18,9 @@
 package alice.tuprolog;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.data.Number;
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.db.primitives.PrimitiveInfo;
 
 import java.io.Serializable;
@@ -207,7 +210,7 @@ public abstract class Library implements Serializable, IPrimitives {
 
                 int type;
                 if (returnTypeName.equals("boolean")) type = PrimitiveInfo.PREDICATE;
-                else if (returnTypeName.equals("alice.tuprolog.Term")) type = PrimitiveInfo.FUNCTOR;
+                else if (returnTypeName.equals("com.szadowsz.gospel.core.data.Term")) type = PrimitiveInfo.FUNCTOR;
                 else if (returnTypeName.equals("void")) type = PrimitiveInfo.DIRECTIVE;
                 else continue;
 

@@ -19,8 +19,8 @@ package com.szadowsz.gospel.core.db.primitives;
 
 import alice.tuprolog.IPrimitives;
 import alice.tuprolog.Library;
-import alice.tuprolog.Struct;
-import alice.tuprolog.Term;
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Term;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

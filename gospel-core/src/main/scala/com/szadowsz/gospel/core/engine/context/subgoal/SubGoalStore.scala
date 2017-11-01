@@ -1,6 +1,6 @@
 package com.szadowsz.gospel.core.engine.context.subgoal
 
-import alice.tuprolog.Term
+import com.szadowsz.gospel.core.data.Term
 import com.szadowsz.gospel.core.engine.context.subgoal.tree.{SubGoalLeaf, SubGoalTree}
 
 /** Class to hold sub-goal clauses to evaluate

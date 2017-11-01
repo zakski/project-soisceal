@@ -1,6 +1,6 @@
 package com.szadowsz.gospel.core
 
-import alice.tuprolog.{Struct, Number}
+import com.szadowsz.gospel.core.data.{Number, Struct}
 import org.junit.runner.RunWith
 import org.scalatest.FunSpec
 import org.scalatest.junit.JUnitRunner

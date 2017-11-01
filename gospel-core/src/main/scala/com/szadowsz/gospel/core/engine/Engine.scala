@@ -35,7 +35,7 @@ package com.szadowsz.gospel.core.engine
 
 import java.util
 
-import alice.tuprolog.{Struct, Term, Var}
+import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.engine.context.{ChoicePointContext, ChoicePointStore, ExecutionContext}
 import com.szadowsz.gospel.core.engine.state.{EndState, State}
 

@@ -37,7 +37,8 @@ import java.io._
 import java.util
 import java.util.regex.Pattern
 
-import alice.tuprolog.{Double, Int, Long, Number, Struct, Term, Var}
+import com.szadowsz.gospel.core.data
+import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.db.ops.OperatorManager
 import com.szadowsz.gospel.core.error.InvalidTermException
 
@@ -79,7 +80,7 @@ object Parser {
     */
   def isAtom(s: String): Boolean = atom.matcher(s).matches
 
-  private[core] def createNumber(s: String): Number = {
+  private[core] def createNumber(s: String): data.Number = {
     try {
       parseInteger(s)
     } catch {
@@ -87,12 +88,12 @@ object Parser {
     }
   }
 
-  private[core] def parseInteger(s: String): Number = {
+  private[core] def parseInteger(s: String): data.Number = {
     val num: scala.Long = java.lang.Long.parseLong(s)
-    if (num > Integer.MIN_VALUE && num < Integer.MAX_VALUE) new Int(num.toInt) else new Long(num)
+    if (num > Integer.MIN_VALUE && num < Integer.MAX_VALUE) new data.Int(num.toInt) else new data.Long(num)
   }
 
-  private[core] def parseFloat(s: String): Double = new Double(s.toDouble)
+  private[core] def parseFloat(s: String): data.Double = new data.Double(s.toDouble)
 }
 
 

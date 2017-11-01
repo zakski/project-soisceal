@@ -1,6 +1,7 @@
-package alice.tuprolog;
+package com.szadowsz.gospel.core.data;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.engine.EngineRunner;
 
 import java.util.LinkedList;

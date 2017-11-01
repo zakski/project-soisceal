@@ -36,12 +36,13 @@ package com.szadowsz.gospel.core.db.libs
 import java.io.{File, FileInputStream, FileNotFoundException, IOException}
 import java.util
 
-import alice.tuprolog.{Int, Library, Number, Struct, Term, Var}
+import alice.tuprolog.Library
 import alice.util.Tools
+import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.db.ops.OperatorManager
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
 import com.szadowsz.gospel.core.error.{InvalidLibraryException, InvalidTheoryException, PrologError}
-import com.szadowsz.gospel.core.{PrologEngine, Theory}
+import com.szadowsz.gospel.core.{PrologEngine, Theory, data}
 
 import scala.collection.JavaConverters._
 import scala.util.control.NonFatal
@@ -71,8 +72,8 @@ object BuiltIn {
     */
   def convertTermToGoal(term: Term): Term = {
     term match {
-      case n: Number => null
-      case v1: Var if v1.getLink.isInstanceOf[Number] => null
+      case n: data.Number => null
+      case v1: Var if v1.getLink.isInstanceOf[data.Number] => null
       case default =>
         term.getTerm match {
           case v2: Var => new Struct("call", term)
@@ -158,7 +159,7 @@ class BuiltIn(mediator: PrologEngine) extends Library {
   @throws[PrologError]
   def halt_1(arg0: Term): Boolean = {
     arg0 match {
-      case i: Int => System.exit(i.intValue)
+      case i: data.Int => System.exit(i.intValue)
       case v: Var => throw PrologError.instantiation_error(engineManager, 1)
       case _ => throw PrologError.type_error(engineManager, 1, "integer", arg0)
     }
@@ -493,7 +494,7 @@ class BuiltIn(mediator: PrologEngine) extends Library {
           throw PrologError.domain_error(engineManager, 2, "flag_value", b)
         }
         if (!flagManager.isModifiable(name)) {
-          throw PrologError.permission_error(engineManager, "modify", "flag", a, new Int(0))
+          throw PrologError.permission_error(engineManager, "modify", "flag", a, new data.Int(0))
         }
         flagManager.setFlag(name, b)
     }
@@ -524,10 +525,10 @@ class BuiltIn(mediator: PrologEngine) extends Library {
       case (a: Var, _, _) => throw PrologError.instantiation_error(engineManager, 1)
       case (_, b: Var, _) => throw PrologError.instantiation_error(engineManager, 2)
       case (_, _, c: Var) => throw PrologError.instantiation_error(engineManager, 3)
-      case (a, _, _) if !a.isInstanceOf[Int] => throw PrologError.type_error(engineManager, 1, "integer", a)
+      case (a, _, _) if !a.isInstanceOf[data.Int] => throw PrologError.type_error(engineManager, 1, "integer", a)
       case (_, b, _) if !b.isAtom => throw PrologError.type_error(engineManager, 2, "atom", b)
       case (_, _, c) if !c.isAtom && !c.isList => throw PrologError.type_error(engineManager, 3, "atom_or_atom_list", c)
-      case (a: Int, b: Struct, c: Struct) =>
+      case (a: data.Int, b: Struct, c: Struct) =>
         val priority = a.intValue
         if (priority < OperatorManager.OP_LOW || priority > OperatorManager.OP_HIGH) {
           throw PrologError.domain_error(engineManager, 1, "operator_priority", a)

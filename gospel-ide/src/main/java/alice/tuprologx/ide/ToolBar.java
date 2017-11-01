@@ -1,9 +1,9 @@
 package alice.tuprologx.ide;
 
-import alice.tuprolog.Term;
 import alice.tuprologx.spyframe.SpyFrame;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.error.InvalidTheoryException;
 
 import javax.swing.*;

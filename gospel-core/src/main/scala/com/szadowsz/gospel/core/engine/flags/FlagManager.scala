@@ -20,7 +20,7 @@ package com.szadowsz.gospel.core.engine.flags
 import java.util
 
 import alice.tuprolog.json.{AbstractEngineState, FullEngineState, JSONSerializerManager}
-import alice.tuprolog.{Struct, Term}
+import com.szadowsz.gospel.core.data.{Struct, Term}
 
 
 /**

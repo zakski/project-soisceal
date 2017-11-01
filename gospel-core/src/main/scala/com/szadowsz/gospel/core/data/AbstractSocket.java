@@ -1,4 +1,8 @@
-package alice.tuprolog;
+package com.szadowsz.gospel.core.data;
+import com.szadowsz.gospel.core.data.Term;
+import com.szadowsz.gospel.core.data.TermVisitor;
+import com.szadowsz.gospel.core.data.Var;
+
 import java.net.InetAddress;
 import java.util.AbstractMap;
 import java.util.ArrayList;

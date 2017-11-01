@@ -4,6 +4,9 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.data.Int;
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.error.InvalidTermException;
 import junit.framework.TestCase;
 

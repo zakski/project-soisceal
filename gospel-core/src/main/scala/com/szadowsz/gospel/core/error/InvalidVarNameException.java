@@ -17,7 +17,7 @@
  */
 package com.szadowsz.gospel.core.error;
 
-import alice.tuprolog.Var;
+import com.szadowsz.gospel.core.data.Var;
 
 /**
  * This exeption means that a not valid tuProlog variable has been specified.

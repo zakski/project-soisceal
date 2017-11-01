@@ -1,46 +1,44 @@
-package alice.tuprolog;
+package com.szadowsz.gospel.core.data;
 
+import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.util.List;
 
-
-public class Client_Socket extends AbstractSocket {
+public class Datagram_Socket extends AbstractSocket {
 	private static final long serialVersionUID = 1L;
-	private final Socket socket;
 
-	public Client_Socket(Socket s){
-		socket=s;
-	}
+	private final DatagramSocket socket;
+
 	
+	public Datagram_Socket(DatagramSocket socket) {
+		super();
+		this.socket = socket;
+	}
+
 	@Override
 	public boolean isClientSocket() {
-		return true;
-	}
-
-	@Override
-	public boolean isServerSocket() {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public Socket getSocket() {
+	public boolean isServerSocket() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isDatagramSocket() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public DatagramSocket getSocket() {
+		// TODO Auto-generated method stub
 		return socket;
 	}
-	
-	
-	public boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t, boolean isOccursCheckEnabled) {
-		t = t.getTerm();
-        if (t instanceof Var) {
-            return t.unify(varsUnifiedArg1, varsUnifiedArg2, this, isOccursCheckEnabled);
-        } else if (t instanceof AbstractSocket && ((AbstractSocket) t).isServerSocket()) {
-        	InetAddress addr= ((AbstractSocket) t).getAddress();
-            return socket.getInetAddress().toString().equals(addr.toString());
-        } else {
-            return false;
-        }
-	}
-	
+
 	@Override
 	public InetAddress getAddress() {
 		if(socket.isBound())return socket.getInetAddress();
@@ -48,11 +46,18 @@ public class Client_Socket extends AbstractSocket {
 	}
 
 	@Override
-	public boolean isDatagramSocket() {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t, boolean isOccursCheckEnabled) {
+		t = t.getTerm();
+        if (t instanceof Var) {
+            return t.unify(varsUnifiedArg1, varsUnifiedArg2, this, isOccursCheckEnabled);
+        } else if (t instanceof AbstractSocket && ((AbstractSocket) t).isDatagramSocket()) {
+        	InetAddress addr= ((AbstractSocket) t).getAddress();
+            return socket.getInetAddress().toString().equals(addr.toString());
+        } else {
+            return false;
+        }
 	}
-
+	
 	@Override
 	public String toString(){
 		return socket.toString();

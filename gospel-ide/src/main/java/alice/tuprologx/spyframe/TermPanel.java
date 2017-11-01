@@ -1,9 +1,10 @@
 package alice.tuprologx.spyframe;
 
 
-import alice.tuprolog.Struct;
-import alice.tuprolog.Term;
-import alice.tuprolog.Var;
+import com.szadowsz.gospel.core.data.Number;
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Term;
+import com.szadowsz.gospel.core.data.Var;
 import com.szadowsz.gospel.core.db.ops.OperatorManager;
 import com.szadowsz.gospel.core.parser.Parser;
 
@@ -41,7 +42,7 @@ public class TermPanel extends JPanel implements ActionListener {
                     node.kids = new Node[1];
                     node.kids[0] = makeTreeFrom(var.getTerm());
                 }
-            } else if (term instanceof alice.tuprolog.Number) {
+            } else if (term instanceof Number) {
                 node.textcolor = node.bordercolor = Color.MAGENTA;
             } else if (term instanceof Struct) {
                 Struct struct = (Struct) term;

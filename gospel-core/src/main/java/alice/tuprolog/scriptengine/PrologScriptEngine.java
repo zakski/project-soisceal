@@ -4,8 +4,8 @@
  */
 package alice.tuprolog.scriptengine;
 
-import alice.tuprolog.Struct;
-import alice.tuprolog.Var;
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Var;
 import alice.tuprolog.lib.IOLibrary;
 import alice.tuprolog.lib.InvalidObjectIdException;
 import alice.tuprolog.lib.OOLibrary;

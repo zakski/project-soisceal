@@ -19,14 +19,14 @@ public class Double extends Term<Double> {
         _theDouble = d;
     }
 
-    static Double unmarshal(alice.tuprolog.Double d) {
+    static Double unmarshal(com.szadowsz.gospel.core.data.Double d) {
         if (!matches(d))
             throw new UnsupportedOperationException();
         return new Double(d.doubleValue());
     }
 
-    static boolean matches(alice.tuprolog.Term t) {
-        return (t instanceof alice.tuprolog.Double);
+    static boolean matches(com.szadowsz.gospel.core.data.Term t) {
+        return (t instanceof com.szadowsz.gospel.core.data.Double);
     }
 
     public <Z> Z/*java.lang.Double*/ toJava() {
@@ -34,8 +34,8 @@ public class Double extends Term<Double> {
         return uncheckedCast(_theDouble);
     }
 
-    public alice.tuprolog.Double marshal() {
-        return new alice.tuprolog.Double(_theDouble);
+    public com.szadowsz.gospel.core.data.Double marshal() {
+        return new com.szadowsz.gospel.core.data.Double(_theDouble);
     }
 
     public String toString() {

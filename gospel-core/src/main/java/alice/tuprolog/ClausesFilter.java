@@ -6,6 +6,10 @@
 package alice.tuprolog;
 
 import alice.util.OneWayList;
+import com.szadowsz.gospel.core.data.Number;
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Term;
+import com.szadowsz.gospel.core.data.Var;
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo;
 
 import java.util.List;

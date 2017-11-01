@@ -20,7 +20,7 @@ package com.szadowsz.gospel.core.db.theory.clause
 import java.lang.Iterable
 import java.{util => ju}
 
-import alice.tuprolog.{Struct, Term}
+import com.szadowsz.gospel.core.data.{Struct, Term}
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
 
 import scala.collection.JavaConverters._

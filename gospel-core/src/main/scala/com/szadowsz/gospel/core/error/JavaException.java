@@ -1,8 +1,8 @@
 package com.szadowsz.gospel.core.error;
 
-import alice.tuprolog.Int;
-import alice.tuprolog.Struct;
-import alice.tuprolog.Term;
+import com.szadowsz.gospel.core.data.Int;
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Term;
 
 /**
  * @author Matteo Iuliani

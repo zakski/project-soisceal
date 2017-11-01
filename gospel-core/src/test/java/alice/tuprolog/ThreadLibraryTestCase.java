@@ -3,6 +3,9 @@ import static org.junit.Assert.*;
 
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.data.Int;
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.error.InvalidLibraryException;
 import com.szadowsz.gospel.core.error.InvalidTheoryException;
 import com.szadowsz.gospel.core.error.MalformedGoalException;

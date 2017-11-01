@@ -1,5 +1,8 @@
 package alice.tuprologx.pj.model;
 
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Var;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Vector;
@@ -47,7 +50,7 @@ public class Cons<H extends Term<?>, R extends Compound<?>> extends Compound<Con
             throw new UnsupportedOperationException();
     }
 
-    static <Z extends Cons<?, ?>> Z unmarshal(alice.tuprolog.Struct s) {
+    static <Z extends Cons<?, ?>> Z unmarshal(Struct s) {
         if (!matches(s))
             throw new UnsupportedOperationException();
         Vector<Term<?>> termList = new Vector<>();
@@ -58,8 +61,8 @@ public class Cons<H extends Term<?>, R extends Compound<?>> extends Compound<Con
         return Cons.make(s.getName(), termList.toArray(new Term<?>[termList.size()]));
     }
 
-    static boolean matches(alice.tuprolog.Term t) {
-        return (!(t instanceof alice.tuprolog.Var) && t.isCompound() && !t.isList());
+    static boolean matches(com.szadowsz.gospel.core.data.Term t) {
+        return (!(t instanceof Var) && t.isCompound() && !t.isList());
     }
 
     /*
@@ -171,13 +174,13 @@ public class Cons<H extends Term<?>, R extends Compound<?>> extends Compound<Con
         //}
     }
 
-    public alice.tuprolog.Struct marshal() {
-        alice.tuprolog.Term[] termArray = new alice.tuprolog.Term[arity()];
+    public Struct marshal() {
+        com.szadowsz.gospel.core.data.Term[] termArray = new com.szadowsz.gospel.core.data.Term[arity()];
         int i = 0;
         for (Term<?> t : this) {
             termArray[i++] = t.marshal();
         }
-        return new alice.tuprolog.Struct(_theName, termArray);
+        return new Struct(_theName, termArray);
     }
     /*
     private Object toPrologObject() {            

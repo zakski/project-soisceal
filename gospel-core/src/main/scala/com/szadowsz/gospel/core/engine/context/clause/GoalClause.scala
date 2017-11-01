@@ -1,6 +1,6 @@
 package com.szadowsz.gospel.core.engine.context.clause
 
-import alice.tuprolog.Struct
+import com.szadowsz.gospel.core.data.Struct
 import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalTree
 
 

@@ -1,5 +1,7 @@
 package alice.tuprologx.pj.model;
 
+import com.szadowsz.gospel.core.data.Term;
+
 public class Nil extends Compound<Nil> {
     public int arity() {
         return 0;
@@ -10,7 +12,7 @@ public class Nil extends Compound<Nil> {
         throw new UnsupportedOperationException();
     }
 
-    public alice.tuprolog.Term marshal() {
+    public Term marshal() {
         throw new UnsupportedOperationException();
     }
 

@@ -18,6 +18,8 @@
 package alice.tuprolog.lib;
 
 import alice.tuprolog.*;
+import com.szadowsz.gospel.core.data.Term;
+import com.szadowsz.gospel.core.data.Var;
 import com.szadowsz.gospel.core.error.PrologError;
 
 /**

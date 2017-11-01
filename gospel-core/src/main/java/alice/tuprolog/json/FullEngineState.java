@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import com.szadowsz.gospel.core.db.ops.Operator;
-import alice.tuprolog.Term;
+import com.szadowsz.gospel.core.data.Term;
 
 //Alberto
 public class FullEngineState extends AbstractEngineState {

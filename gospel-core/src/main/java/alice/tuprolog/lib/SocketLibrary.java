@@ -3,6 +3,7 @@ package alice.tuprolog.lib;
 import alice.tuprolog.*;
 import alice.tuprolog.interfaces.ISocketLib;
 import com.szadowsz.gospel.core.PrologEngine;
+import com.szadowsz.gospel.core.data.*;
 import com.szadowsz.gospel.core.error.PrologError;
 
 import java.io.ByteArrayOutputStream;
@@ -49,7 +50,7 @@ public class SocketLibrary extends Library implements ISocketLib {
     // Open an udp socket
 
     public boolean udp_socket_open_2(Struct Address, Term Socket) throws PrologError {
-        if (!(Socket.getTerm() instanceof alice.tuprolog.Var)) { // Socket has to be a variable
+        if (!(Socket.getTerm() instanceof Var)) { // Socket has to be a variable
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
         byte[] address = new byte[4];
@@ -83,7 +84,7 @@ public class SocketLibrary extends Library implements ISocketLib {
     // send an udp data
 
     public boolean udp_send_3(Term Socket, Term Data, Struct AddressTo) throws PrologError {
-        if (!(Socket.getTerm() instanceof alice.tuprolog.Var)) { // Socket has to be a variable
+        if (!(Socket.getTerm() instanceof Var)) { // Socket has to be a variable
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
         byte[] address = new byte[4];
@@ -123,7 +124,7 @@ public class SocketLibrary extends Library implements ISocketLib {
 
     // udp socket close
     public boolean udp_socket_close_1(Term Socket) throws PrologError {
-        if (Socket.getTerm() instanceof alice.tuprolog.Var) {
+        if (Socket.getTerm() instanceof Var) {
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
         if (!(((Server_Socket) Socket.getTerm()).isDatagramSocket())) {
@@ -138,7 +139,7 @@ public class SocketLibrary extends Library implements ISocketLib {
     @Override
     public boolean udp_receive(Term Socket, Term Data, Struct AddressFrom,
                                Struct Options) throws PrologError {
-        if (!(Socket.getTerm() instanceof alice.tuprolog.Var)) {
+        if (!(Socket.getTerm() instanceof Var)) {
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
         byte[] address = new byte[4];
@@ -194,7 +195,7 @@ public class SocketLibrary extends Library implements ISocketLib {
     public boolean tcp_socket_server_open_3(Struct Address, Term Socket, Struct Options) throws PrologError {
         int backlog = 0;
 
-        if (!(Socket.getTerm() instanceof alice.tuprolog.Var)) { // Socket has to be a variable
+        if (!(Socket.getTerm() instanceof Var)) { // Socket has to be a variable
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
 
@@ -262,7 +263,7 @@ public class SocketLibrary extends Library implements ISocketLib {
      */
     public boolean tcp_socket_server_accept_3(Term ServerSock, Term Client_Addr, Term Client_Slave_Socket) throws PrologError {
 
-        if (ServerSock.getTerm() instanceof alice.tuprolog.Var) {    // ServerSock has to be bound
+        if (ServerSock.getTerm() instanceof Var) {    // ServerSock has to be bound
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
 
@@ -291,7 +292,7 @@ public class SocketLibrary extends Library implements ISocketLib {
      * @throws PrologError if Socket is not a variable
      */
     public boolean tcp_socket_client_open_2(Struct Address, Term SocketTerm) throws PrologError {
-        if (!(SocketTerm.getTerm() instanceof alice.tuprolog.Var)) { // Socket has to be a variable
+        if (!(SocketTerm.getTerm() instanceof Var)) { // Socket has to be a variable
             throw PrologError.instantiation_error(engine.getEngineManager(), 2);
         }
 
@@ -330,7 +331,7 @@ public class SocketLibrary extends Library implements ISocketLib {
      * @throws PrologError if serverSocket is a variable or it is not a Server_Socket
      */
     public synchronized boolean tcp_socket_server_close_1(Term serverSocket) throws PrologError {
-        if (serverSocket.getTerm() instanceof alice.tuprolog.Var) {            // serverSocket has to be bound
+        if (serverSocket.getTerm() instanceof Var) {            // serverSocket has to be bound
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
         if (!(((Server_Socket) serverSocket.getTerm()).isServerSocket())) {        // serverSocket has to be a Server_Socket
@@ -359,13 +360,13 @@ public class SocketLibrary extends Library implements ISocketLib {
      * @throws PrologError if Socket is a variable or it is not a Client_Socket or Msg is not bound
      */
     public boolean write_to_socket_2(Term Socket, Term Msg) throws PrologError {
-        if (Socket.getTerm() instanceof alice.tuprolog.Var) { // Socket has to be bound
+        if (Socket.getTerm() instanceof Var) { // Socket has to be bound
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
         if (((AbstractSocket) Socket.getTerm()).isServerSocket()) { // Only Client_Sockets can send data
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
-        if (Msg.getTerm() instanceof alice.tuprolog.Var) { // Record has to be bound
+        if (Msg.getTerm() instanceof Var) { // Record has to be bound
             throw PrologError.instantiation_error(engine.getEngineManager(), 2);
 
         } else {
@@ -390,10 +391,10 @@ public class SocketLibrary extends Library implements ISocketLib {
      * @throws PrologError if Socket is not bound or it is not a Client_Socket or Msg is bound
      */
     public boolean read_from_socket_3(Term Socket, Term Msg, Struct Options) throws PrologError {
-        if (Socket.getTerm() instanceof alice.tuprolog.Var) { // Socket has to be bound
+        if (Socket.getTerm() instanceof Var) { // Socket has to be bound
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
-        if (!(Msg.getTerm() instanceof alice.tuprolog.Var)) { // Message has to be a variable
+        if (!(Msg.getTerm() instanceof Var)) { // Message has to be a variable
             throw PrologError.instantiation_error(engine.getEngineManager(), 2);
         }
         if (!((AbstractSocket) Socket.getTerm()).isClientSocket()) { // Only Client_Sockets can receive data
@@ -455,7 +456,7 @@ public class SocketLibrary extends Library implements ISocketLib {
      */
     public boolean aread_from_socket_2(Term Socket, Struct Options) throws PrologError {
         ThreadReader r;
-        if (Socket.getTerm() instanceof alice.tuprolog.Var) { // Socket has to be bound
+        if (Socket.getTerm() instanceof Var) { // Socket has to be bound
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
         if (!((AbstractSocket) Socket.getTerm()).isClientSocket()) { // Only Client_Sockets can receive data
@@ -573,7 +574,7 @@ public class SocketLibrary extends Library implements ISocketLib {
     }
 
     public boolean getAddress_2(Term sock, Term addr) throws PrologError {
-        if (sock.getTerm() instanceof alice.tuprolog.Var) { // Socket has to be bound
+        if (sock.getTerm() instanceof Var) { // Socket has to be bound
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
         AbstractSocket abs = (AbstractSocket) sock.getTerm();

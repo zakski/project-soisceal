@@ -1,6 +1,6 @@
 package alice.tuprolog.json;
 
-import alice.tuprolog.Term;
+import com.szadowsz.gospel.core.data.Term;
 
 //Alberto
 public class ReducedEngineState extends AbstractEngineState {

@@ -1,5 +1,9 @@
 package alice.tuprolog;
 
+import com.szadowsz.gospel.core.data.Double;
+import com.szadowsz.gospel.core.data.Int;
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Var;
 import com.szadowsz.gospel.core.error.InvalidTermException;
 import junit.framework.TestCase;
 

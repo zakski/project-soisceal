@@ -1,7 +1,7 @@
 package com.szadowsz.gospel.core
 
 
-import alice.tuprolog.{Struct, Number}
+import com.szadowsz.gospel.core.data.Struct
 import org.scalatest.FunSpec
 
 /**
@@ -54,7 +54,7 @@ class ListManagementSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("length([1, 2 | T], X).")
       solution.isSuccess shouldBe true
 
-      var result1 = solution.getVarValue("X").asInstanceOf[Number]
+      var result1 = solution.getVarValue("X").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "2"
 
       var result2 = solution.getVarValue("T").asInstanceOf[Struct]
@@ -62,7 +62,7 @@ class ListManagementSpec extends FunSpec with BaseEngineSpec {
 
       solution = prolog.solveNext()
 
-      result1 = solution.getVarValue("X").asInstanceOf[Number]
+      result1 = solution.getVarValue("X").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "3"
 
       result2 = solution.getVarValue("T").asInstanceOf[Struct]
@@ -70,7 +70,7 @@ class ListManagementSpec extends FunSpec with BaseEngineSpec {
 
       solution = prolog.solveNext()
 
-      result1 = solution.getVarValue("X").asInstanceOf[Number]
+      result1 = solution.getVarValue("X").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "4"
 
       result2 = solution.getVarValue("T").asInstanceOf[Struct]
@@ -84,7 +84,7 @@ class ListManagementSpec extends FunSpec with BaseEngineSpec {
       var result1 = solution.getVarValue("L").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "[]"
 
-      var result2 = solution.getVarValue("S").asInstanceOf[Number]
+      var result2 = solution.getVarValue("S").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "0"
 
       solution = prolog.solveNext()
@@ -92,7 +92,7 @@ class ListManagementSpec extends FunSpec with BaseEngineSpec {
       result1 = solution.getVarValue("L").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "[_]"
 
-      result2 = solution.getVarValue("S").asInstanceOf[Number]
+      result2 = solution.getVarValue("S").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "1"
 
       solution = prolog.solveNext()
@@ -100,7 +100,7 @@ class ListManagementSpec extends FunSpec with BaseEngineSpec {
       result1 = solution.getVarValue("L").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "[_,_]"
 
-      result2 = solution.getVarValue("S").asInstanceOf[Number]
+      result2 = solution.getVarValue("S").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "2"
     }
   }

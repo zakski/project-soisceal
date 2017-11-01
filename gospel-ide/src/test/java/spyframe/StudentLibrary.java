@@ -2,8 +2,8 @@ package spyframe;
 // franz.beslmeisl at googlemail.com
 
 import alice.tuprolog.Library;
-import alice.tuprolog.Term;
 import alice.tuprologx.spyframe.TermFrame;
+import com.szadowsz.gospel.core.data.Term;
 
 // import in a prolog session by
 // :-load_library('StudentLibrary').

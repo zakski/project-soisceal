@@ -14,6 +14,7 @@ import alice.tuprologx.pj.model.Term;
 import alice.tuprologx.pj.model.Theory;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
+import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.error.InvalidTheoryException;
 import com.szadowsz.gospel.core.error.NoMoreSolutionException;
 
@@ -76,11 +77,11 @@ public class PJProlog /*extends alice.tuprolog.Prolog*/ {
         engine.setTheory(new com.szadowsz.gospel.core.Theory(theory.marshal()));
     }
 
-    public alice.tuprolog.Struct registerJavaObject(Object o) {
+    public Struct registerJavaObject(Object o) {
         return ((alice.tuprolog.lib.OOLibrary) engine.getLibrary("alice.tuprologx.pj.lib.PJLibraryNew")).register(o);
     }
 
-    public Object getJavaObject(alice.tuprolog.Struct t) {
+    public Object getJavaObject(Struct t) {
         try {
             return ((alice.tuprolog.lib.OOLibrary) engine.getLibrary("alice.tuprologx.pj.lib.PJLibraryNew")).getRegisteredObject(t);
         } catch (Exception e) {

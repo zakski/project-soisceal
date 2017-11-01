@@ -3,6 +3,9 @@ package alice.tuprolog;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import com.szadowsz.gospel.core.data.Int;
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Term;
 import junit.framework.TestCase;
 
 /**

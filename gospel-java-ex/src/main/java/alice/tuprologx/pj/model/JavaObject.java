@@ -10,6 +10,7 @@
 package alice.tuprologx.pj.model;
 
 import alice.tuprologx.pj.engine.PJ;
+import com.szadowsz.gospel.core.data.Struct;
 
 /**
  * @author maurizio
@@ -25,11 +26,11 @@ public class JavaObject<O> extends Term<JavaObject<O>> {
         _theObject = o;
     }
 
-    static boolean matches(alice.tuprolog.Term t) {
-        return (t instanceof alice.tuprolog.Struct && PJ.getRegisteredJavaObject((alice.tuprolog.Struct) t) != null);
+    static boolean matches(com.szadowsz.gospel.core.data.Term t) {
+        return (t instanceof Struct && PJ.getRegisteredJavaObject((Struct) t) != null);
     }
 
-    static <Z> JavaObject<Z> unmarshalObject(alice.tuprolog.Struct s) {
+    static <Z> JavaObject<Z> unmarshalObject(Struct s) {
         if (matches(s)) {
             //return new JavaObject<Z>((Z)(PJ.getRegisteredJavaObject(s)));
             Z auxJavaObject = uncheckedCast(PJ.getRegisteredJavaObject(s));
@@ -38,7 +39,7 @@ public class JavaObject<O> extends Term<JavaObject<O>> {
             throw new UnsupportedOperationException();
     }
 
-    public alice.tuprolog.Term marshal() {
+    public com.szadowsz.gospel.core.data.Term marshal() {
         return PJ.registerJavaObject(_theObject);
     }
 

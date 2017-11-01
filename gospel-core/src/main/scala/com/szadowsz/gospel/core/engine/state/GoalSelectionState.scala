@@ -33,8 +33,7 @@
  */
 package com.szadowsz.gospel.core.engine.state
 
-import alice.tuprolog.Struct
-import alice.tuprolog.Term
+import com.szadowsz.gospel.core.data.{Struct, Term}
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
 
 /**

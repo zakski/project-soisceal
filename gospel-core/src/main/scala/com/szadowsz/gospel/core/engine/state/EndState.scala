@@ -35,8 +35,7 @@ package com.szadowsz.gospel.core.engine.state
 
 import java.util
 
-import alice.tuprolog.Struct
-import alice.tuprolog.Var
+import com.szadowsz.gospel.core.data.{Struct, Var}
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner, ExecutionResultType}
 
 /**

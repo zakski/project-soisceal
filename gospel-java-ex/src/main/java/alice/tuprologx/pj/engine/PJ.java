@@ -7,6 +7,7 @@ import alice.tuprologx.pj.meta.PrologMetaClass;
 import alice.tuprologx.pj.meta.PrologMetaField;
 import alice.tuprologx.pj.meta.PrologMetaMethod;
 import alice.tuprologx.pj.model.*;
+import com.szadowsz.gospel.core.data.Struct;
 import javassist.util.proxy.MethodHandler;
 
 import java.lang.reflect.Method;
@@ -84,7 +85,7 @@ public class PJ implements MethodHandler {
         }
     }
 
-    public static alice.tuprolog.Struct registerJavaObject(Object o) {
+    public static Struct registerJavaObject(Object o) {
         //return engine.registerJavaObject(o);
         try {
             return engine().getPJLibrary().register(o);
@@ -93,7 +94,7 @@ public class PJ implements MethodHandler {
         }
     }
 
-    public static Object getRegisteredJavaObject(alice.tuprolog.Struct t) {
+    public static Object getRegisteredJavaObject(Struct t) {
         //return engine.getJavaObject(t);
         try {
             Object obj = engine().getPJLibrary().getRegisteredObject(t);
@@ -106,7 +107,7 @@ public class PJ implements MethodHandler {
         }
     }
 
-    public static void assertClause(PrologObject po, alice.tuprolog.Term clause) {
+    public static void assertClause(PrologObject po, com.szadowsz.gospel.core.data.Term clause) {
         try {
             pushEngine();
             engine().setTheory(po.getTheory());
@@ -120,7 +121,7 @@ public class PJ implements MethodHandler {
         }
     }
 
-    public static void retractClause(PrologObject po, alice.tuprolog.Term clause) {
+    public static void retractClause(PrologObject po, com.szadowsz.gospel.core.data.Term clause) {
         try {
             pushEngine();
             engine().setTheory(po.getTheory());
@@ -134,11 +135,11 @@ public class PJ implements MethodHandler {
         }
     }
 
-    public static void retractAllClauses(PrologObject po, alice.tuprolog.Term clause) {
+    public static void retractAllClauses(PrologObject po, com.szadowsz.gospel.core.data.Term clause) {
         try {
             pushEngine();
             engine().setTheory(po.getTheory());
-            alice.tuprolog.Struct goal = new alice.tuprolog.Struct("retractall", clause);
+            Struct goal = new Struct("retractall", clause);
             System.out.println(goal);
             engine().engine.solve(goal);
             po.setTheory(engine().getTheory());

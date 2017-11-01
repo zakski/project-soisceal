@@ -17,7 +17,8 @@
  */
 package com.szadowsz.gospel.core.engine.flags
 
-import alice.tuprolog.{Struct, Term}
+import com.szadowsz.gospel.core.data.{Struct, Term}
+
 import scala.collection.JavaConverters._
 
 /**

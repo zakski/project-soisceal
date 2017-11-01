@@ -1,6 +1,6 @@
 package com.szadowsz.gospel.core.parser
 
-import alice.tuprolog.Term
+import com.szadowsz.gospel.core.data.Term
 
 /**
   * Created on 02/03/2017.

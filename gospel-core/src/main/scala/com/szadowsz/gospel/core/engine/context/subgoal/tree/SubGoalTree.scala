@@ -1,6 +1,6 @@
 package com.szadowsz.gospel.core.engine.context.subgoal.tree
 
-import alice.tuprolog.Term
+import com.szadowsz.gospel.core.data.Term
 
 import scala.collection.mutable
 import scala.collection.JavaConverters._

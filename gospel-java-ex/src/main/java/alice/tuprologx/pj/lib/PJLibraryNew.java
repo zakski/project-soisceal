@@ -17,13 +17,13 @@
  */
 package alice.tuprologx.pj.lib;
 
-import alice.tuprolog.*;
-import alice.tuprolog.Number;
+import com.szadowsz.gospel.core.data.*;
 import alice.tuprolog.lib.InvalidObjectIdException;
 import alice.tuprolog.lib.OOLibrary;
 import alice.tuprologx.pj.annotations.PrologClass;
 import alice.tuprologx.pj.annotations.PrologField;
 import alice.tuprologx.pj.annotations.PrologMethod;
+import com.szadowsz.gospel.core.data.Number;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -398,11 +398,11 @@ public class PJLibraryNew extends OOLibrary {
                 Number wn = (Number) what;
                 if (wn instanceof Int) {
                     field.setInt(obj, wn.intValue());
-                } else if (wn instanceof alice.tuprolog.Double) {
+                } else if (wn instanceof com.szadowsz.gospel.core.data.Double) {
                     field.setDouble(obj, wn.doubleValue());
-                } else if (wn instanceof alice.tuprolog.Long) {
+                } else if (wn instanceof com.szadowsz.gospel.core.data.Long) {
                     field.setLong(obj, wn.longValue());
-                } else if (wn instanceof alice.tuprolog.Float) {
+                } else if (wn instanceof com.szadowsz.gospel.core.data.Float) {
                     field.setFloat(obj, wn.floatValue());
                 } else {
                     return false;
@@ -521,16 +521,16 @@ public class PJLibraryNew extends OOLibrary {
             // first check for primitive types
             if (fc.equals(Integer.TYPE) || fc.equals(Byte.TYPE)) {
                 int value = field.getInt(obj);
-                return unify(what, new alice.tuprolog.Int(value));
+                return unify(what, new Int(value));
             } else if (fc.equals(java.lang.Long.TYPE)) {
                 long value = field.getLong(obj);
-                return unify(what, new alice.tuprolog.Long(value));
+                return unify(what, new com.szadowsz.gospel.core.data.Long(value));
             } else if (fc.equals(java.lang.Float.TYPE)) {
                 float value = field.getFloat(obj);
-                return unify(what, new alice.tuprolog.Float(value));
+                return unify(what, new com.szadowsz.gospel.core.data.Float(value));
             } else if (fc.equals(java.lang.Double.TYPE)) {
                 double value = field.getDouble(obj);
-                return unify(what, new alice.tuprolog.Double(value));
+                return unify(what, new com.szadowsz.gospel.core.data.Double(value));
             } else {
                 // the field value is an object
                 Object res = field.get(obj);
@@ -600,13 +600,13 @@ public class PJLibraryNew extends OOLibrary {
                 if (t instanceof Int) {
                     values[i] = t.intValue();
                     types[i] = java.lang.Integer.TYPE;
-                } else if (t instanceof alice.tuprolog.Double) {
+                } else if (t instanceof com.szadowsz.gospel.core.data.Double) {
                     values[i] = t.doubleValue();
                     types[i] = java.lang.Double.TYPE;
-                } else if (t instanceof alice.tuprolog.Long) {
+                } else if (t instanceof com.szadowsz.gospel.core.data.Long) {
                     values[i] = t.longValue();
                     types[i] = java.lang.Long.TYPE;
-                } else if (t instanceof alice.tuprolog.Float) {
+                } else if (t instanceof com.szadowsz.gospel.core.data.Float) {
                     values[i] = t.floatValue();
                     types[i] = java.lang.Float.TYPE;
                 }
@@ -659,11 +659,11 @@ public class PJLibraryNew extends OOLibrary {
             } else if (Integer.class.isInstance(obj)) {
                 return unify(id, new Int((Integer) obj));
             } else if (java.lang.Long.class.isInstance(obj)) {
-                return unify(id, new alice.tuprolog.Long((Long) obj));
+                return unify(id, new com.szadowsz.gospel.core.data.Long((Long) obj));
             } else if (java.lang.Float.class.isInstance(obj)) {
-                return unify(id, new alice.tuprolog.Float((Float) obj));
+                return unify(id, new com.szadowsz.gospel.core.data.Float((Float) obj));
             } else if (java.lang.Double.class.isInstance(obj)) {
-                return unify(id, new alice.tuprolog.Double((Double) obj));
+                return unify(id, new com.szadowsz.gospel.core.data.Double((Double) obj));
             } else if (String.class.isInstance(obj)) {
                 return unify(id, new Struct((String) obj));
             } else if (Character.class.isInstance(obj)) {

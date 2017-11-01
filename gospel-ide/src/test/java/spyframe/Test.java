@@ -1,10 +1,10 @@
 package spyframe;
 
-import alice.tuprolog.Term;
 import alice.tuprologx.spyframe.TermFrame;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.Theory;
+import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.engine.Engine;
 import com.szadowsz.gospel.core.engine.context.ExecutionContext;
 

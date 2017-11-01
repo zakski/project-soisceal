@@ -19,7 +19,7 @@ package com.szadowsz.gospel.core.parser;
 
 
 import com.szadowsz.gospel.core.error.InvalidTermException;
-import alice.tuprolog.Term;
+import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.parser.Parser;
 
 import java.util.Iterator;

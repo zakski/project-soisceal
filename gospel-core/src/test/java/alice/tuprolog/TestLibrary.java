@@ -20,6 +20,10 @@
  */
 package alice.tuprolog;
 
+import com.szadowsz.gospel.core.data.Int;
+import com.szadowsz.gospel.core.data.Number;
+import com.szadowsz.gospel.core.data.Term;
+
 public class TestLibrary extends StringLibrary {
 	private static final long serialVersionUID = 1L;
 

@@ -9,6 +9,9 @@
 
 package alice.tuprologx.pj.model;
 
+import com.szadowsz.gospel.core.data.Struct;
+import com.szadowsz.gospel.core.data.Var;
+
 /**
  * @author maurizio
  */
@@ -19,17 +22,17 @@ public class Bool extends Term<Bool> {
         _theBool = b;
     }
 
-    static Bool unmarshal(alice.tuprolog.Struct b) {
+    static Bool unmarshal(Struct b) {
         if (!matches(b))
             throw new UnsupportedOperationException();
-        if (b.isEqual(alice.tuprolog.Struct.TRUE))
+        if (b.isEqual(Struct.TRUE))
             return new Bool(Boolean.TRUE);
         else
             return new Bool(Boolean.FALSE);
     }
 
-    static boolean matches(alice.tuprolog.Term t) {
-        return (!(t instanceof alice.tuprolog.Var) && (t.isEqual(alice.tuprolog.Struct.TRUE) || t.isEqual(alice.tuprolog.Struct.FALSE)));
+    static boolean matches(com.szadowsz.gospel.core.data.Term t) {
+        return (!(t instanceof Var) && (t.isEqual(Struct.TRUE) || t.isEqual(Struct.FALSE)));
     }
 
     // public Boolean toJava() { return _theBool; } // ED 2013-05-12
@@ -37,8 +40,8 @@ public class Bool extends Term<Bool> {
         return uncheckedCast(_theBool);
     }
 
-    public alice.tuprolog.Term marshal() {
-        return _theBool ? alice.tuprolog.Struct.TRUE : alice.tuprolog.Struct.FALSE;
+    public com.szadowsz.gospel.core.data.Term marshal() {
+        return _theBool ? Struct.TRUE : Struct.FALSE;
     }
 
     public String toString() {

@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package alice.tuprolog;
+package com.szadowsz.gospel.core.data;
 
 import alice.tuprolog.json.JSONSerializerManager;
 import alice.util.OneWayList;

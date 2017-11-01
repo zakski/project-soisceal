@@ -2,7 +2,7 @@ package alice.tuprologx.ide;
 
 //import alice.tuprologx.spyframe.TermPanel;
 
-import alice.tuprolog.Var;
+import com.szadowsz.gospel.core.data.Var;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.error.NoSolutionException;
 import com.szadowsz.gospel.core.event.interpreter.ExceptionEvent;

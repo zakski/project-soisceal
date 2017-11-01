@@ -3,7 +3,7 @@ package alice.tuprolog.json;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import alice.tuprolog.Term;
+import com.szadowsz.gospel.core.data.Term;
 
 //Alberto
 public class JSONSerializerManager {
