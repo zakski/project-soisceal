@@ -182,7 +182,7 @@ public class Var extends Term {
      * Gets a copy of this variable.
      */
     @Override
-    Term copy(AbstractMap<Var, Var> vMap, AbstractMap<Term, Var> substMap) {
+    public Term copy(AbstractMap<Var, Var> vMap, AbstractMap<Term, Var> substMap) {
         Var v;
         Object temp = vMap.get(this);
         if (temp == null) {
@@ -373,7 +373,7 @@ public class Var extends Term {
     /**
      * Resolve the occurence of variables in a Term
      */
-    long resolveTerm(long count) {
+    public long resolveTerm(long count) {
         Term tt = getTerm();
         if (tt != this) {
             return tt.resolveTerm(count);
@@ -527,10 +527,5 @@ public class Var extends Term {
     @Override
     public void accept(TermVisitor tv) {
         tv.visit(this);
-    }
-
-    @Override
-    boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t) {
-        return unify(varsUnifiedArg1, varsUnifiedArg2, t, true);
     }
 }

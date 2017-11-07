@@ -1182,13 +1182,13 @@ public class OOLibrary extends Library {
             } else if (name.equals("class [Z")) {
                 boolean b = Array.getBoolean(obj, index.intValue());
                 if (b) {
-                    if (unify(what, Term.TRUE))
+                    if (unify(what, Term.TRUE()))
                         return true;
                     else
                         throw new JavaException(new IllegalArgumentException(
                                 what.toString()));
                 } else {
-                    if (unify(what, Term.FALSE))
+                    if (unify(what, Term.FALSE()))
                         return true;
                     else
                         throw new JavaException(new IllegalArgumentException(
@@ -1526,9 +1526,9 @@ public class OOLibrary extends Library {
         try {
             if (Boolean.class.isInstance(obj)) {
                 if ((Boolean) obj) {
-                    return unify(id, Term.TRUE);
+                    return unify(id, Term.TRUE());
                 } else {
-                    return unify(id, Term.FALSE);
+                    return unify(id, Term.FALSE());
                 }
             } else if (Byte.class.isInstance(obj)) {
                 return unify(id, new Int(((Byte) obj).intValue()));

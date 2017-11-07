@@ -18,24 +18,6 @@ public abstract class AbstractSocket extends Term{
 	public abstract Object getSocket();
 	
 	protected abstract InetAddress getAddress();
-	
-	@Override
-	public boolean isNumber() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isStruct() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isVar() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public boolean isEmptyList() {
@@ -101,7 +83,7 @@ public abstract class AbstractSocket extends Term{
 	}
 
 	@Override
-	long resolveTerm(long count) {
+	public long resolveTerm(long count) {
 		return count;
 	}
 
@@ -111,7 +93,7 @@ public abstract class AbstractSocket extends Term{
 	}
 
 	@Override
-	Term copy(AbstractMap<Var, Var> vMap, AbstractMap<Term, Var> substMap) {
+	public Term copy(AbstractMap<Var, Var> vMap, AbstractMap<Term, Var> substMap) {
 		return this;
 	}
 	

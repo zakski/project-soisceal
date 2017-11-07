@@ -425,7 +425,7 @@ public class Struct extends Term {
      *
      * @param vMap is needed for register occurence of same variables
      */
-    Term copy(AbstractMap<Var, Var> vMap, AbstractMap<Term, Var> substMap) {
+    public Term copy(AbstractMap<Var, Var> vMap, AbstractMap<Term, Var> substMap) {
         Struct t = new Struct(arity);
         t.resolved = false;
         t.name = name;
@@ -443,7 +443,7 @@ public class Struct extends Term {
     /**
      * resolve term
      */
-    long resolveTerm(long count) {
+    public long resolveTerm(long count) {
         if (resolved) {
             return count;
         } else {
@@ -787,7 +787,7 @@ public class Struct extends Term {
         }
     }
 
-    String toStringAsArg(OperatorManager op, int prio, boolean x) {
+    public String toStringAsArg(OperatorManager op, int prio, boolean x) {
         int p;
         String v;
 
@@ -894,7 +894,7 @@ public class Struct extends Term {
     }
 
     @Override
-    boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t) {
+    public boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t) {
         return unify(varsUnifiedArg1, varsUnifiedArg2, t, true);
     }
 }

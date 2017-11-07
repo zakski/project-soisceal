@@ -64,15 +64,6 @@ abstract class Number extends Term with Comparable[Number] {
     */
   override def getTerm: Term = this
 
-  /** is this term a prolog numeric term? */
-  override final def isNumber = true
-
-  /** is this term a struct  */
-  override final def isStruct = false
-
-  /** is this term a variable  */
-  override final def isVar = false
-
   override final def isEmptyList = false
 
   /** is this term a constant prolog term? */

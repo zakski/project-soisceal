@@ -1059,25 +1059,25 @@ public class ISOIOLibrary extends Library {
 
         Number arg0 = (Number) char_code.getTerm();
 
-        if (arg0.isVar()) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 2);
-        } else if (!arg0.isNumber()) {
-            throw PrologError.type_error(engine.getEngineManager(), 2, "character", arg0);
+//        if (arg0 instanceof Var) {
+//            throw PrologError.instantiation_error(engine.getEngineManager(), 2);
+//        } else if (!arg0 instanceof  Number) {
+//            throw PrologError.type_error(engine.getEngineManager(), 2, "character", arg0);
+//        } else {
+        if (Character.isDefined(arg0.intValue())) {
+            throw PrologError.representation_error(engine.getEngineManager(), 2, "character_code");
+        }
+        if (stream_name.equals("stdout")) {
+            getEngine().stdOutput("" + arg0.intValue());
         } else {
-            if (Character.isDefined(arg0.intValue())) {
-                throw PrologError.representation_error(engine.getEngineManager(), 2, "character_code");
-            }
-            if (stream_name.equals("stdout")) {
-                getEngine().stdOutput("" + arg0.intValue());
-            } else {
-                try {
-                    stream.write(arg0.intValue());
-                } catch (IOException ioe) {
-                    ioe.printStackTrace();
-                    throw PrologError.system_error(new Struct("An I/O error has occurred."));
-                }
+            try {
+                stream.write(arg0.intValue());
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
+                throw PrologError.system_error(new Struct("An I/O error has occurred."));
             }
         }
+//        }
         return true;
     }
 

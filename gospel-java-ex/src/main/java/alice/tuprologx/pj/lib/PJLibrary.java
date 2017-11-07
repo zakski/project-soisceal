@@ -921,9 +921,9 @@ public class PJLibrary extends Library {
             } else if (name.equals("class [Z")) {
                 boolean b = Array.getBoolean(obj, index.intValue());
                 if (b) {
-                    return unify(what, Term.TRUE);
+                    return unify(what, Term.TRUE());
                 } else {
-                    return unify(what, Term.FALSE);
+                    return unify(what, Term.FALSE());
                 }
             } else if (name.equals("class [B")) {
                 Term value = new Int(Array.getByte(obj, index.intValue()));
@@ -1195,9 +1195,9 @@ public class PJLibrary extends Library {
         try {
             if (Boolean.class.isInstance(obj)) {
                 if ((Boolean) obj) {
-                    return unify(id, Term.TRUE);
+                    return unify(id, Term.TRUE());
                 } else {
-                    return unify(id, Term.FALSE);
+                    return unify(id, Term.FALSE());
                 }
             } else if (Byte.class.isInstance(obj)) {
                 return unify(id, new Int(((Byte) obj).intValue()));
