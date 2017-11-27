@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import alice.tuprolog.lib.InvalidObjectIdException;
+import com.szadowsz.gospel.core.TestCounter;
 import com.szadowsz.gospel.core.db.libs.OOLibrary;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
@@ -53,7 +54,7 @@ public class JavaLibraryTestCase extends TestCase {
 		PrologEngine engine = new PrologEngine();
 		OOLibrary lib = (OOLibrary) engine.getLibrary("com.szadowsz.gospel.core.db.libs.OOLibrary");
 		String theory = "demo(C) :- \n" +
-				"java_object('alice.tuprolog.TestCounter', [], C), \n" +
+				"java_object('com.szadowsz.gospel.core.TestCounter', [], C), \n" +
 				"C <- update, \n" +
 				"C <- update. \n";			
 		engine.setTheory(new Theory(theory));

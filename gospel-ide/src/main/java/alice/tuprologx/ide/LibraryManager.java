@@ -18,7 +18,7 @@
 package alice.tuprologx.ide;
 
 import com.szadowsz.gospel.core.db.Library;
-import alice.util.AssemblyCustomClassLoader;
+import com.szadowsz.gospel.core.utils.classloader.AssemblyCustomClassLoader;
 import cli.System.Reflection.Assembly;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.error.InvalidLibraryException;
