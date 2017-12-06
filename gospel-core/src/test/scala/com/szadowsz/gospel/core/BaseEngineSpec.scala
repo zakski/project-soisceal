@@ -28,19 +28,14 @@ trait BaseEngineSpec extends Matchers with BeforeAndAfter {
   protected def replaceUnderscore(query: String): String = {
     var result: String = ""
     var trovato: Boolean = false
-    var i: Int = 0
-    while (i < query.length) {
-      {
+    for (i <- 0 until query.length) {
         if (query.charAt(i) == ',' || query.charAt(i) == ')' || query.charAt(i) == ']') trovato = false
         if (!trovato) result += (query.charAt(i) + "")
         if (query.charAt(i) == '_') trovato = true
-      }
-      {
-        i += 1; i - 1
-      }
     }
     result
   }
+
   before {
     prolog = init()
   }

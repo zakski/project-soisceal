@@ -1,7 +1,7 @@
-package com.szadowsz.gospel.core.db.libs
+package com.szadowsz.gospel.core.db.libs.basic
 
-import com.szadowsz.gospel.core.data.{Struct,Long}
-import com.szadowsz.gospel.core.{BaseEngineSpec, PrologEngine, Theory}
+import com.szadowsz.gospel.core.data.Long
+import com.szadowsz.gospel.core.{BaseEngineSpec, PrologEngine}
 import org.junit.runner.RunWith
 import org.scalatest.FunSpec
 import org.scalatest.junit.JUnitRunner
