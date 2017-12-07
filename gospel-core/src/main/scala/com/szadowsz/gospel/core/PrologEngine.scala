@@ -21,7 +21,7 @@ import java.util
 
 import alice.tuprolog.json.{AbstractEngineState, FullEngineState, JSONSerializerManager, ReducedEngineState}
 import com.szadowsz.gospel.core.data.Term
-import com.szadowsz.gospel.core.db.{Library, LibraryManager}
+import com.szadowsz.gospel.core.db.{Library, LibraryManager, LibraryManagerFactory}
 import com.szadowsz.gospel.core.db.libs._
 import com.szadowsz.gospel.core.db.ops.{Operator, OperatorManager}
 import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
@@ -65,7 +65,7 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
 
   protected lazy val flagManager = new FlagManager() // engine flag manager.
 
-  protected lazy val libManager = LibraryManager(this) // manager of loaded libraries
+  protected lazy val libManager = LibraryManagerFactory.getManagerForCurrPlatform(this) // manager of loaded libraries
 
   protected lazy val opManager: OperatorManager = new OperatorManager // manager of operators
 

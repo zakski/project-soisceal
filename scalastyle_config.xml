@@ -2,7 +2,7 @@
     <name>Scalastyle standard configuration</name>
     <check class="org.scalastyle.file.HeaderMatchesChecker" level="warning" enabled="true">
         <parameters>
-            <parameter name="header"><![CDATA[/*
+            <parameter name="header"><![CDATA[/**
  * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or

@@ -1,7 +1,5 @@
 package alice.util.proxyGenerator;
 
-import cli.System.Reflection.Assembly;
-
 import javax.tools.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -28,9 +26,6 @@ public class Generator {
         } catch (NoSuchMethodException e) {
             throw new ExceptionInInitializerError(e);
         }
-
-        if (System.getProperty("java.vm.name").equals("IKVM.NET"))
-            ikvm.runtime.Startup.addBootClassPathAssemby(Assembly.Load("IKVM.OpenJDK.Tools"));
 
         jc = ToolProvider.getSystemJavaCompiler();
         if (jc == null) {

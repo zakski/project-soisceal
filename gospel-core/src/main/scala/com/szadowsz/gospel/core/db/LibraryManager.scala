@@ -1,13 +1,32 @@
+/**
+  * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+  * License as published by the Free Software Foundation; either
+  * version 3.0 of the License, or (at your option) any later version.
+  *
+  * This library is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * Lesser General Public License for more details.
+  *
+  * You should have received a copy of the GNU Lesser General Public
+  * License along with this library; if not, write to the Free Software
+  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
 package com.szadowsz.gospel.core.db
 
 import java.io.File
 import java.net.{URL, URLClassLoader}
 
 import com.szadowsz.gospel.core.data.Term
+import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
+import com.szadowsz.gospel.core.db.theory.TheoryManager
 import com.szadowsz.gospel.core.error.{InvalidLibraryException, InvalidTheoryException}
 import com.szadowsz.gospel.core.event.interpreter.LibraryEvent
 import com.szadowsz.gospel.core.{PrologEngine, Theory}
-import org.slf4j.LoggerFactory
+import org.slf4j.{Logger, LoggerFactory}
 
 import scala.util.control.NonFatal
 
@@ -18,27 +37,21 @@ import scala.util.control.NonFatal
   *
   * @version Gospel 2.0.0
   */
-final case class LibraryManager(private val wam: PrologEngine) extends java.io.Serializable {
-  private lazy val logger = LoggerFactory.getLogger(getClass)
+trait LibraryManager extends java.io.Serializable {
 
-  private var currentLibs = List[Library]()
+  protected val wam: PrologEngine
+
+  protected lazy val thManager: TheoryManager = wam.getTheoryManager //  manager of current theories.
+
+  protected lazy val primManager: PrimitiveManager = wam.getPrimitiveManager // primitive prolog term manager.
+
+  protected lazy val logger: Logger = LoggerFactory.getLogger(getClass)
+
+  protected var currentLibs: List[Library] = List()
+
   // currently bound libraries.
-  private var externalLibs: Map[String, URL] = Map() // external libraries.
+  protected var externalLibs: Map[String, URL] = Map() // external libraries.
 
-  /* * This is the directory where optimized dex files should be written.
-	 * Is required to the DexClassLoader.
-	 */
-  private var optimizedDirectory : String = _
-
-
-  private lazy val thManager = wam.getTheoryManager //  manager of current theories.
-
-  private lazy val primManager = wam.getPrimitiveManager // primitive prolog term manager.
-
-  private def getClassResource(klass: Class[_]) = Option(klass) match {
-    case None => null
-    case Some(c) => c.getClassLoader.getResource(c.getName.replace('.', '/') + ".class")
-  }
   /**
     * Binds a library by adding its clauses to the database and carrying out tis directives.
     *
@@ -47,7 +60,7 @@ final case class LibraryManager(private val wam: PrologEngine) extends java.io.S
     * @throws InvalidLibraryException if name is not a valid library
     */
   @throws(classOf[InvalidLibraryException])
-  private def bindLibrary(lib: Library) = {
+  protected def bindLibrary(lib: Library): Unit = {
     try {
       lib.setEngine(wam)
       currentLibs = lib +: currentLibs
@@ -84,7 +97,6 @@ final case class LibraryManager(private val wam: PrologEngine) extends java.io.S
     */
   def getLibrary(name: String): Library = currentLibs.find(_.getName == name).orNull
 
-  def getOptimizedDirectory: String = optimizedDirectory
 
   /**
     * Loads a library.
@@ -103,54 +115,55 @@ final case class LibraryManager(private val wam: PrologEngine) extends java.io.S
   }
 
   @throws(classOf[InvalidLibraryException])
-  def loadLibrary(className: String, paths: Array[String]): Library = {
-    try {
-      val lib = System.getProperty("java.vm.name") match {
-        case "Dalvik" =>
-          // Only the first path is used. Dex file doesn't contain.class files and therefore getResource() method can't be used to locate the files at runtime.
-          val dexPath = paths.head
-          val loaderClass = Class.forName("dalvik.system.DexClassLoader")
-
-          /**
-            * Description of DexClassLoader
-            * A class loader that loads classes from .jar files containing a classes.dex entry.
-            * This can be used to execute code not installed as part of an application.
-            *
-            * param dexPath jar file path where is contained the library.
-            * param optimizedDirectory directory where optimized dex files should be written; must not be null
-            * param libraryPath the list of directories containing native libraries, delimited by File.pathSeparator; may be null
-            * param parent the parent class loader
-            */
-          val loaderConstructor = loaderClass.getConstructor(classOf[String], classOf[String], classOf[String], classOf[ClassLoader])
-          val loader = loaderConstructor.newInstance(dexPath, this.getOptimizedDirectory, null, getClass.getClassLoader).asInstanceOf[ClassLoader]
-          Class.forName(className, true, loader).newInstance.asInstanceOf[Library]
-        case _ =>
-          val urls = paths.map(p => (if (!p.contains(".class")) new File(p) else new File(p.substring(0, p.lastIndexOf(File.separator) + 1))).toURI.toURL)
-          val loader = URLClassLoader.newInstance(urls, getClass.getClassLoader)
-          Class.forName(className, true, loader).newInstance.asInstanceOf[Library]
-      }
-      Option(getLibrary(lib.getName)) match {
-        case Some(oldLib) =>
-          logger.warn(s"Library ${oldLib.getName} already loaded.")
-          oldLib
-        case None =>
-          System.getProperty("java.vm.name") match {
-            case "Dalvik" =>
-              val file = new File(paths(0))
-              val url = file.toURI.toURL
-              externalLibs = externalLibs + (className -> url)
-            case _ => externalLibs = externalLibs + (className -> getClassResource(lib.getClass))
-          }
-          bindLibrary(lib)
-          logger.info(s"Loaded Library ${lib.getName}")
-          val ev = new LibraryEvent(wam, lib.getName)
-          wam.notifyLoadedLibrary(ev)
-          lib
-      }
-    } catch {
-      case NonFatal(e) => throw new InvalidLibraryException(className, -1, -1)
-    }
-  }
+  def loadLibrary(className: String, paths: Array[String]): Library
+//  = {
+//    try {
+//      val lib = System.getProperty("java.vm.name") match {
+//        case "Dalvik" =>
+//          // Only the first path is used. Dex file doesn't contain.class files and therefore getResource() method can't be used to locate the files at runtime.
+//          val dexPath = paths.head
+//          val loaderClass = Class.forName("dalvik.system.DexClassLoader")
+//
+//          /**
+//            * Description of DexClassLoader
+//            * A class loader that loads classes from .jar files containing a classes.dex entry.
+//            * This can be used to execute code not installed as part of an application.
+//            *
+//            * param dexPath jar file path where is contained the library.
+//            * param optimizedDirectory directory where optimized dex files should be written; must not be null
+//            * param libraryPath the list of directories containing native libraries, delimited by File.pathSeparator; may be null
+//            * param parent the parent class loader
+//            */
+//          val loaderConstructor = loaderClass.getConstructor(classOf[String], classOf[String], classOf[String], classOf[ClassLoader])
+//          val loader = loaderConstructor.newInstance(dexPath, this.getOptimizedDirectory, null, getClass.getClassLoader).asInstanceOf[ClassLoader]
+//          Class.forName(className, true, loader).newInstance.asInstanceOf[Library]
+//        case _ =>
+//          val urls = paths.map(p => (if (!p.contains(".class")) new File(p) else new File(p.substring(0, p.lastIndexOf(File.separator) + 1))).toURI.toURL)
+//          val loader = URLClassLoader.newInstance(urls, getClass.getClassLoader)
+//          Class.forName(className, true, loader).newInstance.asInstanceOf[Library]
+//      }
+//      Option(getLibrary(lib.getName)) match {
+//        case Some(oldLib) =>
+//          logger.warn(s"Library ${oldLib.getName} already loaded.")
+//          oldLib
+//        case None =>
+//          System.getProperty("java.vm.name") match {
+//            case "Dalvik" =>
+//              val file = new File(paths(0))
+//              val url = file.toURI.toURL
+//              externalLibs = externalLibs + (className -> url)
+//            case _ => externalLibs = externalLibs + (className -> getClassResource(lib.getClass))
+//          }
+//          bindLibrary(lib)
+//          logger.info(s"Loaded Library ${lib.getName}")
+//          val ev = new LibraryEvent(wam, lib.getName)
+//          wam.notifyLoadedLibrary(ev)
+//          lib
+//      }
+//    } catch {
+//      case NonFatal(e) => throw new InvalidLibraryException(className, -1, -1)
+//    }
+//  }
 
   /**
     * Loads a library.
@@ -240,9 +253,5 @@ final case class LibraryManager(private val wam: PrologEngine) extends java.io.S
     * Method is called when Prolog demonstration ends. Allows JVM libraries to do any cleanup that they may want.
     */
   def onSolveEnd(): Unit = currentLibs.foreach(_.onSolveEnd())
-
-  def setOptimizedDirectory(optimizedDir: String): Unit = {
-    optimizedDirectory = optimizedDir
-  }
 }
 

@@ -1,3 +1,20 @@
+/**
+  * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+  * License as published by the Free Software Foundation; either
+  * version 3.0 of the License, or (at your option) any later version.
+  *
+  * This library is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * Lesser General Public License for more details.
+  *
+  * You should have received a copy of the GNU Lesser General Public
+  * License along with this library; if not, write to the Free Software
+  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
 package com.szadowsz.gospel.core.db.theory.clause
 
 import java.{util => ju}
@@ -17,7 +34,7 @@ import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
   * @see LinkedList
   */
 @SerialVersionUID(1L)
-class FamilyClausesList extends ju.LinkedList[ClauseInfo] {
+private[theory] class FamilyClausesList extends ju.LinkedList[ClauseInfo] {
   private val numCompClausesIndex = new FamilyClausesIndex[Number]
   private val constantCompClausesIndex = new FamilyClausesIndex[String]
   private val structCompClausesIndex = new FamilyClausesIndex[String]
@@ -28,13 +45,13 @@ class FamilyClausesList extends ju.LinkedList[ClauseInfo] {
     *
     * @param ci The clause to be added (with related informations)
     */
-  override def addFirst(ci: ClauseInfo) {
+  override def addFirst(ci: ClauseInfo): Unit = {
     super.addFirst(ci)
     register(ci, true)
   }
 
   // Updates indexes, storing informations about the last added clause
-  private def register(ci: ClauseInfo, first: Boolean) {
+  private def register(ci: ClauseInfo, first: Boolean): Unit = {
     // See FamilyClausesList.get(Term): same concept
     val clause = ci.getHead
     if (clause.isInstanceOf[Struct]) {
@@ -42,38 +59,33 @@ class FamilyClausesList extends ju.LinkedList[ClauseInfo] {
       if (g.getArity == 0) {
         return
       }
-      val t: Term = g.getArg(0).getTerm
-      if (t.isInstanceOf[Var]) {
-        numCompClausesIndex.insertAsShared(ci, first)
-        constantCompClausesIndex.insertAsShared(ci, first)
-        structCompClausesIndex.insertAsShared(ci, first)
-        if (first) {
-          listCompClausesList.addFirst(ci)
-        }
-        else {
-          listCompClausesList.addLast(ci)
-        }
-      }
-      else if (t.isAtomic) {
-        if (t.isInstanceOf[Number]) {
-          numCompClausesIndex.insert(t.asInstanceOf[Number], ci, first)
-        }
-        else if (t.isInstanceOf[Struct]) {
-          constantCompClausesIndex.insert(t.asInstanceOf[Struct].getName, ci, first)
-        }
-      }
-      else if (t.isInstanceOf[Struct]) {
-        if (isAList(t.asInstanceOf[Struct])) {
+      g.getArg(0).getTerm match {
+        case v: Var =>
+          numCompClausesIndex.insertAsShared(ci, first)
+          constantCompClausesIndex.insertAsShared(ci, first)
+          structCompClausesIndex.insertAsShared(ci, first)
           if (first) {
             listCompClausesList.addFirst(ci)
-          }
-          else {
+          } else {
             listCompClausesList.addLast(ci)
           }
-        }
-        else {
-          structCompClausesIndex.insert(t.asInstanceOf[Struct].getPredicateIndicator, ci, first)
-        }
+        case t if t.isAtomic =>
+          t match {
+            case n: Number => numCompClausesIndex.insert(n, ci, first)
+            case s: Struct => constantCompClausesIndex.insert(s.getName, ci, first)
+            case _ =>
+          }
+        case s: Struct =>
+          if (isAList(s)) {
+            if (first) {
+              listCompClausesList.addFirst(ci)
+            } else {
+              listCompClausesList.addLast(ci)
+            }
+          } else {
+            structCompClausesIndex.insert(s.getPredicateIndicator, ci, first)
+          }
+        case _ =>
       }
     }
   }
@@ -83,9 +95,7 @@ class FamilyClausesList extends ju.LinkedList[ClauseInfo] {
    * A list can be an empty list, or a Struct with name equals to "."
    * and arity equals to 2.
    */
-  private def isAList(t: Struct): Boolean = {
-    t.isEmptyList || ((t.getName == ".") && t.getArity == 2)
-  }
+  private def isAList(t: Struct): Boolean = t.isEmptyList || ((t.getName == ".") && t.getArity == 2)
 
   override def add(o: ClauseInfo): Boolean = {
     addLast(o)
@@ -174,10 +184,10 @@ class FamilyClausesList extends ju.LinkedList[ClauseInfo] {
       }
       else if (t.isAtomic) {
         if (t.isInstanceOf[Number]) {
-          numCompClausesIndex.delete(t.asInstanceOf[Number], ci)
+          numCompClausesIndex.remove(t.asInstanceOf[Number], ci)
         }
         else if (t.isInstanceOf[Struct]) {
-          constantCompClausesIndex.delete(t.asInstanceOf[Struct].getName, ci)
+          constantCompClausesIndex.remove(t.asInstanceOf[Struct].getName, ci)
         }
       }
       else if (t.isInstanceOf[Struct]) {
@@ -185,7 +195,7 @@ class FamilyClausesList extends ju.LinkedList[ClauseInfo] {
           listCompClausesList.remove(ci)
         }
         else {
-          structCompClausesIndex.delete(t.asInstanceOf[Struct].getPredicateIndicator, ci)
+          structCompClausesIndex.remove(t.asInstanceOf[Struct].getPredicateIndicator, ci)
         }
       }
     }
@@ -235,14 +245,14 @@ class FamilyClausesList extends ju.LinkedList[ClauseInfo] {
            * are retrieved, all clauses with a variable
            * as first argument
            */
-          numCompClausesIndex.get(t.asInstanceOf[Number]) //.asScala.toList ::: List[ClauseInfo]()
+          numCompClausesIndex.get(t.asInstanceOf[Number])
         } else {
           /* retrieves clauses whose first argument is a constant (or Var)
            * and same as goal's first argument, if no clauses
            * are retrieved, all clauses with a variable
            * as first argument
            */
-          constantCompClausesIndex.get(t.asInstanceOf[Struct].getName) //.asScala.toList ::: List[ClauseInfo]()
+          constantCompClausesIndex.get(t.asInstanceOf[Struct].getName)
         }
       } else if (t.isInstanceOf[Struct]) {
         if (isAList(t.asInstanceOf[Struct])) {
@@ -254,7 +264,7 @@ class FamilyClausesList extends ju.LinkedList[ClauseInfo] {
            * are retrieved, all clauses with a variable
            * as first argument
            */
-          structCompClausesIndex.get(t.asInstanceOf[Struct].getPredicateIndicator) //.asScala.toList ::: List[ClauseInfo]()
+          structCompClausesIndex.get(t.asInstanceOf[Struct].getPredicateIndicator)
         }
       } else {
         /* Default behaviour: no optimization done */
@@ -330,5 +340,4 @@ class FamilyClausesList extends ju.LinkedList[ClauseInfo] {
       l.addLast(o)
     }
   }
-
 }
