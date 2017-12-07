@@ -1,7 +1,0 @@
-//Alberto
-
-RoboVM_SDK is a hidden directory in this Eclipse project.
-
-See -> http://robovm.mobidevelop.com or https://github.com/MobiDevelop/robovm
-
-(For all the .jar required see the IntelliJ/Eclipse plug-in)

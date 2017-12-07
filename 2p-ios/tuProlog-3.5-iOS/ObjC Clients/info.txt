@@ -1,3 +1,0 @@
-//Alberto
-
-Project for Apple Watch and ObjC client App which uses tuProlog as a service on iOS.
