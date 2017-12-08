@@ -23,7 +23,7 @@ import java.util
   * Long class represents the long prolog data type
   */
 @SerialVersionUID(1L)
-class Long(val value: scala.Long) extends Number {
+case class Long(value: scala.Long) extends Number {
   @SuppressWarnings(Array("unused")) private val `type` = "Long"
 
   /**

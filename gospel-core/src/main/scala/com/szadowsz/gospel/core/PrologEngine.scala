@@ -19,7 +19,6 @@ package com.szadowsz.gospel.core
 
 import java.util
 
-import alice.tuprolog.json.{AbstractEngineState, FullEngineState, JSONSerializerManager, ReducedEngineState}
 import com.szadowsz.gospel.core.data.Term
 import com.szadowsz.gospel.core.db.{Library, LibraryManager, LibraryManagerFactory}
 import com.szadowsz.gospel.core.db.libs._
@@ -31,6 +30,7 @@ import com.szadowsz.gospel.core.engine.flags.FlagManager
 import com.szadowsz.gospel.core.error._
 import com.szadowsz.gospel.core.event.interpreter._
 import com.szadowsz.gospel.core.event.io.OutputEvent
+import com.szadowsz.gospel.core.json.{EngineState, JSONSerializerManager}
 import com.szadowsz.gospel.core.listener._
 import com.szadowsz.gospel.core.parser.Parser
 
@@ -45,10 +45,18 @@ object PrologEngine {
     */
   def getVersion: String = alice.util.VersionInfo.getEngineVersion
 
-  def getEngineStateFromJSON(jsonString: String): AbstractEngineState = {
-    if (jsonString.contains("FullEngineState")) JSONSerializerManager.fromJSON(jsonString, classOf[FullEngineState])
-    else if (jsonString.contains("ReducedEngineState")) JSONSerializerManager.fromJSON(jsonString, classOf[ReducedEngineState])
-    else null
+  def fromJSON(jsonString: String): PrologEngine = {
+    val brain = JSONSerializerManager.fromJSON(jsonString, classOf[EngineState])
+    val engine = new PrologEngine(brain.getLibraries)
+    engine.setTheory(new Theory(brain.getDynTheory))
+    brain.getOp.asScala.foreach(o => engine.getOperatorManager.opNew(o.name, o.`type`, o.prio))
+    engine.getFlagManager.reloadFlags(brain)
+    if (brain.hasOpenAlternatives) {
+      for (i <- 0 until brain.getNumberAskedResults) {
+        engine.solve(brain.getQuery)
+      }
+    }
+    engine
   }
 }
 
@@ -87,7 +95,7 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
 
   protected val queryListeners = new util.ArrayList[QueryListener]() // listeners to query events
 
-  private val engineState = new FullEngineState
+  private val engineState = new EngineState
 
   protected var spy = spyFlag
 
@@ -681,7 +689,6 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
   /**
     * Notifies a warn information event
     *
-    *
     * @param m the warning message
     */
   def warn(m: String) {
@@ -693,7 +700,6 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
 
   /**
     * Notifies a exception information event
-    *
     *
     * @param m the exception message
     */
@@ -798,17 +804,11 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     absolutePathList.add(path)
   }
 
-  def toJSON(alsoKB: Boolean): String = {
-    var brain: AbstractEngineState = null
-    if (alsoKB) {
-      brain = this.engineState
-      this.theoryManager.serializeLibraries(brain.asInstanceOf[FullEngineState])
-      this.theoryManager.serializeDynDataBase(brain.asInstanceOf[FullEngineState])
-      brain.asInstanceOf[FullEngineState].setOp(getOperatorManager.getOperators.asInstanceOf[util.LinkedList[Operator]])
-    } else {
-      brain = new ReducedEngineState
-
-    }
+  def toJSON(): String = {
+    val brain = this.engineState
+    theoryManager.serializeLibraries(brain.asInstanceOf[EngineState])
+    theoryManager.serializeDynDataBase(brain.asInstanceOf[EngineState])
+    brain.asInstanceOf[EngineState].setOp(opManager.getOperators.asInstanceOf[util.LinkedList[Operator]])
     theoryManager.serializeTimestamp(brain)
     engManager.serializeQueryState(brain)
     flagManager.serializeFlags(brain)

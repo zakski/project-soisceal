@@ -23,7 +23,7 @@ import java.util
   * Double class represents the double prolog data type
   */
 @SerialVersionUID(1L)
-class Double(val value: scala.Double) extends Number {
+case class Double(value: scala.Double) extends Number {
 
   /**
     * Returns the value of the Double as int

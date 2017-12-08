@@ -1,8 +1,24 @@
+/**
+  * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+  * License as published by the Free Software Foundation; either
+  * version 3.0 of the License, or (at your option) any later version.
+  *
+  * This library is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * Lesser General Public License for more details.
+  *
+  * You should have received a copy of the GNU Lesser General Public
+  * License along with this library; if not, write to the Free Software
+  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
 package com.szadowsz.gospel.core.db.theory
 
 import java.util
 
-import alice.tuprolog.json.{AbstractEngineState, FullEngineState}
 import alice.util.Tools
 import com.szadowsz.gospel.core.PrologEngine
 import com.szadowsz.gospel.core.Theory
@@ -12,6 +28,7 @@ import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
 import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalLeaf
 import com.szadowsz.gospel.core.error.{InvalidTermException, InvalidTheoryException}
+import com.szadowsz.gospel.core.json.EngineState
 import org.slf4j.LoggerFactory
 
 import scala.collection.JavaConverters._
@@ -376,9 +393,9 @@ final case class TheoryManager(private val wam: PrologEngine) {
 
   def checkExistence(predicateIndicator: String): Boolean = dynamicDB.containsKey(predicateIndicator) || staticDB.containsKey(predicateIndicator)
 
-  def serializeLibraries(brain: FullEngineState): Unit = brain.setLibraries(wam.getCurrentLibraries)
+  def serializeLibraries(brain: EngineState): Unit = brain.setLibraries(wam.getCurrentLibraries)
 
-  def serializeTimestamp(brain: AbstractEngineState): Unit = brain.setSerializationTimestamp(System.currentTimeMillis)
+  def serializeTimestamp(brain: EngineState): Unit = brain.setSerializationTimestamp(System.currentTimeMillis)
 
-  def serializeDynDataBase(brain: FullEngineState): Unit = brain.setDynTheory(getTheory(true))
+  def serializeDynDataBase(brain: EngineState): Unit = brain.setDynTheory(getTheory(true))
 }

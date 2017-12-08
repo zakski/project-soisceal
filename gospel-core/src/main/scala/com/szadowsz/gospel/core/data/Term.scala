@@ -19,11 +19,13 @@ package com.szadowsz.gospel.core.data
 
 import java.io.Serializable
 
-import alice.tuprolog.json.JSONSerializerManager
 import alice.util.OneWayList
 import com.szadowsz.gospel.core.PrologEngine
 import com.szadowsz.gospel.core.db.ops.OperatorManager
 import java.util
+
+import com.szadowsz.gospel.core.json.JSONSerializerManager
+
 import scala.collection.JavaConverters._
 
 /**

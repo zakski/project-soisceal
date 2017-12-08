@@ -1,4 +1,4 @@
-package alice.tuprolog.json;
+package com.szadowsz.gospel.core.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

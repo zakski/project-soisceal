@@ -37,10 +37,10 @@ import java.io._
 import java.util
 
 import scala.collection.JavaConverters._
-import alice.tuprolog.json.JSONSerializerManager
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.engine.ExecutionResultType
 import com.szadowsz.gospel.core.error.{NoSolutionException, UnknownVarException}
+import com.szadowsz.gospel.core.json.JSONSerializerManager
 
 @SerialVersionUID(1L)
 object Solution {

@@ -1,6 +1,22 @@
+/**
+  * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+  * License as published by the Free Software Foundation; either
+  * version 3.0 of the License, or (at your option) any later version.
+  *
+  * This library is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * Lesser General Public License for more details.
+  *
+  * You should have received a copy of the GNU Lesser General Public
+  * License along with this library; if not, write to the Free Software
+  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
 package com.szadowsz.gospel.core.engine
 
-import alice.tuprolog.json.AbstractEngineState
 import java.util
 import java.util.concurrent.locks.ReentrantLock
 
@@ -9,6 +25,7 @@ import com.szadowsz.gospel.core.{PrologEngine, Solution}
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalTree
 import com.szadowsz.gospel.core.error.NoMoreSolutionException
+import com.szadowsz.gospel.core.json.EngineState
 
 /**
   * Prolog Interpreter Execution Handler.
@@ -366,7 +383,7 @@ final case class EngineManager(private val wam: PrologEngine) extends java.io.Se
   }
 
   //Alberto
-  def serializeQueryState(brain: AbstractEngineState) {
+  def serializeQueryState(brain: EngineState) {
     brain.setQuery(findRunner.getQuery)
     if (findRunner.env == null) {
       brain.setNumberAskedResults(0)

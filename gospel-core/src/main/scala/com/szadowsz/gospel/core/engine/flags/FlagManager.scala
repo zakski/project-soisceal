@@ -19,9 +19,9 @@ package com.szadowsz.gospel.core.engine.flags
 
 import java.util
 
-import alice.tuprolog.json.{AbstractEngineState, FullEngineState, JSONSerializerManager}
 import com.szadowsz.gospel.core.data.{Struct, Term}
-
+import com.szadowsz.gospel.core.json.{EngineState, JSONSerializerManager}
+import scala.collection.JavaConverters._
 
 /**
   * Administrator of declared flags.
@@ -83,13 +83,13 @@ private[core] final class FlagManager extends java.io.Serializable {
     flags.exists(flag => flag.getName == name && flag.isValidValue(value))
   }
 
-  def serializeFlags(brain: AbstractEngineState) {
-    if (brain.isInstanceOf[FullEngineState]) {
-      val a = new util.ArrayList[String]
-      for (f <- flags) {
-        a.add(JSONSerializerManager.toJSON(f))
-      }
-      brain.asInstanceOf[FullEngineState].setFlags(a)
-    }
+  def serializeFlags(brain: EngineState): Unit = {
+    val a = new util.ArrayList[String]
+    flags.foreach(f => a.add(JSONSerializerManager.toJSON(f)))
+    brain.asInstanceOf[EngineState].setFlags(a)
+  }
+
+  def reloadFlags(brain: EngineState): Unit = {
+    brain.getFlags.asScala.foreach(s => flags = flags :+ JSONSerializerManager.fromJSON(s, classOf[Flag]))
   }
 }

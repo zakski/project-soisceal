@@ -23,7 +23,7 @@ import java.util
   * Float class represents the float prolog data type
   */
 @SerialVersionUID(1L)
-class Float(val value: scala.Float) extends Number {
+case class Float(value: scala.Float) extends Number {
 
   /**
     * Returns the value of the Float as int

@@ -1,17 +1,19 @@
-package alice.tuprolog.json;
+package com.szadowsz.gospel.core.json;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import alice.tuprolog.Operator;
-import alice.tuprolog.Term;
+import com.szadowsz.gospel.core.db.ops.Operator;
+import com.szadowsz.gospel.core.data.Term;
 
 //Alberto
-public class FullEngineState extends AbstractEngineState {
-	
-	@SuppressWarnings("unused")
-	private String type = "FullEngineState";
-	
+public class EngineState {
+	private Term query;
+	private int nAskedResults;
+	private boolean hasOpenAlternatives;
+
+	private long serializationTimestamp;
+
 	private String[] libraries;
 	private ArrayList<String> flags;
 	
@@ -19,22 +21,22 @@ public class FullEngineState extends AbstractEngineState {
 	
 	private LinkedList<Operator> op;
 	
-	@Override
+	
 	public void setQuery(Term query) {
 		this.query = query;
 	}
 	
-	@Override
+	
 	public Term getQuery(){
 		return this.query;
 	}
 
-	@Override
+	
 	public void setNumberAskedResults(int nResultAsked) {
 		this.nAskedResults = nResultAsked;
 	}
 	
-	@Override
+	
 	public int getNumberAskedResults(){
 		return this.nAskedResults;
 	}
@@ -47,22 +49,22 @@ public class FullEngineState extends AbstractEngineState {
 		return this.libraries;
 	}
 
-	@Override
+	
 	public void setHasOpenAlternatives(boolean hasOpenAlternatives) {
 		this.hasOpenAlternatives = hasOpenAlternatives;
 	}
 	
-	@Override
+	
 	public boolean  hasOpenAlternatives(){
 		return this.hasOpenAlternatives;
 	}
 
-	@Override
+	
 	public long getSerializationTimestamp() {
 		return serializationTimestamp;
 	}
 
-	@Override
+	
 	public void setSerializationTimestamp(long serializationTimestamp) {
 		this.serializationTimestamp = serializationTimestamp;
 	}

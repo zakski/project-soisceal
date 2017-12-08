@@ -1,20 +1,20 @@
-/*
- * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/**
+  * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Lesser General Public
+  * License as published by the Free Software Foundation; either
+  * version 3.0 of the License, or (at your option) any later version.
+  *
+  * This library is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  * Lesser General Public License for more details.
+  *
+  * You should have received a copy of the GNU Lesser General Public
+  * License along with this library; if not, write to the Free Software
+  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
 package com.szadowsz.gospel.core.data
 
 import java.util
@@ -23,38 +23,37 @@ import java.util
   * Int class represents the integer prolog data type
   */
 @SerialVersionUID(1L)
-class Int(val value: scala.Int) extends Number {
-  @SuppressWarnings(Array("unused")) private val `type` = "Int"
+final case class Int(value: scala.Int) extends Number {
 
   /**
     * Returns the value of the Integer as int
     */
-  override final def intValue: scala.Int = value
+  override def intValue: scala.Int = value
 
   /**
     * Returns the value of the Integer as float
     */
-  override final def floatValue: scala.Float = value.toFloat
+  override def floatValue: scala.Float = value.toFloat
 
   /**
     * Returns the value of the Integer as double
     */
-  override final def doubleValue: scala.Double = value.toDouble
+  override def doubleValue: scala.Double = value.toDouble
 
   /**
     * Returns the value of the Integer as long
     */
-  override final def longValue: scala.Long = value
+  override def longValue: scala.Long = value
 
   /**
     * is this term a prolog integer term?
     */
-  override final def isInteger = true
+  override def isInteger = true
 
   /**
     * is this term a prolog real term?
     */
-  override final def isReal = false
+  override def isReal = false
 
   /**
     * Returns true if this integer term is grater that the term provided.
