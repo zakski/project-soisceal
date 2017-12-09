@@ -1,16 +1,16 @@
-/*
+/**
  * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
- *
+ * <p>
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *
+ * <p>
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -106,21 +106,20 @@ public class ISOLibrary extends Library {
         if (arg1 instanceof Var) {
             if (arg0.isAtom()) {
                 String st = ((Struct) arg0).getName();
-                if (st.length() <= 1)
+                if (st.length() <= 1) {
                     return unify(arg1, new Int(st.charAt(0)));
-                else
-                    throw PrologError.type_error(engine.getEngineManager(), 1,
-                            "character", arg0);
-            } else
-                throw PrologError.type_error(engine.getEngineManager(), 1,
-                        "character", arg0);
-        } else if ((arg1 instanceof Int)
-                || (arg1 instanceof Long)) {
+                } else {
+                    throw PrologError.type_error(engine.getEngineManager(), 1, "character", arg0);
+                }
+            } else {
+                throw PrologError.type_error(engine.getEngineManager(), 1, "character", arg0);
+            }
+        } else if ((arg1 instanceof Int) || (arg1 instanceof Long)) {
             char c = (char) ((Number) arg1).intValue();
             return unify(arg0, new Struct("" + c));
-        } else
-            throw PrologError.type_error(engine.getEngineManager(), 2,
-                    "integer", arg1);
+        } else {
+            throw PrologError.type_error(engine.getEngineManager(), 2, "integer", arg1);
+        }
     }
 
     //
@@ -134,9 +133,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
-            return new Double(Math.sin(((Number) val0)
-                    .doubleValue()));
+        if (val0 instanceof Number) {
+            return new Double(Math.sin(((Number) val0).doubleValue()));
+        }
         return null;
     }
 
@@ -147,9 +146,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
-            return new Double(Math.cos(((Number) val0)
-                    .doubleValue()));
+        if (val0 instanceof Number) {
+            return new Double(Math.cos(((Number) val0).doubleValue()));
+        }
         return null;
     }
 
@@ -160,9 +159,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
-            return new Double(Math.exp(((Number) val0)
-                    .doubleValue()));
+        if (val0 instanceof Number) {
+            return new Double(Math.exp(((Number) val0).doubleValue()));
+        }
         return null;
     }
 
@@ -173,9 +172,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
-            return new Double(Math.atan(((Number) val0)
-                    .doubleValue()));
+        if (val0 instanceof Number) {
+            return new Double(Math.atan(((Number) val0).doubleValue()));
+        }
         return null;
     }
 
@@ -186,9 +185,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
-            return new Double(Math.log(((Number) val0)
-                    .doubleValue()));
+        if (val0 instanceof Number) {
+            return new Double(Math.log(((Number) val0).doubleValue()));
+        }
         return null;
     }
 
@@ -199,9 +198,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
-            return new Double(Math.sqrt(((Number) val0)
-                    .doubleValue()));
+        if (val0 instanceof Number) {
+            return new Double(Math.sqrt(((Number) val0).doubleValue()));
+        }
         return null;
     }
 
@@ -212,12 +211,11 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Int || val0 instanceof Long)
+        if (val0 instanceof Int || val0 instanceof Long) {
             return new Int(Math.abs(((Number) val0).intValue()));
-        if (val0 instanceof Double
-                || val0 instanceof Float)
-            return new Double(Math.abs(((Number) val0)
-                    .doubleValue()));
+        } else if (val0 instanceof Double || val0 instanceof Float){
+            return new Double(Math.abs(((Number) val0).doubleValue()));
+        }
         return null;
     }
 
@@ -228,13 +226,11 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Int || val0 instanceof Long)
-            return new Double(
-                    ((Number) val0).intValue() > 0 ? 1.0 : -1.0);
-        if (val0 instanceof Double
-                || val0 instanceof Float)
-            return new Double(
-                    ((Number) val0).doubleValue() > 0 ? 1.0 : -1.0);
+        if (val0 instanceof Int || val0 instanceof Long) {
+            return new Double(((Number) val0).intValue() > 0 ? 1.0 : -1.0);
+        } else if (val0 instanceof Double || val0 instanceof Float) {
+            return new Double(((Number) val0).doubleValue() > 0 ? 1.0 : -1.0);
+        }
         return null;
     }
 
@@ -245,9 +241,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
-            return new Double((long) Math.rint(((Number) val0)
-                    .doubleValue()));
+        if (val0 instanceof Number) {
+            return new Double((long) Math.rint(((Number) val0).doubleValue()));
+        }
         return null;
     }
 
@@ -272,8 +268,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new Double(((Number) val0).doubleValue());
+        }
         return null;
     }
 
@@ -284,8 +281,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new Int((int) Math.floor(((Number) val0).doubleValue()));
+        }
         return null;
     }
 
@@ -296,9 +294,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
-            return new Long(Math.round(((Number) val0)
-                    .doubleValue()));
+        if (val0 instanceof Number) {
+            return new Long(Math.round(((Number) val0).doubleValue()));
+        }
         return null;
     }
 
@@ -309,8 +307,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new Int((int) Math.rint(((Number) val0).doubleValue()));
+        }
         return null;
     }
 
@@ -321,8 +320,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new Int((int) Math.ceil(((Number) val0).doubleValue()));
+        }
         return null;
     }
 
@@ -335,9 +335,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number && val1 instanceof Number)
-            return new Int(((Number) val0).intValue()
-                    / ((Number) val1).intValue());
+        if (val0 instanceof Number && val1 instanceof Number) {
+            return new Int(((Number) val0).intValue() / ((Number) val1).intValue());
+        }
         return null;
     }
 
@@ -370,8 +370,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number && val1 instanceof Number) {
-            return new Double(Math.IEEEremainder(((Number) val0)
-                    .doubleValue(), ((Number) val1).doubleValue()));
+            return new Double(Math.IEEEremainder(((Number) val0).doubleValue(), ((Number) val1).doubleValue()));
         }
         return null;
     }
@@ -449,10 +448,6 @@ public class ISOLibrary extends Library {
                         + "number_codes(Number,List):-catch(number_codes0(Number,List), Error, false).\n"
                         + "number_codes0(Number,List):-nonvar(Number),!,num_atom(Number,Struct),atom_codes(Struct,List).\n"
                         + "number_codes0(Number,List):-atom_codes(Struct,List),num_atom(Number,Struct).\n";
-        //
-        // ISO default
-        // "current_prolog_flag(changeable_flags,[ char_conversion(on,off), debug(on,off), undefined_predicate(error,fail,warning),double_quotes(chars,codes,atom) ]).\n"+
-        // "current_prolog_flag(changeable_flags,[]).\n                                                              "+
 
     }
 

@@ -1,16 +1,16 @@
-/*
+/**
  * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
- *
+ * <p>
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *
+ * <p>
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -30,43 +30,45 @@ import java.util.Random;
 
 /**
  * This class provides basic I/O predicates.
- * <p>
+ *
  * Library/Theory Dependency: BasicLibrary
  */
 public class IOLibrary extends Library {
+    private static final long serialVersionUID = 1L;
     /**
      * Added the variable consoleExecution and graphicExecution
      */
     public static final String consoleExecution = "console";
     public static final String graphicExecution = "graphic";
-    private static final long serialVersionUID = 1L;
+
     /**
      * Added StandardInput and StandardOutput for JSR-223
      */
     private static final String STDIN_NAME = "stdin";
     private static final String STDOUT_NAME = "stdout";
 
-    private InputStream stdIn = System.in;
-    private OutputStream stdOut = System.out;
+    protected InputStream stdIn = System.in;
+    protected OutputStream stdOut = System.out;
 
     /**
      * Current inputStream and outputStream initialized as StandardInput and StandardOutput*
      */
-    String inputStreamName = STDIN_NAME;
-    InputStream inputStream = stdIn;
-    String outputStreamName = STDOUT_NAME;
-    OutputStream outputStream = stdOut;
+    protected String inputStreamName = STDIN_NAME;
+    protected InputStream inputStream = stdIn;
+    protected String outputStreamName = STDOUT_NAME;
+    protected OutputStream outputStream = stdOut;
     /***************************************************************************************/
 
-    private UserContextInputStream input;
-    private final Random gen = new Random();
+    protected UserContextInputStream input;
+    private Random gen = new Random();
 
     public IOLibrary() {
         gen.setSeed(System.currentTimeMillis());
     }
 
     /************ Mirco Mastrovito - Input da Console ***********/
-    public UserContextInputStream getUserContextInputStream() {
+    public UserContextInputStream getUserContextInputStream()
+    {
         return this.input;
     }
 
@@ -92,21 +94,21 @@ public class IOLibrary extends Library {
      * Added getters and setters of StandardInput and StandardOutput for JSR-223
      */
 
-    public void setStandardInput(InputStream is) {
-        if (inputStream == null)
+    public void setStandardInput(InputStream is)  {
+        if(inputStream == null)
             throw new NullPointerException("Paramter 'is' is null");
 
         this.stdIn = is;
-        if (inputStreamName.equals(STDIN_NAME))
+        if(inputStreamName.equals(STDIN_NAME))
             this.inputStream = stdIn;
     }
 
     public void setStandardOutput(OutputStream os) {
-        if (outputStream == null)
+        if(outputStream == null)
             throw new NullPointerException("Parameter 'os' is null");
 
         this.stdOut = os;
-        if (outputStreamName.equals(STDOUT_NAME))
+        if(outputStreamName.equals(STDOUT_NAME))
             this.outputStream = stdOut;
     }
 
@@ -230,7 +232,7 @@ public class IOLibrary extends Library {
                         "character", arg);
             } else {
                 if (outputStreamName.equals(STDOUT_NAME)) { /* Changed from "stdout" to STDOUT_NAME */
-                    getEngine().stdOutput(ch);
+                    engine.stdOutput(ch);
                 } else {
                     try {
                         outputStream.write((byte) ch.charAt(0));
@@ -247,7 +249,7 @@ public class IOLibrary extends Library {
     }
 
     public boolean get0_1(Term arg0) throws PrologError {
-        int ch;
+        int ch = -2;
         try {
             ch = inputStream.read();
         } catch (IOException e) {
@@ -263,7 +265,7 @@ public class IOLibrary extends Library {
     }
 
     public boolean get_1(Term arg0) throws PrologError {
-        int ch;
+        int ch = 0;
         do {
             try {
                 ch = inputStream.read();
@@ -288,11 +290,11 @@ public class IOLibrary extends Library {
         if (!(arg instanceof Int))
             throw PrologError.type_error(engine.getEngineManager(), 1,
                     "integer", arg);
-        // int n = ((Int)arg).intValue(); // OLD BUGGED  VERSION (signaled by MViroli) 
-        int n = ((Int) arg.getTerm()).intValue(); // NEW CORRECT VERSION (by MViroli, EDenti)
+        // int n = ((Int)arg).intValue(); // OLD BUGGED  VERSION (signaled by MViroli)
+        int n = ((Int)arg.getTerm()).intValue(); // NEW CORRECT VERSION (by MViroli, EDenti)
         if (outputStreamName.equals(STDOUT_NAME)) { /* Changed from STDOUT_NAME to STDOUT_NAME */
             for (int i = 0; i < n; i++) {
-                getEngine().stdOutput(" ");
+                engine.stdOutput(" ");
             }
         } else {
             for (int i = 0; i < n; i++) {
@@ -311,7 +313,7 @@ public class IOLibrary extends Library {
 
     public boolean read_1(Term arg0) throws PrologError {
         arg0 = arg0.getTerm();
-        int ch;
+        int ch = 0;
 
         boolean open_apices = false;
         // boolean just_open_apices = false;
@@ -350,12 +352,9 @@ public class IOLibrary extends Library {
             }
         } while (true);
         try {
-            unify(arg0, getEngine().createTerm(st));
+            unify(arg0, engine.createTerm(st));
         } catch (InvalidTermException e) {
-            /*Castagna 06/2011*/
-            //throw PrologError.syntax_error(engine.getEngineManager(), -1, -1, new Struct(st));
-            throw PrologError.syntax_error(engine.getEngineManager(), -1, e.line, e.pos, new Struct(st));
-            /**/
+            throw PrologError.syntax_error(engine.getEngineManager(),-1, e.line, e.pos, new Struct(st));
         }
         return true;
     }
@@ -365,7 +364,7 @@ public class IOLibrary extends Library {
         if (arg0 instanceof Var)
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         if (outputStreamName.equals(STDOUT_NAME)) { /* Changed from "stdout" to STDOUT_NAME */
-            getEngine().stdOutput(arg0.toString());
+            engine.stdOutput(arg0.toString());
         } else {
             try {
                 outputStream.write(arg0.toString().getBytes());
@@ -383,8 +382,7 @@ public class IOLibrary extends Library {
         if (arg0 instanceof Var)
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         if (outputStreamName.equals(STDOUT_NAME)) { /* Changed from "stdout" to STDOUT_NAME */
-            getEngine().stdOutput(
-                    alice.util.Tools.removeApices(arg0.toString()));
+            engine.stdOutput(alice.util.Tools.removeApices(arg0.toString()));
         } else {
             try {
                 outputStream.write(alice.util.Tools.removeApices(
@@ -401,7 +399,7 @@ public class IOLibrary extends Library {
 
     public boolean nl_0() throws PrologError {
         if (outputStreamName.equals(STDOUT_NAME)) { /* Changed from "stdout" to STDOUT_NAME */
-            getEngine().stdOutput("\n");
+            engine.stdOutput("\n");
         } else {
             try {
                 outputStream.write('\n');
@@ -447,7 +445,6 @@ public class IOLibrary extends Library {
     }
 
     // miscellanea
-
     /**
      * Sets an arbitrary seed for the Random object.
      *
@@ -456,11 +453,11 @@ public class IOLibrary extends Library {
      */
     public boolean set_seed_1(Term t) throws PrologError {
         t = t.getTerm();
-        if (!(t instanceof Number)) {
+        if( !(t instanceof Number) ) {
             throw PrologError.type_error(engine.getEngineManager(), 1, "Integer Number", t);
         }
-        Number seed = (Number) t;
-        if (!seed.isInteger()) {
+        Number seed = (Number)t;
+        if( !seed.isInteger() ){
             throw PrologError.type_error(engine.getEngineManager(), 1, "Integer Number", t);
         }
         gen.setSeed(seed.longValue());
@@ -534,7 +531,7 @@ public class IOLibrary extends Library {
         if (arg0 instanceof Var)
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         if (outputStreamName.equals(STDOUT_NAME)) { /* Changed from "stdout" to STDOUT_NAME */
-            getEngine().stdOutput(arg0.toString());
+            engine.stdOutput(arg0.toString());
         } else {
             try {
                 outputStream.write(arg0.toString().getBytes());

@@ -18,9 +18,9 @@
 package alice.tuprologx.pj.lib;
 
 import com.szadowsz.gospel.core.data.*;
-import alice.tuprolog.lib.InvalidObjectIdException;
 import com.szadowsz.gospel.core.data.Number;
 import com.szadowsz.gospel.core.db.Library;
+import com.szadowsz.gospel.core.error.InvalidObjectIdException;
 
 import java.io.FileWriter;
 import java.io.IOException;

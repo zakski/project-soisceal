@@ -1,7 +1,20 @@
 /**
- * @author Eleonora Cau
+ * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
+ * <p>
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * <p>
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
 package com.szadowsz.gospel.core.db.libs;
 
 import com.szadowsz.gospel.core.data.Int;
@@ -17,8 +30,9 @@ import com.szadowsz.gospel.core.error.PrologError;
 
 public class ThreadLibrary extends Library {
     private static final long serialVersionUID = 1L;
-    private EngineManager engineManager;
+    protected EngineManager engineManager;
 
+    @Override
     public void setEngine(PrologEngine en) {
         engine = en;
         engineManager = en.getEngineManager();
@@ -84,26 +98,26 @@ public class ThreadLibrary extends Library {
 
     public boolean thread_has_next_1(Term id) throws PrologError {
         id = id.getTerm();
-        if (!(id instanceof Int))
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "integer", id);
+        if (!(id instanceof Int)) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "integer", id);
+        }
         return engineManager.hasNext(((Int) id).intValue());
     }
 
 
     public boolean thread_next_sol_1(Term id) throws PrologError {
         id = id.getTerm();
-        if (!(id instanceof Int))
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "integer", id);
+        if (!(id instanceof Int)) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "integer", id);
+        }
         return engineManager.nextSolution(((Int) id).intValue());
     }
 
     public boolean thread_detach_1(Term id) throws PrologError {
         id = id.getTerm();
-        if (!(id instanceof Int))
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "integer", id);
+        if (!(id instanceof Int)) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "integer", id);
+        }
         engineManager.detach(((Int) id).intValue());
         return true;
     }
@@ -125,67 +139,67 @@ public class ThreadLibrary extends Library {
 
     public boolean thread_send_msg_2(Term id, Term msg) throws PrologError {
         id = id.getTerm();
-        if (id instanceof Int)
+        if (id instanceof Int) {
             return engineManager.sendMsg(((Int) id).intValue(), msg);
-        if (!id.isAtomic() || !id.isAtom())
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "atom, atomic or integer", id);
+        } else if (!id.isAtomic() || !id.isAtom()) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom, atomic or integer", id);
+        }
         return engineManager.sendMsg(id.toString(), msg);
     }
 
     public boolean thread_get_msg_2(Term id, Term msg) throws PrologError {
         id = id.getTerm();
-        if (id instanceof Int)
+        if (id instanceof Int) {
             return engineManager.getMsg(((Int) id).intValue(), msg);
-        if (!id.isAtom() || !id.isAtomic())
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "atom, atomic or integer", id);
+        } else if (!id.isAtom() || !id.isAtomic()) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom, atomic or integer", id);
+        }
         return engineManager.getMsg(id.toString(), msg);
     }
 
     public boolean thread_peek_msg_2(Term id, Term msg) throws PrologError {
         id = id.getTerm();
-        if (id instanceof Int)
+        if (id instanceof Int) {
             return engineManager.peekMsg(((Int) id).intValue(), msg);
-        if (!id.isAtom() || !id.isAtomic())
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "atom, atomic or integer", id);
+        } else if (!id.isAtom() || !id.isAtomic()) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom, atomic or integer", id);
+        }
         return engineManager.peekMsg(id.toString(), msg);
     }
 
     public boolean thread_wait_msg_2(Term id, Term msg) throws PrologError {
         id = id.getTerm();
-        if (id instanceof Int)
+        if (id instanceof Int) {
             return engineManager.waitMsg(((Int) id).intValue(), msg);
-        if (!id.isAtom() || !id.isAtomic())
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "atom, atomic or integer", id);
+        } else if (!id.isAtom() || !id.isAtomic()) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom, atomic or integer", id);
+        }
         return engineManager.waitMsg(id.toString(), msg);
     }
 
     public boolean thread_remove_msg_2(Term id, Term msg) throws PrologError {
         id = id.getTerm();
-        if (id instanceof Int)
+        if (id instanceof Int) {
             return engineManager.removeMsg(((Int) id).intValue(), msg);
-        if (!id.isAtom() || !id.isAtomic())
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "atom, atomic or integer", id);
+        } else if (!id.isAtom() || !id.isAtomic()) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom, atomic or integer", id);
+        }
         return engineManager.removeMsg(id.toString(), msg);
     }
 
     public boolean msg_queue_create_1(Term q) throws PrologError {
         q = q.getTerm();
-        if (!q.isAtomic() || !q.isAtom())
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "atom or atomic", q);
+        if (!q.isAtomic() || !q.isAtom()) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom or atomic", q);
+        }
         return engineManager.createQueue(q.toString());
     }
 
     public boolean msg_queue_destroy_1(Term q) throws PrologError {
         q = q.getTerm();
-        if (!q.isAtomic() || !q.isAtom())
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "atom or atomic", q);
+        if (!q.isAtomic() || !q.isAtom()) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom or atomic", q);
+        }
         engineManager.destroyQueue(q.toString());
         return true;
     }
@@ -193,63 +207,67 @@ public class ThreadLibrary extends Library {
     public boolean msg_queue_size_2(Term id, Term n) throws PrologError {
         id = id.getTerm();
         int size;
-        if (id instanceof Int)
+        if (id instanceof Int) {
             size = engineManager.queueSize(((Int) id).intValue());
-        else {
-            if (!id.isAtom() || !id.isAtomic())
-                throw PrologError.type_error(engine.getEngineManager(), 1,
-                        "atom, atomic or integer", id);
+        } else {
+            if (!id.isAtom() || !id.isAtomic()) {
+                throw PrologError.type_error(engine.getEngineManager(), 1, "atom, atomic or integer", id);
+            }
             size = engineManager.queueSize(id.toString());
         }
-        return size >= 0 && unify(n, new Int(size));
+        if (size < 0) {
+            return false;
+        } else {
+            return unify(n, new Int(size));
+        }
     }
 
     public boolean mutex_create_1(Term mutex) throws PrologError {
         mutex = mutex.getTerm();
-        if (!mutex.isAtom() || !mutex.isAtomic())
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "atom or atomic", mutex);
+        if (!mutex.isAtom() || !mutex.isAtomic()) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom or atomic", mutex);
+        }
         return engineManager.createLock(mutex.toString());
     }
 
     public boolean mutex_destroy_1(Term mutex) throws PrologError {
         mutex = mutex.getTerm();
-        if (!mutex.isAtom() || !mutex.isAtomic())
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "atom or atomic", mutex);
+        if (!mutex.isAtom() || !mutex.isAtomic()) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom or atomic", mutex);
+        }
         engineManager.destroyLock(mutex.toString());
         return true;
     }
 
     public boolean mutex_lock_1(Term mutex) throws PrologError {
         mutex = mutex.getTerm();
-        if (!mutex.isAtom() || !mutex.isAtomic())
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "atom or atomic", mutex);
+        if (!mutex.isAtom() || !mutex.isAtomic()) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom or atomic", mutex);
+        }
         return engineManager.mutexLock(mutex.toString());
     }
 
     public boolean mutex_trylock_1(Term mutex) throws PrologError {
         mutex = mutex.getTerm();
-        if (!mutex.isAtom() || !mutex.isAtomic())
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "atom or atomic", mutex);
+        if (!mutex.isAtom() || !mutex.isAtomic()) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom or atomic", mutex);
+        }
         return engineManager.mutexTryLock(mutex.toString());
     }
 
     public boolean mutex_unlock_1(Term mutex) throws PrologError {
         mutex = mutex.getTerm();
-        if (!mutex.isAtom() || !mutex.isAtomic())
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "atom or atomic", mutex);
+        if (!mutex.isAtom() || !mutex.isAtomic()) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom or atomic", mutex);
+        }
         return engineManager.mutexUnlock(mutex.toString());
     }
 
     public boolean mutex_isLocked_1(Term mutex) throws PrologError {
         mutex = mutex.getTerm();
-        if (!mutex.isAtom() || !mutex.isAtomic())
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                    "atom or atomic", mutex);
+        if (!mutex.isAtom() || !mutex.isAtomic()) {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom or atomic", mutex);
+        }
         return engineManager.isLocked(mutex.toString());
     }
 

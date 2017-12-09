@@ -18,12 +18,12 @@
 package alice.tuprologx.pj.lib;
 
 import com.szadowsz.gospel.core.data.*;
-import alice.tuprolog.lib.InvalidObjectIdException;
 import com.szadowsz.gospel.core.db.libs.OOLibrary;
 import alice.tuprologx.pj.annotations.PrologClass;
 import alice.tuprologx.pj.annotations.PrologField;
 import alice.tuprologx.pj.annotations.PrologMethod;
 import com.szadowsz.gospel.core.data.Number;
+import com.szadowsz.gospel.core.error.InvalidObjectIdException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
