@@ -1,24 +1,21 @@
-/*
- * tuProlog - Copyright (C) 2001-2007 aliCE team at deis.unibo.it
- *
+/**
+ * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
+ * <p>
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
+ * version 3.0 of the License, or (at your option) any later version.
+ * <p>
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package com.szadowsz.gospel.core.data;
-
-import com.szadowsz.gospel.core.data.Struct;
-import com.szadowsz.gospel.core.data.Term;
 
 import java.util.NoSuchElementException;
 
@@ -28,17 +25,17 @@ import java.util.NoSuchElementException;
  * @see Struct
  */
 class StructIterator implements java.util.Iterator<Term>, java.io.Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     private Struct list;
-    
+
     StructIterator(Struct t) {
         this.list = t;
     }
-    
+
     public boolean hasNext() {
         return !list.isEmptyList();
     }
-    
+
     public Term next() {
         if (list.isEmptyList())
             throw new NoSuchElementException();
@@ -49,9 +46,8 @@ class StructIterator implements java.util.Iterator<Term>, java.io.Serializable {
         list = (Struct) list.getTerm(1);
         return head;
     }
-    
+
     public void remove() {
         throw new UnsupportedOperationException();
     }
-    
 }

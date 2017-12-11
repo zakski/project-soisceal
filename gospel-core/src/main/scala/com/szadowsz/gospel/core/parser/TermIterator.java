@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2007 aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,9 +18,8 @@
 package com.szadowsz.gospel.core.parser;
 
 
-import com.szadowsz.gospel.core.error.InvalidTermException;
 import com.szadowsz.gospel.core.data.Term;
-import com.szadowsz.gospel.core.parser.Parser;
+import com.szadowsz.gospel.core.error.InvalidTermException;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -35,18 +34,20 @@ import java.util.NoSuchElementException;
  * instead of just returning it or checking for its existence from a pool
  * of already produced terms.
  */
-public class TermIterator implements Iterator<Term>, java.io.Serializable {
-	private static final long serialVersionUID = 1L;
-    private final Parser parser;
+class TermIterator implements Iterator<Term>, java.io.Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private Parser parser;
     private boolean hasNext;
     private Term next;
-    
-    public TermIterator(Parser p) {
+
+    TermIterator(Parser p) {
         parser = p;
         next = parser.nextTerm(true);
-        hasNext = (next != null);    
+        hasNext = (next != null);
     }
-    
+
     public Term next() {
         if (hasNext) {
             if (next == null) {
@@ -58,19 +59,17 @@ public class TermIterator implements Iterator<Term>, java.io.Serializable {
             Term temp = next;
             next = null;
             return temp;
-        } else
-            if (hasNext()) {
-                hasNext = false;
-                Term temp = next;
-                next = null;
-                return temp;
-            }
+        } else if (hasNext()) {
+            hasNext = false;
+            Term temp = next;
+            next = null;
+            return temp;
+        }
         throw new NoSuchElementException();
     }
-    
+
     /**
-     * @throws InvalidTermException if, while the parser checks for the
-     * existence of the next term, a syntax error is encountered.
+     * @throws InvalidTermException if, while the parser checks for the existence of the next term, a syntax error is encountered.
      */
     public boolean hasNext() {
         if (hasNext)
@@ -80,9 +79,9 @@ public class TermIterator implements Iterator<Term>, java.io.Serializable {
             hasNext = true;
         return hasNext;
     }
-    
+
     public void remove() {
         throw new UnsupportedOperationException();
     }
-    
+
 }

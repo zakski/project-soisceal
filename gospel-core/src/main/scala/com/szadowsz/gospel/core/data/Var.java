@@ -522,10 +522,4 @@ public class Var extends Term {
             }
         }
     }
-
-    /*Castagna 06/2011*/
-    @Override
-    public void accept(TermVisitor tv) {
-        tv.visit(this);
-    }
 }

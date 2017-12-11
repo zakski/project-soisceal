@@ -302,12 +302,5 @@ abstract class Term extends Serializable {
     **/
   def iteratedGoalTerm: Term = this
 
-  /**
-    * Visitor pattern
-    *
-    * @param tv - Visitor
-    */
-  def accept(tv: TermVisitor): Unit
-
   def toJSON: String = JSONSerializerManager.toJSON(this)
 }

@@ -887,12 +887,6 @@ public class Struct extends Term {
             return super.iteratedGoalTerm();
     }
 
-    /*Castagna 06/2011*/
-    @Override
-    public void accept(TermVisitor tv) {
-        tv.visit(this);
-    }
-
     @Override
     public boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t) {
         return unify(varsUnifiedArg1, varsUnifiedArg2, t, true);

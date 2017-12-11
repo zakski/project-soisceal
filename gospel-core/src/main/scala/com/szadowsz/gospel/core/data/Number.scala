@@ -113,7 +113,4 @@ abstract class Number extends Term with Comparable[Number] {
 
   private[data] def restoreVariables() = {
   }
-
-  /*Castagna 06/2011*/
-  override def accept(tv: TermVisitor): Unit = tv.visit(this)
 }

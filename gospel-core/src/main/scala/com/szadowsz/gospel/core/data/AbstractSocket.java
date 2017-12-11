@@ -1,6 +1,5 @@
 package com.szadowsz.gospel.core.data;
 import com.szadowsz.gospel.core.data.Term;
-import com.szadowsz.gospel.core.data.TermVisitor;
 import com.szadowsz.gospel.core.data.Var;
 
 import java.net.InetAddress;
@@ -102,13 +101,6 @@ public abstract class AbstractSocket extends Term{
 		// TODO Auto-generated method stub
 		return this;
 	}
-
-	@Override
-	public void accept(TermVisitor tv) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
 
 
