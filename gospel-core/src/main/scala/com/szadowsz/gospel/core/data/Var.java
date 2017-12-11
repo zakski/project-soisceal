@@ -37,8 +37,7 @@ public class Var extends Term {
     private final static String ANY = "_";
     private static final long serialVersionUID = 1L;
     private static long fingerprint = 0; //Alberto //static version as global counter
-    @SuppressWarnings("unused")
-    private String type = "Var";
+
     // the name identifying the var
     private String name;
     private StringBuilder completeName;    /* Reviewed by Paolo Contessi */

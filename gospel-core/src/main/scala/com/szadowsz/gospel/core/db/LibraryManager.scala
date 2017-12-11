@@ -17,8 +17,7 @@
   */
 package com.szadowsz.gospel.core.db
 
-import java.io.File
-import java.net.{URL, URLClassLoader}
+import java.net.URL
 
 import com.szadowsz.gospel.core.data.Term
 import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
@@ -108,62 +107,17 @@ trait LibraryManager extends java.io.Serializable {
     * @return the reference to the Library just loaded.
     */
   @throws(classOf[InvalidLibraryException])
-  def loadLibrary(className: String): Library = try
-    loadLibrary(Class.forName(className).asInstanceOf[Class[Library]])
-  catch {
-    case NonFatal(e) => throw new InvalidLibraryException(className, -1, -1)
+  def loadLibrary(className: String): Library = {
+    try {
+      loadLibrary(Class.forName(className).asInstanceOf[Class[Library]])
+    } catch {
+      case NonFatal(e) =>
+        throw new InvalidLibraryException(className, -1, -1)
+    }
   }
 
   @throws(classOf[InvalidLibraryException])
   def loadLibrary(className: String, paths: Array[String]): Library
-//  = {
-//    try {
-//      val lib = System.getProperty("java.vm.name") match {
-//        case "Dalvik" =>
-//          // Only the first path is used. Dex file doesn't contain.class files and therefore getResource() method can't be used to locate the files at runtime.
-//          val dexPath = paths.head
-//          val loaderClass = Class.forName("dalvik.system.DexClassLoader")
-//
-//          /**
-//            * Description of DexClassLoader
-//            * A class loader that loads classes from .jar files containing a classes.dex entry.
-//            * This can be used to execute code not installed as part of an application.
-//            *
-//            * param dexPath jar file path where is contained the library.
-//            * param optimizedDirectory directory where optimized dex files should be written; must not be null
-//            * param libraryPath the list of directories containing native libraries, delimited by File.pathSeparator; may be null
-//            * param parent the parent class loader
-//            */
-//          val loaderConstructor = loaderClass.getConstructor(classOf[String], classOf[String], classOf[String], classOf[ClassLoader])
-//          val loader = loaderConstructor.newInstance(dexPath, this.getOptimizedDirectory, null, getClass.getClassLoader).asInstanceOf[ClassLoader]
-//          Class.forName(className, true, loader).newInstance.asInstanceOf[Library]
-//        case _ =>
-//          val urls = paths.map(p => (if (!p.contains(".class")) new File(p) else new File(p.substring(0, p.lastIndexOf(File.separator) + 1))).toURI.toURL)
-//          val loader = URLClassLoader.newInstance(urls, getClass.getClassLoader)
-//          Class.forName(className, true, loader).newInstance.asInstanceOf[Library]
-//      }
-//      Option(getLibrary(lib.getName)) match {
-//        case Some(oldLib) =>
-//          logger.warn(s"Library ${oldLib.getName} already loaded.")
-//          oldLib
-//        case None =>
-//          System.getProperty("java.vm.name") match {
-//            case "Dalvik" =>
-//              val file = new File(paths(0))
-//              val url = file.toURI.toURL
-//              externalLibs = externalLibs + (className -> url)
-//            case _ => externalLibs = externalLibs + (className -> getClassResource(lib.getClass))
-//          }
-//          bindLibrary(lib)
-//          logger.info(s"Loaded Library ${lib.getName}")
-//          val ev = new LibraryEvent(wam, lib.getName)
-//          wam.notifyLoadedLibrary(ev)
-//          lib
-//      }
-//    } catch {
-//      case NonFatal(e) => throw new InvalidLibraryException(className, -1, -1)
-//    }
-//  }
 
   /**
     * Loads a library.

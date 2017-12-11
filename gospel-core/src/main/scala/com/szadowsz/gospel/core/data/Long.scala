@@ -24,7 +24,6 @@ import java.util
   */
 @SerialVersionUID(1L)
 case class Long(value: scala.Long) extends Number {
-  @SuppressWarnings(Array("unused")) private val `type` = "Long"
 
   /**
     * Returns the value of the Integer as int

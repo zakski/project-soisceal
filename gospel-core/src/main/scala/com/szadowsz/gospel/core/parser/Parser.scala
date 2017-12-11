@@ -90,10 +90,10 @@ object Parser {
 
   private[core] def parseInteger(s: String): data.Number = {
     val num: scala.Long = java.lang.Long.parseLong(s)
-    if (num > Integer.MIN_VALUE && num < Integer.MAX_VALUE) new data.Int(num.toInt) else new data.Long(num)
+    if (num >= Integer.MIN_VALUE && num <= Integer.MAX_VALUE) data.Int(num.toInt) else data.Long(num)
   }
 
-  private[core] def parseFloat(s: String): data.Double = new data.Double(s.toDouble)
+  private[core] def parseFloat(s: String): data.Double = data.Double(s.toDouble)
 }
 
 
