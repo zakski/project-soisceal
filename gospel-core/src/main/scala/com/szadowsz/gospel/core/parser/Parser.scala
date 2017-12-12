@@ -367,16 +367,7 @@ private[core] class Parser(op: OperatorManager) extends Serializable {
   @throws[IOException]
   private def expr0: Term = {
     val t1: Token = tokenizer.readToken
-    /*Castagna 06/2011*//*
-        if (t1.isType(Tokenizer.INTEGER))
-          return Parser.parseInteger(t1.seq); //todo moved method to Number
-
-        if (t1.isType(Tokenizer.FLOAT))
-          return Parser.parseFloat(t1.seq);   //todo moved method to Number
-
-        if (t1.isType(Tokenizer.VARIABLE))
-          return new Var(t1.seq);             //todo switched to use the internal check for "_" in Var(String)
-        */ val tempStart: scala.Int = tokenizer.tokenStart
+    val tempStart: scala.Int = tokenizer.tokenStart
     if (t1.isType(Tokenizer.INTEGER)) {
       val i: Term = Parser.parseInteger(t1.seq)
       map(i, tokenizer.tokenStart)

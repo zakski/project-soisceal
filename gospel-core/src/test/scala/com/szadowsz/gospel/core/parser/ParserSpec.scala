@@ -1,6 +1,8 @@
 package com.szadowsz.gospel.core.parser
 
-import com.szadowsz.gospel.core.data.{Int, Number, Struct, Var}
+import java.math.BigInteger
+
+import com.szadowsz.gospel.core.data.{Double, Int, Long, Struct, Var}
 import com.szadowsz.gospel.core.db.ops.OperatorManager
 import com.szadowsz.gospel.core.error.InvalidTermException
 import com.szadowsz.gospel.core.{BaseEngineSpec, PrologEngine}
@@ -226,6 +228,64 @@ class ParserSpec extends FlatSpec with BaseEngineSpec {
     }
   }
 
+  it should "parse minimum long value successfully" in {
+    val p = new Parser(new OperatorManager, s"n(${scala.Long.MinValue}).\n")
+    val result = new Struct("n", Long(scala.Long.MinValue))
+    result.resolveTerm()
+
+    p.nextTerm(true) shouldBe result
+  }
+
+  it should "parse minimum binary long value successfully" in {
+    val binary = new BigInteger(scala.Long.MinValue.toString).toString(2).substring(1)
+    val p = new Parser(new OperatorManager, s"n(-0b$binary).\n")
+    val result = new Struct("n", Long(scala.Long.MinValue))
+    result.resolveTerm()
+
+    p.nextTerm(true) shouldBe result
+  }
+
+  it should "parse minimum octal long value successfully" in {
+    val octal = new BigInteger(scala.Long.MinValue.toString).toString(8).substring(1)
+    val p = new Parser(new OperatorManager, s"n(-0o$octal).\n")
+    val result = new Struct("n", Long(scala.Long.MinValue))
+    result.resolveTerm()
+
+    p.nextTerm(true) shouldBe result
+  }
+
+  it should "parse minimum hexadecimal long value successfully" in {
+    val hex = new BigInteger(scala.Long.MinValue.toString).toString(16).substring(1)
+    val p = new Parser(new OperatorManager, s"n(-0x$hex).\n")
+    val result = new Struct("n", Long(scala.Long.MinValue))
+    result.resolveTerm()
+
+    p.nextTerm(true) shouldBe result
+  }
+
+  it should "parse maximum long value successfully" in {
+    val p = new Parser(new OperatorManager, s"n(${scala.Long.MaxValue}).\n")
+    val result = new Struct("n", Long(scala.Long.MaxValue))
+    result.resolveTerm()
+
+    p.nextTerm(true) shouldBe result
+  }
+
+  it should "parse minimum double value successfully" in {
+    val p = new Parser(new OperatorManager, s"n(${scala.Double.MinValue}).\n")
+    val result = new Struct("n", Double(scala.Double.MinValue))
+    result.resolveTerm()
+
+    p.nextTerm(true) shouldBe result
+  }
+
+  it should "parse maximum double value successfully" in {
+    val p = new Parser(new OperatorManager, s"n(${scala.Double.MaxValue}).\n")
+    val result = new Struct("n", Double(scala.Double.MaxValue))
+    result.resolveTerm()
+
+    p.nextTerm(true) shouldBe result
+  }
   /** TODO More tests on Parser
     * Character code for Integer representation
     * :-op(500, yfx, v). 3v2 NOT CORRECT, 3 v 2 CORRECT
