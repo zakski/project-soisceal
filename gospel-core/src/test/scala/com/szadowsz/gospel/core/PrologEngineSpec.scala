@@ -19,6 +19,10 @@ class PrologEngineSpec extends FlatSpec with BaseEngineSpec {
 
   behavior of "Basic Engine Functionality"
 
+  it should "have the correct engine version" in {
+    PrologEngine.getVersion shouldBe "2.0.0"
+  }
+
   it should "initialise with the default libraries successfully" in {
     prolog.getCurrentLibraries should have length 4
     prolog.getLibrary(classOf[MyBasicLibrary].getName) should not be null

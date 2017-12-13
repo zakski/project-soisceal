@@ -11,7 +11,7 @@ import java.util.List;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 
-import alice.util.VersionInfo;
+import com.szadowsz.gospel.core.utils.VersionInfo;
 
 /**
 * Implementation of the ScriptEngineFactory interface

@@ -33,6 +33,7 @@ import com.szadowsz.gospel.core.event.io.OutputEvent
 import com.szadowsz.gospel.core.json.{EngineState, JSONSerializerManager}
 import com.szadowsz.gospel.core.listener._
 import com.szadowsz.gospel.core.parser.Parser
+import com.szadowsz.gospel.core.utils.VersionInfo
 
 import scala.util.Try
 import scala.collection.JavaConverters._
@@ -43,7 +44,7 @@ object PrologEngine {
   /**
     * Gets the current version of the tuProlog system
     */
-  def getVersion: String = alice.util.VersionInfo.getEngineVersion
+  def getVersion: String = VersionInfo.getEngineVersion
 
   def fromJSON(jsonString: String): PrologEngine = {
     val brain = JSONSerializerManager.fromJSON(jsonString, classOf[EngineState])

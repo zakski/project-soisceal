@@ -11,7 +11,6 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'scala'
-apply plugin: 'ikvm'
 
 repositories {
     mavenCentral()
@@ -20,6 +19,13 @@ repositories {
 sourceSets {
     main.scala.srcDirs = ['src/main/scala', 'src/main/java']
     main.java.srcDirs = []
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Gospel: a TuProlog fork',
+                'Implementation-Version': version
+    }
 }
 
 dependencies {
