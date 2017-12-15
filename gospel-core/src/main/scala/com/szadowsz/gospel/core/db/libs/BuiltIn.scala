@@ -79,6 +79,8 @@ object BuiltIn {
 }
 
 @SerialVersionUID(1L)
+// scalastyle:off number.of.methods
+// scalastyle:off method.name
 class BuiltIn(mediator: PrologEngine) extends Library {
   setEngine(mediator)
 
@@ -108,6 +110,53 @@ class BuiltIn(mediator: PrologEngine) extends Library {
       Array("consult", "include", "directive"),
       Array("load_library", "$load_library", "directive"))
   }
+
+  // Prolog Directives.
+
+  /**
+    * Jvm hook for initialisation/1 predicate.
+    *
+    * Call Goal after loading the source file in which this directive appears has been completed. The ISO standard only allows for using :- Term if Term is a
+    * directive. This means that arbitrary goals can only be called from a directive by means of the initialization/1 directive.
+    *
+    * @note SWI-Prolog does not enforce that directive rule.
+    * @param goal the goal to initialise the theory with.
+    */
+  def initialization_1(goal: Term) {
+    goal.getTerm match {
+      case goalTerm: Struct =>
+        primitiveManager.identifyPredicate(goalTerm)
+        theoryManager.addStartGoal(goalTerm)
+      case _ =>
+    }
+  }
+
+  /**
+    * Jvm hook for include/1 predicate.
+    *
+    * Textually include the content of File at the position where the directive :- include(File). appears. The include construct is only honoured if it appears
+    * as a directive in a source file. Textual include (similar to C/C++ #include) is obviously useful for sharing declarations such as dynamic/1 or
+    * multifile/1 by including a file with directives from multiple files that use these predicates.
+    *
+    * @param file the file to be included
+    * @throws FileNotFoundException if the file does not exist
+    * @throws InvalidTheoryException if the textual content is not valid prolog.
+    * @throws IOException if an error occurs mid file load
+    */
+  @throws[FileNotFoundException]
+  @throws[InvalidTheoryException]
+  @throws[IOException]
+  def include_1(file: Term): Unit = {
+    var path: String = Tools.removeApices(file.getTerm.toString)
+    if (!new File(path).isAbsolute) {
+      path = engine.getCurrentDirectory + File.separator + path
+    }
+    engine.pushDirectoryToList(new File(path).getParent)
+    engine.addTheory(new Theory(new FileInputStream(path)))
+    engine.popDirectoryFromList()
+  }
+
+  // Prolog predicates
 
   /**
     * Always fail. The predicate fail/0 is translated into a single virtual machine instruction.
@@ -544,28 +593,6 @@ class BuiltIn(mediator: PrologEngine) extends Library {
       val libName: String = ""
       flagManager.defineFlag(flagName.toString, flagSet.asInstanceOf[Struct], flagDefault, flagModifiable == Term.TRUE, libName)
     }
-  }
-
-  def initialization_1(goal: Term) {
-    val goalTerm = goal.getTerm
-    if (goalTerm.isInstanceOf[Struct]) {
-      primitiveManager.identifyPredicate(goalTerm)
-      theoryManager.addStartGoal(goalTerm.asInstanceOf[Struct])
-    }
-  }
-
-  @throws[FileNotFoundException]
-  @throws[InvalidTheoryException]
-  @throws[IOException]
-  def include_1(arg0: Term) {
-    val theory = arg0.getTerm
-    var path: String = Tools.removeApices(theory.toString)
-    if (!new File(path).isAbsolute) {
-      path = engine.getCurrentDirectory + File.separator + path
-    }
-    engine.pushDirectoryToList(new File(path).getParent)
-    engine.addTheory(new Theory(new FileInputStream(path)))
-    engine.popDirectoryFromList
   }
 
   private def getStringArrayFromStruct(list: Struct): Array[String] = list.listIterator().asScala.map(s => Tools.removeApices(s.toString)).toArray
