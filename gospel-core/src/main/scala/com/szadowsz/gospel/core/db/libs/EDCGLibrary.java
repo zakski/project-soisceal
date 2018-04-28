@@ -19,7 +19,7 @@ package com.szadowsz.gospel.core.db.libs;
 
 import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.data.Var;
-import com.szadowsz.gospel.core.db.Library;
+import com.szadowsz.gospel.core.db.JavaLibrary;
 import com.szadowsz.gospel.core.error.PrologError;
 
 /**
@@ -30,7 +30,7 @@ import com.szadowsz.gospel.core.error.PrologError;
  *
  *
  */
-public class EDCGLibrary extends Library {
+public class EDCGLibrary extends JavaLibrary {
     private static final long serialVersionUID = 1L;
     public EDCGLibrary() {
     }

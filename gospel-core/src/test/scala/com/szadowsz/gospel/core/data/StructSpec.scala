@@ -157,7 +157,7 @@ class StructSpec extends FlatSpec with BaseEngineSpec {
   it should "support the toList method properly" in {
     val emptyList = new Struct
     val emptyListToList = new Struct(new Struct("[]"), new Struct)
-    emptyList.toList shouldBe emptyListToList
+    emptyList.toStructList shouldBe emptyListToList
   }
 
   it should "support the toString method properly" in {

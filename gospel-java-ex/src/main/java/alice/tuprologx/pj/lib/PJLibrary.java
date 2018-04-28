@@ -19,7 +19,7 @@ package alice.tuprologx.pj.lib;
 
 import com.szadowsz.gospel.core.data.*;
 import com.szadowsz.gospel.core.data.Number;
-import com.szadowsz.gospel.core.db.Library;
+import com.szadowsz.gospel.core.db.JavaLibrary;
 import com.szadowsz.gospel.core.error.InvalidObjectIdException;
 
 import java.io.FileWriter;
@@ -47,7 +47,7 @@ import java.lang.Double;
  * Library/Theory Dependency:  BasicLibrary
  */
 @SuppressWarnings("serial")
-public class PJLibrary extends Library {
+public class PJLibrary extends JavaLibrary {
 
     /**
      * java objects referenced by prolog terms (keys)

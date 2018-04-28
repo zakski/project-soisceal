@@ -33,12 +33,12 @@ final case class DefaultLibraryManager(override protected val wam: PrologEngine)
     case Some(c) => c.getClassLoader.getResource(c.getName.replace('.', '/') + ".class")
   }
 
-  override def loadLibrary(className: String, paths: Array[String]): Library = {
+  override def loadLibrary(className: String, paths: Array[String]): JavaLibrary = {
     //  = {
     try {
       val urls = paths.map(p => (if (!p.contains(".class")) new File(p) else new File(p.substring(0, p.lastIndexOf(File.separator) + 1))).toURI.toURL)
       val loader = URLClassLoader.newInstance(urls, getClass.getClassLoader)
-      val lib = Class.forName(className, true, loader).newInstance.asInstanceOf[Library]
+      val lib = Class.forName(className, true, loader).newInstance.asInstanceOf[JavaLibrary]
       Option(getLibrary(lib.getName)) match {
         case Some(oldLib) =>
           logger.warn(s"Library ${oldLib.getName} already loaded.")

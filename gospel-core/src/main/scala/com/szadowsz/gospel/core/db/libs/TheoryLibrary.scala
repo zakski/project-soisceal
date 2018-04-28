@@ -34,14 +34,14 @@
 package com.szadowsz.gospel.core.db.libs
 
 import com.szadowsz.gospel.core.Theory
-import com.szadowsz.gospel.core.db.Library
+import com.szadowsz.gospel.core.db.JavaLibrary
 
 /**
   * Library built solely from Prolog theory.
   *
   */
 @SerialVersionUID(1L)
-case class TheoryLibrary(protected val name: String, protected val th: Theory) extends Library {
+case class TheoryLibrary(protected val name: String, protected val th: Theory) extends JavaLibrary {
 
     override def getTheory: String = th.toString
 

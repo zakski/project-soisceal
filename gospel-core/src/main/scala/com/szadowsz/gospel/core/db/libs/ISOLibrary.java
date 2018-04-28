@@ -18,11 +18,10 @@
 package com.szadowsz.gospel.core.db.libs;
 
 import com.szadowsz.gospel.core.data.*;
-import com.szadowsz.gospel.core.data.Double;
 import com.szadowsz.gospel.core.data.Float;
 import com.szadowsz.gospel.core.data.Long;
 import com.szadowsz.gospel.core.data.Number;
-import com.szadowsz.gospel.core.db.Library;
+import com.szadowsz.gospel.core.db.JavaLibrary;
 import com.szadowsz.gospel.core.error.PrologError;
 
 /**
@@ -31,7 +30,7 @@ import com.szadowsz.gospel.core.error.PrologError;
  * <p>
  * Library/Theory dependency: BasicLibrary
  */
-public class ISOLibrary extends Library {
+public class ISOLibrary extends JavaLibrary {
     private static final long serialVersionUID = 1L;
 
     public ISOLibrary() {
@@ -134,7 +133,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number) {
-            return new Double(Math.sin(((Number) val0).doubleValue()));
+            return new Float(Math.sin(((Number) val0).doubleValue()));
         }
         return null;
     }
@@ -147,7 +146,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number) {
-            return new Double(Math.cos(((Number) val0).doubleValue()));
+            return new Float(Math.cos(((Number) val0).doubleValue()));
         }
         return null;
     }
@@ -160,7 +159,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number) {
-            return new Double(Math.exp(((Number) val0).doubleValue()));
+            return new Float(Math.exp(((Number) val0).doubleValue()));
         }
         return null;
     }
@@ -173,7 +172,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number) {
-            return new Double(Math.atan(((Number) val0).doubleValue()));
+            return new Float(Math.atan(((Number) val0).doubleValue()));
         }
         return null;
     }
@@ -186,7 +185,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number) {
-            return new Double(Math.log(((Number) val0).doubleValue()));
+            return new Float(Math.log(((Number) val0).doubleValue()));
         }
         return null;
     }
@@ -199,7 +198,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number) {
-            return new Double(Math.sqrt(((Number) val0).doubleValue()));
+            return new Float(Math.sqrt(((Number) val0).doubleValue()));
         }
         return null;
     }
@@ -213,8 +212,8 @@ public class ISOLibrary extends Library {
         }
         if (val0 instanceof Int || val0 instanceof Long) {
             return new Int(Math.abs(((Number) val0).intValue()));
-        } else if (val0 instanceof Double || val0 instanceof Float){
-            return new Double(Math.abs(((Number) val0).doubleValue()));
+        } else if (val0 instanceof Float || val0 instanceof Float){
+            return new Float(Math.abs(((Number) val0).doubleValue()));
         }
         return null;
     }
@@ -227,9 +226,9 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Int || val0 instanceof Long) {
-            return new Double(((Number) val0).intValue() > 0 ? 1.0 : -1.0);
-        } else if (val0 instanceof Double || val0 instanceof Float) {
-            return new Double(((Number) val0).doubleValue() > 0 ? 1.0 : -1.0);
+            return new Float(((Number) val0).intValue() > 0 ? 1.0 : -1.0);
+        } else if (val0 instanceof Float || val0 instanceof Float) {
+            return new Float(((Number) val0).doubleValue() > 0 ? 1.0 : -1.0);
         }
         return null;
     }
@@ -242,7 +241,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number) {
-            return new Double((long) Math.rint(((Number) val0).doubleValue()));
+            return new Float((long) Math.rint(((Number) val0).doubleValue()));
         }
         return null;
     }
@@ -256,7 +255,7 @@ public class ISOLibrary extends Library {
         }
         if (val0 instanceof Number) {
             double fl = ((Number) val0).doubleValue();
-            return new Double(Math.abs(fl - Math.rint(fl)));
+            return new Float(Math.abs(fl - Math.rint(fl)));
         }
         return null;
     }
@@ -269,7 +268,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number) {
-            return new Double(((Number) val0).doubleValue());
+            return new Float(((Number) val0).doubleValue());
         }
         return null;
     }
@@ -370,7 +369,7 @@ public class ISOLibrary extends Library {
 
         }
         if (val0 instanceof Number && val1 instanceof Number) {
-            return new Double(Math.IEEEremainder(((Number) val0).doubleValue(), ((Number) val1).doubleValue()));
+            return new Float(Math.IEEEremainder(((Number) val0).doubleValue(), ((Number) val1).doubleValue()));
         }
         return null;
     }

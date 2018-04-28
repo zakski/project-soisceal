@@ -21,16 +21,16 @@ sourceSets {
     main.java.srcDirs = []
 }
 
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'Gospel: a TuProlog fork',
-                'Implementation-Version': version
-    }
-}
+//jar {
+//    manifest {
+//        attributes 'Implementation-Title': 'Gospel: a TuProlog fork',
+//                'Implementation-Version': version
+//    }
+//}
 
 dependencies {
 
-    compile group: 'org.scala-lang', name: 'scala-compiler', version: scalaVersion
+    compile group: 'org.scala-lang', name: 'scala-compiler', version: scalafullVersion
 
     compile group: 'org.slf4j', name: 'slf4j-api', version: slf4jVersion
 
@@ -38,7 +38,7 @@ dependencies {
 
     compile group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
 
-    testCompile group: 'org.scalatest', name: 'scalatest_2.11', version: scalaTestVersion
+    testCompile group: 'org.scalatest', name: "scalatest_${scalaVersion}", version: scalaTestVersion
 
     testCompile group: 'junit', name: 'junit', version: junitVersion
 

@@ -105,12 +105,6 @@ abstract class Number extends Term with Comparable[Number] {
 
   override private[data] def resolveTerm(count: scala.Long) = count
 
-  /**
-    *
-    */
-  override def free(): Unit = {
-  }
-
   private[data] def restoreVariables() = {
   }
 }

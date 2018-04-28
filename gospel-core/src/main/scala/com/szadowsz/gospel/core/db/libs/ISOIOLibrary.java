@@ -20,7 +20,7 @@ package com.szadowsz.gospel.core.db.libs;
 import com.szadowsz.gospel.core.data.*;
 import com.szadowsz.gospel.core.data.Long;
 import com.szadowsz.gospel.core.data.Number;
-import com.szadowsz.gospel.core.db.Library;
+import com.szadowsz.gospel.core.db.JavaLibrary;
 import com.szadowsz.gospel.core.db.ops.Operator;
 import com.szadowsz.gospel.core.error.InvalidLibraryException;
 import com.szadowsz.gospel.core.error.PrologError;
@@ -34,7 +34,7 @@ import java.util.*;
  * Library/Theory Dependency: IOLibrary
  */
 
-public class ISOIOLibrary extends Library {
+public class ISOIOLibrary extends JavaLibrary {
     private static final long serialVersionUID = 1L;
 
     protected final int files = 1000; //numero casuale abbastanza alto per evitare eccezioni sulle dimensioni delle hashtable
@@ -1020,14 +1020,14 @@ public class ISOIOLibrary extends Library {
             throw PrologError.permission_error(engine.getEngineManager(), "input", "binary_stream", stream_or_alias, new Struct("Target stream is associated with a binary stream."));
         }
 
-        Struct arg0 = (Struct) in_char.getTerm();
+        Term arg0 = in_char.getTerm();
 
-        if (arg0.isVar())
+        if (arg0 instanceof Var)
             throw PrologError.instantiation_error(engine.getEngineManager(), 2);
         else if (!arg0.isAtom()) {
             throw PrologError.type_error(engine.getEngineManager(), 2, "character", arg0);
         } else {
-            String ch = arg0.getName();
+            String ch = ((Struct) arg0).getName();
             if (!(Character.isDefined(ch.charAt(0)))) {
                 throw PrologError.representation_error(engine.getEngineManager(), 2, "character");
             }
@@ -1826,7 +1826,7 @@ public class ISOIOLibrary extends Library {
         if (flag == 1)
             return;
 
-        Library library;
+        JavaLibrary library;
 
         library = engine.getLibrary("com.szadowsz.gospel.core.db.libs.IOLibrary");
         if (library == null) {

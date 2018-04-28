@@ -2,7 +2,7 @@ package com.szadowsz.gospel.core.parser
 
 import java.math.BigInteger
 
-import com.szadowsz.gospel.core.data.{Double, Int, Long, Struct, Var}
+import com.szadowsz.gospel.core.data.{Float, Int, Long, Struct, Var}
 import com.szadowsz.gospel.core.db.ops.OperatorManager
 import com.szadowsz.gospel.core.error.InvalidTermException
 import com.szadowsz.gospel.core.{BaseEngineSpec, PrologEngine}
@@ -273,7 +273,7 @@ class ParserSpec extends FlatSpec with BaseEngineSpec {
 
   it should "parse minimum double value successfully" in {
     val p = new Parser(new OperatorManager, s"n(${scala.Double.MinValue}).\n")
-    val result = new Struct("n", Double(scala.Double.MinValue))
+    val result = new Struct("n", Float(scala.Double.MinValue))
     result.resolveTerm()
 
     p.nextTerm(true) shouldBe result
@@ -281,7 +281,7 @@ class ParserSpec extends FlatSpec with BaseEngineSpec {
 
   it should "parse maximum double value successfully" in {
     val p = new Parser(new OperatorManager, s"n(${scala.Double.MaxValue}).\n")
-    val result = new Struct("n", Double(scala.Double.MaxValue))
+    val result = new Struct("n", Float(scala.Double.MaxValue))
     result.resolveTerm()
 
     p.nextTerm(true) shouldBe result

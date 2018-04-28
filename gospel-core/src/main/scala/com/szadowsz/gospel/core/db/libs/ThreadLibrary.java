@@ -18,7 +18,7 @@
 package com.szadowsz.gospel.core.db.libs;
 
 import com.szadowsz.gospel.core.data.Int;
-import com.szadowsz.gospel.core.db.Library;
+import com.szadowsz.gospel.core.db.JavaLibrary;
 import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
@@ -28,7 +28,7 @@ import com.szadowsz.gospel.core.error.NoSolutionException;
 import com.szadowsz.gospel.core.error.PrologError;
 
 
-public class ThreadLibrary extends Library {
+public class ThreadLibrary extends JavaLibrary {
     private static final long serialVersionUID = 1L;
     protected EngineManager engineManager;
 

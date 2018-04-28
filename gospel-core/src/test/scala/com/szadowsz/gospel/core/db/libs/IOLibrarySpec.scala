@@ -5,7 +5,7 @@ import java.util
 import java.util.{List, Map}
 
 import com.szadowsz.gospel.core.data.{Int, Struct, Term, Var}
-import com.szadowsz.gospel.core.db.Library
+import com.szadowsz.gospel.core.db.JavaLibrary
 import com.szadowsz.gospel.core.db.primitives.PrimitiveInfo
 import com.szadowsz.gospel.core.listener.TestOutputListener
 import com.szadowsz.gospel.core.{BaseEngineSpec, PrologEngine, Solution, Theory}
@@ -21,7 +21,7 @@ class IOLibrarySpec extends FlatSpec with BaseEngineSpec {
   behavior of "IO Library"
 
   it should "only have predicate primitives" in {
-    val library: Library = new IOLibrary
+    val library: JavaLibrary = new IOLibrary
     val primitives: util.Map[Integer, util.List[PrimitiveInfo]] = library.getPrimitives
 
     primitives.size shouldBe 3

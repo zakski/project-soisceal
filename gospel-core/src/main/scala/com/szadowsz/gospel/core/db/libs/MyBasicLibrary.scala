@@ -352,7 +352,7 @@ class MyBasicLibrary() extends BasicLibrary {
   override def expression_minus_1(arg0: Term): Term = {
     Try(evalExpression(arg0).asInstanceOf[data.Number]).toOption match {
       case Some(i: data.Int) => new data.Int(i.intValue * -1)
-      case Some(d: data.Double) => new data.Double(d.doubleValue * -1)
+      case Some(d: data.Float) => new data.Float(d.doubleValue * -1)
       case Some(l: data.Long) => new data.Long(l.longValue * -1)
       case Some(f: data.Float) => new data.Float(f.floatValue * -1)
       case _ => null
@@ -369,7 +369,7 @@ class MyBasicLibrary() extends BasicLibrary {
         if (val0.isInteger && val1.isInteger) {
           getIntegerNumber(val0.longValue + val1.longValue)
         } else {
-          new data.Double(val0.doubleValue + val1.doubleValue)
+          new data.Float(val0.doubleValue + val1.doubleValue)
         }
       case None => null
     }
@@ -381,7 +381,7 @@ class MyBasicLibrary() extends BasicLibrary {
         if (val0.isInteger && val1.isInteger) {
           getIntegerNumber(val0.longValue - val1.longValue)
         } else {
-          new data.Double(val0.doubleValue - val1.doubleValue)
+          new data.Float(val0.doubleValue - val1.doubleValue)
         }
       case None => null
     }
@@ -393,7 +393,7 @@ class MyBasicLibrary() extends BasicLibrary {
         if (val0.isInteger && val1.isInteger) {
           getIntegerNumber(val0.longValue * val1.longValue)
         } else {
-          new data.Double(val0.doubleValue * val1.doubleValue)
+          new data.Float(val0.doubleValue * val1.doubleValue)
         }
       case None => null
     }
@@ -405,7 +405,7 @@ class MyBasicLibrary() extends BasicLibrary {
         if (val0.isInteger && val1.isInteger) {
           getIntegerNumber(val0.longValue / val1.longValue)
         } else {
-          new data.Double(val0.doubleValue / val1.doubleValue)
+          new data.Float(val0.doubleValue / val1.doubleValue)
         }
       case None => null
     }
@@ -420,7 +420,7 @@ class MyBasicLibrary() extends BasicLibrary {
 
   override def expression_pow_2(arg0: Term, arg1: Term): Term = {
     Try((evalExpression(arg0).asInstanceOf[data.Number], evalExpression(arg1).asInstanceOf[data.Number])).toOption match {
-      case Some((val0, val1)) => new data.Double(Math.pow(val0.doubleValue, val1.doubleValue))
+      case Some((val0, val1)) => new data.Float(Math.pow(val0.doubleValue, val1.doubleValue))
       case None => null
     }
   }

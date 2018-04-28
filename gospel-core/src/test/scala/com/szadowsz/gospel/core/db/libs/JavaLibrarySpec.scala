@@ -5,7 +5,7 @@ import java.util
 import java.util.{List, Map}
 
 import com.szadowsz.gospel.core.data.{Float, Int, Number, Struct, Term, Var}
-import com.szadowsz.gospel.core.db.Library
+import com.szadowsz.gospel.core.db.JavaLibrary
 import com.szadowsz.gospel.core.db.primitives.PrimitiveInfo
 import com.szadowsz.gospel.core._
 import org.junit.runner.RunWith
@@ -39,7 +39,7 @@ class JavaLibrarySpec extends FunSpec with BaseEngineSpec {
   describe("Java library basics") {
 
     it("should only have predicate primitives") {
-      val library: Library = new OOLibrary
+      val library: JavaLibrary = new OOLibrary
       val primitives: util.Map[Integer, util.List[PrimitiveInfo]] = library.getPrimitives
 
       primitives.size shouldBe 3
@@ -578,7 +578,7 @@ class JavaLibrarySpec extends FunSpec with BaseEngineSpec {
       message shouldBe new Struct("Counter")
 
       val stackTrace = info.getTerm("StackTrace").asInstanceOf[Struct]
-      stackTrace.isList() shouldBe true
+      stackTrace.isList shouldBe true
 
       val x = info.getTerm("X").asInstanceOf[Int]
       x.intValue shouldBe 2

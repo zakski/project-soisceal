@@ -59,8 +59,8 @@ private[engine] final case class BacktrackState(override protected val runner: E
     }
     e.currentAlternative = curChoice
     //deunify variables and reload old goal
-    e.currentContext = curChoice.executionContext
-    var curGoal: Term = e.currentContext.goalsToEval.backTo(curChoice.indexSubGoal).orNull.getTerm
+    e.currentContext = curChoice.getExecutionContext
+    var curGoal: Term = e.currentContext.goalsToEval.backTo(curChoice.getIndexBack).orNull.getTerm
     if (!curGoal.isInstanceOf[Struct]) {
       e.nextState = runner.END_FALSE
       return

@@ -8,6 +8,8 @@ import com.szadowsz.gospel.core.listener.WarningListener;
 
 public class TestWarningListener implements WarningListener {
 	public String warning;
+
+	@Override
 	public void onWarning(WarningEvent e) {
 		warning = e.getMsg();
 	}

@@ -1,6 +1,6 @@
 package com.szadowsz.gospel.core.db.libs.basic
 
-import com.szadowsz.gospel.core.data.{Double, Int, Number}
+import com.szadowsz.gospel.core.data.{Float, Int, Number}
 import com.szadowsz.gospel.core.{BaseEngineSpec, PrologEngine}
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec

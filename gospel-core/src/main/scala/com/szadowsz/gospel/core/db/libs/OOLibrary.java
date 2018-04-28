@@ -25,7 +25,7 @@ import com.szadowsz.gospel.core.utils.classloader.AbstractDynamicClassLoader;
 import com.szadowsz.gospel.core.utils.classloader.AndroidDynamicClassLoader;
 import com.szadowsz.gospel.core.utils.InspectionUtils;
 import com.szadowsz.gospel.core.utils.classloader.JavaDynamicClassLoader;
-import com.szadowsz.gospel.core.db.Library;
+import com.szadowsz.gospel.core.db.JavaLibrary;
 import com.szadowsz.gospel.core.error.JavaException;
 
 import java.io.File;
@@ -55,7 +55,7 @@ import java.util.*;
  */
 @SuppressWarnings("serial")
 @OOLibraryEnableLambdas(mode = "active") //Alberto
-public class OOLibrary extends Library {
+public class OOLibrary extends JavaLibrary {
 
     /**
      * java objects referenced by prolog terms (keys)
@@ -642,7 +642,7 @@ public class OOLibrary extends Library {
                 Number wn = (Number) what;
                 if (wn instanceof Int) {
                     field.setInt(obj, wn.intValue());
-                } else if (wn instanceof com.szadowsz.gospel.core.data.Double) {
+                } else if (wn instanceof com.szadowsz.gospel.core.data.Float) {
                     field.setDouble(obj, wn.doubleValue());
                 } else if (wn instanceof com.szadowsz.gospel.core.data.Long) {
                     field.setLong(obj, wn.longValue());
@@ -727,7 +727,7 @@ public class OOLibrary extends Library {
                 return unify(what, new com.szadowsz.gospel.core.data.Float(value));
             } else if (fc.equals(java.lang.Double.TYPE)) {
                 double value = field.getDouble(obj);
-                return unify(what, new com.szadowsz.gospel.core.data.Double(value));
+                return unify(what, new com.szadowsz.gospel.core.data.Float(value));
             } else {
                 // the field value is an object
                 Object res = field.get(obj);
@@ -873,7 +873,7 @@ public class OOLibrary extends Library {
                 else
                     throw new JavaException(new IllegalArgumentException(what.toString()));
             } else if (name.equals("class [D")) {
-                Term value = new com.szadowsz.gospel.core.data.Double(Array.getDouble(obj, index.intValue()));
+                Term value = new com.szadowsz.gospel.core.data.Float(Array.getDouble(obj, index.intValue()));
                 if (unify(what, value))
                     return true;
                 else
@@ -1067,7 +1067,7 @@ public class OOLibrary extends Library {
                 if (t instanceof Int) {
                     values[i] = t.intValue();
                     types[i] = java.lang.Integer.TYPE;
-                } else if (t instanceof com.szadowsz.gospel.core.data.Double) {
+                } else if (t instanceof com.szadowsz.gospel.core.data.Float) {
                     values[i] = t.doubleValue();
                     types[i] = java.lang.Double.TYPE;
                 } else if (t instanceof com.szadowsz.gospel.core.data.Long) {
@@ -1263,7 +1263,7 @@ public class OOLibrary extends Library {
                 return unify(id, new com.szadowsz.gospel.core.data.Float(
                         (Float) obj));
             } else if (java.lang.Double.class.isInstance(obj)) {
-                return unify(id, new com.szadowsz.gospel.core.data.Double(
+                return unify(id, new com.szadowsz.gospel.core.data.Float(
                         (Double) obj));
             } else if (String.class.isInstance(obj)) {
                 return unify(id, new Struct((String) obj));

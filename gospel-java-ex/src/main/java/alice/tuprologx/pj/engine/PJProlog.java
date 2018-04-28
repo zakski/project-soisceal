@@ -15,7 +15,7 @@ import alice.tuprologx.pj.model.Theory;
 import com.szadowsz.gospel.core.PrologEngine;
 import com.szadowsz.gospel.core.Solution;
 import com.szadowsz.gospel.core.data.Struct;
-import com.szadowsz.gospel.core.db.Library;
+import com.szadowsz.gospel.core.db.JavaLibrary;
 import com.szadowsz.gospel.core.db.libs.OOLibrary;
 import com.szadowsz.gospel.core.error.InvalidTheoryException;
 import com.szadowsz.gospel.core.error.NoMoreSolutionException;
@@ -91,7 +91,7 @@ public class PJProlog /*extends alice.tuprolog.Prolog*/ {
         }
     }
 
-    public void loadLibrary(Library library) {
+    public void loadLibrary(JavaLibrary library) {
         try {
             engine.loadLibrary(library);
         } catch (Exception e) {

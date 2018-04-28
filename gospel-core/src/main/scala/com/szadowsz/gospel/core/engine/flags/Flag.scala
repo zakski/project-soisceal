@@ -58,7 +58,7 @@ private[flags] class Flag(flagName: String, valueList: Struct, defaultValue: Ter
     * @param value the possible value of the flag
     * @return flag validity
     */
-  def isValidValue(value: Term): Boolean = valList.listIterator().asScala.exists(value.`match`)
+  def isValidValue(value: Term): Boolean = valList.listIterator.asScala.exists(value.`match`)
 
   /**
     * Checks if the value is modifiable

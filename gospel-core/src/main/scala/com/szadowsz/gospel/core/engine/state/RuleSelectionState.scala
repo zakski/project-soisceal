@@ -69,7 +69,7 @@ private[engine] final case class RuleSelectionState(override protected val runne
         return
       }
     } else {
-      clauseStore = alternative.compatibleGoals
+      clauseStore = alternative.getCompatibleGoals
     }
     /*-----------------------------------------------------
      * Scelgo una regola fra quelle potenzialmente compatibili.
@@ -93,9 +93,9 @@ private[engine] final case class RuleSelectionState(override protected val runne
     ec.choicePointAfterCut = e.choicePointSelector.getPointer
     if (alternative != null) {
       var choicePoint: ChoicePointContext = alternative
-      val depth: Int = alternative.executionContext.depth
+      val depth: Int = alternative.getExecutionContext.depth
       ec.choicePointAfterCut = choicePoint.prevChoicePointContext
-      var currentGoal: Struct = choicePoint.executionContext.currentGoal
+      var currentGoal: Struct = choicePoint.getExecutionContext.currentGoal
       var shouldBreak = false
       while (!shouldBreak && currentGoal.getName == ";" && currentGoal.getArity == 2) {
         if (choicePoint.prevChoicePointContext != null) {

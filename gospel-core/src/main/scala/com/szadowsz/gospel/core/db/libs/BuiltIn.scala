@@ -22,7 +22,7 @@ import java.util
 
 import alice.util.Tools
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
-import com.szadowsz.gospel.core.db.Library
+import com.szadowsz.gospel.core.db.JavaLibrary
 import com.szadowsz.gospel.core.db.ops.OperatorManager
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
 import com.szadowsz.gospel.core.error.{InvalidLibraryException, InvalidTheoryException, PrologError}
@@ -81,7 +81,7 @@ object BuiltIn {
 @SerialVersionUID(1L)
 // scalastyle:off number.of.methods
 // scalastyle:off method.name
-class BuiltIn(mediator: PrologEngine) extends Library {
+class BuiltIn(mediator: PrologEngine) extends JavaLibrary {
   setEngine(mediator)
 
   private lazy val engineManager = engine.getEngineManager
@@ -222,7 +222,7 @@ class BuiltIn(mediator: PrologEngine) extends Library {
     arg0.getTerm match {
       case assertion: Struct =>
         if (assertion.getName == ":-") {
-          for (argi <- assertion.toList.listIterator().asScala) {
+          for (argi <- assertion.toStructList.iterator) {
             argi match {
               case s: Struct =>
               case v: Var => throw PrologError.instantiation_error(engineManager, 1)
@@ -250,7 +250,7 @@ class BuiltIn(mediator: PrologEngine) extends Library {
     arg0.getTerm match {
       case assertion: Struct =>
         if (assertion.getName == ":-") {
-          for (argi <- assertion.toList.listIterator().asScala) {
+          for (argi <- assertion.toStructList.iterator) {
             argi match {
               case s: Struct =>
               case v: Var => throw PrologError.instantiation_error(engineManager, 1)
@@ -450,7 +450,7 @@ class BuiltIn(mediator: PrologEngine) extends Library {
     arg0.getTerm match {
       case v: Var => throw PrologError.instantiation_error(engineManager, 1)
       case s: Struct =>
-        val val0: Term = s.toList
+        val val0: Term = s.toStructList
         val0 != null && unify(arg1.getTerm, val0)
       case default => throw PrologError.type_error(engineManager, 1, "struct", default)
     }
@@ -464,7 +464,7 @@ class BuiltIn(mediator: PrologEngine) extends Library {
       case v: Var => throw PrologError.instantiation_error(engineManager, 2)
       case t: Term if !t.isList => throw PrologError.type_error(engineManager, 2, "list", t)
       case s: Struct =>
-        val val1: Term = s.fromList
+        val val1: Term = s.fromStructList
         if (val1 == null) {
           false
         } else {
@@ -574,7 +574,7 @@ class BuiltIn(mediator: PrologEngine) extends Library {
         }
 
         if (c.isList) {
-          for (operator <- c.listIterator().asScala) {
+          for (operator <- c.listIterator.asScala) {
             operatorManager.opNew(operator.asInstanceOf[Struct].getName, specifier, priority)
           }
         } else {
@@ -595,5 +595,5 @@ class BuiltIn(mediator: PrologEngine) extends Library {
     }
   }
 
-  private def getStringArrayFromStruct(list: Struct): Array[String] = list.listIterator().asScala.map(s => Tools.removeApices(s.toString)).toArray
+  private def getStringArrayFromStruct(list: Struct): Array[String] = list.listIterator.asScala.map(s => Tools.removeApices(s.toString)).toArray
 }

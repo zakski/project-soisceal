@@ -78,6 +78,8 @@ public class ChoicePointStore {
 //            pointer = pointer.prevChoicePointContext;
 //        }
 //    }
+
+    @Override
     public String toString() {
         return pointer + "\n";
     }

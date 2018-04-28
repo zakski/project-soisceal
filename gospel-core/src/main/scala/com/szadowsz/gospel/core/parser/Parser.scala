@@ -93,7 +93,7 @@ object Parser {
     if (num >= Integer.MIN_VALUE && num <= Integer.MAX_VALUE) data.Int(num.toInt) else data.Long(num)
   }
 
-  private[core] def parseFloat(s: String): data.Double = data.Double(s.toDouble)
+  private[core] def parseFloat(s: String): data.Float = data.Float(s.toDouble)
 }
 
 

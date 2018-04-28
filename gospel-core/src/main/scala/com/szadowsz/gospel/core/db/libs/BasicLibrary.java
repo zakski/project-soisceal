@@ -20,11 +20,10 @@ package com.szadowsz.gospel.core.db.libs;
 import alice.tuprolog.*;
 import com.szadowsz.gospel.core.data.*;
 import com.szadowsz.gospel.core.Theory;
-import com.szadowsz.gospel.core.data.Double;
 import com.szadowsz.gospel.core.data.Float;
 import com.szadowsz.gospel.core.data.Long;
 import com.szadowsz.gospel.core.data.Number;
-import com.szadowsz.gospel.core.db.Library;
+import com.szadowsz.gospel.core.db.JavaLibrary;
 import com.szadowsz.gospel.core.db.libs.TheoryLibrary;
 import com.szadowsz.gospel.core.db.ops.Operator;
 import com.szadowsz.gospel.core.error.InvalidTheoryException;
@@ -37,7 +36,7 @@ import java.util.IdentityHashMap;
  * <p>
  * Library/Theory dependency: none
  */
-public class BasicLibrary extends Library {
+public class BasicLibrary extends JavaLibrary {
 
     private static final long serialVersionUID = 1L;
 
@@ -508,8 +507,8 @@ public class BasicLibrary extends Library {
             Number val0n = (Number) val0;
             if (val0n instanceof Int) {
                 return new Int(val0n.intValue() * -1);
-            } else if (val0n instanceof Double) {
-                return new Double(val0n.doubleValue() * -1);
+            } else if (val0n instanceof Float) {
+                return new Float(val0n.doubleValue() * -1);
             } else if (val0n instanceof Long) {
                 return new Long(val0n.longValue() * -1);
             } else if (val0n instanceof Float) {
@@ -559,7 +558,7 @@ public class BasicLibrary extends Library {
             if (val0n.isInteger() && (val1n.isInteger()))
                 return getIntegerNumber(val0n.longValue() + val1n.longValue());
             else
-                return new Double(val0n.doubleValue()
+                return new Float(val0n.doubleValue()
                         + val1n.doubleValue());
         } else
             return null;
@@ -581,7 +580,7 @@ public class BasicLibrary extends Library {
             if (val0n.isInteger() && (val1n.isInteger()))
                 return getIntegerNumber(val0n.longValue() - val1n.longValue());
             else
-                return new Double(val0n.doubleValue()
+                return new Float(val0n.doubleValue()
                         - val1n.doubleValue());
         } else
             return null;
@@ -603,7 +602,7 @@ public class BasicLibrary extends Library {
             if (val0n.isInteger() && (val1n.isInteger()))
                 return getIntegerNumber(val0n.longValue() * val1n.longValue());
             else
-                return new Double(val0n.doubleValue()
+                return new Float(val0n.doubleValue()
                         * val1n.doubleValue());
         } else
             return null;
@@ -625,7 +624,7 @@ public class BasicLibrary extends Library {
             if (val0n.isInteger() && val1n.isInteger())
                 return getIntegerNumber(val0n.longValue() / val1n.longValue());
             else
-                return new Double(val0n.doubleValue()
+                return new Float(val0n.doubleValue()
                         / val1n.doubleValue());
         } else
             return null;
@@ -663,7 +662,7 @@ public class BasicLibrary extends Library {
                 && (val1 instanceof Number)) {
             Number val0n = (Number) val0;
             Number val1n = (Number) val1;
-            return new Double(Math.pow(val0n.doubleValue(),
+            return new Float(Math.pow(val0n.doubleValue(),
                     val1n.doubleValue()));
         } else {
             return null;
@@ -895,7 +894,7 @@ public class BasicLibrary extends Library {
             }
             if (term == null) {
                 try {
-                    term = new Double(java.lang.Double
+                    term = new Float(java.lang.Double
                             .parseDouble(st2));
                 } catch (Exception ex) {
                 }

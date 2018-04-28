@@ -3,8 +3,11 @@ version '2.0.0'
 
 
 ext {
-    scalaVersion = '2.11.8'
-    scalaTestVersion = '2.2.4'
+    scalaVersion = '2.12'
+    scalafullVersion = "${scalaVersion}.4"
+
     slf4jVersion = '1.7.12'
+
+    scalaTestVersion = '3.0.5'
     junitVersion = '4.11'
 }

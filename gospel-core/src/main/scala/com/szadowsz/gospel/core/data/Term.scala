@@ -43,7 +43,7 @@ object Term { // true and false constants
   //Alberto
   def fromJSON(jsonString: String): Term = if (jsonString.contains("Var")) JSONSerializerManager.fromJSON(jsonString, classOf[Var])
   else if (jsonString.contains("Struct")) JSONSerializerManager.fromJSON(jsonString, classOf[Struct])
-  else if (jsonString.contains("Double")) JSONSerializerManager.fromJSON(jsonString, classOf[Double])
+  else if (jsonString.contains("Double")) JSONSerializerManager.fromJSON(jsonString, classOf[Float])
   else if (jsonString.contains("Int")) JSONSerializerManager.fromJSON(jsonString, classOf[Int])
   else if (jsonString.contains("Long")) JSONSerializerManager.fromJSON(jsonString, classOf[Long])
   else if (jsonString.contains("Float")) JSONSerializerManager.fromJSON(jsonString, classOf[Float])
@@ -113,7 +113,8 @@ abstract class Term extends Serializable {
   /**
     * Unlink variables inside the term
     */
-  def free(): Unit
+  def free(): Unit = {
+  }
 
   /**
     * Resolves variables inside the term, starting from a specific time count.

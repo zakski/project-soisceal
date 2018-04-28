@@ -38,7 +38,7 @@ final case class AndroidLibraryManager(override protected val wam: PrologEngine)
 
   def getOptimizedDirectory: String = optimizedDirectory
 
-  override def loadLibrary(className: String, paths: Array[String]): Library = {
+  override def loadLibrary(className: String, paths: Array[String]): JavaLibrary = {
     try {
       // Only the first path is used. Dex file doesn't contain.class files and therefore getResource() method can't be used to locate the files at runtime.
       val dexPath = paths.head
@@ -56,7 +56,7 @@ final case class AndroidLibraryManager(override protected val wam: PrologEngine)
         */
       val loaderConstructor = loaderClass.getConstructor(classOf[String], classOf[String], classOf[String], classOf[ClassLoader])
       val loader = loaderConstructor.newInstance(dexPath, this.getOptimizedDirectory, null, getClass.getClassLoader).asInstanceOf[ClassLoader]
-      val lib = Class.forName(className, true, loader).newInstance.asInstanceOf[Library]
+      val lib = Class.forName(className, true, loader).newInstance.asInstanceOf[JavaLibrary]
       Option(getLibrary(lib.getName)) match {
         case Some(oldLib) =>
           logger.warn(s"Library ${oldLib.getName} already loaded.")

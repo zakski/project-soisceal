@@ -1,7 +1,7 @@
 package com.szadowsz.gospel.core.db.libs
 
 import com.szadowsz.gospel.core.{BaseEngineSpec, PrologEngine, Solution, Theory}
-import com.szadowsz.gospel.core.data.{Double, Int, Struct, Term, Var}
+import com.szadowsz.gospel.core.data.{Float, Int, Struct, Term, Var}
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner
@@ -176,12 +176,12 @@ class BuiltinSpec extends FlatSpec with BaseEngineSpec {
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
     val g = info.getTerm("Goal").asInstanceOf[Struct]
-    g shouldBe new Struct("halt", new Double(1.5))
+    g shouldBe new Struct("halt", new Float(1.5))
     val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
     val validType = info.getTerm("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("integer")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Double]
+    val culprit = info.getTerm("Culprit").asInstanceOf[Float]
     culprit.doubleValue shouldBe 1.5
   }
 

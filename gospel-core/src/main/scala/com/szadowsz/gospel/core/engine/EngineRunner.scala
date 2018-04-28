@@ -4,7 +4,7 @@ import java.util
 import java.util.NoSuchElementException
 import java.util.concurrent.locks.{Condition, Lock, ReentrantLock}
 
-import com.szadowsz.gospel.core.data.{Term, TermQueue}
+import com.szadowsz.gospel.core.data.Term
 import com.szadowsz.gospel.core.db.theory.TheoryManager
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo

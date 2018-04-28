@@ -20,7 +20,7 @@ package com.szadowsz.gospel.core
 import java.util
 
 import com.szadowsz.gospel.core.data.Term
-import com.szadowsz.gospel.core.db.{Library, LibraryManager, LibraryManagerFactory}
+import com.szadowsz.gospel.core.db.{JavaLibrary, LibraryManager, LibraryManagerFactory}
 import com.szadowsz.gospel.core.db.libs._
 import com.szadowsz.gospel.core.db.ops.{Operator, OperatorManager}
 import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
@@ -60,6 +60,7 @@ object PrologEngine {
     engine
   }
 }
+// scalastyle:off number.of.methods
 
 /**
   * This class represents a tuProlog engine.
@@ -123,7 +124,7 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     *
     * @param libs the classes of the libraries to be loaded
     */
-  def this(libs: Array[Class[_ <: Library]]) {
+  def this(libs: Array[Class[_ <: JavaLibrary]]) {
     this(false, true)
     libs.foreach(c => loadLibrary(c.getName))
   }
@@ -134,7 +135,7 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     * The default libraries are BasicLibrary, ISOLibrary, IOLibrary, and OOLibrary.
     */
   def this() {
-    this(Array[Class[_ <: Library]](
+    this(Array[Class[_ <: JavaLibrary]](
       classOf[MyBasicLibrary],
       classOf[ISOLibrary],
       classOf[IOLibrary],
@@ -142,9 +143,9 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     ))
   }
 
-  protected def getLibraryPredicate(name: String, nArgs: Int): Library = primManager.getLibraryPredicate(name, nArgs) // TODO comment or remove
+  protected def getLibraryPredicate(name: String, nArgs: Int): JavaLibrary = primManager.getLibraryPredicate(name, nArgs) // TODO comment or remove
 
-  protected def getLibraryFunctor(name: String, nArgs: Int): Library = primManager.getLibraryFunctor(name, nArgs) // TODO comment or remove
+  protected def getLibraryFunctor(name: String, nArgs: Int): JavaLibrary = primManager.getLibraryFunctor(name, nArgs) // TODO comment or remove
 
   /**
     * Method to retrieve the db component that manages primitives.
@@ -210,7 +211,7 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     * @param name the name of the library already loaded
     * @return the reference to the library loaded, null if the library is not found
     */
-  def getLibrary(name: String): Library = libManager.getLibrary(name)
+  def getLibrary(name: String): JavaLibrary = libManager.getLibrary(name)
 
   /**
     * Gets a copy of current listener list to output events
@@ -446,7 +447,7 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     * @return the reference to the Library just loaded.
     */
   @throws(classOf[InvalidLibraryException])
-  def loadLibrary(className: String): Library = libManager.loadLibrary(className)
+  def loadLibrary(className: String): JavaLibrary = libManager.loadLibrary(className)
 
   /**
     * Loads a library.
@@ -460,7 +461,7 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     * @throws InvalidLibraryException if name is not a valid library
     */
   @throws[InvalidLibraryException]
-  def loadLibrary(className: String, paths: Array[String]): Library = libManager.loadLibrary(className, paths)
+  def loadLibrary(className: String, paths: Array[String]): JavaLibrary = libManager.loadLibrary(className, paths)
 
   /**
     * Loads a specific instance of a library
@@ -471,7 +472,7 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     * @throws InvalidLibraryException if name is not a valid library
     */
   @throws(classOf[InvalidLibraryException])
-  def loadLibrary(lib: Library): Unit = libManager.loadLibrary(lib)
+  def loadLibrary(lib: JavaLibrary): Unit = libManager.loadLibrary(lib)
 
   /**
     * Loads a library.
@@ -484,7 +485,7 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     * @return the reference to the Library just loaded.
     */
   @throws(classOf[InvalidLibraryException])
-  def loadLibrary[L <: Library](libClass: Class[L]): Library = libManager.loadLibrary(libClass)
+  def loadLibrary[L <: JavaLibrary](libClass: Class[L]): JavaLibrary = libManager.loadLibrary(libClass)
 
 
   /**

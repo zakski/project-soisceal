@@ -43,7 +43,7 @@ class NumberSpec extends FunSpec with BaseEngineSpec {
     it("long equality")(pending) // TODO Test Int numbers for equality with Long numbers
 
     it("should not be equal to a double of the same value") {
-      new Int(1) should not be new Double(1)
+      new Int(1) should not be new Float(1)
     }
 
     it("float equality")(pending) // TODO Test Int numbers for equality with Long numbers
@@ -52,37 +52,37 @@ class NumberSpec extends FunSpec with BaseEngineSpec {
   describe("Double") {
 
     it("should be atomic") {
-      new Double(0).isAtomic should be (true)
+      new Float(0).isAtomic should be (true)
     }
 
     it("should not be an atom") {
-      new Double(0).isAtom should be (false)
+      new Float(0).isAtom should be (false)
     }
 
     it("should not be a compound") {
-      new Double(0).isCompound should be (false)
+      new Float(0).isCompound should be (false)
     }
 
     it("should not be equal to a struct") {
-      new Double(0) should not be new Struct()
+      new Float(0) should not be new Struct()
     }
 
     it("should not be equal to a var") {
-      new Double(1) should not be new Var("X")
+      new Float(1) should not be new Var("X")
     }
 
     it("should not be equal to a double of a different value") {
-      new Double(0) should not be new Double(1)
+      new Float(0) should not be new Float(1)
     }
 
     it("should be equal to a double of the same value") {
-      new Double(0) should be (new Double(0))
+      new Float(0) should be (new Float(0))
     }
 
     it("long equality")(pending) // TODO Test Double numbers for equality with Long numbers
 
     it("should not be equal to an int of the same value") {
-      new Double(1) should not be new Int(1)
+      new Float(1) should not be new Int(1)
     }
 
     it("float equality")(pending) // TODO Test Double numbers for equality with Long numbers

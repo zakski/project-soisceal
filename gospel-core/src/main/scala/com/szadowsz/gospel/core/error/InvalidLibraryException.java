@@ -17,12 +17,12 @@
  */
 package com.szadowsz.gospel.core.error;
 
-import com.szadowsz.gospel.core.db.Library;
+import com.szadowsz.gospel.core.db.JavaLibrary;
 
 /**
  * This exception means that a not valid tuProlog library has been specified.
  *
- * @see Library
+ * @see JavaLibrary
  */
 public class InvalidLibraryException extends PrologException {
 	private static final long serialVersionUID = 1L;

@@ -20,7 +20,7 @@ package com.szadowsz.gospel.core.engine
 import java.util
 import java.util.concurrent.locks.ReentrantLock
 
-import com.szadowsz.gospel.core.data.{Int, Term, TermQueue, Var}
+import com.szadowsz.gospel.core.data.{Int, Term, Var}
 import com.szadowsz.gospel.core.{PrologEngine, Solution}
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalTree

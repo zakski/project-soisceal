@@ -20,28 +20,28 @@ package com.szadowsz.gospel.core.data
 import java.util
 
 /**
-  * Float class represents the float prolog data type
+  * Float class represents the float prolog data type, stored as Doubles
   */
 @SerialVersionUID(1L)
-case class Float(value: scala.Float) extends Number {
+case class Float(value: scala.Double) extends Number {
 
   /**
-    * Returns the value of the Float as int
+    * Returns the value of the Double as int
     */
   override final def intValue: scala.Int = value.toInt
 
   /**
-    * Returns the value of the Float as float
+    * Returns the value of the Double as float
     */
-  override final def floatValue: scala.Float = value
+  override final def floatValue: scala.Float = value.toFloat
 
   /**
-    * Returns the value of the Float as double
+    * Returns the value of the Double as double
     */
   override final def doubleValue: scala.Double = value
 
   /**
-    * Returns the value of the Float as long
+    * Returns the value of the Double as long
     */
   override final def longValue: scala.Long = value.toLong
 
@@ -56,12 +56,12 @@ case class Float(value: scala.Float) extends Number {
   override final def isReal = true
 
   /**
-    * Returns true if this Float term is grater that the term provided.
+    * Returns true if this Double term is grater that the term provided.
     * For number term argument, the int value is considered.
     */
   override def isGreater(t: Term): Boolean = {
     t.getTerm match {
-      case n : Number => value > n.floatValue
+      case n : Number => value > n.doubleValue
       case term : Term => !term.isInstanceOf[Struct] && term.isInstanceOf[Var]
     }
   }
@@ -73,16 +73,20 @@ case class Float(value: scala.Float) extends Number {
   override def unify(vl1: util.List[Var], vl2: util.List[Var], t: Term, isOccursCheckEnabled: Boolean): Boolean = {
     t.getTerm match {
       case v: Var => v.unify(vl2, vl1, this, isOccursCheckEnabled)
-      case term: Term => term.isInstanceOf[Number] && term.asInstanceOf[Number].isReal && value == term.asInstanceOf[Number].floatValue
+      case term: Term => term.isInstanceOf[Number] && term.asInstanceOf[Number].isReal && value == term.asInstanceOf[Number].doubleValue
     }
   }
 
-  override def toString: String = java.lang.Float.toString(value)
+  override def toString: String = java.lang.Double.toString(value)
+
+  def resolveVariables(count: Int): Int = count
 
   /**
     * @author Paolo Contessi
     */
-  override def compareTo(o: Number): scala.Int = value.compareTo(o.floatValue)
+  override def compareTo(o: Number): scala.Int = value.compareTo(o.doubleValue)
 
-  override private[data] def unify(varsUnifiedArg1: util.List[Var], varsUnifiedArg2: util.List[Var], t: Term) = unify(varsUnifiedArg1, varsUnifiedArg2, t, true)
+  override private[data] def unify(varsUnifiedArg1: util.List[Var], varsUnifiedArg2: util.List[Var], t: Term) = {
+    unify(varsUnifiedArg1, varsUnifiedArg2, t, true)
+  }
 }

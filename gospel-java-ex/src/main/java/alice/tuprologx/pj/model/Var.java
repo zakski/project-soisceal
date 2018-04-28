@@ -1,5 +1,5 @@
 /*
- * Var.java
+ * OldVar.java
  *
  * Created on March 8, 2007, 5:06 PM
  *

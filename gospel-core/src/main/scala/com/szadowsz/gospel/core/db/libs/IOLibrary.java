@@ -19,9 +19,9 @@ package com.szadowsz.gospel.core.db.libs;
 
 import alice.tuprolog.lib.UserContextInputStream;
 import com.szadowsz.gospel.core.data.*;
-import com.szadowsz.gospel.core.data.Double;
+import com.szadowsz.gospel.core.data.Float;
 import com.szadowsz.gospel.core.data.Number;
-import com.szadowsz.gospel.core.db.Library;
+import com.szadowsz.gospel.core.db.JavaLibrary;
 import com.szadowsz.gospel.core.error.InvalidTermException;
 import com.szadowsz.gospel.core.error.PrologError;
 
@@ -33,7 +33,7 @@ import java.util.Random;
  *
  * Library/Theory Dependency: BasicLibrary
  */
-public class IOLibrary extends Library {
+public class IOLibrary extends JavaLibrary {
     private static final long serialVersionUID = 1L;
     /**
      * Added the variable consoleExecution and graphicExecution
@@ -465,7 +465,7 @@ public class IOLibrary extends Library {
     }
 
     public boolean rand_float_1(Term t) {
-        return unify(t, new Double(gen.nextFloat()));
+        return unify(t, new Float(gen.nextFloat()));
     }
 
     public boolean rand_int_2(Term argNum, Term num) {

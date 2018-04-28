@@ -3,7 +3,7 @@ package com.szadowsz.gospel.core.db.libs
 import java.util
 
 import com.szadowsz.gospel.core.data.{Int, Struct, Var}
-import com.szadowsz.gospel.core.db.Library
+import com.szadowsz.gospel.core.db.JavaLibrary
 import com.szadowsz.gospel.core.db.primitives.PrimitiveInfo
 import com.szadowsz.gospel.core.{BaseEngineSpec, PrologEngine}
 import org.junit.runner.RunWith

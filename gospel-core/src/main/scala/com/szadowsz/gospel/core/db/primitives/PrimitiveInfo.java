@@ -18,7 +18,7 @@
 package com.szadowsz.gospel.core.db.primitives;
 
 import alice.tuprolog.IPrimitives;
-import com.szadowsz.gospel.core.db.Library;
+import com.szadowsz.gospel.core.db.JavaLibrary;
 import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.Term;
 
@@ -54,7 +54,7 @@ public class PrimitiveInfo {
     private String primitive_key;
 
 
-    public PrimitiveInfo(int type, String key, Library lib, Method m, int arity) throws NoSuchMethodException {
+    public PrimitiveInfo(int type, String key, JavaLibrary lib, Method m, int arity) throws NoSuchMethodException {
         if (m == null) {
             throw new NoSuchMethodException();
         }
