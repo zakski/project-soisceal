@@ -22,10 +22,10 @@ import java.io.{File, FileInputStream, FileNotFoundException, IOException}
 import alice.util.Tools
 import com.szadowsz.gospel.core.Theory
 import com.szadowsz.gospel.core.data.{Struct, Term}
-import com.szadowsz.gospel.core.db.JavaLibrary
+import com.szadowsz.gospel.core.db.JLibrary
 import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
 import com.szadowsz.gospel.core.db.theory.TheoryManager
-import com.szadowsz.gospel.core.error.InvalidTheoryException
+import com.szadowsz.gospel.core.exception.InvalidTheoryException
 
 /**
   * Directives, Functors and Predicates to do with loading Prolog Source Files.
@@ -50,7 +50,7 @@ import com.szadowsz.gospel.core.error.InvalidTheoryException
   */
 private[builtin] trait LoadSource {
   // scalastyle:off method.name
-  this : JavaLibrary =>
+  this : JLibrary =>
 
   protected def primitiveManager : PrimitiveManager
 

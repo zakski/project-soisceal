@@ -52,6 +52,7 @@ object Term { // true and false constants
 
 @SerialVersionUID(1L)
 abstract class Term extends Serializable {
+
   /**
     * is this term a null term?
     */

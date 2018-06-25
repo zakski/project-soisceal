@@ -42,11 +42,11 @@ class LogicAndControlSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("(X=1; X=2), \\+((!, fail)).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Int]
+      var result = solution.getVar("X").asInstanceOf[Int]
       result.intValue shouldBe 1
 
       solution = prolog.solveNext()
-      result = solution.getVarValue("X").asInstanceOf[Int]
+      result = solution.getVar("X").asInstanceOf[Int]
       result.intValue shouldBe 2
     }
 
@@ -87,11 +87,11 @@ class LogicAndControlSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("once(!), (X=1; X=2).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Int]
+      var result = solution.getVar("X").asInstanceOf[Int]
       result.intValue shouldBe 1
 
       solution = prolog.solveNext()
-      result = solution.getVarValue("X").asInstanceOf[Int]
+      result = solution.getVar("X").asInstanceOf[Int]
       result.intValue shouldBe 2
     }
   }

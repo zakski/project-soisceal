@@ -22,9 +22,9 @@ package com.szadowsz.gospel.core.db.libs;
 
 import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.Term;
-import com.szadowsz.gospel.core.db.JavaLibrary;
+import com.szadowsz.gospel.core.db.JLibrary;
 
-public class StringLibrary extends JavaLibrary {
+public class StringLibrary extends JLibrary {
 	private static final long serialVersionUID = 1L;
 
 	public boolean to_lower_case_2(Term arg0, Term arg1){

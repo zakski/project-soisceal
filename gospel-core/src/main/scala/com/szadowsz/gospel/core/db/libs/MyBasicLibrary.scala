@@ -38,7 +38,8 @@ import java.util
 import alice.tuprolog.Agent
 import com.szadowsz.gospel.core.{Theory, data}
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
-import com.szadowsz.gospel.core.error.{InvalidTheoryException, PrologError}
+import com.szadowsz.gospel.core.error.PrologError
+import com.szadowsz.gospel.core.exception.InvalidTheoryException
 
 import scala.util.control.NonFatal
 import scala.collection.JavaConverters._
@@ -104,7 +105,7 @@ class MyBasicLibrary() extends BasicLibrary {
           engine.setTheory(new Theory(struct.getName))
           true
         } catch {
-          case ex: InvalidTheoryException => throw PrologError.syntax_error(engine.getEngineManager, ex.clause, ex.line, ex.pos, new Struct(ex.getMessage))
+          case ex: InvalidTheoryException => throw PrologError.syntax_error(engine.getEngineManager, ex)
         }
     }
   }
@@ -126,7 +127,7 @@ class MyBasicLibrary() extends BasicLibrary {
           engine.addTheory(new Theory(struct.getName))
           true
         } catch {
-          case ex: InvalidTheoryException => throw PrologError.syntax_error(engine.getEngineManager, ex.clause, ex.line, ex.pos, new Struct(ex.getMessage))
+          case ex: InvalidTheoryException => throw PrologError.syntax_error(engine.getEngineManager, ex)
         }
     }
   }

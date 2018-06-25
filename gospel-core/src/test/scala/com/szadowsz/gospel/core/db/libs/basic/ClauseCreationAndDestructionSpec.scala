@@ -177,7 +177,7 @@ class ClauseCreationAndDestructionSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("retract((legs(X, 2) :- T)).")
       solution.isSuccess shouldBe true
 
-      var result1 = solution.getVarValue("T").asInstanceOf[Struct]
+      var result1 = solution.getVar("T").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "bird(X)"
     }
 

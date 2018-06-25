@@ -22,10 +22,12 @@ import java.util
 
 import alice.util.Tools
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
-import com.szadowsz.gospel.core.db.JavaLibrary
+import com.szadowsz.gospel.core.db.SLibrary
+import com.szadowsz.gospel.core.db.libs.builtin.TermUnification
 import com.szadowsz.gospel.core.db.ops.OperatorManager
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
-import com.szadowsz.gospel.core.error.{InvalidLibraryException, InvalidTheoryException, PrologError}
+import com.szadowsz.gospel.core.error.PrologError
+import com.szadowsz.gospel.core.exception.{InvalidLibraryException, InvalidTheoryException}
 import com.szadowsz.gospel.core.{PrologEngine, Theory, data}
 
 import scala.collection.JavaConverters._
@@ -81,7 +83,7 @@ object BuiltIn {
 @SerialVersionUID(1L)
 // scalastyle:off number.of.methods
 // scalastyle:off method.name
-class BuiltIn(mediator: PrologEngine) extends JavaLibrary {
+final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnification {
   setEngine(mediator)
 
   private lazy val engineManager = engine.getEngineManager
@@ -96,20 +98,43 @@ class BuiltIn(mediator: PrologEngine) extends JavaLibrary {
 
   private lazy val operatorManager = engine.getOperatorManager
 
-  /**
-    * Defines some synonyms
-    */
-  override def getSynonymMap: Array[Array[String]] = {
-    Array[Array[String]](
-      Array("!", "cut", "predicate"),
-      Array("=", "unify", "predicate"),
-      Array("\\=", "deunify", "predicate"),
-      Array(",", "comma", "predicate"),
-      Array("op", "$op", "predicate"),
-      Array("solve", "initialization", "directive"),
-      Array("consult", "include", "directive"),
-      Array("load_library", "$load_library", "directive"))
-  }
+  override protected def getPredicates: List[(String, AnyRef)] = List(
+    ("!/0", cut_0 _),
+    ("=/2", unify_2 _),
+    ("\\=/2", deunify_2 _),
+    (",/2", comma_2 _),
+    ("abolish/1", abolish_1 _),
+    ("$append/2", $append_2 _),
+    ("asserta/1", asserta_1 _),
+    ("assertz/1", assertz_1 _),
+    ("$call/1", $call_1 _ ),
+    ("copy_term/2", copy_term_2 _),
+    ("fail/0", fail_0 _),
+    ("$find/2", $find_2 _),
+    ("flag_list/1", flag_list_1 _),
+    ("$fromlist/2", $fromlist_2 _),
+    ("get_prolog_flag/2", get_prolog_flag_2 _),
+    ("halt/0", halt_0 _),
+    ("halt/1", halt_1 _),
+    ("is/2", is_2 _),
+    ("set_prolog_flag/2", set_prolog_flag_2 _),
+    ("load_library/1", load_library_1 _),
+    ("op/3", $op_3 _),
+    ("$retract/1", $retract_1 _),
+    ("$tolist/2", $tolist_2 _ ),
+    ("true/0",true_0 _),
+    ("unload_library/1",unload_library_1 _)
+  )
+
+  override protected def getDirectives: List[(String, AnyRef)] = List(
+    ("consult/1", include_1 _),
+    ("flag/4", flag_4 _),
+    ("include/1", include_1 _),
+    ("initialization/1", initialization_1 _),
+    ("load_library/1", $load_library_1 _),
+    ("op/3", op_3 _),
+    ("solve/1", initialization_1 _)
+  )
 
   // Prolog Directives.
 
@@ -415,18 +440,20 @@ class BuiltIn(mediator: PrologEngine) extends JavaLibrary {
 
   @throws[PrologError]
   def is_2(arg0: Term, arg1: Term): Boolean = {
-    if (arg1.getTerm.isInstanceOf[Var]) throw PrologError.instantiation_error(engineManager, 2)
+    if (arg1.getTerm.isInstanceOf[Var]) {
+      throw PrologError.instantiation_error(engineManager, 2)
+    }
     var val1: Term = null
     try {
       val1 = evalExpression(arg1)
+    } catch {
+      case t: Throwable => handleError(t)
     }
-    catch {
-      case t: Throwable => {
-        handleError(t)
-      }
+    if (val1 == null) {
+      throw PrologError.type_error(engineManager, 2, "evaluable", arg1.getTerm)
+    } else {
+      unify(arg0.getTerm, val1)
     }
-    if (val1 == null) throw PrologError.type_error(engineManager, 2, "evaluable", arg1.getTerm)
-    else unify(arg0.getTerm, val1)
   }
 
   @throws[PrologError]
@@ -437,11 +464,6 @@ class BuiltIn(mediator: PrologEngine) extends JavaLibrary {
       if (cause.getMessage == "/ by zero") throw PrologError.evaluation_error(engineManager, 2, "zero_divisor")
     }
   }
-
-  def unify_2(arg0: Term, arg1: Term): Boolean = unify(arg0, arg1)
-
-  // \=
-  def deunify_2(arg0: Term, arg1: Term): Boolean = !unify(arg0, arg1)
 
   // $tolist
   @throws[PrologError]
@@ -584,7 +606,7 @@ class BuiltIn(mediator: PrologEngine) extends JavaLibrary {
     }
   }
 
-  def flag_4(arg0: Term, arg1: Term, arg2: Term, arg3: Term) {
+  def flag_4(arg0: Term, arg1: Term, arg2: Term, arg3: Term) : Unit = {
     val flagName = arg0.getTerm
     val flagSet = arg1.getTerm
     val flagDefault = arg2.getTerm
@@ -595,5 +617,9 @@ class BuiltIn(mediator: PrologEngine) extends JavaLibrary {
     }
   }
 
-  private def getStringArrayFromStruct(list: Struct): Array[String] = list.listIterator.asScala.map(s => Tools.removeApices(s.toString)).toArray
+  private def getStringArrayFromStruct(list: Struct): Array[String] = {
+    list.listIterator.asScala.map(s => Tools.removeApices(s.toString)).toArray
+  }
+
+  override protected def getFunctors: List[(String, AnyRef)] = List()
 }

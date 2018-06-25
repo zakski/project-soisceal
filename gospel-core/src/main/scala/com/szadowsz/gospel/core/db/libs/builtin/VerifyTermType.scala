@@ -19,7 +19,7 @@ package com.szadowsz.gospel.core.db.libs.builtin
 
 import com.szadowsz.gospel.core.data
 import com.szadowsz.gospel.core.data.{Number, Term, Var}
-import com.szadowsz.gospel.core.db.JavaLibrary
+import com.szadowsz.gospel.core.db.JLibrary
 
 /**
   * Type tests are semi-deterministic predicates that succeed if the argument satisfies the requested type. Type-test
@@ -27,7 +27,7 @@ import com.szadowsz.gospel.core.db.JavaLibrary
   */
 trait VerifyTermType {
   // scalastyle:off method.name
-  this : JavaLibrary =>
+  this : JLibrary =>
 
   // def acyclic_term TODO http://www.swi-prolog.org/pldoc/doc_for?object=acyclic_term/1
 

@@ -20,8 +20,8 @@ package com.szadowsz.gospel.core.db
 import java.io.File
 
 import com.szadowsz.gospel.core.PrologEngine
-import com.szadowsz.gospel.core.error.InvalidLibraryException
 import com.szadowsz.gospel.core.event.interpreter.LibraryEvent
+import com.szadowsz.gospel.core.exception.InvalidLibraryException
 
 import scala.util.control.NonFatal
 
@@ -38,7 +38,7 @@ final case class AndroidLibraryManager(override protected val wam: PrologEngine)
 
   def getOptimizedDirectory: String = optimizedDirectory
 
-  override def loadLibrary(className: String, paths: Array[String]): JavaLibrary = {
+  override def loadLibrary(className: String, paths: Array[String]): Library = {
     try {
       // Only the first path is used. Dex file doesn't contain.class files and therefore getResource() method can't be used to locate the files at runtime.
       val dexPath = paths.head
@@ -56,7 +56,7 @@ final case class AndroidLibraryManager(override protected val wam: PrologEngine)
         */
       val loaderConstructor = loaderClass.getConstructor(classOf[String], classOf[String], classOf[String], classOf[ClassLoader])
       val loader = loaderConstructor.newInstance(dexPath, this.getOptimizedDirectory, null, getClass.getClassLoader).asInstanceOf[ClassLoader]
-      val lib = Class.forName(className, true, loader).newInstance.asInstanceOf[JavaLibrary]
+      val lib = Class.forName(className, true, loader).newInstance.asInstanceOf[Library]
       Option(getLibrary(lib.getName)) match {
         case Some(oldLib) =>
           logger.warn(s"Library ${oldLib.getName} already loaded.")
@@ -72,7 +72,7 @@ final case class AndroidLibraryManager(override protected val wam: PrologEngine)
           lib
       }
     } catch {
-      case NonFatal(_) => throw new InvalidLibraryException(className, -1, -1)
+      case NonFatal(ex) => throw new InvalidLibraryException(ex,className, "Failed to Load Library")
     }
   }
 }

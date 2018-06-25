@@ -26,7 +26,6 @@ import java.util
   * @see Int
   * @see Long
   * @see Float
-  * @see Double
   *
   *      Reviewed by Paolo Contessi: implements Comparable<Number>
   */
@@ -107,4 +106,6 @@ abstract class Number extends Term with Comparable[Number] {
 
   private[data] def restoreVariables() = {
   }
+
+
 }

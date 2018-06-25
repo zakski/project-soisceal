@@ -17,9 +17,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(set_theory(X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("set_theory", new Var("X"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -27,13 +27,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(set_theory(1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("set_theory", new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("atom")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -41,13 +41,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(set_theory(a), error(syntax_error(Message), syntax_error(Goal, Line, Position, Message)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("set_theory", new Struct("a"))
-    val line = info.getTerm("Line").asInstanceOf[Int]
+    val line = info.getVar("Line").asInstanceOf[Int]
     line.intValue shouldBe 1
-    val position = info.getTerm("Line").asInstanceOf[Int]
+    val position = info.getVar("Line").asInstanceOf[Int]
     position.intValue shouldBe 1
-    val message = info.getTerm("Message").asInstanceOf[Struct]
+    val message = info.getVar("Message").asInstanceOf[Struct]
     message shouldBe new Struct("The term 'a' is not ended with a period.")
   }
 
@@ -56,9 +56,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(add_theory(X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("add_theory", new Var("X"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -66,13 +66,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(add_theory(1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("add_theory", new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("atom")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -80,13 +80,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(add_theory(a), error(syntax_error(Message), syntax_error(Goal, Line, Position, Message)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("add_theory", new Struct("a"))
-    val line = info.getTerm("Line").asInstanceOf[Int]
+    val line = info.getVar("Line").asInstanceOf[Int]
     line.intValue shouldBe 1
-    val position = info.getTerm("Line").asInstanceOf[Int]
+    val position = info.getVar("Line").asInstanceOf[Int]
     position.intValue shouldBe 1
-    val message = info.getTerm("Message").asInstanceOf[Struct]
+    val message = info.getVar("Message").asInstanceOf[Struct]
     message shouldBe new Struct("The term 'a' is not ended with a period.")
   }
 
@@ -94,9 +94,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(agent(X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("agent", new Var("X"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -104,13 +104,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(agent(1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("agent", new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("atom")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -118,9 +118,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(agent(X, a), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("agent", new Var("X"), new Struct("a"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -128,9 +128,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(agent(a, X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("agent", new Struct("a"), new Var("X"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
   }
 
@@ -138,13 +138,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(agent(1, a), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("agent", new Int(1), new Struct("a"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("atom")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -152,13 +152,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(agent(a, 1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("agent", new Struct("a"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("struct")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -166,9 +166,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=:='(X, 1), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_equality", new Var("X"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -176,9 +176,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=:='(1, X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_equality", new Int(1), new Var("X"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
   }
 
@@ -186,13 +186,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=:='(a, 1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_equality", new Struct("a"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("evaluable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -200,13 +200,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=:='(1, a), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_equality", new Int(1), new Struct("a"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("evaluable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -214,9 +214,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=\\='(X, 1), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_equality", new Var("X"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -224,9 +224,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=\\='(1, X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_equality", new Int(1), new Var("X"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
   }
 
@@ -234,13 +234,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=\\='(a, 1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_equality", new Struct("a"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("evaluable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -248,13 +248,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=\\='(1, a), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_equality", new Int(1), new Struct("a"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("evaluable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -262,9 +262,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('>'(X, 1), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_greater_than", new Var("X"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -272,9 +272,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('>'(1, X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_greater_than", new Int(1), new Var("X"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
   }
 
@@ -282,13 +282,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('>'(a, 1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_greater_than", new Struct("a"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("evaluable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -296,13 +296,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('>'(1, a), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_greater_than", new Int(1), new Struct("a"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("evaluable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -310,9 +310,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('<'(X, 1), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_less_than", new Var("X"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -320,9 +320,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('<'(1, X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_less_than", new Int(1), new Var("X"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
   }
 
@@ -330,13 +330,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('<'(a, 1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_less_than", new Struct("a"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("evaluable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -344,13 +344,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('<'(1, a), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_less_than", new Int(1), new Struct("a"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("evaluable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -358,9 +358,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('>='(X, 1), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_greater_or_equal_than", new Var("X"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -368,9 +368,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('>='(1, X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_greater_or_equal_than", new Int(1), new Var("X"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
   }
 
@@ -378,13 +378,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('>='(a, 1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_greater_or_equal_than", new Struct("a"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("evaluable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -392,13 +392,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('>='(1, a), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_greater_or_equal_than", new Int(1), new Struct("a"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("evaluable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -406,9 +406,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=<'(X, 1), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_less_or_equal_than", new Var("X"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -416,9 +416,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=<'(1, X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_less_or_equal_than", new Int(1), new Var("X"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
   }
 
@@ -426,13 +426,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=<'(a, 1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_less_or_equal_than", new Struct("a"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("evaluable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -440,13 +440,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=<'(1, a), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_less_or_equal_than", new Int(1), new Struct("a"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("evaluable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -454,11 +454,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=:='(1, 1/0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_equality", new Int(1), new Struct("/", new Int(1), new Int(0)))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -466,11 +466,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=\\='(1, 1/0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_equality", new Int(1), new Struct("/", new Int(1), new Int(0)))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -478,11 +478,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('>'(1, 1/0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_greater_than", new Int(1), new Struct("/", new Int(1), new Int(0)))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -490,11 +490,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('<'(1, 1/0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_less_than", new Int(1), new Struct("/", new Int(1), new Int(0)))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -502,11 +502,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('>='(1, 1/0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_greater_or_equal_than", new Int(1), new Struct("/", new Int(1), new Int(0)))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -514,11 +514,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=<'(1, 1/0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_less_or_equal_than", new Int(1), new Struct("/", new Int(1), new Int(0)))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -526,11 +526,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=:='(1, 1//0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_equality", new Int(1), new Struct("//", new Int(1), new Int(0)))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -538,11 +538,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=\\='(1, 1//0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_equality", new Int(1), new Struct("//", new Int(1), new Int(0)))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -550,11 +550,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('>'(1, 1//0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_greater_than", new Int(1), new Struct("//", new Int(1), new Int(0)))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -562,11 +562,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('<'(1, 1//0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_less_than", new Int(1), new Struct("//", new Int(1), new Int(0)))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -574,11 +574,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('>='(1, 1//0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_greater_or_equal_than", new Int(1), new Struct("//", new Int(1), new Int(0)))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -586,11 +586,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=<'(1, 1//0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_less_or_equal_than", new Int(1), new Struct("//", new Int(1), new Int(0)))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -598,11 +598,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=:='(1 div 0, 1), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_equality", new Struct("div", new Int(1), new Int(0)), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -610,11 +610,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=\\='(1 div 0, 1), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_equality", new Struct("div", new Int(1), new Int(0)), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -622,11 +622,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('>'(1 div 0, 1), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_greater_than", new Struct("div", new Int(1), new Int(0)), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -634,11 +634,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('<'(1 div 0, 1), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_less_than", new Struct("div", new Int(1), new Int(0)), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -646,11 +646,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('>='(1 div 0, 1), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_greater_or_equal_than", new Struct("div", new Int(1), new Int(0)), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -658,11 +658,11 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch('=<'(1 div 0, 1), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("expression_less_or_equal_than", new Struct("div", new Int(1), new Int(0)), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("Error").asInstanceOf[Struct]
+    val validType = info.getVar("Error").asInstanceOf[Struct]
     validType shouldBe new Struct("zero_divisor")
   }
 
@@ -670,9 +670,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(text_concat(X, a, b), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("text_concat", new Var("X"), new Struct("a"), new Struct("b"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -680,9 +680,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(text_concat(a, X, b), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("text_concat", new Struct("a"), new Var("X"), new Struct("b"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
   }
 
@@ -690,13 +690,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(text_concat(1, a, b), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("text_concat", new Int(1), new Struct("a"), new Struct("b"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("atom")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -704,13 +704,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(text_concat(a, 1, b), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("text_concat", new Struct("a"), new Int(1), new Struct("b"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("atom")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -718,13 +718,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(num_atom(a, X), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("num_atom", new Struct("a"), new Var("X"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("number")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -732,13 +732,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(num_atom(1, 1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("num_atom", new Int(1), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("atom")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -746,13 +746,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(num_atom(1, a), error(domain_error(ValidDomain, Culprit), domain_error(Goal, ArgNo, ValidDomain, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("num_atom", new Int(1), new Struct("a"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validDomain = info.getTerm("ValidDomain").asInstanceOf[Struct]
+    val validDomain = info.getVar("ValidDomain").asInstanceOf[Struct]
     validDomain shouldBe new Struct("num_atom")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -760,9 +760,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(arg(X, p(1), 1), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("arg_guard", new Var("X"), new Struct("p", new Int(1)), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -770,9 +770,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(arg(1, X, 1), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("arg_guard", new Int(1), new Var("X"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
   }
 
@@ -780,13 +780,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(arg(a, p(1), 1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("arg_guard", new Struct("a"), new Struct("p", new Int(1)), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("integer")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -794,13 +794,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(arg(1, p, 1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("arg_guard", new Int(1), new Struct("p"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("compound")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("p")
   }
 
@@ -808,13 +808,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(arg(0, p(0), 1), error(domain_error(ValidDomain, Culprit), domain_error(Goal, ArgNo, ValidDomain, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("arg_guard", new Int(0), new Struct("p", new Int(0)), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validDomain = info.getTerm("ValidDomain").asInstanceOf[Struct]
+    val validDomain = info.getVar("ValidDomain").asInstanceOf[Struct]
     validDomain shouldBe new Struct("greater_than_zero")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 0
   }
 
@@ -822,9 +822,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(clause(X, true), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("clause_guard", new Var("X"), new Struct("true"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -832,9 +832,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(call(X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("call_guard", new Var("X"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -842,13 +842,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(call(1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("call_guard", new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("callable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -856,9 +856,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(findall(a, X, L), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("all_solutions_predicates_guard", new Struct("a"), new Var("X"), new Var("L"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
   }
 
@@ -866,13 +866,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(findall(a, 1, L), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("all_solutions_predicates_guard", new Struct("a"), new Int(1), new Var("L"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("callable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -880,9 +880,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(setof(a, X, L), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("all_solutions_predicates_guard", new Struct("a"), new Var("X"), new Var("L"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
   }
 
@@ -890,13 +890,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(setof(a, 1, L), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("all_solutions_predicates_guard", new Struct("a"), new Int(1), new Var("L"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("callable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -904,9 +904,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(bagof(a, X, L), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("all_solutions_predicates_guard", new Struct("a"), new Var("X"), new Var("L"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
   }
 
@@ -914,13 +914,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(bagof(a, 1, L), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("all_solutions_predicates_guard", new Struct("a"), new Int(1), new Var("L"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("callable")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -928,9 +928,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(assert(X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("assertz", new Var("X"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -938,13 +938,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(assert(1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("assertz", new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("clause")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -952,9 +952,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(retract(X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("retract_guard", new Var("X"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -962,13 +962,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(retract(1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("retract_guard", new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("clause")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -976,9 +976,9 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(retractall(X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("retract_guard", new Var("X"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -986,13 +986,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(retractall(1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("retract_guard", new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("clause")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -1000,13 +1000,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(member(a, 1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("member_guard", new Struct("a"), new Int(1))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("list")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Int]
+    val culprit = info.getVar("Culprit").asInstanceOf[Int]
     culprit.intValue shouldBe 1
   }
 
@@ -1014,13 +1014,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(reverse(a, []), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("reverse_guard", new Struct("a"), new Struct)
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("list")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -1028,13 +1028,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(delete(a, a, []), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("delete_guard", new Struct("a"), new Struct("a"), new Struct)
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("list")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 
@@ -1042,13 +1042,13 @@ class BasicLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(element(1, a, a), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("element_guard", new Int(1), new Struct("a"), new Struct("a"))
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 2
-    val validType = info.getTerm("ValidType").asInstanceOf[Struct]
+    val validType = info.getVar("ValidType").asInstanceOf[Struct]
     validType shouldBe new Struct("list")
-    val culprit = info.getTerm("Culprit").asInstanceOf[Struct]
+    val culprit = info.getVar("Culprit").asInstanceOf[Struct]
     culprit shouldBe new Struct("a")
   }
 }

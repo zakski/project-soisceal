@@ -40,7 +40,9 @@ import java.util.regex.Pattern
 import com.szadowsz.gospel.core.data
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.db.ops.OperatorManager
-import com.szadowsz.gospel.core.error.InvalidTermException
+import com.szadowsz.gospel.core.exception.InvalidTermException
+
+import scala.collection.JavaConverters._
 
 /**
   * This class defines a parser of prolog terms and sentences.
@@ -63,11 +65,17 @@ object Parser {
     try {
       val p: Parser = new Parser(op, st)
       val t: Token = p.tokenizer.readToken
-      if (t.isEOF) throw new InvalidTermException("Term starts with EOF")
+      if (t.isEOF) {
+        throw new InvalidTermException("Term starts with EOF")
+      }
       p.tokenizer.unreadToken(t)
       val term: Term = p.expr(false)
-      if (term == null) throw new InvalidTermException("Term is null")
-      if (!p.tokenizer.readToken.isEOF) throw new InvalidTermException("The entire string could not be read as one term")
+      if (term == null) {
+        throw new InvalidTermException("Term is null")
+      }
+      if (!p.tokenizer.readToken.isEOF) {
+        throw new InvalidTermException("The entire string could not be read as one term")
+      }
       term.resolveTerm()
       term
     } catch {
@@ -131,7 +139,7 @@ private[core] class Parser(op: OperatorManager) extends Serializable {
     offsetsMap = mapping
   }
 
-  def iterator: util.Iterator[Term] = new TermIterator(this)
+  def iterator: util.Iterator[Term] = new TermIterator(this).asJava
 
   /**
     * Parses next term from the stream built on string.
@@ -144,25 +152,35 @@ private[core] class Parser(op: OperatorManager) extends Serializable {
   def nextTerm(endNeeded: Boolean): Term = {
     try {
       val t: Token = tokenizer.readToken
-      if (t.isEOF) return null
+      if (t.isEOF) {
+        return null
+      }
       tokenizer.unreadToken(t)
       val term: Term = expr(false)
-      if (term == null) /*Castagna 06/2011*/
-      //throw new InvalidTermException("The parser is unable to finish");
-        throw new InvalidTermException("The parser is unable to finish.", tokenizer.offsetToRowColumn(getCurrentOffset)(0), tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1)
-      /**/ if (endNeeded && tokenizer.readToken.getType != Tokenizer.END) /*Castagna 06/2011*/
-      //throw new InvalidTermException("The term " + term + " is not ended with a period.");
-        throw new InvalidTermException("The term '" + term + "' is not ended with a period.", tokenizer.offsetToRowColumn(getCurrentOffset)(0), tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1)
-      /**/ term.resolveTerm()
-      term
-    }
-    catch {
-      case ex: IOException => {
-        /*Castagna 06/2011*/
-        //throw new InvalidTermException("An I/O error occured.");
-        throw new InvalidTermException("An I/O error occured.", tokenizer.offsetToRowColumn(getCurrentOffset)(0), tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1)
-        /**/
+      if (term == null) {
+        throw new InvalidTermException(
+          "The parser is unable to finish.",
+          tokenizer.offsetToRowColumn(getCurrentOffset)(0),
+          tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1
+        )
       }
+      if (endNeeded && tokenizer.readToken.getType != Tokenizer.END) {
+        throw new InvalidTermException(
+          "The term '" + term + "' is not ended with a period.",
+          term,
+          tokenizer.offsetToRowColumn(getCurrentOffset)(0),
+          tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1
+        )
+      }
+      term.resolveTerm()
+      term
+    } catch {
+      case ex: IOException =>
+        throw new InvalidTermException(
+          "An I/O error occured.",
+          tokenizer.offsetToRowColumn(getCurrentOffset)(0),
+          tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1
+        )
     }
   }
 
@@ -314,10 +332,11 @@ private[core] class Parser(op: OperatorManager) extends Serializable {
       var FY: scala.Int = opManager.opPrio(f.seq, "fy")
       if (f.seq == "-") {
         val t: Token = tokenizer.readToken
-        if (t.isNumber) /*Michele Castagna 06/2011*/
-        //return new IdentifiedTerm(0, Parser.createNumber("-" + t.seq));
+        if (t.isNumber) {
           return identifyTerm(0, Parser.createNumber("-" + t.seq), tokenStart)
-        else /**/ tokenizer.unreadToken(t)
+        } else {
+          tokenizer.unreadToken(t)
+        }
       }
       //check that no operator has a priority higher than permitted
       if (FY > maxPriority) FY = -1
@@ -326,26 +345,20 @@ private[core] class Parser(op: OperatorManager) extends Serializable {
       var haveAttemptedFX: Boolean = false
       if (FX >= FY && FX >= OperatorManager.OP_LOW) {
         val found: IdentifiedTerm = exprA(FX - 1, commaIsEndMarker) //op(fx, n) exprA(n - 1)
-        if (found != null) /*Castagna 06/2011*/
-        //return new IdentifiedTerm(FX, new Struct(f.seq, found.result));
+        if (found != null)
           return identifyTerm(FX, new Struct(f.seq, found.result), tokenStart)
-        else /**/ haveAttemptedFX = true
       }
       //FY has priority over FX, or FX has failed
       if (FY >= OperatorManager.OP_LOW) {
         val found: IdentifiedTerm = exprA(FY, commaIsEndMarker) //op(fy,n) exprA(1200)  or   op(fy,n) exprA(n)
-        if (found != null) /*Castagna 06/2011*/
-        //return new IdentifiedTerm(FY, new Struct(f.seq, found.result));
+        if (found != null)
           return identifyTerm(FY, new Struct(f.seq, found.result), tokenStart)
-        /**/
       }
       //FY has priority over FX, but FY failed
       if (!haveAttemptedFX && FX >= OperatorManager.OP_LOW) {
         val found: IdentifiedTerm = exprA(FX - 1, commaIsEndMarker) //op(fx, n) exprA(n - 1)
-        if (found != null) /*Castagna 06/2011*/
-        //return new IdentifiedTerm(FX, new Struct(f.seq, found.result));
+        if (found != null)
           return identifyTerm(FX, new Struct(f.seq, found.result), tokenStart)
-        /**/
       }
     }
     tokenizer.unreadToken(f)
@@ -383,48 +396,65 @@ private[core] class Parser(op: OperatorManager) extends Serializable {
       map(v, tokenizer.tokenStart)
       return v //todo switched to use the internal check for "_" in Var(String)
     }
-    /**/ if (t1.isType(Tokenizer.ATOM) || t1.isType(Tokenizer.SQ_SEQUENCE) || t1.isType(Tokenizer.DQ_SEQUENCE)) {
-      if (!t1.isFunctor) /*Castagna 06/2011*/ {
-        //return new Struct(t1.seq);
+     if (t1.isType(Tokenizer.ATOM) || t1.isType(Tokenizer.SQ_SEQUENCE) || t1.isType(Tokenizer.DQ_SEQUENCE)) {
+      if (!t1.isFunctor) {
         val f: Term = new Struct(t1.seq)
         map(f, tokenizer.tokenStart)
         return f
       }
-      /**/ val functor: String = t1.seq
+      val functor: String = t1.seq
       val t2: Token = tokenizer.readToken //reading left par
-      if (!t2.isType(Tokenizer.LPAR)) throw new InvalidTermException("Something identified as functor misses its first left parenthesis") //todo check can be skipped
+      if (!t2.isType(Tokenizer.LPAR)) {
+        throw new InvalidTermException(
+          "Something identified as functor misses its first left parenthesis",
+          functor,
+          tokenizer.offsetToRowColumn(getCurrentOffset)(0),
+          tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1
+        )
+      } //todo check can be skipped
       val a: util.LinkedList[Term] = expr0_arglist //reading arguments
       val t3: Token = tokenizer.readToken
-      if (t3.isType(Tokenizer.RPAR)) //reading right par
-      /*Castagna 06/2011*/ {
-        //return new Struct(functor, a);
+      if (t3.isType(Tokenizer.RPAR)) {
+        //reading right par
         val c: Term = new Struct(functor, a)
         map(c, tempStart)
         return c
       }
-      /**//*Castagna 06/2011*/
-      //throw new InvalidTermException("Missing right parenthesis: ("+a + " -> here <-");
-      throw new InvalidTermException("Missing right parenthesis '(" + a + "' -> here <-", tokenizer.offsetToRowColumn(getCurrentOffset)(0), tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1)
-      /**/
+      throw new InvalidTermException(
+        "Missing right parenthesis '(" + a + "' -> here <-",
+        functor,
+        tokenizer.offsetToRowColumn(getCurrentOffset)(0),
+        tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1
+      )
     }
     if (t1.isType(Tokenizer.LPAR)) {
       val term: Term = expr(false)
-      if (tokenizer.readToken.isType(Tokenizer.RPAR)) return term
-      /*Castagna 06/2011*/
-      //throw new InvalidTermException("Missing right parenthesis: ("+term + " -> here <-");
-      throw new InvalidTermException("Missing right parenthesis '(" + term + "' -> here <-", tokenizer.offsetToRowColumn(getCurrentOffset)(0), tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1)
-      /**/
+      if (tokenizer.readToken.isType(Tokenizer.RPAR)) {
+        return term
+      }
+
+      throw new InvalidTermException(
+        "Missing right parenthesis '(" + term + "' -> here <-",
+        term,
+        tokenizer.offsetToRowColumn(getCurrentOffset)(0),
+        tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1
+      )
     }
     if (t1.isType(Tokenizer.LBRA)) {
       val t2: Token = tokenizer.readToken
       if (t2.isType(Tokenizer.RBRA)) return new Struct
       tokenizer.unreadToken(t2)
       val term: Term = expr0_list
-      if (tokenizer.readToken.isType(Tokenizer.RBRA)) return term
-      /*Castagna 06/2011*/
-      //throw new InvalidTermException("Missing right bracket: ["+term + " -> here <-");
-      throw new InvalidTermException("Missing right bracket '[" + term + " ->' here <-", tokenizer.offsetToRowColumn(getCurrentOffset)(0), tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1)
-      /**/
+      if (tokenizer.readToken.isType(Tokenizer.RBRA)) {
+        return term
+      }
+
+      throw new InvalidTermException(
+        "Missing right bracket '[" + term + " ->' here <-",
+        term,
+        tokenizer.offsetToRowColumn(getCurrentOffset)(0),
+        tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1
+      )
     }
     if (t1.isType(Tokenizer.LBRA2)) {
       var t2: Token = tokenizer.readToken
@@ -443,15 +473,19 @@ private[core] class Parser(op: OperatorManager) extends Serializable {
         map(b, tempStart)
         return b
       }
-      /*Castagna 06/2011*/
-      //throw new InvalidTermException("Missing right braces: {"+arg + " -> here <-");
-      throw new InvalidTermException("Missing right braces '{" + arg + "' -> here <-", tokenizer.offsetToRowColumn(getCurrentOffset)(0), tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1)
-      /**/
+      throw new InvalidTermException(
+        "Missing right braces '{" + arg + "' -> here <-",
+        arg,
+        tokenizer.offsetToRowColumn(getCurrentOffset)(0),
+        tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1
+      )
     }
-    /*Castagna 06/2011*/
-    //throw new InvalidTermException("The following token could not be identified: "+t1.seq);
-    throw new InvalidTermException("Unexpected token '" + t1.seq + "'", tokenizer.offsetToRowColumn(getCurrentOffset)(0), tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1)
-    /**/
+    throw new InvalidTermException(
+      s"Unexpected token '${t1.seq}' in ${tokenizer.getText()}",
+      tokenizer.getText(),
+      tokenizer.offsetToRowColumn(getCurrentOffset)(0),
+      tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1
+    )
   }
 
   //todo make non-recursive?
@@ -466,10 +500,12 @@ private[core] class Parser(op: OperatorManager) extends Serializable {
       tokenizer.unreadToken(t)
       return new Struct(head, new Struct)
     }
-    /*Castagna 06/2011*/
-    //throw new InvalidTermException("The expression: " + head + " is not followed by either a ',' or '|'  or ']'.");
-    throw new InvalidTermException("The expression '" + head + "' is not followed by either a ',' or '|'  or ']'.", tokenizer.offsetToRowColumn(getCurrentOffset)(0), tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1)
-    /**/
+    throw new InvalidTermException(
+      "The expression '" + head + "' is not followed by either a ',' or '|'  or ']'.",
+      head,
+      tokenizer.offsetToRowColumn(getCurrentOffset)(0),
+      tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1
+    )
   }
 
   //todo make non-recursive
@@ -489,12 +525,12 @@ private[core] class Parser(op: OperatorManager) extends Serializable {
       l.add(head)
       return l
     }
-    /*Castagna 06/2011*/
-    //throw new InvalidTermException("The argument: " + head + " is not followed by either a ',' or ')'.\nline: " + tokenizer.lineno());
-    /*Castagna 06/2011*/
-    //throw new InvalidTermException("The argument: " + head + " is not followed by either a ',' or ')'.");
-    throw new InvalidTermException("The argument '" + head + "' is not followed by either a ',' or ')'.", tokenizer.offsetToRowColumn(getCurrentOffset)(0), tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1)
-    /**/
+    throw new InvalidTermException(
+      "The argument '" + head + "' is not followed by either a ',' or ')'.",
+      head,
+      tokenizer.offsetToRowColumn(getCurrentOffset)(0),
+      tokenizer.offsetToRowColumn(getCurrentOffset)(1) - 1
+    )
   }
 
   private def identifyTerm(priority: scala.Int, term: Term, offset: scala.Int): IdentifiedTerm = {

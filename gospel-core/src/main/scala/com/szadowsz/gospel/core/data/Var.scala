@@ -33,8 +33,9 @@
  */
 package com.szadowsz.gospel.core.data
 
-import com.szadowsz.gospel.core.error.InvalidTermException
 import java.util
+
+import com.szadowsz.gospel.core.exception.InvalidTermException
 
 /**
   * This class represents a variable term.
@@ -136,7 +137,7 @@ class Var private(n: String, id: scala.Int, count: scala.Long) extends Term {
       if (Character.isUpperCase(name.charAt(0)) || name.startsWith(Var.ANY)) {
         completeName = new StringBuilder(name)
       } else {
-        throw new InvalidTermException("Illegal variable name: " + name)
+        throw new InvalidTermException("Illegal variable name", name)
       }
     }
   }

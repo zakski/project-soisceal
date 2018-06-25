@@ -4,7 +4,7 @@ import java.math.BigInteger
 
 import com.szadowsz.gospel.core.data.{Float, Int, Long, Struct, Var}
 import com.szadowsz.gospel.core.db.ops.OperatorManager
-import com.szadowsz.gospel.core.error.InvalidTermException
+import com.szadowsz.gospel.core.exception.InvalidTermException
 import com.szadowsz.gospel.core.{BaseEngineSpec, PrologEngine}
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec

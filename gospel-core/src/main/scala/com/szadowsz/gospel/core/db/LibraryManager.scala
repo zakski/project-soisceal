@@ -22,8 +22,8 @@ import java.net.URL
 import com.szadowsz.gospel.core.data.Term
 import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
 import com.szadowsz.gospel.core.db.theory.TheoryManager
-import com.szadowsz.gospel.core.error.{InvalidLibraryException, InvalidTheoryException}
 import com.szadowsz.gospel.core.event.interpreter.LibraryEvent
+import com.szadowsz.gospel.core.exception.{InvalidLibraryException, InvalidTheoryException, PrologException}
 import com.szadowsz.gospel.core.{PrologEngine, Theory}
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -46,7 +46,7 @@ trait LibraryManager extends java.io.Serializable {
 
   protected lazy val logger: Logger = LoggerFactory.getLogger(getClass)
 
-  protected var currentLibs: List[JavaLibrary] = List()
+  protected var currentLibs: List[Library] = List()
 
   // currently bound libraries.
   protected var externalLibs: Map[String, URL] = Map() // external libraries.
@@ -59,7 +59,7 @@ trait LibraryManager extends java.io.Serializable {
     * @throws InvalidLibraryException if name is not a valid library
     */
   @throws(classOf[InvalidLibraryException])
-  protected def bindLibrary(lib: JavaLibrary): Unit = {
+  protected def bindLibrary(lib: Library): Unit = {
     try {
       lib.setEngine(wam)
       currentLibs = lib +: currentLibs
@@ -72,8 +72,8 @@ trait LibraryManager extends java.io.Serializable {
       }
       thManager.rebindPrimitives() // in current theory there could be predicates and functors which become built-ins after lib loading.
     } catch {
-      case ex: InvalidTheoryException => throw new InvalidLibraryException(lib.getName, ex.line, ex.pos)
-      case NonFatal(ex) => throw new InvalidLibraryException(lib.getName, -1, -1)
+      case ex: InvalidTheoryException => new InvalidLibraryException(ex,lib.getName)
+      case NonFatal(ex) => throw new InvalidLibraryException(ex, lib.getName, " Failed to Bind Library")
     }
   }
 
@@ -94,7 +94,7 @@ trait LibraryManager extends java.io.Serializable {
     * @param name the name of the library already loaded
     * @return the reference to the library loaded, null if the library is not found.
     */
-  def getLibrary(name: String): JavaLibrary = currentLibs.find(_.getName == name).orNull
+  def getLibrary(name: String): Library = currentLibs.find(_.getName == name).orNull
 
 
   /**
@@ -107,17 +107,17 @@ trait LibraryManager extends java.io.Serializable {
     * @return the reference to the Library just loaded.
     */
   @throws(classOf[InvalidLibraryException])
-  def loadLibrary(className: String): JavaLibrary = {
+  def loadLibrary(className: String): Library = {
     try {
-      loadLibrary(Class.forName(className).asInstanceOf[Class[JavaLibrary]])
+      loadLibrary(Class.forName(className).asInstanceOf[Class[Library]])
     } catch {
-      case NonFatal(e) =>
-        throw new InvalidLibraryException(className, -1, -1)
+      case p : PrologException => throw new InvalidLibraryException(p, className)
+      case NonFatal(ex) => throw new InvalidLibraryException(ex,className, s"Failed to Load Library $className")
     }
   }
 
   @throws(classOf[InvalidLibraryException])
-  def loadLibrary(className: String, paths: Array[String]): JavaLibrary
+  def loadLibrary(className: String, paths: Array[String]): Library
 
   /**
     * Loads a library.
@@ -129,7 +129,7 @@ trait LibraryManager extends java.io.Serializable {
     * @return the reference to the Library just loaded.
     */
   @throws(classOf[InvalidLibraryException])
-  def loadLibrary(libClass: Class[_ <: JavaLibrary]): JavaLibrary = {
+  def loadLibrary(libClass: Class[_ <: Library]): Library = {
     val library = Option(getLibrary(libClass.getName)) match {
       case Some(lib) =>
         logger.warn(s"Library ${lib.getName} already loaded.")
@@ -138,7 +138,8 @@ trait LibraryManager extends java.io.Serializable {
         try
           libClass.newInstance()
         catch {
-          case NonFatal(ex) => throw new InvalidLibraryException(libClass.getName, -1, -1)
+          case p : PrologException => throw new InvalidLibraryException(p, libClass.getName)
+          case NonFatal(ex) => throw new InvalidLibraryException(ex,libClass.getName, s"Failed to Load Library ${libClass.getName}")
         }
     }
     bindLibrary(library)
@@ -159,7 +160,7 @@ trait LibraryManager extends java.io.Serializable {
     * @return the library object now loaded in the interpreter
     */
   @throws(classOf[InvalidLibraryException])
-  def loadLibrary(lib: JavaLibrary): Unit = {
+  def loadLibrary(lib: Library): Library = {
     Option(getLibrary(lib.getName)) match {
       case Some(oldLib) =>
         logger.warn(s"Library ${oldLib.getName} already loaded.")
@@ -172,6 +173,7 @@ trait LibraryManager extends java.io.Serializable {
     logger.info("Loaded Library {}", lib)
     val ev = new LibraryEvent(wam, lib.getName)
     wam.notifyLoadedLibrary(ev)
+    lib
   }
 
   /**
@@ -187,7 +189,7 @@ trait LibraryManager extends java.io.Serializable {
         currentLibs = currentLibs.filterNot(_ == lib)
         thManager.removeLibraryTheory(className)
         thManager.rebindPrimitives()
-      case None => throw new InvalidLibraryException() // TODO don't throw error here logger.warn(s"Library $className is not loaded.")
+      case None => throw new InvalidLibraryException(s"Cannot unload Library $className as it is not loaded",className) // TODO don't throw error here logger.warn(s"Library $className is not loaded.")
     }
   }
 

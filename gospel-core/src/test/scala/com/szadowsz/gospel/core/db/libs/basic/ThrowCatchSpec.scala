@@ -19,13 +19,13 @@ class ThrowCatchSpec extends FlatSpec with BaseEngineSpec {
     val goal = "atom_length(err, 3), catch(p(0), E, (atom_length(E, Length), X is 2+3)), Y is X+5."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val e = info.getTerm("E").asInstanceOf[Struct]
+    val e = info.getVar("E").asInstanceOf[Struct]
     e shouldBe new Struct("error")
-    val length = info.getTerm("Length").asInstanceOf[Int]
+    val length = info.getVar("Length").asInstanceOf[Int]
     length.intValue shouldBe 5
-    val x = info.getTerm("X").asInstanceOf[Int]
+    val x = info.getVar("X").asInstanceOf[Int]
     x.intValue shouldBe 5
-    val y = info.getTerm("Y").asInstanceOf[Int]
+    val y = info.getVar("Y").asInstanceOf[Int]
     y.intValue shouldBe 10
   }
 
@@ -35,9 +35,9 @@ class ThrowCatchSpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(p(1), E, fail), catch(p(0), E, atom_length(E, Length))."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val e = info.getTerm("E").asInstanceOf[Struct]
+    val e = info.getVar("E").asInstanceOf[Struct]
     e shouldBe new Struct("error")
-    val length = info.getTerm("Length").asInstanceOf[Int]
+    val length = info.getVar("Length").asInstanceOf[Int]
     length.intValue shouldBe 5
   }
 

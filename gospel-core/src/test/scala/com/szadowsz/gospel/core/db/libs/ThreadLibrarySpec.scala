@@ -12,7 +12,6 @@ class ThreadLibrarySpec extends FlatSpec with BaseEngineSpec {
 
   override protected def init(): PrologEngine = {
     val p = new PrologEngine()
-    p.loadLibrary("com.szadowsz.gospel.core.db.libs.SocketLibrary")
     p.loadLibrary("com.szadowsz.gospel.core.db.libs.ThreadLibrary")
     p
   }
@@ -22,7 +21,7 @@ class ThreadLibrarySpec extends FlatSpec with BaseEngineSpec {
   it should "unify the ID of the current thread to the ID (Root)" in {
     val sinfo = prolog.solve("thread_id(ID).")
     sinfo.isSuccess shouldBe true
-    val id = sinfo.getVarValue("ID")
+    val id = sinfo.getVar("ID")
     id shouldBe new Int(0)
   }
 
@@ -53,7 +52,7 @@ class ThreadLibrarySpec extends FlatSpec with BaseEngineSpec {
     prolog.setTheory(new Theory(theory))
     val sinfo = prolog.solve("start(X).")
     sinfo.isSuccess shouldBe true
-    val x = sinfo.getVarValue("X")
+    val x = sinfo.getVar("X")
     x shouldBe prolog.createTerm("genitore(bob,gdh)")
   }
 
@@ -62,9 +61,9 @@ class ThreadLibrarySpec extends FlatSpec with BaseEngineSpec {
     prolog.setTheory(new Theory(theory))
     var sinfo = prolog.solve("thread_create(ID, genitore(bob,X)), thread_create(ID2, genitore(b,Y)), thread_join(ID2,Y), thread_join(ID,X).")
     sinfo.isSuccess shouldBe true
-    val x = sinfo.getVarValue("X")
+    val x = sinfo.getVar("X")
     x shouldBe prolog.createTerm("genitore(bob,a)")
-    val y = sinfo.getVarValue("Y")
+    val y = sinfo.getVar("Y")
     y shouldBe prolog.createTerm("genitore(b,b)")
     sinfo = prolog.solve("thread_create(ID, genitore(bob,X)), thread_join(ID,X), thread_next_sol(ID).") //il thread stato rimosso
     sinfo.isSuccess shouldBe false
@@ -83,9 +82,9 @@ class ThreadLibrarySpec extends FlatSpec with BaseEngineSpec {
     prolog.setTheory(new Theory(theory))
     var sinfo = prolog.solve("thread_create(ID, genitore(bob,X)), thread_read(ID,X1), thread_create(ID2, loop(1,10,1, thread_read(ID,X2))),  thread_create(ID3, loop(1,2,1, thread_read(ID,X2))), thread_next_sol(ID), thread_read(ID,X).")
     sinfo.isSuccess shouldBe true
-    val x = sinfo.getVarValue("X")
+    val x = sinfo.getVar("X")
     x shouldBe prolog.createTerm("genitore(bob,f)")
-    val x1 = sinfo.getVarValue("X1")
+    val x1 = sinfo.getVar("X1")
     x1 shouldBe prolog.createTerm("genitore(bob,a)")
     sinfo = prolog.solve("thread_create(ID, genitore(bob,X)), thread_read(ID,X), thread_next_sol(ID).")
     sinfo.isSuccess shouldBe true
@@ -105,7 +104,7 @@ class ThreadLibrarySpec extends FlatSpec with BaseEngineSpec {
     prolog.setTheory(new Theory(theory))
     val sinfo = prolog.solve("start(genitore(bob,X)).")
     sinfo.isSuccess shouldBe true
-    val x = sinfo.getVarValue("X")
+    val x = sinfo.getVar("X")
     x shouldBe prolog.createTerm("b")
   }
 
@@ -130,7 +129,7 @@ class ThreadLibrarySpec extends FlatSpec with BaseEngineSpec {
     var sinfo = prolog.solve("start(X).")
     sinfo.isSuccess shouldBe true
 
-    val x = sinfo.getVarValue("X")
+    val x = sinfo.getVar("X")
     x shouldBe new Struct("messaggio molto importante")
 
     theory = "start(X) :- msg_queue_create('CODA'), thread_create(ID, thread1(X)), invio(ID, 'messaggio molto importante'), lettura(ID,X), thread_get_msg('CODA', a(X)).\n" + //Posso nuovamente prelevare, in quanto il msg non stato eliminato
@@ -140,7 +139,7 @@ class ThreadLibrarySpec extends FlatSpec with BaseEngineSpec {
     sinfo = prolog.solve("start(X).")
     sinfo.isSuccess shouldBe true
 
-    val x1 = sinfo.getVarValue("X")
+    val x1 = sinfo.getVar("X")
     x1 shouldBe new Struct("messaggio molto importante")
   }
 
@@ -150,7 +149,7 @@ class ThreadLibrarySpec extends FlatSpec with BaseEngineSpec {
     val sinfo = prolog.solve("start(X).")
     sinfo.isSuccess shouldBe true
 
-    val x = sinfo.getVarValue("X")
+    val x = sinfo.getVar("X")
     x shouldBe new Struct("messaggio molto importante")
   }
 
@@ -165,7 +164,7 @@ class ThreadLibrarySpec extends FlatSpec with BaseEngineSpec {
     sinfo = prolog.solve("start(X).")
     sinfo.isSuccess shouldBe true
 
-    val x = sinfo.getVarValue("X")
+    val x = sinfo.getVar("X")
     x shouldBe new Struct("messaggio molto importante")
 
     theory = "start(X) :- msg_queue_create('CODA'), thread_create(ID, thread1(X)), lettura(ID,X).\n" + "thread1(X) :- thread_peek_msg('CODA', a(X)). \n " + "lettura(ID, X):- thread_join(ID, thread1(X)). "
@@ -185,7 +184,7 @@ class ThreadLibrarySpec extends FlatSpec with BaseEngineSpec {
     sinfo = prolog.solve("start(X).")
     sinfo.isSuccess shouldBe true
 
-    val x = sinfo.getVarValue("X")
+    val x = sinfo.getVar("X")
     x shouldBe new Struct("messaggio molto importante")
   }
 
@@ -211,7 +210,7 @@ class ThreadLibrarySpec extends FlatSpec with BaseEngineSpec {
     prolog.setTheory(new Theory(theory))
     val sinfo = prolog.solve("start(X, S).")
     sinfo.isSuccess shouldBe true
-    val x = sinfo.getVarValue("S")
+    val x = sinfo.getVar("S")
     x shouldBe new Int(5)
   }
 
@@ -248,9 +247,9 @@ class ThreadLibrarySpec extends FlatSpec with BaseEngineSpec {
     prolog.setTheory(new Theory(theory))
     val sinfo = prolog.solve("start(7,X,8,Y).")
     sinfo.isSuccess shouldBe true
-    val X = sinfo.getVarValue("X")
+    val X = sinfo.getVar("X")
     assertEquals(new Int(5040), X)
-    val Y = sinfo.getVarValue("Y")
+    val Y = sinfo.getVar("Y")
     assertEquals(new Int(40320), Y)
   }
 

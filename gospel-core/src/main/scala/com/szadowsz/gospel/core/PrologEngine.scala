@@ -20,7 +20,7 @@ package com.szadowsz.gospel.core
 import java.util
 
 import com.szadowsz.gospel.core.data.Term
-import com.szadowsz.gospel.core.db.{JavaLibrary, LibraryManager, LibraryManagerFactory}
+import com.szadowsz.gospel.core.db.{Library, LibraryManager, LibraryManagerFactory}
 import com.szadowsz.gospel.core.db.libs._
 import com.szadowsz.gospel.core.db.ops.{Operator, OperatorManager}
 import com.szadowsz.gospel.core.db.primitives.PrimitiveManager
@@ -37,6 +37,9 @@ import com.szadowsz.gospel.core.utils.VersionInfo
 
 import scala.util.Try
 import scala.collection.JavaConverters._
+import java.io.{File, FileInputStream}
+
+import com.szadowsz.gospel.core.exception.{InvalidLibraryException, InvalidTermException, InvalidTheoryException}
 
 
 object PrologEngine {
@@ -124,7 +127,7 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     *
     * @param libs the classes of the libraries to be loaded
     */
-  def this(libs: Array[Class[_ <: JavaLibrary]]) {
+  def this(libs: Array[Class[_ <: Library]]) {
     this(false, true)
     libs.foreach(c => loadLibrary(c.getName))
   }
@@ -135,7 +138,7 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     * The default libraries are BasicLibrary, ISOLibrary, IOLibrary, and OOLibrary.
     */
   def this() {
-    this(Array[Class[_ <: JavaLibrary]](
+    this(Array[Class[_ <: Library]](
       classOf[MyBasicLibrary],
       classOf[ISOLibrary],
       classOf[IOLibrary],
@@ -143,9 +146,9 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     ))
   }
 
-  protected def getLibraryPredicate(name: String, nArgs: Int): JavaLibrary = primManager.getLibraryPredicate(name, nArgs) // TODO comment or remove
+  protected def getLibraryPredicate(name: String, nArgs: Int): Library = primManager.getLibraryPredicate(name, nArgs) // TODO comment or remove
 
-  protected def getLibraryFunctor(name: String, nArgs: Int): JavaLibrary = primManager.getLibraryFunctor(name, nArgs) // TODO comment or remove
+  protected def getLibraryFunctor(name: String, nArgs: Int): Library = primManager.getLibraryFunctor(name, nArgs) // TODO comment or remove
 
   /**
     * Method to retrieve the db component that manages primitives.
@@ -211,7 +214,7 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     * @param name the name of the library already loaded
     * @return the reference to the library loaded, null if the library is not found
     */
-  def getLibrary(name: String): JavaLibrary = libManager.getLibrary(name)
+  def getLibrary(name: String): Library = libManager.getLibrary(name)
 
   /**
     * Gets a copy of current listener list to output events
@@ -442,12 +445,25 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     *
     * If a library with the same name is already present, a warning event is notified and the request is ignored.
     *
+    * @param file the name of the Java class containing the library to be loaded.
+    * @throws InvalidLibraryException if we cannot create a valid library.
+    * @return the reference to the Library just loaded.
+    */
+  @throws(classOf[InvalidLibraryException])
+  def loadLibrary(file: File): Library = libManager.loadLibrary(new TheoryLibrary(file.getName.dropRight(3),new Theory(new FileInputStream(file))))
+
+
+  /**
+    * Loads a library.
+    *
+    * If a library with the same name is already present, a warning event is notified and the request is ignored.
+    *
     * @param className the name of the Java class containing the library to be loaded.
     * @throws InvalidLibraryException if we cannot create a valid library.
     * @return the reference to the Library just loaded.
     */
   @throws(classOf[InvalidLibraryException])
-  def loadLibrary(className: String): JavaLibrary = libManager.loadLibrary(className)
+  def loadLibrary(className: String): Library = libManager.loadLibrary(className)
 
   /**
     * Loads a library.
@@ -461,7 +477,7 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     * @throws InvalidLibraryException if name is not a valid library
     */
   @throws[InvalidLibraryException]
-  def loadLibrary(className: String, paths: Array[String]): JavaLibrary = libManager.loadLibrary(className, paths)
+  def loadLibrary(className: String, paths: Array[String]): Library = libManager.loadLibrary(className, paths)
 
   /**
     * Loads a specific instance of a library
@@ -472,7 +488,7 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     * @throws InvalidLibraryException if name is not a valid library
     */
   @throws(classOf[InvalidLibraryException])
-  def loadLibrary(lib: JavaLibrary): Unit = libManager.loadLibrary(lib)
+  def loadLibrary(lib: Library): Library = libManager.loadLibrary(lib)
 
   /**
     * Loads a library.
@@ -485,7 +501,7 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     * @return the reference to the Library just loaded.
     */
   @throws(classOf[InvalidLibraryException])
-  def loadLibrary[L <: JavaLibrary](libClass: Class[L]): JavaLibrary = libManager.loadLibrary(libClass)
+  def loadLibrary[L <: Library](libClass: Class[L]): Library = libManager.loadLibrary(libClass)
 
 
   /**
@@ -563,33 +579,40 @@ class PrologEngine protected(spyFlag: Boolean, warningFlag: Boolean) {
     * @return the result of the demonstration
     * @see SolveInfo
     **/
-  @throws[MalformedGoalException]
+  @throws[InvalidTermException]
   def solve(st: String): Solution = {
     try {
       val p = new Parser(opManager, st)
       val t = p.nextTerm(true)
       solve(t)
     } catch {
-      case ex: InvalidTermException => throw new MalformedGoalException
+      case ex: InvalidTermException =>
+        throw new InvalidTermException("Goal is Malformed",ex, ex.getTerm, ex.getLine, ex.getPos)
     }
   }
+  /**
+    * Gets next solution
+    *
+    * @return the result of the demonstration
+    * @see Solution
+    **/
+  def solveNext(): Solution = solveNextOpt().orNull
 
   /**
     * Gets next solution
     *
     * @return the result of the demonstration
-    * @throws NoMoreSolutionException if no more solutions are present
-    * @see SolveInfo
+    * @see Solution
     **/
-  @throws[NoMoreSolutionException]
-  def solveNext(): Solution = {
+  def solveNextOpt(): Option[Solution] = {
     if (hasOpenAlternatives) {
       val sinfo: Solution = engManager.solveNext
       val ev: QueryEvent = new QueryEvent(this, sinfo)
       notifyNewQueryResultAvailable(ev)
-      sinfo
+      Option(sinfo)
+    } else {
+      None
     }
-    else throw new NoMoreSolutionException
   }
 
   /**

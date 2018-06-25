@@ -17,7 +17,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '+'(7, 35).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe 42
   }
 
@@ -25,7 +25,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '+'(0, 3+11).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe 14
   }
 
@@ -33,7 +33,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '+'(0, 3.2+11).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Float]
+    val result = solution.getVar("X").asInstanceOf[Float]
     result.doubleValue shouldBe 14.2
   }
 
@@ -41,7 +41,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '-'(7).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe -7
   }
 
@@ -49,7 +49,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '-'(3-11).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe 8
   }
 
@@ -57,7 +57,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '-'(3.2-11).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Float]
+    val result = solution.getVar("X").asInstanceOf[Float]
     result.doubleValue shouldBe 7.8
   }
 
@@ -65,7 +65,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '-'(7, 35).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe -28
   }
 
@@ -73,7 +73,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '-'(20, 3+11).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe 6
   }
 
@@ -81,7 +81,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '-'(0, 3.2+11).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Float]
+    val result = solution.getVar("X").asInstanceOf[Float]
     result.doubleValue shouldBe -14.2
   }
 
@@ -89,7 +89,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '*'(7, 35).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe 245
   }
 
@@ -97,7 +97,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '*'(1.5, 3.2+11).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Float]
+    val result = solution.getVar("X").asInstanceOf[Float]
     result.doubleValue shouldBe 21.299999999999997
   }
 
@@ -105,7 +105,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '/'(7, 35).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe 0
   }
 
@@ -113,7 +113,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '/'(7.0, 35).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Float]
+    val result = solution.getVar("X").asInstanceOf[Float]
     result.doubleValue shouldBe 0.2
   }
 
@@ -121,7 +121,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '/'(140, 3+11).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe 10
   }
 
@@ -129,7 +129,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '/'(20.164, 3.2+11).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Float]
+    val result = solution.getVar("X").asInstanceOf[Float]
     result.doubleValue shouldBe 1.4200000000000002
   }
 
@@ -137,7 +137,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is mod(7, 3).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe 1
   }
 
@@ -145,7 +145,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is mod(0, 3+11).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe 0
   }
 
@@ -153,7 +153,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is mod(7, -2).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe -1
   }
 
@@ -161,7 +161,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is floor(7.4).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe 7
   }
 
@@ -169,7 +169,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is floor(-0.4).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe -1
   }
 
@@ -177,7 +177,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is round(7.5).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Number]
+    val result = solution.getVar("X").asInstanceOf[Number]
     result.intValue shouldBe 8
   }
 
@@ -185,7 +185,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is round(7.6).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Number]
+    val result = solution.getVar("X").asInstanceOf[Number]
     result.intValue shouldBe 8
   }
 
@@ -193,7 +193,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is '/'(7, 35).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe 0
   }
 
@@ -201,7 +201,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is round(-0.6).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Number]
+    val result = solution.getVar("X").asInstanceOf[Number]
     result.intValue shouldBe -1
   }
 
@@ -209,7 +209,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is ceiling(-0.5).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe 0
   }
 
@@ -217,7 +217,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is truncate(-0.5).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe 0
   }
 
@@ -225,7 +225,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is float(7).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Number]
+    val result = solution.getVar("X").asInstanceOf[Number]
     result.floatValue shouldBe 7.0f
   }
 
@@ -233,14 +233,14 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is float(7.3).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Number]
+    val result = solution.getVar("X").asInstanceOf[Number]
     result.floatValue shouldBe 7.3f
   }
   it should "pass variable test #29" in {
     val solution = prolog.solve("X is float(5 / 3).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Number]
+    val result = solution.getVar("X").asInstanceOf[Number]
     result.floatValue shouldBe 1.0f
   }
 
@@ -248,7 +248,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is abs(7).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe 7
   }
 
@@ -256,7 +256,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is abs(3-11).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Int]
+    val result = solution.getVar("X").asInstanceOf[Int]
     result.intValue shouldBe 8
   }
 
@@ -264,7 +264,7 @@ class SimpleArithemticFunctorsSpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("X is abs(3.2-11.0).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("X").asInstanceOf[Float]
+    val result = solution.getVar("X").asInstanceOf[Float]
     result.doubleValue shouldBe 7.8
   }
 

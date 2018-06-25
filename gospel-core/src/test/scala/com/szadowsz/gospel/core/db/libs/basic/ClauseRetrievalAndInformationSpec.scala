@@ -47,7 +47,7 @@ class ClauseRetrievalAndInformationSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("clause(legs(I, 6), Body).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("Body").asInstanceOf[Struct]
+      val result = solution.getVar("Body").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "insect(I)"
     }
 
@@ -56,7 +56,7 @@ class ClauseRetrievalAndInformationSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("clause(legs(C, 7), Body).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("Body").asInstanceOf[Struct]
+      val result = solution.getVar("Body").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "','(C,call(C))"
     }
 
@@ -65,17 +65,17 @@ class ClauseRetrievalAndInformationSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("clause(insect(I), T).")
       solution.isSuccess shouldBe true
 
-      var result1 = solution.getVarValue("I").asInstanceOf[Struct]
+      var result1 = solution.getVar("I").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "ant"
 
-     var result2 = solution.getVarValue("T").asInstanceOf[Struct]
+     var result2 = solution.getVar("T").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "true"
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("I").asInstanceOf[Struct]
+      result1 = solution.getVar("I").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "bee"
 
-      result2 = solution.getVarValue("T").asInstanceOf[Struct]
+      result2 = solution.getVar("T").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "true"
     }
 
@@ -135,7 +135,7 @@ class ClauseRetrievalAndInformationSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("current_predicate(elk/Arity).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("Arity")
+      val result = solution.getVar("Arity")
       replaceUnderscore(result.toString) shouldBe "1"
     }
 
@@ -144,7 +144,7 @@ class ClauseRetrievalAndInformationSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("current_predicate(Name/1).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("Name").asInstanceOf[Struct]
+      val result = solution.getVar("Name").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "elk"
     }
   }

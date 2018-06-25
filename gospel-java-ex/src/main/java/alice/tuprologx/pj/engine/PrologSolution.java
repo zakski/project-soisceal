@@ -32,9 +32,9 @@ public class PrologSolution<Q extends Term<?>, S extends Term<?>> /*implements I
         _solveInfo = si;
     }
 
-    public <Z extends Term<?>> Z getVarValue(String varName) throws com.szadowsz.gospel.core.error.NoSolutionException {
+    public <Z extends Term<?>> Z getVar(String varName) throws com.szadowsz.gospel.core.error.NoSolutionException {
         com.szadowsz.gospel.core.data.Term retValue;
-        retValue = _solveInfo.getVarValue(varName);
+        retValue = _solveInfo.getVar(varName);
         return Term.unmarshal(retValue);
     }
 

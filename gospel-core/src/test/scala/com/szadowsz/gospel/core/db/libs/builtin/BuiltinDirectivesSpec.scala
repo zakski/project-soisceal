@@ -42,7 +42,7 @@ class BuiltinDirectivesSpec extends FunSpec with BaseEngineSpec {
       prolog.setTheory(new Theory(theory))
       val solution = prolog.solve("test(X).")
       solution.isSuccess shouldBe true
-      val x = solution.getVarValue("X").asInstanceOf[Number]
+      val x = solution.getVar("X").asInstanceOf[Number]
       x.intValue shouldBe 2
 
     }
@@ -57,7 +57,7 @@ class BuiltinDirectivesSpec extends FunSpec with BaseEngineSpec {
       prolog.setTheory(new Theory(theory))
       val solution = prolog.solve("test(X).")
       solution.isSuccess shouldBe true
-      val x = solution.getVarValue("X").asInstanceOf[Number]
+      val x = solution.getVar("X").asInstanceOf[Number]
       x.intValue shouldBe 1
     }
 
@@ -71,7 +71,7 @@ class BuiltinDirectivesSpec extends FunSpec with BaseEngineSpec {
       prolog.setTheory(new Theory(theory))
       val solution = prolog.solve("test(X).")
       solution.isSuccess shouldBe true
-      val x = solution.getVarValue("X").asInstanceOf[Number]
+      val x = solution.getVar("X").asInstanceOf[Number]
       x.intValue shouldBe 1
     }
   }
@@ -104,7 +104,7 @@ class BuiltinDirectivesSpec extends FunSpec with BaseEngineSpec {
       prolog.setTheory(new Theory(theory))
       val solution = prolog.solve("test(X).")
       solution.isSuccess shouldBe true
-      val x = solution.getVarValue("X").asInstanceOf[Number]
+      val x = solution.getVar("X").asInstanceOf[Number]
       x.intValue shouldBe 1
     }
   }

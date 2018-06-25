@@ -17,7 +17,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is '**'(5, 3).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 125.0
     }
 
@@ -25,7 +25,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is '**'(-5.0, 3).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe -125.0
     }
 
@@ -33,7 +33,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is '**'(5, -1).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 0.2
     }
 
@@ -41,7 +41,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is '**'(5, 3.0).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 125.0
     }
 
@@ -49,7 +49,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is '**'(0.0, 0).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 1.0
     }
   }
@@ -59,7 +59,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is sin(0.0).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 0.0
     }
 
@@ -67,7 +67,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is sin(0).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 0.0
     }
 
@@ -75,10 +75,10 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("PI is atan(1.0) * 4, X is sin(PI / 2.0).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 1.0
 
-      result = solution.getVarValue("PI").asInstanceOf[Float]
+      result = solution.getVar("PI").asInstanceOf[Float]
       result.doubleValue shouldBe 3.141592653589793
     }
   }
@@ -88,7 +88,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is cos(0.0).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 1.0
     }
 
@@ -96,7 +96,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is cos(0).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 1.0
     }
 
@@ -104,10 +104,10 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("PI is atan(1.0) * 4, X is cos(PI / 2.0).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 6.123233995736766E-17
 
-      result = solution.getVarValue("PI").asInstanceOf[Float]
+      result = solution.getVar("PI").asInstanceOf[Float]
       result.doubleValue shouldBe 3.141592653589793
     }
   }
@@ -117,7 +117,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
         var solution = prolog.solve("PI is atan(1.0) * 4.")
         solution.isSuccess shouldBe true
 
-        val result = solution.getVarValue("PI").asInstanceOf[Float]
+        val result = solution.getVar("PI").asInstanceOf[Float]
         result.doubleValue shouldBe 3.141592653589793
       }
   }
@@ -127,7 +127,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is exp(0.0).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 1.0
     }
 
@@ -135,7 +135,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is exp(1.0).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 2.718281828459045
     }
 
@@ -143,7 +143,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is exp(0).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 1.0
     }
   }
@@ -153,7 +153,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is log(1.0).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 0.0
     }
 
@@ -161,7 +161,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is log(2.7182818284590455).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 1.0
     }
   }
@@ -171,7 +171,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is sqrt(0.0).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 0.0
     }
 
@@ -179,7 +179,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is sqrt(1.0).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 1.0
     }
 
@@ -187,7 +187,7 @@ class OtherArithmeticFunctionsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is sqrt(1.21).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X").asInstanceOf[Float]
+      var result = solution.getVar("X").asInstanceOf[Float]
       result.doubleValue shouldBe 1.1
     }
   }

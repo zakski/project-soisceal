@@ -1,0 +1,14 @@
+dependencies {
+    compile project(':gospel-core')
+
+    testCompile group: 'org.scalatest', name: "scalatest_${scalaVersion}", version: scalaTestVersion
+    testCompile group: 'junit', name: 'junit', version: junitVersion
+
+}
+
+sourceSets {
+    main.scala.srcDirs = ['src/main/scala', 'src/main/java']
+    main.java.srcDirs = []
+    test.scala.srcDirs = ['src/test/scala', 'src/test/java']
+    test.java.srcDirs = []
+}

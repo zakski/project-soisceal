@@ -52,13 +52,13 @@ class BugFixesSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("op(10, yfx, ['@', ':']), current_op(10, yfx, Op).")
       solution.isSuccess shouldBe true
 
-      var op = solution.getVarValue("Op").asInstanceOf[Struct]
+      var op = solution.getVar("Op").asInstanceOf[Struct]
       op.getName shouldBe ":"
 
       solution = prolog.solveNext()
       solution.isSuccess shouldBe true
 
-      op = solution.getVarValue("Op").asInstanceOf[Struct]
+      op = solution.getVar("Op").asInstanceOf[Struct]
       op.getName shouldBe "@"
     }
   }
@@ -69,7 +69,7 @@ class BugFixesSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("p(X), X.")
       solution.isSuccess shouldBe true
 
-      var op = solution.getVarValue("X").asInstanceOf[Struct]
+      var op = solution.getVar("X").asInstanceOf[Struct]
       op.getName shouldBe "a"
     }
   }
@@ -79,13 +79,13 @@ class BugFixesSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is 5, Y =.. ['+', X, 2], K is Y.")
       solution.isSuccess shouldBe true
 
-      var op = solution.getVarValue("X")
+      var op = solution.getVar("X")
       op.toString shouldBe "5"
 
-      op = solution.getVarValue("Y")
+      op = solution.getVar("Y")
       op.toString shouldBe "'+'(5,2)"
 
-      op = solution.getVarValue("K")
+      op = solution.getVar("K")
       op.toString shouldBe "7"
     }
 
@@ -93,10 +93,10 @@ class BugFixesSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("X is 5, Y =.. ['+', X, 2], 10 > Y.")
       solution.isSuccess shouldBe true
 
-      var op = solution.getVarValue("X")
+      var op = solution.getVar("X")
       op.toString shouldBe "5"
 
-      op = solution.getVarValue("Y")
+      op = solution.getVar("Y")
       op.toString shouldBe "'+'(5,2)"
     }
   }
@@ -133,15 +133,15 @@ class BugFixesSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("ops(X).")
       solution.isSuccess shouldBe true
 
-      var op = solution.getVarValue("X")
+      var op = solution.getVar("X")
       op.toString shouldBe "s"
 
       solution = prolog.solveNext()
-      op = solution.getVarValue("X")
+      op = solution.getVar("X")
       op.toString shouldBe "y"
 
       solution = prolog.solveNext()
-      op = solution.getVarValue("X")
+      op = solution.getVar("X")
       op.toString shouldBe "z"
     }
   }

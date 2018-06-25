@@ -116,7 +116,7 @@ class ControlConstructsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("';'((X = 1, !), X = 2).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X")
+      val result = solution.getVar("X")
       replaceUnderscore(result.toString) shouldBe "1"
     }
 
@@ -124,7 +124,7 @@ class ControlConstructsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("','(';'(X = 1, X = 2), ';'(true, !)).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X")
+      val result = solution.getVar("X")
       replaceUnderscore(result.toString) shouldBe "1"
     }
   }
@@ -149,7 +149,7 @@ class ControlConstructsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("'->'(true, X = 1).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X")
+      val result = solution.getVar("X")
       replaceUnderscore(result.toString) shouldBe "1"
     }
 
@@ -157,7 +157,7 @@ class ControlConstructsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("'->'(';'(X = 1, X = 2), true).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X")
+      val result = solution.getVar("X")
       replaceUnderscore(result.toString) shouldBe "1"
     }
 
@@ -165,11 +165,11 @@ class ControlConstructsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("'->'(true, ';'(X = 1, X = 2)).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X")
+      var result = solution.getVar("X")
       replaceUnderscore(result.toString) shouldBe "1"
 
       solution = prolog.solveNext()
-      result = solution.getVarValue("X")
+      result = solution.getVar("X")
       replaceUnderscore(result.toString) shouldBe "2"
     }
   }
@@ -205,7 +205,7 @@ class ControlConstructsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("';'('->'(true, X = 1), X = 2).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X")
+      val result = solution.getVar("X")
       replaceUnderscore(result.toString) shouldBe "1"
     }
 
@@ -213,7 +213,7 @@ class ControlConstructsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("';'('->'(fail, X = 1), X = 2).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X")
+      val result = solution.getVar("X")
       replaceUnderscore(result.toString) shouldBe "2"
     }
 
@@ -221,11 +221,11 @@ class ControlConstructsSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("'->'(true, ';'(X = 1, X = 2)).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("X")
+      var result = solution.getVar("X")
       replaceUnderscore(result.toString) shouldBe "1"
 
       solution = prolog.solveNext()
-      result = solution.getVarValue("X")
+      result = solution.getVar("X")
       replaceUnderscore(result.toString) shouldBe "2"
     }
 
@@ -233,7 +233,7 @@ class ControlConstructsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("';'('->'(';'(X = 1, X = 2), true), true).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X")
+      val result = solution.getVar("X")
       replaceUnderscore(result.toString) shouldBe "1"
     }
   }

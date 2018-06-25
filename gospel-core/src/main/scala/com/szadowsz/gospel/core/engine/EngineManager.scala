@@ -24,7 +24,6 @@ import com.szadowsz.gospel.core.data.{Int, Term, Var}
 import com.szadowsz.gospel.core.{PrologEngine, Solution}
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalTree
-import com.szadowsz.gospel.core.error.NoMoreSolutionException
 import com.szadowsz.gospel.core.json.EngineState
 
 /**
@@ -247,7 +246,6 @@ final case class EngineManager(private val wam: PrologEngine) extends java.io.Se
     }
   }
 
-  @throws[NoMoreSolutionException]
   def solveNext: Solution = er1.solveNext
 
   /**

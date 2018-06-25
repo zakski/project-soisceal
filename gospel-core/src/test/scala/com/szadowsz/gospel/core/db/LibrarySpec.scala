@@ -16,7 +16,7 @@ class LibrarySpec extends FlatSpec with BaseEngineSpec {
     prolog.loadLibrary(new TestLibrary)
     val goal = prolog.solve("N is sum(1, 3).")
     goal.isSuccess shouldBe true
-    goal.getVarValue("N") should be (new Int(4))
+    goal.getVar("N") should be (new Int(4))
 
   }
 

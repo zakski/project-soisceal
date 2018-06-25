@@ -5,6 +5,8 @@ import com.szadowsz.gospel.core.data.Int;
 import com.szadowsz.gospel.core.data.Struct;
 import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.engine.EngineManager;
+import com.szadowsz.gospel.core.exception.InvalidTermException;
+import com.szadowsz.gospel.core.exception.InvalidTheoryException;
 
 /**
  * @author Matteo Iuliani
@@ -143,11 +145,15 @@ public class PrologError extends Throwable {
 		/**/		
 	}
 
-	public static PrologError syntax_error(EngineManager e,
-			/*Castagna 06/2011*/			
-			int clause, 
-			/**/			
-			int line, int position, Term message) {
+	public static PrologError syntax_error(EngineManager e, InvalidTermException ex) {
+		return syntax_error(e,-1,ex.getLine(),ex.getPos(), new Struct (ex.getMessage()));
+	}
+
+	public static PrologError syntax_error(EngineManager e, InvalidTheoryException ex) {
+		return syntax_error(e,ex.getClause(),ex.getLine(),ex.getPos(), new Struct (ex.getMessage()));
+	}
+
+	private static PrologError syntax_error(EngineManager e, int clause, int line, int position, Term message) {
 		Term errorTerm = new Struct("syntax_error", message);
 		Term tuPrologTerm = new Struct("syntax_error", e.getEnv().currentContext().currentGoal(), new Int(line), new Int(position), message);
 		/*Castagna 06/2011*/

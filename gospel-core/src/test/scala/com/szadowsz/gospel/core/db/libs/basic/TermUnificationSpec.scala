@@ -104,7 +104,7 @@ class TermUnificationSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("'='(X, 1).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Int]
+      val result = solution.getVar("X").asInstanceOf[Int]
       result.intValue shouldBe 1
     }
 
@@ -112,7 +112,7 @@ class TermUnificationSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("'='(X, Y).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Var]
+      val result = solution.getVar("X").asInstanceOf[Var]
       result.getName shouldBe "X"
     }
 
@@ -120,7 +120,7 @@ class TermUnificationSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("'='(X, Y), '='(X, abc).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Struct]
+      val result = solution.getVar("X").asInstanceOf[Struct]
       result.getName shouldBe "abc"
     }
 
@@ -128,7 +128,7 @@ class TermUnificationSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("'='(X, Y), '='(X, abc).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("Y").asInstanceOf[Struct]
+      val result = solution.getVar("Y").asInstanceOf[Struct]
       result.getName shouldBe "abc"
     }
 
@@ -136,7 +136,7 @@ class TermUnificationSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("'='(f(X, def), f(def, Y)).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Struct]
+      val result = solution.getVar("X").asInstanceOf[Struct]
       result.getName shouldBe "def"
     }
 
@@ -144,7 +144,7 @@ class TermUnificationSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("'='(f(X, def), f(def, Y)).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("Y").asInstanceOf[Struct]
+      val result = solution.getVar("Y").asInstanceOf[Struct]
       result.getName shouldBe "def"
     }
   }
@@ -234,7 +234,7 @@ class TermUnificationSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("unify_with_occurs_check(X,1).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Int]
+      val result = solution.getVar("X").asInstanceOf[Int]
       result.intValue shouldBe 1
     }
   }

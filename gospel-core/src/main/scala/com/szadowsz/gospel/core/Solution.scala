@@ -39,7 +39,6 @@ import java.util
 import scala.collection.JavaConverters._
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.engine.ExecutionResultType
-import com.szadowsz.gospel.core.error.{NoSolutionException, UnknownVarException}
 import com.szadowsz.gospel.core.json.JSONSerializerManager
 
 @SerialVersionUID(1L)
@@ -97,41 +96,31 @@ class Solution(q: Term, g: Struct, result: ExecutionResultType.Value, resultVars
   /**
     * Gets the solution of the request
     *
-    * @throws NoSolutionException if the query had no solution.
+    * @return the solution of the query if successful, otherwise nothing
     */
-  @throws[NoSolutionException]
-  def getSolution: Term = if (isSuccess) goal else throw new NoSolutionException
+  def getSolution: Option[Term] = if (isSuccess) Option(goal) else None
 
   /**
     * Gets the list of the variables in the solution.
     *
-    * @return the array of variables.
-    *
-    * @throws NoSolutionException if the query had no solution.
-    */
-  @throws[NoSolutionException]
-  def getBindingVars: util.List[Var] = if (isSuccess) bindings else throw new NoSolutionException
+    * @return the array of variables if successful, otherwise nothing.
+     */
+  def getBindingVars: Option[util.List[Var]] = if (isSuccess) Option(bindings) else None
 
   /**
     * Gets the value of a variable in the substitution.
     *
-    * @throws NoSolutionException if the solve request has no solution
-    * @throws UnknownVarException if the variable does not appear in the substitution.
+    * @return the value of a variable if successful, otherwise nothing.
     */
-  @throws[NoSolutionException]
-  @throws[UnknownVarException]
-  def getTerm(varName: String): Term = {
-    val term: Term = getVarValue(varName)
-    if (term == null) throw new UnknownVarException else term
-  }
+  def getVar(varName: String): Term = getVarOpt(varName).orNull
 
   /**
-    * Gets the value of a variable in the substitution. Returns <code>null</code>
-    * if the variable does not appear in the substitution.
+    * Gets the value of a variable in the substitution.
+    *
+    * @return the value of a variable if successful, otherwise nothing.
     */
-  @throws[NoSolutionException]
-  def getVarValue(varName: String): Term = {
-    if (isSuccess) bindings.asScala.find(v => v.getName == varName).map(_.getTerm).orNull else throw new NoSolutionException
+  def getVarOpt(varName: String): Option[Term] = {
+    if (isSuccess) bindings.asScala.find(v => v.getName == varName).map(_.getTerm())  else None
   }
 
   /**
@@ -150,7 +139,12 @@ class Solution(q: Term, g: Struct, result: ExecutionResultType.Value, resultVars
         st.append(". ")
       }
      for (v <- bindings.asScala){
-          if (v != null && !v.isAnonymous && v.isBound && (!v.getTerm.isInstanceOf[Var] || (!v.getTerm.asInstanceOf[Var].getName.startsWith("_")))) {
+          if (v != null &&
+            !v.isAnonymous &&
+            v.isBound &&
+            (!v.getTerm().isInstanceOf[Var] ||
+              (!v.getTerm().asInstanceOf[Var].getName.startsWith("_")))
+          ) {
             st.append(v)
             st.append("  ")
           }

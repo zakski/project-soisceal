@@ -34,7 +34,7 @@ class TheoryManagerSpec extends FlatSpec with BaseEngineSpec {
     prolog.setTheory(new Theory(theory))
 
     warningListener.warning.indexOf("load_library/1") should be > 0
-    warningListener.warning.indexOf("InvalidLibraryException") should be > 0
+    warningListener.warning.indexOf("Failed to Load Library") should be > 0
   }
 
   it should "not allow asserts to be backtracked" in {
@@ -74,17 +74,17 @@ class TheoryManagerSpec extends FlatSpec with BaseEngineSpec {
     solution = prolog.solve("takes(s1, N).")
     solution.isSuccess shouldBe true
     solution.hasOpenAlternatives shouldBe true
-    solution.getVarValue("N").toString should be("c2")
+    solution.getVar("N").toString should be("c2")
     solution = prolog.solveNext()
     solution.isSuccess shouldBe true
-    solution.getVarValue("N").toString should be("c3")
+    solution.getVar("N").toString should be("c3")
 
     solution = prolog.solve("retractall(takes(s1,c2)).")
     solution.isSuccess shouldBe true
     solution = prolog.solve("takes(s1, N).")
     solution.isSuccess shouldBe true
     solution.hasOpenAlternatives shouldBe false
-    solution.getVarValue("N").toString should be("c3")
+    solution.getVar("N").toString should be("c3")
   }
 
   // TODO test retractall: ClauseDatabase#get(f/a) should return an empty list

@@ -45,7 +45,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("findall(X, (X=1;Y=2), S).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S").asInstanceOf[Struct]
+      val result = solution.getVar("S").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1,_]"
     }
 
@@ -53,7 +53,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("findall(X+Y, (X=1), S).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S").asInstanceOf[Struct]
+      val result = solution.getVar("S").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "['+'(1,_)]"
     }
 
@@ -61,7 +61,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("findall(X, fail, L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[]"
     }
 
@@ -69,7 +69,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("findall(X, (X=1;X=1), S).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S").asInstanceOf[Struct]
+      val result = solution.getVar("S").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1,1]"
     }
 
@@ -77,10 +77,10 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("findall(X, (X=1;X=2), [X,Y]).")
       solution.isSuccess shouldBe true
 
-      val xResult = solution.getVarValue("X")
+      val xResult = solution.getVar("X")
       xResult.toString shouldBe "1"
 
-      val yResult = solution.getVarValue("Y")
+      val yResult = solution.getVar("Y")
       yResult.toString shouldBe "2"
     }
 
@@ -88,7 +88,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("findall(X, (X=1;X=2), S).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S").asInstanceOf[Struct]
+      val result = solution.getVar("S").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1,2]"
     }
 
@@ -161,7 +161,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("bagof(X,(X=1;X=2), S).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S").asInstanceOf[Struct]
+      val result = solution.getVar("S").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1,2]"
     }
 
@@ -169,7 +169,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("bagof(X,(X=1;X=2), X).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Struct]
+      val result = solution.getVar("X").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1,2]"
     }
 
@@ -177,7 +177,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("bagof(X,(X=Y;X=Z), S1).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S1").asInstanceOf[Struct]
+      val result = solution.getVar("S1").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[Y,Z]"
     }
 
@@ -185,7 +185,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("bagof(1,(Y=1;Y=2), L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1]"
     }
 
@@ -193,7 +193,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("bagof(f(X,Y), (X=a;Y=b), L1).")
       solution.isSuccess shouldBe true
 
-      val xResult = solution.getVarValue("L1")
+      val xResult = solution.getVar("L1")
       replaceUnderscore(xResult.toString) shouldBe "[f(a,_),f(_,b)]"
     }
 
@@ -201,7 +201,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("bagof(X, Y^((X=1,Y=1);(X=2;Y=2)), L2).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L2").asInstanceOf[Struct]
+      val result = solution.getVar("L2").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1,2,_]"
     }
 
@@ -209,7 +209,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("bagof(X, Y^((X=1;Y=1);(X=2;Y=2)), L3).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L3").asInstanceOf[Struct]
+      val result = solution.getVar("L3").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1,_,2,_]"
     }
 
@@ -217,7 +217,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("bagof(X, Y^((X=1;Y=2);X=3), Si1).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("Si1").asInstanceOf[Struct]
+      val result = solution.getVar("Si1").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1,_,3]"
     }
 
@@ -225,7 +225,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("bagof(X, (X=Y;X=Z;Y=1), S3).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S3").asInstanceOf[Struct]
+      val result = solution.getVar("S3").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[Y,Z]"
     }
 
@@ -347,7 +347,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("setof(X,(X=1;X=2),S).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S").asInstanceOf[Struct]
+      val result = solution.getVar("S").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1,2]"
     }
 
@@ -355,7 +355,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("setof(X,(X=1;X=2),X).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Struct]
+      val result = solution.getVar("X").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1,2]"
     }
 
@@ -363,7 +363,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("setof(X,(X=2;X=1),S).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S").asInstanceOf[Struct]
+      val result = solution.getVar("S").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1,2]"
     }
 
@@ -371,7 +371,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("setof(X,(X=2;X=2),S).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S").asInstanceOf[Struct]
+      val result = solution.getVar("S").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[2]"
     }
 
@@ -379,7 +379,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("setof(X,(X=Y;X=Z),S).")
       solution.isSuccess shouldBe true
 
-      val xResult = solution.getVarValue("S")
+      val xResult = solution.getVar("S")
       replaceUnderscore(xResult.toString) shouldBe "[Y,Z]"
     }
 
@@ -387,7 +387,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("setof(1,(Y=2;Y=1),L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1]"
     }
 
@@ -395,7 +395,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("setof(f(X,Y),(X=a;Y=b),L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[f(_,b),f(a,_)]"
     }
 
@@ -403,7 +403,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("setof(X,Y^((X=1,Y=1);(X=2,Y=2)),S).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S").asInstanceOf[Struct]
+      val result = solution.getVar("S").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1,2]"
     }
 
@@ -411,7 +411,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("setof(X,Y^((X=1;Y=1);(X=2,Y=2)),S).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S").asInstanceOf[Struct]
+      val result = solution.getVar("S").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[_,1,2]"
     }
 
@@ -419,7 +419,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("setof(X,Y^((X=1,Y=1);X=3),S).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S").asInstanceOf[Struct]
+      val result = solution.getVar("S").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1,3]"
     }
 
@@ -427,7 +427,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("setof(X,(X=Y;X=Z;Y=1),S).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S").asInstanceOf[Struct]
+      val result = solution.getVar("S").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[Y,Z]"
     }
 
@@ -436,7 +436,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("setof(X,a(X,Y),L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[1,2]"
     }
 
@@ -444,7 +444,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("setof(X,member(X,[f(U,b),f(V,c)]),L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[f(U,b),f(V,c)]"
     }
 
@@ -452,7 +452,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("setof(X,member(X,[V,U,f(U),f(V)]),L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[V,U,f(V),f(U)]"
     }
 
@@ -460,7 +460,7 @@ class AllSolutionsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("setof(X,member(X,[V,U,f(U),f(V)]),[a,b,f(a),f(b)]).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("V").asInstanceOf[Struct]
+      val result = solution.getVar("V").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "a"
     }
   }

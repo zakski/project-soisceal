@@ -10,7 +10,7 @@ import java.util.Hashtable;
  * @author Alessio Mercurio
  * <p>
  * Custom abstract classloader used to add/remove dynamically URLs from it
- * needed by JavaLibrary.
+ * needed by JLibrary.
  */
 
 public abstract class AbstractDynamicClassLoader extends ClassLoader {

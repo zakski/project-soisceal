@@ -71,10 +71,10 @@ class TermCreationAndDecompositionSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("functor(foo(a, b, c), X, Y).")
       solution.isSuccess shouldBe true
 
-      val x = solution.getVarValue("X")
+      val x = solution.getVar("X")
       x shouldBe new Struct("foo")
 
-      val y = solution.getVarValue("Y").asInstanceOf[Number]
+      val y = solution.getVar("Y").asInstanceOf[Number]
       y.intValue shouldBe 3
     }
 
@@ -82,7 +82,7 @@ class TermCreationAndDecompositionSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("functor(X, foo, 3).")
       solution.isSuccess shouldBe true
 
-      val x = solution.getVarValue("X")
+      val x = solution.getVar("X")
       replaceUnderscore(x.toString) shouldBe "foo(_,_,_)"
 
     }
@@ -91,7 +91,7 @@ class TermCreationAndDecompositionSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("functor(X, foo, 0).")
       solution.isSuccess shouldBe true
 
-      val x = solution.getVarValue("X")
+      val x = solution.getVar("X")
       x shouldBe new Struct("foo")
     }
 
@@ -99,10 +99,10 @@ class TermCreationAndDecompositionSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("functor(mats(A, B), A, B).")
       solution.isSuccess shouldBe true
 
-      val a = solution.getVarValue("A")
+      val a = solution.getVar("A")
       a shouldBe new Struct("mats")
 
-      val b = solution.getVarValue("B").asInstanceOf[Number]
+      val b = solution.getVar("B").asInstanceOf[Number]
       b.intValue shouldBe 2
     }
 
@@ -110,10 +110,10 @@ class TermCreationAndDecompositionSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("functor(1, X, Y).")
       solution.isSuccess shouldBe true
 
-      val x = solution.getVarValue("X").asInstanceOf[Number]
+      val x = solution.getVar("X").asInstanceOf[Number]
       x.intValue shouldBe 1
 
-      val y = solution.getVarValue("Y").asInstanceOf[Number]
+      val y = solution.getVar("Y").asInstanceOf[Number]
       y.intValue shouldBe 0
     }
 
@@ -122,7 +122,7 @@ class TermCreationAndDecompositionSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("functor(X, 1.1, 0).")
       solution.isSuccess shouldBe true
 
-      val x = solution.getVarValue("X").asInstanceOf[Number]
+      val x = solution.getVar("X").asInstanceOf[Number]
       x.doubleValue shouldBe 1.1
     }
 
@@ -231,7 +231,7 @@ class TermCreationAndDecompositionSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("arg(1, foo(a, b), X).")
       solution.isSuccess shouldBe true
 
-      val x = solution.getVarValue("X")
+      val x = solution.getVar("X")
       x shouldBe new Struct("a")
     }
 
@@ -239,7 +239,7 @@ class TermCreationAndDecompositionSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("arg(1, foo(X, b), a).")
       solution.isSuccess shouldBe true
 
-      val x = solution.getVarValue("X")
+      val x = solution.getVar("X")
       x shouldBe new Struct("a")
     }
 
@@ -247,7 +247,7 @@ class TermCreationAndDecompositionSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("arg(1, foo(X, b), Y).")
       solution.isSuccess shouldBe true
 
-      val x = solution.getVarValue("X")
+      val x = solution.getVar("X")
       x shouldBe new Var("X")
     }
 
@@ -305,7 +305,7 @@ class TermCreationAndDecompositionSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("'=..'(X, [foo,a,b]).")
       solution.isSuccess shouldBe true
 
-      val x = solution.getVarValue("X")
+      val x = solution.getVar("X")
       x shouldBe new Struct("foo", new Struct("a"), new Struct("b"))
     }
 
@@ -313,7 +313,7 @@ class TermCreationAndDecompositionSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("'=..'(foo(a,b), L).")
       solution.isSuccess shouldBe true
 
-      val x = solution.getVarValue("L")
+      val x = solution.getVar("L")
       x shouldBe prolog.createTerm("[foo,a,b]")
     }
 
@@ -321,7 +321,7 @@ class TermCreationAndDecompositionSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("'=..'(foo(X, b), [foo, a, Y]).")
       solution.isSuccess shouldBe true
 
-      val x = solution.getVarValue("Y")
+      val x = solution.getVar("Y")
       x shouldBe new Struct("b")
     }
 
@@ -430,7 +430,7 @@ class TermCreationAndDecompositionSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("copy_term(a+X, X+b).")
       solution.isSuccess shouldBe true
 
-      val x = solution.getVarValue("X")
+      val x = solution.getVar("X")
       x shouldBe new Struct("a")
     }
 
@@ -438,7 +438,7 @@ class TermCreationAndDecompositionSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("copy_term(X+X+Y, A+B+B).")
       solution.isSuccess shouldBe true
 
-      val x = solution.getVarValue("A")
+      val x = solution.getVar("A")
       x shouldBe new Var("A")
     }
   }

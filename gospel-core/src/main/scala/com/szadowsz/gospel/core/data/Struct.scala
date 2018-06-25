@@ -35,9 +35,10 @@ package com.szadowsz.gospel.core.data
 
 import com.szadowsz.gospel.core.db.ops.OperatorManager
 import com.szadowsz.gospel.core.db.primitives.PrimitiveInfo
-import com.szadowsz.gospel.core.error.InvalidTermException
 import com.szadowsz.gospel.core.parser.Parser
 import java.util
+
+import com.szadowsz.gospel.core.exception.InvalidTermException
 
 import scala.collection.JavaConverters._
 // scalastyle:off number.of.methods
@@ -47,7 +48,7 @@ import scala.collection.JavaConverters._
   * and atom term (considered as 0-arity compound).
   */
 @SerialVersionUID(1L)
-class Struct(n: String, a: scala.Int) extends Term with Iterable[Term] {
+class Struct(n: String, a: scala.Int) extends Term {//with Iterable[Term] {
 
   /**
     * name of the structure
@@ -101,7 +102,7 @@ class Struct(n: String, a: scala.Int) extends Term with Iterable[Term] {
     this(f, argList.length)
     for (i <- argList.indices) {
       if (argList(i) == null) {
-        throw new InvalidTermException("Arguments of a Struct cannot be null")
+        throw new InvalidTermException("Arguments of a Struct cannot be null",f)
       } else {
         arg(i) = argList(i)
       }
@@ -509,7 +510,7 @@ class Struct(n: String, a: scala.Int) extends Term with Iterable[Term] {
    iterator.asJava
   }
 
-  override def iterator: Iterator[Term] = {
+  def iterator: Iterator[Term] = {
     if (!isList) {
       throw new UnsupportedOperationException(s"The structure $this is not a list.")
     } else {

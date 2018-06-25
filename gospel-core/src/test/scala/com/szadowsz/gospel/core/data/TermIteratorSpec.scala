@@ -2,7 +2,7 @@ package com.szadowsz.gospel.core.data
 
 import java.util.NoSuchElementException
 
-import com.szadowsz.gospel.core.error.InvalidTermException
+import com.szadowsz.gospel.core.exception.InvalidTermException
 import com.szadowsz.gospel.core.{BaseEngineSpec, PrologEngine}
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec

@@ -23,12 +23,12 @@ import java.{util => ju}
 import alice.tuprolog.IPrimitives
 import com.szadowsz.gospel.core.PrologEngine
 import com.szadowsz.gospel.core.data.{Struct, Term}
-import com.szadowsz.gospel.core.db.JavaLibrary
+import com.szadowsz.gospel.core.db.Library
 import com.szadowsz.gospel.core.db.libs.BuiltIn
 
-import scala.collection.mutable
-import scala.collection.JavaConverters._
-import scala.util.Try
+import _root_.scala.collection.mutable
+import _root_.scala.collection.JavaConverters._
+import _root_.scala.util.Try
 
 /**
   * Administration of primitive predicate objects.
@@ -74,11 +74,11 @@ final case class PrimitiveManager(vm: PrologEngine) extends java.io.Serializable
     }
   }
 
-  def getLibraryDirective(name: String, nArgs: Int): JavaLibrary = Try(directives.get(name + "/" + nArgs).getSource.asInstanceOf[JavaLibrary]).toOption.orNull
+  def getLibraryDirective(name: String, nArgs: Int): Library = Try(directives.get(name + "/" + nArgs).getSource.asInstanceOf[Library]).toOption.orNull
 
-  def getLibraryPredicate(name: String, nArgs: Int): JavaLibrary = Try(predicates.get(name + "/" + nArgs).getSource.asInstanceOf[JavaLibrary]).toOption.orNull
+  def getLibraryPredicate(name: String, nArgs: Int): Library = Try(predicates.get(name + "/" + nArgs).getSource.asInstanceOf[Library]).toOption.orNull
 
-  def getLibraryFunctor(name: String, nArgs: Int): JavaLibrary = Try(functors.get(name + "/" + nArgs).getSource.asInstanceOf[JavaLibrary]).toOption.orNull
+  def getLibraryFunctor(name: String, nArgs: Int): Library = Try(functors.get(name + "/" + nArgs).getSource.asInstanceOf[Library]).toOption.orNull
 
   def createPrimitiveInfo(src: IPrimitives): Unit = {
     synchronized {

@@ -21,8 +21,8 @@ import java.io.File
 import java.net.{URL, URLClassLoader}
 
 import com.szadowsz.gospel.core.PrologEngine
-import com.szadowsz.gospel.core.error.InvalidLibraryException
 import com.szadowsz.gospel.core.event.interpreter.LibraryEvent
+import com.szadowsz.gospel.core.exception.InvalidLibraryException
 
 import scala.util.control.NonFatal
 
@@ -33,12 +33,12 @@ final case class DefaultLibraryManager(override protected val wam: PrologEngine)
     case Some(c) => c.getClassLoader.getResource(c.getName.replace('.', '/') + ".class")
   }
 
-  override def loadLibrary(className: String, paths: Array[String]): JavaLibrary = {
+  override def loadLibrary(className: String, paths: Array[String]): Library = {
     //  = {
     try {
       val urls = paths.map(p => (if (!p.contains(".class")) new File(p) else new File(p.substring(0, p.lastIndexOf(File.separator) + 1))).toURI.toURL)
       val loader = URLClassLoader.newInstance(urls, getClass.getClassLoader)
-      val lib = Class.forName(className, true, loader).newInstance.asInstanceOf[JavaLibrary]
+      val lib = Class.forName(className, true, loader).newInstance.asInstanceOf[Library]
       Option(getLibrary(lib.getName)) match {
         case Some(oldLib) =>
           logger.warn(s"Library ${oldLib.getName} already loaded.")
@@ -52,7 +52,7 @@ final case class DefaultLibraryManager(override protected val wam: PrologEngine)
           lib
       }
     } catch {
-      case NonFatal(_) => throw new InvalidLibraryException(className, -1, -1)
+      case NonFatal(ex) => throw new InvalidLibraryException(ex,className, "Failed to Load Library")
     }
   }
 }

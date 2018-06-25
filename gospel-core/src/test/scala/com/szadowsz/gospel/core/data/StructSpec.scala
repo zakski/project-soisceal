@@ -1,6 +1,23 @@
+/*
+ * tuProlog - Copyright (C) 2001-2007  aliCE team at deis.unibo.it
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 package com.szadowsz.gospel.core.data
 
-import com.szadowsz.gospel.core.error.InvalidTermException
+import com.szadowsz.gospel.core.exception.InvalidTermException
 import com.szadowsz.gospel.core.{BaseEngineSpec, PrologEngine}
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
@@ -21,37 +38,37 @@ class StructSpec extends FlatSpec with BaseEngineSpec {
 
   it should "not have null arguments #2" in {
     intercept[InvalidTermException] {
-      new Struct("p", new Int(1), null)
+      new Struct("p",  Int(1), null)
     }
   }
 
   it should "not have null arguments #3" in {
     intercept[InvalidTermException] {
-      new Struct("p", new Int(1), new Int(2), null)
+      new Struct("p",  Int(1),  Int(2), null)
     }
   }
 
   it should "not have null arguments #4" in {
     intercept[InvalidTermException] {
-      new Struct("p", new Int(1), new Int(2), new Int(3), null)
+      new Struct("p",  Int(1),  Int(2),  Int(3), null)
     }
   }
 
   it should "not have null arguments #5" in {
     intercept[InvalidTermException] {
-      new Struct("p", new Int(1), new Int(2), new Int(3), new Int(4), null)
+      new Struct("p",  Int(1),  Int(2),  Int(3),  Int(4), null)
     }
   }
 
   it should "not have null arguments #6" in {
     intercept[InvalidTermException] {
-      new Struct("p", new Int(1), new Int(2), new Int(3), new Int(4), new Int(5), null)
+      new Struct("p",  Int(1),  Int(2),  Int(3),  Int(4),  Int(5), null)
     }
   }
 
   it should "not have null arguments #7" in {
     intercept[InvalidTermException] {
-      new Struct("p", new Int(1), new Int(2), new Int(3), new Int(4), new Int(5), new Int(6), null)
+      new Struct("p",  Int(1),  Int(2),  Int(3),  Int(4),  Int(5),  Int(6), null)
     }
   }
 
@@ -64,13 +81,13 @@ class StructSpec extends FlatSpec with BaseEngineSpec {
 
   it should "not have a null name" in {
     intercept[InvalidTermException] {
-      new Struct(null, new Int(1), new Int(2))
+      new Struct(null,  Int(1),  Int(2))
     }
   }
 
   it should "not have an empty name if not an atom" in {
     intercept[InvalidTermException] {
-      new Struct("", new Int(1), new Int(2))
+      new Struct("",  Int(1),  Int(2))
     }
   }
 
@@ -134,7 +151,7 @@ class StructSpec extends FlatSpec with BaseEngineSpec {
   }
 
   it should "not support returning tail of a list from a non list" in {
-    val s = new Struct("h", new Int(1))
+    val s = new Struct("h",  Int(1))
     intercept[UnsupportedOperationException] {
       s.listTail
     }
@@ -169,7 +186,7 @@ class StructSpec extends FlatSpec with BaseEngineSpec {
 
     val list = new Struct(new Struct("a"), new Struct(new Struct("b"), new Struct(new Struct("c"), new Struct)))
     list.toString shouldBe "[a,b,c]"
-  }
+ }
 
   it should "support appending object to itself properly" in {
     var emptyList = new Struct
@@ -210,7 +227,7 @@ class StructSpec extends FlatSpec with BaseEngineSpec {
     val atom = new Struct("atom")
     atom.isAtomic shouldBe true
 
-    val list = new Struct(Array[Term](new Int(0), new Int(1)))
+    val list = new Struct(Array[Term]( Int(0),  Int(1)))
     list.isAtomic shouldBe false
 
     val compound = new Struct("f", new Struct("a"), new Struct("b"))
@@ -230,7 +247,7 @@ class StructSpec extends FlatSpec with BaseEngineSpec {
     val atom = new Struct("atom")
     atom.isAtom shouldBe true
 
-    val list = new Struct(Array[Term](new Int(0), new Int(1)))
+    val list = new Struct(Array[Term]( Int(0),  Int(1)))
     list.isAtom shouldBe false
 
     val compound = new Struct("f", new Struct("a"), new Struct("b"))
@@ -250,7 +267,7 @@ class StructSpec extends FlatSpec with BaseEngineSpec {
     val atom = new Struct("atom")
     atom.isCompound shouldBe false
 
-    val list = new Struct(Array[Term](new Int(0), new Int(1)))
+    val list = new Struct(Array[Term]( Int(0),  Int(1)))
     list.isCompound shouldBe true
 
     val compound = new Struct("f", new Struct("a"), new Struct("b"))

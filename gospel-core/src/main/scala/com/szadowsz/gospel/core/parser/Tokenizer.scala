@@ -22,8 +22,7 @@ import java.math.BigInteger
 import java.util.{Arrays, LinkedList}
 
 import com.szadowsz.gospel.core
-import com.szadowsz.gospel.core.error.InvalidTermException
-import com.szadowsz.gospel.core.parser
+import com.szadowsz.gospel.core.exception.InvalidTermException
 
 
 @SerialVersionUID(1L)
@@ -239,10 +238,15 @@ private[parser] class Tokenizer(theReader: Reader) extends StreamTokenizer(theRe
         return (false, typea, svala) //todo: break is not supported
       }
     }
-    if (typea == '\n' || typea == '\r') throw new InvalidTermException("Line break in quote not allowed")
-    if (svala != null) quote.append(svala)
-    else {
-      if (typea < 0) throw new InvalidTermException("Invalid string")
+    if (typea == '\n' || typea == '\r') {
+      throw new InvalidTermException("Line break in quote not allowed", quote.toString + svala)
+    }
+    if (svala != null) {
+      quote.append(svala)
+    } else {
+      if (typea < 0) {
+        throw new InvalidTermException("Invalid string", quote.toString)
+      }
       quote.append(typea.toChar)
     }
     (true, typea, svala)
@@ -263,7 +267,7 @@ private[parser] class Tokenizer(theReader: Reader) extends StreamTokenizer(theRe
     if (intVal != -1) {
       new Token("" + intVal, Tokenizer.INTEGER)
     } else {
-      throw new InvalidTermException("Character code constant starting with 0'<X> cannot be recognized.")
+      throw new InvalidTermException("Character code constant starting with 0'<X> cannot be recognized.", svalc)
     }
   }
 
@@ -319,14 +323,14 @@ private[parser] class Tokenizer(theReader: Reader) extends StreamTokenizer(theRe
         } else if (typeb == '\'' && ("0" == svala)) {
           readCharConstantToken()
         } else if (typeb != '.') {
-          throw new InvalidTermException("A number starting with 0-9 cannot be rcognized as an int and does not have a fraction '.'")
+          throw new InvalidTermException("A number starting with 0-9 cannot be recognized as an int and does not have a fraction '.'", svala)
         } else {
           readFloatToken(svala,typeb,svalb)
         }
       }
     } catch {
       case e: NumberFormatException =>
-        throw new InvalidTermException("A term starting with 0-9 cannot be parsed as a number")
+        throw new InvalidTermException("A term starting with 0-9 cannot be parsed as a number", svala)
     }
   }
 
@@ -430,7 +434,7 @@ private[parser] class Tokenizer(theReader: Reader) extends StreamTokenizer(theRe
     if (isNumber) {
       return readNextNumberToken(svala)
     }
-    throw new InvalidTermException("Unknown Unicode character: " + typea + "  (" + svala + ")")
+    throw new InvalidTermException("Unknown Unicode character: " + typea + "  (" + svala + ")", typea + svala)
   }
 
   /**
@@ -453,5 +457,9 @@ private[parser] class Tokenizer(theReader: Reader) extends StreamTokenizer(theRe
   private def tokenPushBack(): Unit = {
     super.pushBack()
     _tokenOffset -= tokenLength
+  }
+
+  def getText() : String = {
+    text
   }
 }

@@ -21,7 +21,7 @@ import com.szadowsz.gospel.core.data.*;
 import com.szadowsz.gospel.core.data.Float;
 import com.szadowsz.gospel.core.data.Long;
 import com.szadowsz.gospel.core.data.Number;
-import com.szadowsz.gospel.core.db.JavaLibrary;
+import com.szadowsz.gospel.core.db.JLibrary;
 import com.szadowsz.gospel.core.error.PrologError;
 
 /**
@@ -30,7 +30,7 @@ import com.szadowsz.gospel.core.error.PrologError;
  * <p>
  * Library/Theory dependency: BasicLibrary
  */
-public class ISOLibrary extends JavaLibrary {
+public class ISOLibrary extends JLibrary {
     private static final long serialVersionUID = 1L;
 
     public ISOLibrary() {
@@ -39,9 +39,9 @@ public class ISOLibrary extends JavaLibrary {
     public boolean atom_length_2(Term arg0, Term len) throws PrologError {
         arg0 = arg0.getTerm();
         if (arg0 instanceof Var)
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         if (!arg0.isAtom())
-            throw PrologError.type_error(engine.getEngineManager(), 1, "atom",
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom",
                     arg0);
         Struct atom = (Struct) arg0;
         return unify(len, new Int(atom.getName().length()));
@@ -52,7 +52,7 @@ public class ISOLibrary extends JavaLibrary {
         arg1 = arg1.getTerm();
         if (arg0 instanceof Var) {
             if (!arg1.isList()) {
-                throw PrologError.type_error(engine.getEngineManager(), 2,
+                throw PrologError.type_error(getEngine().getEngineManager(), 2,
                         "list", arg1);
             }
             Struct list = (Struct) arg1;
@@ -80,7 +80,7 @@ public class ISOLibrary extends JavaLibrary {
             return unify(arg0, new Struct(st));
         } else {
             if (!arg0.isAtom()) {
-                throw PrologError.type_error(engine.getEngineManager(), 1,
+                throw PrologError.type_error(getEngine().getEngineManager(), 1,
                         "atom", arg0);
             }
             String st = ((Struct) arg0).getName();
@@ -108,16 +108,16 @@ public class ISOLibrary extends JavaLibrary {
                 if (st.length() <= 1) {
                     return unify(arg1, new Int(st.charAt(0)));
                 } else {
-                    throw PrologError.type_error(engine.getEngineManager(), 1, "character", arg0);
+                    throw PrologError.type_error(getEngine().getEngineManager(), 1, "character", arg0);
                 }
             } else {
-                throw PrologError.type_error(engine.getEngineManager(), 1, "character", arg0);
+                throw PrologError.type_error(getEngine().getEngineManager(), 1, "character", arg0);
             }
         } else if ((arg1 instanceof Int) || (arg1 instanceof Long)) {
             char c = (char) ((Number) arg1).intValue();
             return unify(arg0, new Struct("" + c));
         } else {
-            throw PrologError.type_error(engine.getEngineManager(), 2, "integer", arg1);
+            throw PrologError.type_error(getEngine().getEngineManager(), 2, "integer", arg1);
         }
     }
 
@@ -456,7 +456,7 @@ public class ISOLibrary extends JavaLibrary {
             throws PrologError {
         arg0 = arg0.getTerm();
         if (!arg0.isAtom())
-            throw PrologError.type_error(engine.getEngineManager(), 1, "atom", arg0);
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom", arg0);
         return true;
     }
 

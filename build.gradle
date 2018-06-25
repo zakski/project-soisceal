@@ -11,3 +11,16 @@ ext {
     scalaTestVersion = '3.0.5'
     junitVersion = '4.11'
 }
+
+allprojects {
+    apply plugin: 'idea'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'scala'
+
+    repositories {
+        mavenCentral()
+    }
+}

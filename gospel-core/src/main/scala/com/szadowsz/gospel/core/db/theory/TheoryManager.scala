@@ -27,7 +27,7 @@ import com.szadowsz.gospel.core.db.theory.clause.{ClauseDatabase, FamilyClausesL
 import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
 import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalLeaf
-import com.szadowsz.gospel.core.error.{InvalidTermException, InvalidTheoryException}
+import com.szadowsz.gospel.core.exception.{InvalidTermException, InvalidTheoryException}
 import com.szadowsz.gospel.core.json.EngineState
 import org.slf4j.LoggerFactory
 
@@ -277,7 +277,7 @@ final case class TheoryManager(private val wam: PrologEngine) {
           }
         }
       } catch {
-        case e: InvalidTermException => throw new InvalidTheoryException(e.getMessage, clause, e.line, e.pos)
+        case e: InvalidTermException => throw new InvalidTheoryException(e, clause)
       }
       if (libName == null)
         lastConsultedTheory = theory

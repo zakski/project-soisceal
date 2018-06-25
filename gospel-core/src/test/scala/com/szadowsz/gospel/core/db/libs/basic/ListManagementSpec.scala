@@ -49,7 +49,7 @@ class ListManagementSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("length(X, 5).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Struct]
+      val result = solution.getVar("X").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[_,_,_,_,_]"
     }
 
@@ -57,26 +57,26 @@ class ListManagementSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("length([1, 2 | T], X).")
       solution.isSuccess shouldBe true
 
-      var result1 = solution.getVarValue("X").asInstanceOf[data.Number]
+      var result1 = solution.getVar("X").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "2"
 
-      var result2 = solution.getVarValue("T").asInstanceOf[Struct]
+      var result2 = solution.getVar("T").asInstanceOf[Struct]
       replaceUnderscore(result2.toString) shouldBe "[]"
 
       solution = prolog.solveNext()
 
-      result1 = solution.getVarValue("X").asInstanceOf[data.Number]
+      result1 = solution.getVar("X").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "3"
 
-      result2 = solution.getVarValue("T").asInstanceOf[Struct]
+      result2 = solution.getVar("T").asInstanceOf[Struct]
       replaceUnderscore(result2.toString) shouldBe "[_]"
 
       solution = prolog.solveNext()
 
-      result1 = solution.getVarValue("X").asInstanceOf[data.Number]
+      result1 = solution.getVar("X").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "4"
 
-      result2 = solution.getVarValue("T").asInstanceOf[Struct]
+      result2 = solution.getVar("T").asInstanceOf[Struct]
       replaceUnderscore(result2.toString) shouldBe "[_,_]"
     }
 
@@ -84,26 +84,26 @@ class ListManagementSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("length(L, S).")
       solution.isSuccess shouldBe true
 
-      var result1 = solution.getVarValue("L").asInstanceOf[Struct]
+      var result1 = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "[]"
 
-      var result2 = solution.getVarValue("S").asInstanceOf[data.Number]
+      var result2 = solution.getVar("S").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "0"
 
       solution = prolog.solveNext()
 
-      result1 = solution.getVarValue("L").asInstanceOf[Struct]
+      result1 = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "[_]"
 
-      result2 = solution.getVarValue("S").asInstanceOf[data.Number]
+      result2 = solution.getVar("S").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "1"
 
       solution = prolog.solveNext()
 
-      result1 = solution.getVarValue("L").asInstanceOf[Struct]
+      result1 = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "[_,_]"
 
-      result2 = solution.getVarValue("S").asInstanceOf[data.Number]
+      result2 = solution.getVar("S").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "2"
     }
   }

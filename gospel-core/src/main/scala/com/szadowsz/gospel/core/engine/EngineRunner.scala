@@ -10,7 +10,6 @@ import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
 import com.szadowsz.gospel.core.engine.context.subgoal.tree.SubGoalTree
 import com.szadowsz.gospel.core.engine.state._
-import com.szadowsz.gospel.core.error.NoMoreSolutionException
 import com.szadowsz.gospel.core.{PrologEngine, Solution}
 
 /**
@@ -109,13 +108,9 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
     if (sinfo == null) {
       threadSolve()
     }
-    try {
       while (hasOpenAlternatives) {
         if (next.get(countNext)) threadSolveNext()
       }
-    } catch {
-      case e: NoMoreSolutionException => e.printStackTrace()
-    }
   }
 
   /**
@@ -199,10 +194,8 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
     * Gets next solution
     *
     * @return the result of the demonstration
-    * @throws NoMoreSolutionException if no more solutions are present
     * @see SolveInfo
     **/
-  @throws[NoMoreSolutionException]
   private def threadSolveNext() {
     solving = true
     next.set(countNext, false)
@@ -228,7 +221,6 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
     }
   }
 
-  @throws[NoMoreSolutionException]
   def solveNext: Solution = {
     if (hasOpenAlternatives) {
       refreeze()
@@ -244,8 +236,8 @@ class EngineRunner(val wam: PrologEngine, var id: scala.Int) extends java.io.Ser
       //Alberto
       env.nResultAsked = env.nResultAsked + 1
       sinfo
-    } else {
-      throw new NoMoreSolutionException
+   } else {
+      null
     }
   }
 

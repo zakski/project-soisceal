@@ -1,3 +1,20 @@
+/*
+ * tuProlog - Copyright (C) 2001-2007  aliCE team at deis.unibo.it
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 package com.szadowsz.gospel.core.data
 
 import com.szadowsz.gospel.core.{BaseEngineSpec, PrologEngine}
@@ -12,79 +29,83 @@ class NumberSpec extends FunSpec with BaseEngineSpec {
 
   describe("Int") {
 
+    it("should represent itself as a String correctly") {
+      Int(0).toString should be ("0")
+    }
+
     it("should be atomic") {
-      new Int(0).isAtomic should be (true)
+       Int(0).isAtomic should be (true)
     }
 
     it("should not be an atom") {
-      new Int(0).isAtom should be (false)
+       Int(0).isAtom should be (false)
     }
 
     it("should not be a compound") {
-      new Int(0).isCompound should be (false)
+       Int(0).isCompound should be (false)
     }
 
     it("should not be equal to a struct") {
-      new Int(0) should not be new Struct()
+       Int(0) should not be new Struct()
     }
 
     it("should not be equal to a var") {
-      new Int(1) should not be new Var("X")
+       Int(1) should not be new Var("X")
     }
 
     it("should not be equal to an int of a different value") {
-      new Int(0) should not be new Int(1)
+       Int(0) should not be Int(1)
     }
 
     it("should be equal to an int of the same value") {
-      new Int(0) should be (new Int(0))
+       Int(0) should be ( Int(0))
     }
 
     it("long equality")(pending) // TODO Test Int numbers for equality with Long numbers
 
-    it("should not be equal to a double of the same value") {
-      new Int(1) should not be new Float(1)
+    it("should not be equal to a float of the same value") {
+       Int(1) should not be Float(1)
     }
-
-    it("float equality")(pending) // TODO Test Int numbers for equality with Long numbers
   }
 
-  describe("Double") {
+  describe("Float") {
+
+    it("should represent itself as a String correctly") {
+      Float(0).toString should be("0.0")
+    }
 
     it("should be atomic") {
-      new Float(0).isAtomic should be (true)
+      Float(0).isAtomic should be(true)
     }
 
     it("should not be an atom") {
-      new Float(0).isAtom should be (false)
+      Float(0).isAtom should be(false)
     }
 
     it("should not be a compound") {
-      new Float(0).isCompound should be (false)
+      Float(0).isCompound should be(false)
     }
 
     it("should not be equal to a struct") {
-      new Float(0) should not be new Struct()
+      Float(0) should not be new Struct()
     }
 
     it("should not be equal to a var") {
-      new Float(1) should not be new Var("X")
+      Float(1) should not be new Var("X")
     }
 
-    it("should not be equal to a double of a different value") {
-      new Float(0) should not be new Float(1)
+    it("should not be equal to a float of a different value") {
+      Float(0) should not be Float(1)
     }
 
-    it("should be equal to a double of the same value") {
-      new Float(0) should be (new Float(0))
+    it("should be equal to a float of the same value") {
+      Float(0) should be(Float(0))
     }
 
     it("long equality")(pending) // TODO Test Double numbers for equality with Long numbers
 
     it("should not be equal to an int of the same value") {
-      new Float(1) should not be new Int(1)
+      Float(1) should not be Int(1)
     }
-
-    it("float equality")(pending) // TODO Test Double numbers for equality with Long numbers
   }
 }

@@ -16,7 +16,7 @@ class BitwiseFunctorsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("X is '>>'(16, 2).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Long]
+      val result = solution.getVar("X").asInstanceOf[Long]
        result shouldBe new Long(4)
     }
 
@@ -24,7 +24,7 @@ class BitwiseFunctorsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("X is '>>'(19, 2).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Long]
+      val result = solution.getVar("X").asInstanceOf[Long]
       result shouldBe new Long(4)
     }
 
@@ -32,7 +32,7 @@ class BitwiseFunctorsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("X is '>>'(-16, 2).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Long]
+      val result = solution.getVar("X").asInstanceOf[Long]
       result shouldBe new Long(-4)
     }
   }
@@ -42,7 +42,7 @@ class BitwiseFunctorsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("X is '<<'(16, 2).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Long]
+      val result = solution.getVar("X").asInstanceOf[Long]
       result shouldBe new Long(64)
     }
 
@@ -50,7 +50,7 @@ class BitwiseFunctorsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("X is '<<'(19, 2).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Long]
+      val result = solution.getVar("X").asInstanceOf[Long]
       result shouldBe new Long(76)
     }
 
@@ -58,7 +58,7 @@ class BitwiseFunctorsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("X is '<<'(-16, 2).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Long]
+      val result = solution.getVar("X").asInstanceOf[Long]
       result shouldBe new Long(-64)
     }
   }
@@ -68,7 +68,7 @@ class BitwiseFunctorsSpec extends FunSpec with BaseEngineSpec {
         val solution = prolog.solve("X is '/\\'(10, 12).")
         solution.isSuccess shouldBe true
 
-        val result = solution.getVarValue("X").asInstanceOf[Long]
+        val result = solution.getVar("X").asInstanceOf[Long]
         result shouldBe new Long(8)
       }
 
@@ -76,7 +76,7 @@ class BitwiseFunctorsSpec extends FunSpec with BaseEngineSpec {
         val solution = prolog.solve("X is '/\\'(125, 255).")
         solution.isSuccess shouldBe true
 
-        val result = solution.getVarValue("X").asInstanceOf[Long]
+        val result = solution.getVar("X").asInstanceOf[Long]
         result shouldBe new Long(125)
       }
 
@@ -84,7 +84,7 @@ class BitwiseFunctorsSpec extends FunSpec with BaseEngineSpec {
         val solution = prolog.solve("X is '/\\'(-10, 12).")
         solution.isSuccess shouldBe true
 
-        val result = solution.getVarValue("X").asInstanceOf[Long]
+        val result = solution.getVar("X").asInstanceOf[Long]
         result shouldBe new Long(4)
       }
   }
@@ -94,7 +94,7 @@ class BitwiseFunctorsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("X is '\\/'(10, 12).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Long]
+      val result = solution.getVar("X").asInstanceOf[Long]
       result shouldBe new Long(14)
     }
 
@@ -102,7 +102,7 @@ class BitwiseFunctorsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("X is '\\/'(125, 255).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Long]
+      val result = solution.getVar("X").asInstanceOf[Long]
       result shouldBe new Long(255)
     }
 
@@ -110,7 +110,7 @@ class BitwiseFunctorsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("X is '\\/'(-10, 12).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Long]
+      val result = solution.getVar("X").asInstanceOf[Long]
       result shouldBe new Long(-2)
     }
   }
@@ -120,7 +120,7 @@ class BitwiseFunctorsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("X is '\\'('\\'(10)).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Long]
+      val result = solution.getVar("X").asInstanceOf[Long]
       result shouldBe new Long(10)
     }
 
@@ -128,7 +128,7 @@ class BitwiseFunctorsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("X is \\(\\(10)).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Long]
+      val result = solution.getVar("X").asInstanceOf[Long]
       result shouldBe new Long(10)
     }
 
@@ -136,7 +136,7 @@ class BitwiseFunctorsSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("X is \\(10).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Long]
+      val result = solution.getVar("X").asInstanceOf[Long]
       result shouldBe new Long(-11)
     }
   }

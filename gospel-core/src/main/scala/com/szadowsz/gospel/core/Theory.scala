@@ -22,7 +22,7 @@ import java.io.{IOException, InputStream}
 import java.util
 
 import com.szadowsz.gospel.core.data.{Struct, Term}
-import com.szadowsz.gospel.core.error.InvalidTheoryException
+import com.szadowsz.gospel.core.exception.InvalidTheoryException
 import com.szadowsz.gospel.core.json.JSONSerializerManager
 import com.szadowsz.gospel.core.parser.Parser
 
@@ -63,7 +63,7 @@ class Theory private[core]()  {
   def this(theory: String) {
     this()
     if (theory == null) {
-      throw new InvalidTheoryException
+      throw new InvalidTheoryException("Theory Source String should not be null")
     }
     this.theory = theory
   }
@@ -79,7 +79,7 @@ class Theory private[core]()  {
     this()
     theory = null
     if (clauseList == null || !clauseList.isList) {
-      throw new InvalidTheoryException
+      throw new InvalidTheoryException("clauseList should be a non-null prolog list")
     }
     this.clauseList = clauseList
   }
@@ -124,7 +124,7 @@ class Theory private[core]()  {
       theory += th.toString
 
     } else {
-      throw new InvalidTheoryException
+      throw new InvalidTheoryException("Appended Theory is Incompatible")
     }
   }
 

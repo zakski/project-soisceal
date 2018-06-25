@@ -21,7 +21,7 @@ import com.szadowsz.gospel.core.db.libs.OOLibrary;
 
 /**
  * This exception is raised when a not valid identifier is used
- * to register an object in the JavaLibrary
+ * to register an object in the JLibrary
  *
  * @see OOLibrary
  *

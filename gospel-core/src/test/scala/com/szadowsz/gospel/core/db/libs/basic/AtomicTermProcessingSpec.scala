@@ -24,7 +24,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_length('enchanted evening', N).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("N").asInstanceOf[data.Number]
+      val result = solution.getVar("N").asInstanceOf[data.Number]
       replaceUnderscore(result.toString) shouldBe "17"
     }
 
@@ -32,7 +32,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_length('enchanted\\evening', N).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("N").asInstanceOf[data.Number]
+      val result = solution.getVar("N").asInstanceOf[data.Number]
       replaceUnderscore(result.toString) shouldBe "17"
     }
 
@@ -40,7 +40,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_length('', N).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("N").asInstanceOf[data.Number]
+      val result = solution.getVar("N").asInstanceOf[data.Number]
       replaceUnderscore(result.toString) shouldBe "0"
     }
 
@@ -79,7 +79,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_concat('small', T, 'smallworld').")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("T").asInstanceOf[Struct]
+      val result = solution.getVar("T").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "world"
     }
 
@@ -87,7 +87,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_concat(T, 'world', 'smallworld').")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("T").asInstanceOf[Struct]
+      val result = solution.getVar("T").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "small"
     }
 
@@ -95,46 +95,46 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("atom_concat(T1, T2, 'hello').")
       solution.isSuccess shouldBe true
 
-      var result1 = solution.getVarValue("T1").asInstanceOf[Struct]
+      var result1 = solution.getVar("T1").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "''"
 
-      var result2 = solution.getVarValue("T2").asInstanceOf[Struct]
+      var result2 = solution.getVar("T2").asInstanceOf[Struct]
       replaceUnderscore(result2.toString) shouldBe "hello"
 
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("T1").asInstanceOf[Struct]
+      result1 = solution.getVar("T1").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "h"
 
-      result2 = solution.getVarValue("T2").asInstanceOf[Struct]
+      result2 = solution.getVar("T2").asInstanceOf[Struct]
       replaceUnderscore(result2.toString) shouldBe "ello"
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("T1").asInstanceOf[Struct]
+      result1 = solution.getVar("T1").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "he"
 
-      result2 = solution.getVarValue("T2").asInstanceOf[Struct]
+      result2 = solution.getVar("T2").asInstanceOf[Struct]
       replaceUnderscore(result2.toString) shouldBe "llo"
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("T1").asInstanceOf[Struct]
+      result1 = solution.getVar("T1").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "hel"
 
-      result2 = solution.getVarValue("T2").asInstanceOf[Struct]
+      result2 = solution.getVar("T2").asInstanceOf[Struct]
       replaceUnderscore(result2.toString) shouldBe "lo"
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("T1").asInstanceOf[Struct]
+      result1 = solution.getVar("T1").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "hell"
 
-      result2 = solution.getVarValue("T2").asInstanceOf[Struct]
+      result2 = solution.getVar("T2").asInstanceOf[Struct]
       replaceUnderscore(result2.toString) shouldBe "o"
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("T1").asInstanceOf[Struct]
+      result1 = solution.getVar("T1").asInstanceOf[Struct]
       replaceUnderscore(result1.toString) shouldBe "hello"
 
-      result2 = solution.getVarValue("T2").asInstanceOf[Struct]
+      result2 = solution.getVar("T2").asInstanceOf[Struct]
       replaceUnderscore(result2.toString) shouldBe "''"
 
     }
@@ -153,7 +153,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("sub_atom(abracadabra, 0, 5, _, S2).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S2").asInstanceOf[Struct]
+      val result = solution.getVar("S2").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "abrac"
     }
 
@@ -161,7 +161,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("sub_atom(abracadabra, _, 5, 0, S2).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("S2").asInstanceOf[Struct]
+      val result = solution.getVar("S2").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "dabra"
     }
 
@@ -169,10 +169,10 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("sub_atom(abracadabra, 3, L, 3, S2).")
       solution.isSuccess shouldBe true
 
-      val result1 = solution.getVarValue("L").asInstanceOf[data.Number]
+      val result1 = solution.getVar("L").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "5"
 
-      val result2 = solution.getVarValue("S2").asInstanceOf[Struct]
+      val result2 = solution.getVar("S2").asInstanceOf[Struct]
       replaceUnderscore(result2.toString) shouldBe "acada"
     }
 
@@ -180,18 +180,18 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("sub_atom(abracadabra, B, 2, A, ab).")
       solution.isSuccess shouldBe true
 
-      var result1 = solution.getVarValue("B").asInstanceOf[data.Number]
+      var result1 = solution.getVar("B").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "0"
 
-      var result2 = solution.getVarValue("A").asInstanceOf[data.Number]
+      var result2 = solution.getVar("A").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "9"
 
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("B").asInstanceOf[data.Number]
+      result1 = solution.getVar("B").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "7"
 
-      result2 = solution.getVarValue("A").asInstanceOf[data.Number]
+      result2 = solution.getVar("A").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "2"
     }
 
@@ -199,7 +199,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("sub_atom('Banana', 3, 2, _, S2).")
       solution.isSuccess shouldBe true
 
-      val xResult = solution.getVarValue("S2").asInstanceOf[Struct]
+      val xResult = solution.getVar("S2").asInstanceOf[Struct]
       replaceUnderscore(xResult.toString) shouldBe "an"
     }
 
@@ -207,23 +207,23 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("sub_atom('charity', _, 3, _, S2).")
       solution.isSuccess shouldBe true
 
-      var result = solution.getVarValue("S2").asInstanceOf[Struct]
+      var result = solution.getVar("S2").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "cha"
 
       solution = prolog.solveNext()
-      result = solution.getVarValue("S2").asInstanceOf[Struct]
+      result = solution.getVar("S2").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "har"
 
       solution = prolog.solveNext()
-      result = solution.getVarValue("S2").asInstanceOf[Struct]
+      result = solution.getVar("S2").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "ari"
 
       solution = prolog.solveNext()
-      result = solution.getVarValue("S2").asInstanceOf[Struct]
+      result = solution.getVar("S2").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "rit"
 
       solution = prolog.solveNext()
-      result = solution.getVarValue("S2").asInstanceOf[Struct]
+      result = solution.getVar("S2").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "ity"
     }
 
@@ -231,45 +231,45 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       var solution = prolog.solve("sub_atom('ab', Start, Length, _, Sub_atom).")
       solution.isSuccess shouldBe true
 
-      var result1 = solution.getVarValue("Start").asInstanceOf[data.Number]
+      var result1 = solution.getVar("Start").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "0"
 
-      var result2 = solution.getVarValue("Length").asInstanceOf[data.Number]
+      var result2 = solution.getVar("Length").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "0"
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("Start").asInstanceOf[data.Number]
+      result1 = solution.getVar("Start").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "0"
 
-      result2 = solution.getVarValue("Length").asInstanceOf[data.Number]
+      result2 = solution.getVar("Length").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "1"
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("Start").asInstanceOf[data.Number]
+      result1 = solution.getVar("Start").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "0"
 
-      result2 = solution.getVarValue("Length").asInstanceOf[data.Number]
+      result2 = solution.getVar("Length").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "2"
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("Start").asInstanceOf[data.Number]
+      result1 = solution.getVar("Start").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "1"
 
-      result2 = solution.getVarValue("Length").asInstanceOf[data.Number]
+      result2 = solution.getVar("Length").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "0"
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("Start").asInstanceOf[data.Number]
+      result1 = solution.getVar("Start").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "1"
 
-      result2 = solution.getVarValue("Length").asInstanceOf[data.Number]
+      result2 = solution.getVar("Length").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "1"
 
       solution = prolog.solveNext()
-      result1 = solution.getVarValue("Start").asInstanceOf[data.Number]
+      result1 = solution.getVar("Start").asInstanceOf[data.Number]
       replaceUnderscore(result1.toString) shouldBe "2"
 
-      result2 = solution.getVarValue("Length").asInstanceOf[data.Number]
+      result2 = solution.getVar("Length").asInstanceOf[data.Number]
       replaceUnderscore(result2.toString) shouldBe "0"
     }
   }
@@ -284,7 +284,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_chars('', L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[]"
     }
 
@@ -292,7 +292,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_chars([], L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "['[',']']"
     }
 
@@ -300,7 +300,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_chars('''', L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[''']"
     }
 
@@ -308,7 +308,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_chars('ant', L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[a,n,t]"
     }
 
@@ -316,7 +316,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_chars(Str, ['s', 'o', 'p']).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("Str").asInstanceOf[Struct]
+      val result = solution.getVar("Str").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "sop"
     }
 
@@ -324,7 +324,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_chars('North', ['N' | X]).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Struct]
+      val result = solution.getVar("X").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[o,r,t,h]"
     }
 
@@ -347,7 +347,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_codes('', L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[]"
     }
 
@@ -355,7 +355,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_codes([], L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[91,93]"
     }
 
@@ -363,7 +363,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_codes('''', L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[39]"
     }
 
@@ -371,7 +371,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_codes('ant', L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[97,110,116]"
     }
 
@@ -379,7 +379,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_codes(Str, [0's, 0'o, 0'p]).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("Str").asInstanceOf[Struct]
+      val result = solution.getVar("Str").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "sop"
     }
 
@@ -387,7 +387,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("atom_codes('North', [0'N | X]).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X").asInstanceOf[Struct]
+      val result = solution.getVar("X").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[111,114,116,104]"
     }
 
@@ -411,7 +411,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("char_code('a', Code).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("Code").asInstanceOf[data.Number]
+      val result = solution.getVar("Code").asInstanceOf[data.Number]
       replaceUnderscore(result.toString) shouldBe "97"
     }
 
@@ -419,7 +419,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("char_code(Str, 99).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("Str").asInstanceOf[Struct]
+      val result = solution.getVar("Str").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "c"
     }
 
@@ -427,7 +427,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("char_code(Str, 0'c).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("Str").asInstanceOf[Struct]
+      val result = solution.getVar("Str").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "c"
     }
 
@@ -435,7 +435,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("char_code(Str, 163).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("Str").asInstanceOf[Struct]
+      val result = solution.getVar("Str").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "'£'"
     }
 
@@ -471,7 +471,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_chars(33, L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "['3','3']"
     }
 
@@ -479,7 +479,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_chars(33.0, L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "['3','3','.','0']"
     }
 
@@ -487,7 +487,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_chars(X, ['3', '.', '3', 'E', '+', '0']).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("X")
+      val result = solution.getVar("X")
       replaceUnderscore(result.toString) shouldBe "3.3"
     }
 
@@ -495,7 +495,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_chars(A, ['-', '2', '5']).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("A")
+      val result = solution.getVar("A")
       replaceUnderscore(result.toString) shouldBe "-25"
     }
 
@@ -503,7 +503,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_chars(A, ['\\t','\\n', ' ', '3']).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("A")
+      val result = solution.getVar("A")
       result.toString shouldBe "3"
     }
 
@@ -511,7 +511,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_chars(A, ['0', x, f]).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("A")
+      val result = solution.getVar("A")
       result.toString shouldBe "15"
     }
 
@@ -519,7 +519,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_chars(A, ['0', '''''', a]).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("A")
+      val result = solution.getVar("A")
       result.toString shouldBe "97"
     }
 
@@ -527,7 +527,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_chars(A, ['4', '.', '2']).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("A")
+      val result = solution.getVar("A")
       replaceUnderscore(result.toString) shouldBe "4.2"
     }
 
@@ -535,7 +535,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_chars(A, ['4', '2', '.', '0', 'e', '-', '1']).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("A")
+      val result = solution.getVar("A")
       replaceUnderscore(result.toString) shouldBe "4.2"
     }
 
@@ -588,7 +588,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_codes(33, L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[51,51]"
     }
 
@@ -596,7 +596,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_codes(33.0, L).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("L").asInstanceOf[Struct]
+      val result = solution.getVar("L").asInstanceOf[Struct]
       replaceUnderscore(result.toString) shouldBe "[51,51,46,48]"
     }
 
@@ -604,7 +604,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_codes(A, [0'-, 0'2, 0'5]).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("A")
+      val result = solution.getVar("A")
       replaceUnderscore(result.toString) shouldBe "-25"
     }
 
@@ -612,7 +612,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_codes(A, [0' , 0'3]).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("A")
+      val result = solution.getVar("A")
       result.toString shouldBe "3"
     }
 
@@ -620,7 +620,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_codes(A, [0'0, 0'x, 0'f]).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("A")
+      val result = solution.getVar("A")
       result.toString shouldBe "15"
     }
 
@@ -628,7 +628,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_codes(A, [0'4, 0'., 0'2]).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("A")
+      val result = solution.getVar("A")
       replaceUnderscore(result.toString) shouldBe "4.2"
     }
 
@@ -636,7 +636,7 @@ class AtomicTermProcessingSpec extends FunSpec with BaseEngineSpec {
       val solution = prolog.solve("number_codes(A, [0'4, 0'2, 0'., 0'0, 0'e, 0'-, 0'1]).")
       solution.isSuccess shouldBe true
 
-      val result = solution.getVarValue("A")
+      val result = solution.getVar("A")
       replaceUnderscore(result.toString) shouldBe "4.2"
     }
   }

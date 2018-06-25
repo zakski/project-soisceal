@@ -1,9 +1,9 @@
 package com.szadowsz.gospel.core
 
-import com.szadowsz.gospel.core.db.JavaLibrary
+import com.szadowsz.gospel.core.db.Library
 import com.szadowsz.gospel.core.db.libs.{StringLibrary, _}
-import com.szadowsz.gospel.core.error.InvalidTheoryException
 import com.szadowsz.gospel.core.event.interpreter.SpyEvent
+import com.szadowsz.gospel.core.exception.InvalidTheoryException
 import com.szadowsz.gospel.core.listener.{SpyListener, TestPrologEventListener}
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
@@ -37,11 +37,11 @@ class PrologEngineSpec extends FlatSpec with BaseEngineSpec {
   }
 
   it should "load a library from an object successfully" in {
-    val stringLibrary: JavaLibrary = new StringLibrary
+    val stringLibrary: Library = new StringLibrary
     prolog.loadLibrary(stringLibrary)
     prolog.getLibrary(classOf[StringLibrary].getName) should not be null
 
-    val javaLibrary: JavaLibrary = new OOLibrary
+    val javaLibrary: Library = new OOLibrary
     prolog.loadLibrary(javaLibrary)
     javaLibrary eq prolog.getLibrary("com.szadowsz.gospel.core.db.libs.OOLibrary") shouldBe true
   }

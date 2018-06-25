@@ -73,7 +73,7 @@ class DCGLibrarySpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("phrase(e(V), [1, '+', '(', 2, '+', 3, ')']).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("V")
+    val result = solution.getVar("V")
     replaceUnderscore(result.toString) shouldBe "6"
   }
 
@@ -82,7 +82,7 @@ class DCGLibrarySpec extends FlatSpec with BaseEngineSpec {
     val solution = prolog.solve("phrase(e(V), ['1']).")
     solution.isSuccess shouldBe true
 
-    val result = solution.getVarValue("V")
+    val result = solution.getVar("V")
     replaceUnderscore(result.toString) shouldBe "1"
   }
 
@@ -90,9 +90,9 @@ class DCGLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(phrase(X, []), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("phrase_guard", new Var("X"), new Struct)
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 
@@ -100,9 +100,9 @@ class DCGLibrarySpec extends FlatSpec with BaseEngineSpec {
     val goal = "catch(phrase(X, [], []), error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
     val info = prolog.solve(goal)
     info.isSuccess shouldBe true
-    val g = info.getTerm("Goal").asInstanceOf[Struct]
+    val g = info.getVar("Goal").asInstanceOf[Struct]
     g shouldBe new Struct("phrase_guard", new Var("X"), new Struct, new Struct)
-    val argNo = info.getTerm("ArgNo").asInstanceOf[Int]
+    val argNo = info.getVar("ArgNo").asInstanceOf[Int]
     argNo.intValue shouldBe 1
   }
 }
