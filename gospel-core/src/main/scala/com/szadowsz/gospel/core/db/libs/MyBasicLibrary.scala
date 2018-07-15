@@ -38,8 +38,7 @@ import java.util
 import alice.tuprolog.Agent
 import com.szadowsz.gospel.core.{Theory, data}
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
-import com.szadowsz.gospel.core.error.PrologError
-import com.szadowsz.gospel.core.exception.InvalidTheoryException
+import com.szadowsz.gospel.core.exception.{InterpreterError, InvalidTheoryException}
 
 import scala.util.control.NonFatal
 import scala.collection.JavaConverters._
@@ -52,16 +51,16 @@ import scala.util.Try
 @SerialVersionUID(1L)
 class MyBasicLibrary() extends BasicLibrary {
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   private def evalNumExpression(arg: Term, argNum: scala.Int): data.Number = {
     val evaled = try {
       evalExpression(arg)
     } catch {
-      case e: ArithmeticException if e.getMessage == "/ by zero" => throw PrologError.evaluation_error(engine.getEngineManager, argNum, "zero_divisor")
-      case _ => throw PrologError.type_error(engine.getEngineManager, 1, "evaluable", arg.getTerm)
+      case e: ArithmeticException if e.getMessage == "/ by zero" => throw InterpreterError.evaluation_error(engine.getEngineManager, argNum, "zero_divisor")
+      case _ => throw InterpreterError.type_error(engine.getEngineManager, 1, "evaluable", arg.getTerm)
     }
     if (!evaled.isInstanceOf[data.Number]) {
-      throw PrologError.type_error(engine.getEngineManager, argNum, "evaluable", arg.getTerm)
+      throw InterpreterError.type_error(engine.getEngineManager, argNum, "evaluable", arg.getTerm)
     } else {
       evaled.asInstanceOf[data.Number]
     }
@@ -92,20 +91,20 @@ class MyBasicLibrary() extends BasicLibrary {
     * Sets a new theory provided as a text.
     *
     * @param arg1 the new theory.
-    * @throws PrologError if arg1 is not a valid theory.
+    * @throws InterpreterError if arg1 is not a valid theory.
     * @return true if successful.
     */
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def set_theory_1(arg1: Term): Boolean = {
     arg1.getTerm match {
-      case v: Var => throw PrologError.instantiation_error(engine.getEngineManager, 1)
-      case nonAtom if !nonAtom.isAtom => throw PrologError.type_error(engine.getEngineManager, 1, "atom", nonAtom)
+      case v: Var => throw InterpreterError.instantiation_error(engine.getEngineManager, 1)
+      case nonAtom if !nonAtom.isAtom => throw InterpreterError.type_error(engine.getEngineManager, 1, "atom", nonAtom)
       case struct: Struct =>
         try {
           engine.setTheory(new Theory(struct.getName))
           true
         } catch {
-          case ex: InvalidTheoryException => throw PrologError.syntax_error(engine.getEngineManager, ex)
+          case ex: InvalidTheoryException => throw InterpreterError.syntax_error(engine.getEngineManager, ex)
         }
     }
   }
@@ -114,20 +113,20 @@ class MyBasicLibrary() extends BasicLibrary {
     * Appends a new theory provided as a text.
     *
     * @param arg1 the new theory.
-    * @throws PrologError if arg1 is not a valid theory.
+    * @throws InterpreterError if arg1 is not a valid theory.
     * @return true if successful.
     */
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def add_theory_1(arg1: Term): Boolean = {
     arg1.getTerm match {
-      case v: Var => throw PrologError.instantiation_error(engine.getEngineManager, 1)
-      case nonAtom if !nonAtom.isAtom => throw PrologError.type_error(engine.getEngineManager, 1, "atom", nonAtom)
+      case v: Var => throw InterpreterError.instantiation_error(engine.getEngineManager, 1)
+      case nonAtom if !nonAtom.isAtom => throw InterpreterError.type_error(engine.getEngineManager, 1, "atom", nonAtom)
       case struct: Struct =>
         try {
           engine.addTheory(new Theory(struct.getName))
           true
         } catch {
-          case ex: InvalidTheoryException => throw PrologError.syntax_error(engine.getEngineManager, ex)
+          case ex: InvalidTheoryException => throw InterpreterError.syntax_error(engine.getEngineManager, ex)
         }
     }
   }
@@ -182,13 +181,13 @@ class MyBasicLibrary() extends BasicLibrary {
   /**
     * spawns a separate prolog agent providing it a theory text
     *
-    * @throws PrologError
+    * @throws InterpreterError
     */
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def agent_1(th: Term): Boolean = {
     th.getTerm match {
-      case v: Var => throw PrologError.instantiation_error(engine.getEngineManager, 1)
-      case t if !t.isAtom => throw PrologError.type_error(engine.getEngineManager, 1, "atom", t)
+      case v: Var => throw InterpreterError.instantiation_error(engine.getEngineManager, 1)
+      case t if !t.isAtom => throw InterpreterError.type_error(engine.getEngineManager, 1, "atom", t)
       case theory: Struct =>
         try {
           new Agent(alice.util.Tools.removeApices(theory.toString)).spawn()
@@ -204,15 +203,15 @@ class MyBasicLibrary() extends BasicLibrary {
   /**
     * spawns a separate prolog agent providing it a theory text and a goal
     *
-    * @throws PrologError
+    * @throws InterpreterError
     */
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def agent_2(th: Term, g: Term): Boolean = {
     (th.getTerm, g.getTerm) match {
-      case (v1: Var, _) => throw PrologError.instantiation_error(engine.getEngineManager, 1)
-      case (_, v2: Var) => throw PrologError.instantiation_error(engine.getEngineManager, 2)
-      case (t1, _) if !t1.isAtom => throw PrologError.type_error(engine.getEngineManager, 1, "atom", t1)
-      case (_, goal) if !goal.isInstanceOf[Struct] => throw PrologError.type_error(engine.getEngineManager, 2, "struct", goal)
+      case (v1: Var, _) => throw InterpreterError.instantiation_error(engine.getEngineManager, 1)
+      case (_, v2: Var) => throw InterpreterError.instantiation_error(engine.getEngineManager, 2)
+      case (t1, _) if !t1.isAtom => throw InterpreterError.type_error(engine.getEngineManager, 1, "atom", t1)
+      case (_, goal) if !goal.isInstanceOf[Struct] => throw InterpreterError.type_error(engine.getEngineManager, 2, "struct", goal)
       case (theory: Struct, goal: Struct) =>
         try {
           new Agent(alice.util.Tools.removeApices(theory.toString), goal.toString + ".").spawn()
@@ -271,12 +270,12 @@ class MyBasicLibrary() extends BasicLibrary {
 
   override def ground_1(t: Term): Boolean = t.getTerm.isGround
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def expression_equality_2(arg0: Term, arg1: Term): Boolean = {
     if (arg0.getTerm.isInstanceOf[Var]) {
-      throw PrologError.instantiation_error(engine.getEngineManager, 1)
+      throw InterpreterError.instantiation_error(engine.getEngineManager, 1)
     } else if (arg1.getTerm.isInstanceOf[Var]) {
-      throw PrologError.instantiation_error(engine.getEngineManager, 2)
+      throw InterpreterError.instantiation_error(engine.getEngineManager, 2)
     }
     val val0 = evalNumExpression(arg0, 1)
     val val1 = evalNumExpression(arg1, 2)
@@ -290,48 +289,48 @@ class MyBasicLibrary() extends BasicLibrary {
     }
   }
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def expression_greater_than_2(arg0: Term, arg1: Term): Boolean = {
     if (arg0.getTerm.isInstanceOf[Var]) {
-      throw PrologError.instantiation_error(engine.getEngineManager, 1)
+      throw InterpreterError.instantiation_error(engine.getEngineManager, 1)
     } else if (arg1.getTerm.isInstanceOf[Var]) {
-      throw PrologError.instantiation_error(engine.getEngineManager, 2)
+      throw InterpreterError.instantiation_error(engine.getEngineManager, 2)
     }
     val val0 = evalNumExpression(arg0, 1)
     val val1 = evalNumExpression(arg1, 2)
     expression_greater_than(val0, val1)
   }
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def expression_less_or_equal_than_2(arg0: Term, arg1: Term): Boolean = {
     if (arg0.getTerm.isInstanceOf[Var]) {
-      throw PrologError.instantiation_error(engine.getEngineManager, 1)
+      throw InterpreterError.instantiation_error(engine.getEngineManager, 1)
     } else if (arg1.getTerm.isInstanceOf[Var]) {
-      throw PrologError.instantiation_error(engine.getEngineManager, 2)
+      throw InterpreterError.instantiation_error(engine.getEngineManager, 2)
     }
     val val0 = evalNumExpression(arg0, 1)
     val val1 = evalNumExpression(arg1, 2)
     !expression_greater_than(val0, val1)
   }
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def expression_less_than_2(arg0: Term, arg1: Term): Boolean = {
     if (arg0.getTerm.isInstanceOf[Var]) {
-      throw PrologError.instantiation_error(engine.getEngineManager, 1)
+      throw InterpreterError.instantiation_error(engine.getEngineManager, 1)
     } else if (arg1.getTerm.isInstanceOf[Var]) {
-      throw PrologError.instantiation_error(engine.getEngineManager, 2)
+      throw InterpreterError.instantiation_error(engine.getEngineManager, 2)
     }
     val val0 = evalNumExpression(arg0, 1)
     val val1 = evalNumExpression(arg1, 2)
     expression_less_than(val0, val1)
   }
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def expression_greater_or_equal_than_2(arg0: Term, arg1: Term): Boolean = {
     if (arg0.getTerm.isInstanceOf[Var]) {
-      throw PrologError.instantiation_error(engine.getEngineManager, 1)
+      throw InterpreterError.instantiation_error(engine.getEngineManager, 1)
     } else if (arg1.getTerm.isInstanceOf[Var]) {
-      throw PrologError.instantiation_error(engine.getEngineManager, 2)
+      throw InterpreterError.instantiation_error(engine.getEngineManager, 2)
     }
     val val0 = evalNumExpression(arg0, 1)
     val val1 = evalNumExpression(arg1, 2)
@@ -339,13 +338,13 @@ class MyBasicLibrary() extends BasicLibrary {
   }
 
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def term_equality_2(arg0: Term, arg1: Term): Boolean = arg0.getTerm.isEqual(arg1.getTerm)
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def term_greater_than_2(arg0: Term, arg1: Term): Boolean = arg0.getTerm.isGreater(arg1.getTerm)
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def term_less_than_2(arg0: Term, arg1: Term): Boolean = !(arg0.getTerm.isGreater(arg1.getTerm) || arg0.getTerm.isEqual(arg1.getTerm))
 
   override def expression_plus_1(arg0: Term): Term = Try(evalExpression(arg0).asInstanceOf[data.Number]).toOption.orNull
@@ -468,26 +467,26 @@ class MyBasicLibrary() extends BasicLibrary {
     }
   }
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def text_concat_3(source1: Term, source2: Term, dest: Term): Boolean = {
     (source1.getTerm, source2.getTerm) match {
-      case (s1: Var, _) => throw PrologError.instantiation_error(engine.getEngineManager, 1)
-      case (_, s2: Var) => throw PrologError.instantiation_error(engine.getEngineManager, 2)
-      case (s1, _) if !s1.isAtom => throw PrologError.type_error(engine.getEngineManager, 1, "atom", s1)
-      case (_, s2) if !s2.isAtom => throw PrologError.type_error(engine.getEngineManager, 2, "atom", s2)
+      case (s1: Var, _) => throw InterpreterError.instantiation_error(engine.getEngineManager, 1)
+      case (_, s2: Var) => throw InterpreterError.instantiation_error(engine.getEngineManager, 2)
+      case (s1, _) if !s1.isAtom => throw InterpreterError.type_error(engine.getEngineManager, 1, "atom", s1)
+      case (_, s2) if !s2.isAtom => throw InterpreterError.type_error(engine.getEngineManager, 2, "atom", s2)
       case (s1: Struct, s2: Struct) => unify(dest.getTerm, new Struct(s1.getName + s2.getName))
     }
   }
 
-  //  @throws[PrologError]
+  //  @throws[InterpreterError]
   //  def num_atom_2(a0: Term, a1: Term): Boolean = {
   //    val result = com.szadowsz.gospel.core.db.libs.BasicLibrary.numAtom(engine,a0,a1)
   //    unify(result.head, result.last)
   //  }
   //
   // throw/1
-  @throws[PrologError]
-  override def throw_1(error: Term): Boolean = throw new PrologError(error)
+  @throws[InterpreterError]
+  override def throw_1(error: Term): Boolean = throw new InterpreterError(error)
 
 //  override def getTheory: String = {
 //    """':-'(op( 1200, fx,   ':-')).
@@ -731,83 +730,83 @@ class MyBasicLibrary() extends BasicLibrary {
 //  }
 
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def arg_guard_3(a0: Term, a1: Term, arg2: Term): Boolean = {
     val arg0 = a0.getTerm
     val arg1 = a1.getTerm
-    if (arg0.isInstanceOf[Var]) throw PrologError.instantiation_error(engine.getEngineManager, 1)
-    if (arg1.isInstanceOf[Var]) throw PrologError.instantiation_error(engine.getEngineManager, 2)
-    if (!arg0.isInstanceOf[data.Int]) throw PrologError.type_error(engine.getEngineManager, 1, "integer", arg0)
-    if (!arg1.isCompound) throw PrologError.type_error(engine.getEngineManager, 2, "compound", arg1)
+    if (arg0.isInstanceOf[Var]) throw InterpreterError.instantiation_error(engine.getEngineManager, 1)
+    if (arg1.isInstanceOf[Var]) throw InterpreterError.instantiation_error(engine.getEngineManager, 2)
+    if (!arg0.isInstanceOf[data.Int]) throw InterpreterError.type_error(engine.getEngineManager, 1, "integer", arg0)
+    if (!arg1.isCompound) throw InterpreterError.type_error(engine.getEngineManager, 2, "compound", arg1)
     val arg0int: data.Int = arg0.asInstanceOf[data.Int]
-    if (arg0int.intValue < 1) throw PrologError.domain_error(engine.getEngineManager, 1, "greater_than_zero", arg0)
+    if (arg0int.intValue < 1) throw InterpreterError.domain_error(engine.getEngineManager, 1, "greater_than_zero", arg0)
     true
   }
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def clause_guard_2(arg0: Term, arg1: Term): Boolean = {
     if (arg0.getTerm.isInstanceOf[Var]) {
-      throw PrologError.instantiation_error(engine.getEngineManager, 1)
+      throw InterpreterError.instantiation_error(engine.getEngineManager, 1)
     } else {
       true
     }
   }
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def call_guard_1(arg0: Term): Boolean = {
     arg0.getTerm match {
-      case v: Var => throw PrologError.instantiation_error(engine.getEngineManager, 1)
-      case a if !a.isAtom && !a.isCompound => throw PrologError.type_error(engine.getEngineManager, 1, "callable", a)
+      case v: Var => throw InterpreterError.instantiation_error(engine.getEngineManager, 1)
+      case a if !a.isAtom && !a.isCompound => throw InterpreterError.type_error(engine.getEngineManager, 1, "callable", a)
       case _ => true
     }
   }
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def all_solutions_predicates_guard_3(arg0: Term, arg1: Term, arg2: Term): Boolean = {
     arg1.getTerm match {
-      case v: Var => throw PrologError.instantiation_error(engine.getEngineManager, 2)
-      case a if !a.isAtom && !a.isCompound => throw PrologError.type_error(engine.getEngineManager, 2, "callable", a)
+      case v: Var => throw InterpreterError.instantiation_error(engine.getEngineManager, 2)
+      case a if !a.isAtom && !a.isCompound => throw InterpreterError.type_error(engine.getEngineManager, 2, "callable", a)
       case _ => true
     }
   }
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def retract_guard_1(arg0: Term): Boolean = {
     arg0.getTerm match {
-      case v: Var => throw PrologError.instantiation_error(engine.getEngineManager, 1)
-      case t if !t.isInstanceOf[Struct] => throw PrologError.type_error(engine.getEngineManager, 1, "clause", arg0)
+      case v: Var => throw InterpreterError.instantiation_error(engine.getEngineManager, 1)
+      case t if !t.isInstanceOf[Struct] => throw InterpreterError.type_error(engine.getEngineManager, 1, "clause", arg0)
       case _ => true
     }
   }
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def member_guard_2(arg0: Term, arg1: Term): Boolean = {
     arg1.getTerm match {
-      case arg if !arg.isInstanceOf[Var] && !arg.isList => throw PrologError.type_error(engine.getEngineManager, 2, "list", arg)
+      case arg if !arg.isInstanceOf[Var] && !arg.isList => throw InterpreterError.type_error(engine.getEngineManager, 2, "list", arg)
       case _ => true
     }
   }
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def reverse_guard_2(arg0: Term, arg1: Term): Boolean = {
     arg0.getTerm match {
-      case arg if !arg.isInstanceOf[Var] && !arg.isList => throw PrologError.type_error(engine.getEngineManager, 1, "list", arg)
+      case arg if !arg.isInstanceOf[Var] && !arg.isList => throw InterpreterError.type_error(engine.getEngineManager, 1, "list", arg)
       case _ => true
     }
   }
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def delete_guard_3(arg0: Term, arg1: Term, arg2: Term): Boolean = {
     arg1.getTerm match {
-      case arg if !arg.isInstanceOf[Var] && !arg.isList => throw PrologError.type_error(engine.getEngineManager, 2, "list", arg)
+      case arg if !arg.isInstanceOf[Var] && !arg.isList => throw InterpreterError.type_error(engine.getEngineManager, 2, "list", arg)
       case _ => true
     }
   }
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   override def element_guard_3(arg0: Term, arg1: Term, arg2: Term): Boolean = {
     arg1.getTerm match {
-      case arg if !arg.isInstanceOf[Var] && !arg.isList => throw PrologError.type_error(engine.getEngineManager, 2, "list", arg)
+      case arg if !arg.isInstanceOf[Var] && !arg.isList => throw InterpreterError.type_error(engine.getEngineManager, 2, "list", arg)
       case _ => true
     }
   }

@@ -1709,10 +1709,10 @@ Underfull \hbox (badness 1708) in paragraph at lines 2091--2091
 []\OT1/cmr/m/n/9 - each term ar-gu-ment, built ap-ply-ing
  []
 
-Missing character: There is no ‘ in font cmtt9!
-Missing character: There is no ’ in font cmtt9!
-Missing character: There is no ‘ in font cmtt9!
-Missing character: There is no ’ in font cmtt9!
+Missing character: There is no ï¿½ in font cmtt9!
+Missing character: There is no ï¿½ in font cmtt9!
+Missing character: There is no ï¿½ in font cmtt9!
+Missing character: There is no ï¿½ in font cmtt9!
 
 Overfull \hbox (5.43304pt too wide) in paragraph at lines 2083--2104
  [][] 
@@ -1796,7 +1796,7 @@ lasses \OT1/cmtt/m/n/10.95 Client[]Socket
 [127]
 Overfull \hbox (17.9956pt too wide) in paragraph at lines 2457--2457
 []\OT1/cmtt/m/n/9 public void testTcp_socket_client_open_2() throws PrologExcep
-tion, PrologError {[] 
+tion, InterpreterError {[]
  []
 
 
@@ -1808,7 +1808,7 @@ Overfull \hbox (17.9956pt too wide) in paragraph at lines 2457--2457
 
 Overfull \hbox (17.9956pt too wide) in paragraph at lines 2457--2457
 []\OT1/cmtt/m/n/9 public void testTcp_socket_client_open_2() throws PrologExcep
-tion, PrologError {[] 
+tion, InterpreterError {[]
  []
 
 
@@ -3087,7 +3087,7 @@ Overfull \hbox (8.0113pt too wide) in paragraph at lines 89--90
 ored in \OT1/cmtt/m/n/10.95 String
  []
 
-Missing character: There is no ¯ in font cmr10!
+Missing character: There is no ï¿½ in font cmr10!
 
 Overfull \hbox (6.49599pt too wide) in paragraph at lines 103--104
 \OT1/cmr/m/n/10.95 an-other list as their tail. (Giulio Pi-ancastelli) [Source-
@@ -3151,7 +3151,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 8--11
 \OT1/cmtt/m/n/10.95 http://www.univ-orleans.fr/lifo/software/stdprolog/
  []
 
-Missing character: There is no Ð in font cmr10!
+Missing character: There is no ï¿½ in font cmr10!
 [244
 
 

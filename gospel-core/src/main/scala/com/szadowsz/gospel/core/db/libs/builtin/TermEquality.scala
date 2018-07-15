@@ -19,7 +19,7 @@ package com.szadowsz.gospel.core.db.libs.builtin
 
 import com.szadowsz.gospel.core.data.Term
 import com.szadowsz.gospel.core.db.JLibrary
-import com.szadowsz.gospel.core.error.PrologError
+import com.szadowsz.gospel.core.exception.InterpreterError
 
 /**
   * Comparison and unification of arbitrary terms. Terms are ordered in the so-called "standard order". This order is
@@ -57,23 +57,23 @@ trait TermEquality {
   // scalastyle:off method.name
   this : JLibrary =>
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   def term_equality_2(arg0: Term, arg1: Term): Boolean = arg0.getTerm.isEqual(arg1.getTerm)
 
-//  @throws[PrologError]
+//  @throws[InterpreterError]
 //  def term_inequality_2(arg0: Term, arg1: Term): Boolean = !arg0.getTerm.isEqual(arg1.getTerm) TODO http://www.swi-prolog.org/pldoc/doc_for?object=(%5C%3D%3D)/2
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   def term_less_than_2(arg0: Term, arg1: Term): Boolean = !(arg0.getTerm.isGreater(arg1.getTerm) || arg0.getTerm.isEqual(arg1.getTerm))
 
-//  @throws[PrologError]
+//  @throws[InterpreterError]
 //  def term_less_than_or_equal_to_2(arg0: Term, arg1: Term): Boolean = !arg0.getTerm.isGreater(arg1.getTerm) TODO http://www.swi-prolog.org/pldoc/doc_for?object=(@%3D%3C)/2
 
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   def term_greater_than_2(arg0: Term, arg1: Term): Boolean = arg0.getTerm.isGreater(arg1.getTerm)
 
-  // @throws[PrologError]
+  // @throws[InterpreterError]
   //  def term_greater_than_or_equal_to_2(arg0: Term, arg1: Term): Boolean = (arg0.getTerm.isGreater(arg1.getTerm) || arg0.getTerm.isEqual(arg1.getTerm)) TODO http://www.swi-prolog.org/pldoc/doc_for?object=(@%3E%3D)/2
 
   //def compare_3(?Order, @Term1, @Term2) TODO http://www.swi-prolog.org/pldoc/doc_for?object=compare/3

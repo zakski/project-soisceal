@@ -19,10 +19,10 @@ private[engine] final case class ExceptionState(override protected val runner: E
 
   override def doJob(e: Engine): Unit = {
     val errorType: String = e.currentContext.currentGoal.getName
-    if (errorType == "throw") prologError(e) else javaException(e)
+    if (errorType == "throw") InterpreterError(e) else javaException(e)
   }
 
-  private def prologError(e: Engine): Unit = {
+  private def InterpreterError(e: Engine): Unit = {
     val errorTerm: Term = e.currentContext.currentGoal.getArg(0)
     e.currentContext = e.currentContext.fatherCtx
 

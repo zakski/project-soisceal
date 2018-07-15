@@ -19,7 +19,7 @@ package com.szadowsz.gospel.core.db
 
 import com.szadowsz.gospel.core.PrologEngine
 
-object LibraryManagerFactory {
+private[core] object LibraryManagerFactory {
 
 
   def getManagerForCurrPlatform(wam: PrologEngine): LibraryManager = {

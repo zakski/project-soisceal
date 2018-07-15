@@ -26,8 +26,7 @@ import com.szadowsz.gospel.core.db.SLibrary
 import com.szadowsz.gospel.core.db.libs.builtin.TermUnification
 import com.szadowsz.gospel.core.db.ops.OperatorManager
 import com.szadowsz.gospel.core.engine.context.clause.ClauseInfo
-import com.szadowsz.gospel.core.error.PrologError
-import com.szadowsz.gospel.core.exception.{InvalidLibraryException, InvalidTheoryException}
+import com.szadowsz.gospel.core.exception.{InterpreterError, InvalidLibraryException, InvalidTheoryException}
 import com.szadowsz.gospel.core.{PrologEngine, Theory, data}
 
 import scala.collection.JavaConverters._
@@ -211,15 +210,15 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
     * Terminate Prolog execution with a status.
     *
     * @param arg0 the status to exit with.
-    * @throws PrologError if the status term is invalid.
+    * @throws InterpreterError if the status term is invalid.
     * @return true, if it still exists at this point.
     */
-  @throws[PrologError]
+  @throws[InterpreterError]
   def halt_1(arg0: Term): Boolean = {
     arg0 match {
       case i: data.Int => System.exit(i.intValue)
-      case v: Var => throw PrologError.instantiation_error(engineManager, 1)
-      case _ => throw PrologError.type_error(engineManager, 1, "integer", arg0)
+      case v: Var => throw InterpreterError.instantiation_error(engineManager, 1)
+      case _ => throw InterpreterError.type_error(engineManager, 1, "integer", arg0)
     }
     true
   }
@@ -239,10 +238,10 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
     * is asserted as first clause or fact of the predicate.
     *
     * @param arg0 the clause/ fact to insert.
-    * @throws PrologError if it is not an asssertable clause.
+    * @throws InterpreterError if it is not an asssertable clause.
     * @return true if successful, throws an exception otherwise
     */
-  @throws[PrologError]
+  @throws[InterpreterError]
   def asserta_1(arg0: Term): Boolean = {
     arg0.getTerm match {
       case assertion: Struct =>
@@ -250,15 +249,15 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
           for (argi <- assertion.toStructList.iterator) {
             argi match {
               case s: Struct =>
-              case v: Var => throw PrologError.instantiation_error(engineManager, 1)
-              case _ => throw PrologError.type_error(engineManager, 1, "clause", arg0)
+              case v: Var => throw InterpreterError.instantiation_error(engineManager, 1)
+              case _ => throw InterpreterError.type_error(engineManager, 1, "clause", arg0)
             }
           }
         }
         theoryManager.assertA(assertion, true, null, false)
         true
-      case v: Var => throw PrologError.instantiation_error(engineManager, 1)
-      case default => throw PrologError.type_error(engineManager, 1, "clause", default)
+      case v: Var => throw InterpreterError.instantiation_error(engineManager, 1)
+      case default => throw InterpreterError.type_error(engineManager, 1, "clause", default)
     }
   }
 
@@ -267,10 +266,10 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
     * is asserted as first clause or fact of the predicate.
     *
     * @param arg0 the clause/ fact to insert.
-    * @throws PrologError if it is not an asssertable clause.
+    * @throws InterpreterError if it is not an asssertable clause.
     * @return true if successful, throws an exception otherwise
     */
-  @throws[PrologError]
+  @throws[InterpreterError]
   def assertz_1(arg0: Term): Boolean = {
     arg0.getTerm match {
       case assertion: Struct =>
@@ -278,15 +277,15 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
           for (argi <- assertion.toStructList.iterator) {
             argi match {
               case s: Struct =>
-              case v: Var => throw PrologError.instantiation_error(engineManager, 1)
-              case default => throw PrologError.type_error(engineManager, 1, "clause", assertion)
+              case v: Var => throw InterpreterError.instantiation_error(engineManager, 1)
+              case default => throw InterpreterError.type_error(engineManager, 1, "clause", assertion)
             }
           }
         }
         theoryManager.assertZ(assertion, true, null, false)
         true
-      case v: Var => throw PrologError.instantiation_error(engineManager, 1)
-      case default => throw PrologError.type_error(engineManager, 1, "clause", default)
+      case v: Var => throw InterpreterError.instantiation_error(engineManager, 1)
+      case default => throw InterpreterError.type_error(engineManager, 1, "clause", default)
     }
   }
 
@@ -295,10 +294,10 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
     * the database.
     *
     * @param arg0 the term to remove from the database.
-    * @throws PrologError if the provided clause is invalid.
+    * @throws InterpreterError if the provided clause is invalid.
     * @return true if a clause is found to retract, false if otherwise.
     */
-  @throws[PrologError]
+  @throws[InterpreterError]
   def $retract_1(arg0: Term): Boolean = {
     arg0.getTerm match {
       case sarg0: Struct =>
@@ -315,8 +314,8 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
         } else {
           false
         }
-      case v: Var => throw PrologError.instantiation_error(engineManager, 1)
-      case default => throw PrologError.type_error(engineManager, 1, "clause", default)
+      case v: Var => throw InterpreterError.instantiation_error(engineManager, 1)
+      case default => throw InterpreterError.type_error(engineManager, 1, "clause", default)
     }
   }
 
@@ -324,22 +323,22 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
     * Removes all clauses of a predicate with functor Functor and arity Arity from the database.
     *
     * @param arg0 a member of the family of predicates to remove.
-    * @throws PrologError if the provided clause is invalid.
+    * @throws InterpreterError if the provided clause is invalid.
     * @return true if a clause is found to retract, false if otherwise.
     */
-  @throws[PrologError]
+  @throws[InterpreterError]
   def abolish_1(arg0: Term): Boolean = {
     arg0.getTerm match {
-      case v: Var => throw PrologError.instantiation_error(engineManager, 1)
+      case v: Var => throw InterpreterError.instantiation_error(engineManager, 1)
 
-      case abArg: Struct if !arg0.isGround => throw PrologError.type_error(engineManager, 1, "predicate_indicator", abArg)
+      case abArg: Struct if !arg0.isGround => throw InterpreterError.type_error(engineManager, 1, "predicate_indicator", abArg)
 
       case abArg: Struct if abArg.getArg(0).toString == "abolish" =>
-        throw PrologError.permission_error(engineManager, "modify", "static_procedure", abArg, new Struct(""))
+        throw InterpreterError.permission_error(engineManager, "modify", "static_procedure", abArg, new Struct(""))
 
       case abArg: Struct => theoryManager.abolish(abArg)
 
-      case t: Term => throw PrologError.type_error(engineManager, 1, "predicate_indicator", t)
+      case t: Term => throw InterpreterError.type_error(engineManager, 1, "predicate_indicator", t)
     }
   }
 
@@ -347,10 +346,10 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
     * loads a prolog library, given its class name.
     *
     * @param arg0 the name of library in term form.
-    * @throws PrologError if the term is invalid
+    * @throws InterpreterError if the term is invalid
     * @return true if the library has been loaded successfully.
     */
-  @throws[PrologError]
+  @throws[InterpreterError]
   def load_library_1(arg0: Term): Boolean = {
     arg0.getTerm match {
       case atom: Term if atom.isAtom =>
@@ -358,10 +357,10 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
           libraryManager.loadLibrary(atom.asInstanceOf[Struct].getName)
           true
         } catch {
-          case NonFatal(ex) => throw PrologError.existence_error(engineManager, 1, "class", atom, new Struct(ex.getMessage))
+          case NonFatal(ex) => throw InterpreterError.existence_error(engineManager, 1, "class", atom, new Struct(ex.getMessage))
         }
-      case v: Var => throw PrologError.instantiation_error(engineManager, 1)
-      case t: Term => throw PrologError.type_error(engineManager, 1, "atom", t)
+      case v: Var => throw InterpreterError.instantiation_error(engineManager, 1)
+      case t: Term => throw InterpreterError.type_error(engineManager, 1, "atom", t)
     }
   }
 
@@ -369,7 +368,7 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
     * loads a prolog library, given its class name. Directive version.
     *
     * @param arg0 the name of library in term form.
-    * @throws PrologError if the term is invalid
+    * @throws InterpreterError if the term is invalid
     */
   @throws[InvalidLibraryException]
   def $load_library_1(arg0: Term): Unit = {
@@ -381,10 +380,10 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
     * unloads a prolog library, given its class name.
     *
     * @param arg0 the name of library in term form.
-    * @throws PrologError if the term is invalid
+    * @throws InterpreterError if the term is invalid
     * @return true if the library has been unloaded successfully.
     */
-  @throws[PrologError]
+  @throws[InterpreterError]
   def unload_library_1(arg0: Term): Boolean = {
     arg0.getTerm match {
       case atom: Term if atom.isAtom =>
@@ -392,10 +391,10 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
           libraryManager.unloadLibrary(atom.asInstanceOf[Struct].getName)
           true
         } catch {
-          case NonFatal(ex) => throw PrologError.existence_error(engineManager, 1, "class", atom, new Struct(ex.getMessage))
+          case NonFatal(ex) => throw InterpreterError.existence_error(engineManager, 1, "class", atom, new Struct(ex.getMessage))
         }
-      case v: Var => throw PrologError.instantiation_error(engineManager, 1)
-      case t: Term => throw PrologError.type_error(engineManager, 1, "atom", t)
+      case v: Var => throw InterpreterError.instantiation_error(engineManager, 1)
+      case t: Term => throw InterpreterError.type_error(engineManager, 1, "atom", t)
     }
   }
 
@@ -416,14 +415,14 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
   /**
     * It is the same as call/1, but it is not opaque to cut.
     *
-    * @throws PrologError
+    * @throws InterpreterError
     */
-  @throws[PrologError]
+  @throws[InterpreterError]
   def $call_1(arg0: Term): Boolean = {
     arg0.getTerm match {
-      case null => throw PrologError.type_error(engineManager, 1, "callable", arg0)
-      case v: Var => throw PrologError.instantiation_error(engineManager, 1)
-      case t: Term if !isCallable(t) => throw PrologError.type_error(engineManager, 1, "callable", t)
+      case null => throw InterpreterError.type_error(engineManager, 1, "callable", arg0)
+      case v: Var => throw InterpreterError.instantiation_error(engineManager, 1)
+      case t: Term if !isCallable(t) => throw InterpreterError.type_error(engineManager, 1, "callable", t)
       case goal: Term =>
         val termToGoal = BuiltIn.convertTermToGoal(goal)
         engineManager.identify(termToGoal)
@@ -438,10 +437,10 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
     */
   private def isCallable(goal: Term): Boolean = goal.isAtom || goal.isCompound
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   def is_2(arg0: Term, arg1: Term): Boolean = {
     if (arg1.getTerm.isInstanceOf[Var]) {
-      throw PrologError.instantiation_error(engineManager, 2)
+      throw InterpreterError.instantiation_error(engineManager, 2)
     }
     var val1: Term = null
     try {
@@ -450,41 +449,41 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
       case t: Throwable => handleError(t)
     }
     if (val1 == null) {
-      throw PrologError.type_error(engineManager, 2, "evaluable", arg1.getTerm)
+      throw InterpreterError.type_error(engineManager, 2, "evaluable", arg1.getTerm)
     } else {
       unify(arg0.getTerm, val1)
     }
   }
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   private def handleError(t: Throwable) {
     // errore durante la valutazione
     if (t.isInstanceOf[ArithmeticException]) {
       val cause: ArithmeticException = t.asInstanceOf[ArithmeticException]
-      if (cause.getMessage == "/ by zero") throw PrologError.evaluation_error(engineManager, 2, "zero_divisor")
+      if (cause.getMessage == "/ by zero") throw InterpreterError.evaluation_error(engineManager, 2, "zero_divisor")
     }
   }
 
   // $tolist
-  @throws[PrologError]
+  @throws[InterpreterError]
   def $tolist_2(arg0: Term, arg1: Term): Boolean = {
     // transform arg0 to a list, unify it with arg1
     arg0.getTerm match {
-      case v: Var => throw PrologError.instantiation_error(engineManager, 1)
+      case v: Var => throw InterpreterError.instantiation_error(engineManager, 1)
       case s: Struct =>
         val val0: Term = s.toStructList
         val0 != null && unify(arg1.getTerm, val0)
-      case default => throw PrologError.type_error(engineManager, 1, "struct", default)
+      case default => throw InterpreterError.type_error(engineManager, 1, "struct", default)
     }
   }
 
   // $fromlist
-  @throws[PrologError]
+  @throws[InterpreterError]
   def $fromlist_2(arg0: Term, arg1: Term): Boolean = {
     // get the compound representation of the list provided as arg1, and unify it with arg0
     arg1.getTerm match {
-      case v: Var => throw PrologError.instantiation_error(engineManager, 2)
-      case t: Term if !t.isList => throw PrologError.type_error(engineManager, 2, "list", t)
+      case v: Var => throw InterpreterError.instantiation_error(engineManager, 2)
+      case t: Term if !t.isList => throw InterpreterError.type_error(engineManager, 2, "list", t)
       case s: Struct =>
         val val1: Term = s.fromStructList
         if (val1 == null) {
@@ -502,12 +501,12 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
   }
 
   // $append
-  @throws[PrologError]
+  @throws[InterpreterError]
   def $append_2(arg0: Term, arg1: Term): Boolean = {
     // append arg0 to arg1
     arg1.getTerm match {
-      case v: Var => throw PrologError.instantiation_error(engineManager, 2)
-      case t: Term if !t.isList => throw PrologError.type_error(engineManager, 2, "list", t)
+      case v: Var => throw InterpreterError.instantiation_error(engineManager, 2)
+      case t: Term if !t.isList => throw InterpreterError.type_error(engineManager, 2, "list", t)
       case s: Struct =>
         s.append(arg0.getTerm)
         true
@@ -515,12 +514,12 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
   }
 
   // $find
-  @throws[PrologError]
+  @throws[InterpreterError]
   def $find_2(arg0: Term, arg1: Term): Boolean = {
     // look for clauses whose head unifies with arg0 and enqueue them to list arg1
     (arg0.getTerm, arg1.getTerm) match {
-      case (a: Var, _) => throw PrologError.instantiation_error(engineManager, 1)
-      case (_, b: Term) if !b.isList => throw PrologError.type_error(engineManager, 2, "list", b)
+      case (a: Var, _) => throw InterpreterError.instantiation_error(engineManager, 1)
+      case (_, b: Term) if !b.isList => throw InterpreterError.type_error(engineManager, 2, "list", b)
       case (a, b: Struct) =>
         theoryManager.find(a).asScala.foreach { c =>
           if (`match`(a, c.getHead)) {
@@ -533,66 +532,66 @@ final class BuiltIn(mediator: PrologEngine) extends SLibrary with TermUnificatio
   }
 
   // set_prolog_flag(+Name,@Value)
-  @throws[PrologError]
+  @throws[InterpreterError]
   def set_prolog_flag_2(arg0: Term, arg1: Term): Boolean = {
     (arg0.getTerm, arg1.getTerm) match {
-      case (a: Var, _) => throw PrologError.instantiation_error(engineManager, 1)
-      case (_, b: Var) => throw PrologError.instantiation_error(engineManager, 2)
-      case (a: Term, _) if !a.isAtom && !a.isInstanceOf[Struct] => throw PrologError.type_error(engineManager, 1, "struct", a)
-      case (_, b: Term) if !b.isGround => throw PrologError.type_error(engineManager, 2, "ground", b)
+      case (a: Var, _) => throw InterpreterError.instantiation_error(engineManager, 1)
+      case (_, b: Var) => throw InterpreterError.instantiation_error(engineManager, 2)
+      case (a: Term, _) if !a.isAtom && !a.isInstanceOf[Struct] => throw InterpreterError.type_error(engineManager, 1, "struct", a)
+      case (_, b: Term) if !b.isGround => throw InterpreterError.type_error(engineManager, 2, "ground", b)
       case (a, b) =>
         val name: String = a.toString
         if (flagManager.getFlag(name) == null) {
-          throw PrologError.domain_error(engineManager, 1, "prolog_flag", a)
+          throw InterpreterError.domain_error(engineManager, 1, "prolog_flag", a)
         }
         if (!flagManager.isValidValue(name, b)) {
-          throw PrologError.domain_error(engineManager, 2, "flag_value", b)
+          throw InterpreterError.domain_error(engineManager, 2, "flag_value", b)
         }
         if (!flagManager.isModifiable(name)) {
-          throw PrologError.permission_error(engineManager, "modify", "flag", a, new data.Int(0))
+          throw InterpreterError.permission_error(engineManager, "modify", "flag", a, new data.Int(0))
         }
         flagManager.setFlag(name, b)
     }
   }
 
   // get_prolog_flag(@Name,?Value)
-  @throws[PrologError]
+  @throws[InterpreterError]
   def get_prolog_flag_2(arg0: Term, arg1: Term): Boolean = {
     arg0.getTerm match {
-      case v: Var => throw PrologError.instantiation_error(engineManager, 1)
-      case t: Term if !t.isAtom && !t.isInstanceOf[Struct] => throw PrologError.type_error(engineManager, 1, "struct", t)
+      case v: Var => throw InterpreterError.instantiation_error(engineManager, 1)
+      case t: Term if !t.isAtom && !t.isInstanceOf[Struct] => throw InterpreterError.type_error(engineManager, 1, "struct", t)
       case s: Struct =>
         val name: String = s.toString()
         val value: Term = flagManager.getFlag(name)
         if (value == null) {
-          throw PrologError.domain_error(engineManager, 1, "prolog_flag", s)
+          throw InterpreterError.domain_error(engineManager, 1, "prolog_flag", s)
         }
         unify(value, arg1.getTerm)
     }
   }
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   def op_3(arg0: Term, arg1: Term, arg2: Term): Unit = $op_3(arg0, arg1, arg2)
 
-  @throws[PrologError]
+  @throws[InterpreterError]
   def $op_3(arg0: Term, arg1: Term, arg2: Term): Boolean = {
     (arg0.getTerm, arg1.getTerm, arg2.getTerm) match {
-      case (a: Var, _, _) => throw PrologError.instantiation_error(engineManager, 1)
-      case (_, b: Var, _) => throw PrologError.instantiation_error(engineManager, 2)
-      case (_, _, c: Var) => throw PrologError.instantiation_error(engineManager, 3)
-      case (a, _, _) if !a.isInstanceOf[data.Int] => throw PrologError.type_error(engineManager, 1, "integer", a)
-      case (_, b, _) if !b.isAtom => throw PrologError.type_error(engineManager, 2, "atom", b)
-      case (_, _, c) if !c.isAtom && !c.isList => throw PrologError.type_error(engineManager, 3, "atom_or_atom_list", c)
+      case (a: Var, _, _) => throw InterpreterError.instantiation_error(engineManager, 1)
+      case (_, b: Var, _) => throw InterpreterError.instantiation_error(engineManager, 2)
+      case (_, _, c: Var) => throw InterpreterError.instantiation_error(engineManager, 3)
+      case (a, _, _) if !a.isInstanceOf[data.Int] => throw InterpreterError.type_error(engineManager, 1, "integer", a)
+      case (_, b, _) if !b.isAtom => throw InterpreterError.type_error(engineManager, 2, "atom", b)
+      case (_, _, c) if !c.isAtom && !c.isList => throw InterpreterError.type_error(engineManager, 3, "atom_or_atom_list", c)
       case (a: data.Int, b: Struct, c: Struct) =>
         val priority = a.intValue
         if (priority < OperatorManager.OP_LOW || priority > OperatorManager.OP_HIGH) {
-          throw PrologError.domain_error(engineManager, 1, "operator_priority", a)
+          throw InterpreterError.domain_error(engineManager, 1, "operator_priority", a)
         }
 
         val specifier: String = b.getName
         if (!(specifier == "fx") && !(specifier == "fy") && !(specifier == "xf") && !(specifier == "yf") && !(specifier == "xfx") && !(specifier == "yfx") &&
           !(specifier == "xfy")) {
-          throw PrologError.domain_error(engineManager, 2, "operator_specifier", b)
+          throw InterpreterError.domain_error(engineManager, 2, "operator_specifier", b)
         }
 
         if (c.isList) {

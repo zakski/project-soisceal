@@ -35,7 +35,8 @@ package com.szadowsz.gospel.core.engine.state
 
 import com.szadowsz.gospel.core.data.Struct
 import com.szadowsz.gospel.core.engine.{Engine, EngineRunner}
-import com.szadowsz.gospel.core.error.{JavaException, PrologError}
+import com.szadowsz.gospel.core.error.JavaException
+import com.szadowsz.gospel.core.exception.InterpreterError
 
 /**
   * @author Alex Benini
@@ -50,7 +51,7 @@ private[engine] final case class GoalEvaluationState(override protected val runn
       try {
         e.nextState = if (primitive.evalAsPredicate(e.currentContext.currentGoal)) runner.GOAL_SELECTION else runner.BACKTRACK
       } catch {
-        case error: PrologError =>
+        case error: InterpreterError =>
           // sostituisco il gol in cui si ? verificato l'errore con il
           // subgoal throw/1
           e.currentContext.currentGoal = new Struct("throw", error.getError)

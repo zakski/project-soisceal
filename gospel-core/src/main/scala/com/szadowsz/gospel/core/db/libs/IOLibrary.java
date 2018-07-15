@@ -22,7 +22,7 @@ import com.szadowsz.gospel.core.data.*;
 import com.szadowsz.gospel.core.data.Float;
 import com.szadowsz.gospel.core.data.Number;
 import com.szadowsz.gospel.core.db.JLibrary;
-import com.szadowsz.gospel.core.error.PrologError;
+import com.szadowsz.gospel.core.exception.InterpreterError;
 import com.szadowsz.gospel.core.exception.InvalidTermException;
 
 import java.io.*;
@@ -122,12 +122,12 @@ public class IOLibrary extends JLibrary {
 
     /************************************************************/
 
-    public boolean see_1(Term arg) throws PrologError {
+    public boolean see_1(Term arg) throws InterpreterError {
         arg = arg.getTerm();
         if (arg instanceof Var)
-            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
+            throw InterpreterError.instantiation_error(getEngine().getEngineManager(), 1);
         if (!arg.isAtom()) {
-            throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom",
+            throw InterpreterError.type_error(getEngine().getEngineManager(), 1, "atom",
                     arg);
         }
         Struct arg0 = (Struct) arg.getTerm();
@@ -144,7 +144,7 @@ public class IOLibrary extends JLibrary {
             try {
                 inputStream = new FileInputStream(arg0.getName());
             } catch (FileNotFoundException e) {
-                throw PrologError.domain_error(getEngine().getEngineManager(), 1,
+                throw InterpreterError.domain_error(getEngine().getEngineManager(), 1,
                         "stream", arg0);
             }
         }
@@ -170,12 +170,12 @@ public class IOLibrary extends JLibrary {
         return unify(t, new Struct(inputStreamName));
     }
 
-    public boolean tell_1(Term arg) throws PrologError {
+    public boolean tell_1(Term arg) throws InterpreterError {
         arg = arg.getTerm();
         if (arg instanceof Var)
-            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
+            throw InterpreterError.instantiation_error(getEngine().getEngineManager(), 1);
         if (!arg.isAtom()) {
-            throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom",
+            throw InterpreterError.type_error(getEngine().getEngineManager(), 1, "atom",
                     arg);
         }
         Struct arg0 = (Struct) arg.getTerm();
@@ -192,7 +192,7 @@ public class IOLibrary extends JLibrary {
             try {
                 outputStream = new FileOutputStream(arg0.getName());
             } catch (FileNotFoundException e) {
-                throw PrologError.domain_error(getEngine().getEngineManager(), 1,
+                throw InterpreterError.domain_error(getEngine().getEngineManager(), 1,
                         "stream", arg);
             }
         }
@@ -217,18 +217,18 @@ public class IOLibrary extends JLibrary {
         return unify(arg0, new Struct(outputStreamName));
     }
 
-    public boolean put_1(Term arg) throws PrologError {
+    public boolean put_1(Term arg) throws InterpreterError {
         arg = arg.getTerm();
         if (arg instanceof Var)
-            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
+            throw InterpreterError.instantiation_error(getEngine().getEngineManager(), 1);
         if (!arg.isAtom()) {
-            throw PrologError.type_error(getEngine().getEngineManager(), 1,
+            throw InterpreterError.type_error(getEngine().getEngineManager(), 1,
                     "character", arg);
         } else {
             Struct arg0 = (Struct) arg.getTerm();
             String ch = arg0.getName();
             if (ch.length() > 1) {
-                throw PrologError.type_error(getEngine().getEngineManager(), 1,
+                throw InterpreterError.type_error(getEngine().getEngineManager(), 1,
                         "character", arg);
             } else {
                 if (outputStreamName.equals(STDOUT_NAME)) { /* Changed from "stdout" to STDOUT_NAME */
@@ -237,7 +237,7 @@ public class IOLibrary extends JLibrary {
                     try {
                         outputStream.write((byte) ch.charAt(0));
                     } catch (IOException e) {
-                        throw PrologError.permission_error(getEngine()
+                        throw InterpreterError.permission_error(getEngine()
                                         .getEngineManager(), "output", "stream",
                                 new Struct(outputStreamName), new Struct(e
                                         .getMessage()));
@@ -248,12 +248,12 @@ public class IOLibrary extends JLibrary {
         }
     }
 
-    public boolean get0_1(Term arg0) throws PrologError {
+    public boolean get0_1(Term arg0) throws InterpreterError {
         int ch = -2;
         try {
             ch = inputStream.read();
         } catch (IOException e) {
-            throw PrologError.permission_error(getEngine().getEngineManager(),
+            throw InterpreterError.permission_error(getEngine().getEngineManager(),
                     "input", "stream", new Struct(inputStreamName), new Struct(
                             e.getMessage()));
         }
@@ -264,13 +264,13 @@ public class IOLibrary extends JLibrary {
         }
     }
 
-    public boolean get_1(Term arg0) throws PrologError {
+    public boolean get_1(Term arg0) throws InterpreterError {
         int ch = 0;
         do {
             try {
                 ch = inputStream.read();
             } catch (IOException e) {
-                throw PrologError.permission_error(getEngine().getEngineManager(),
+                throw InterpreterError.permission_error(getEngine().getEngineManager(),
                         "input", "stream", new Struct(inputStreamName),
                         new Struct(e.getMessage()));
             }
@@ -283,12 +283,12 @@ public class IOLibrary extends JLibrary {
         }
     }
 
-    public boolean tab_1(Term arg) throws PrologError {
+    public boolean tab_1(Term arg) throws InterpreterError {
         arg = arg.getTerm();
         if (arg instanceof Var)
-            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
+            throw InterpreterError.instantiation_error(getEngine().getEngineManager(), 1);
         if (!(arg instanceof Int))
-            throw PrologError.type_error(getEngine().getEngineManager(), 1,
+            throw InterpreterError.type_error(getEngine().getEngineManager(), 1,
                     "integer", arg);
         // int n = ((Int)arg).intValue(); // OLD BUGGED  VERSION (signaled by MViroli)
         int n = ((Int)arg.getTerm()).intValue(); // NEW CORRECT VERSION (by MViroli, EDenti)
@@ -301,7 +301,7 @@ public class IOLibrary extends JLibrary {
                 try {
                     outputStream.write(0x20);
                 } catch (IOException e) {
-                    throw PrologError.permission_error(getEngine()
+                    throw InterpreterError.permission_error(getEngine()
                                     .getEngineManager(), "output", "stream",
                             new Struct(outputStreamName), new Struct(e
                                     .getMessage()));
@@ -311,7 +311,7 @@ public class IOLibrary extends JLibrary {
         return true;
     }
 
-    public boolean read_1(Term arg0) throws PrologError {
+    public boolean read_1(Term arg0) throws InterpreterError {
         arg0 = arg0.getTerm();
         int ch = 0;
 
@@ -325,7 +325,7 @@ public class IOLibrary extends JLibrary {
             try {
                 ch = inputStream.read();
             } catch (IOException e) {
-                throw PrologError.permission_error(getEngine().getEngineManager(),
+                throw InterpreterError.permission_error(getEngine().getEngineManager(),
                         "input", "stream", new Struct(inputStreamName),
                         new Struct(e.getMessage()));
             }
@@ -354,22 +354,22 @@ public class IOLibrary extends JLibrary {
         try {
             unify(arg0, getEngine().createTerm(st));
         } catch (InvalidTermException e) {
-            throw PrologError.syntax_error(getEngine().getEngineManager(),e);
+            throw InterpreterError.syntax_error(getEngine().getEngineManager(),e);
         }
         return true;
     }
 
-    public boolean write_1(Term arg0) throws PrologError {
+    public boolean write_1(Term arg0) throws InterpreterError {
         arg0 = arg0.getTerm();
         if (arg0 instanceof Var)
-            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
+            throw InterpreterError.instantiation_error(getEngine().getEngineManager(), 1);
         if (outputStreamName.equals(STDOUT_NAME)) { /* Changed from "stdout" to STDOUT_NAME */
             getEngine().stdOutput(arg0.toString());
         } else {
             try {
                 outputStream.write(arg0.toString().getBytes());
             } catch (IOException e) {
-                throw PrologError.permission_error(getEngine().getEngineManager(),
+                throw InterpreterError.permission_error(getEngine().getEngineManager(),
                         "output", "stream", new Struct(outputStreamName),
                         new Struct(e.getMessage()));
             }
@@ -377,10 +377,10 @@ public class IOLibrary extends JLibrary {
         return true;
     }
 
-    public boolean print_1(Term arg0) throws PrologError {
+    public boolean print_1(Term arg0) throws InterpreterError {
         arg0 = arg0.getTerm();
         if (arg0 instanceof Var)
-            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
+            throw InterpreterError.instantiation_error(getEngine().getEngineManager(), 1);
         if (outputStreamName.equals(STDOUT_NAME)) { /* Changed from "stdout" to STDOUT_NAME */
             getEngine().stdOutput(alice.util.Tools.removeApices(arg0.toString()));
         } else {
@@ -388,7 +388,7 @@ public class IOLibrary extends JLibrary {
                 outputStream.write(alice.util.Tools.removeApices(
                         arg0.toString()).getBytes());
             } catch (IOException e) {
-                throw PrologError.permission_error(getEngine().getEngineManager(),
+                throw InterpreterError.permission_error(getEngine().getEngineManager(),
                         "output", "stream", new Struct(outputStreamName),
                         new Struct(e.getMessage()));
             }
@@ -397,14 +397,14 @@ public class IOLibrary extends JLibrary {
 
     }
 
-    public boolean nl_0() throws PrologError {
+    public boolean nl_0() throws InterpreterError {
         if (outputStreamName.equals(STDOUT_NAME)) { /* Changed from "stdout" to STDOUT_NAME */
             getEngine().stdOutput("\n");
         } else {
             try {
                 outputStream.write('\n');
             } catch (IOException e) {
-                throw PrologError.permission_error(getEngine().getEngineManager(),
+                throw InterpreterError.permission_error(getEngine().getEngineManager(),
                         "output", "stream", new Struct(outputStreamName),
                         new Struct(e.getMessage()));
             }
@@ -418,15 +418,15 @@ public class IOLibrary extends JLibrary {
      * It's useful used with agent predicate: text_from_file(File,Source),
      * agent(Source).
      *
-     * @throws PrologError
+     * @throws InterpreterError
      */
     public boolean text_from_file_2(Term file_name, Term text)
-            throws PrologError {
+            throws InterpreterError {
         file_name = file_name.getTerm();
         if (file_name instanceof Var)
-            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
+            throw InterpreterError.instantiation_error(getEngine().getEngineManager(), 1);
         if (!file_name.isAtom())
-            throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom",
+            throw InterpreterError.type_error(getEngine().getEngineManager(), 1, "atom",
                     file_name);
         Struct fileName = (Struct) file_name.getTerm();
         Struct goal;
@@ -437,7 +437,7 @@ public class IOLibrary extends JLibrary {
         try {
             goal = new Struct(alice.util.Tools.loadText(path));
         } catch (IOException e) {
-            throw PrologError.existence_error(getEngine().getEngineManager(), 1,
+            throw InterpreterError.existence_error(getEngine().getEngineManager(), 1,
                     "stream", file_name, new Struct(e.getMessage()));
         }
         getEngine().resetDirectoryList(new File(path).getParent());
@@ -451,14 +451,14 @@ public class IOLibrary extends JLibrary {
      * @param seed Seed to use
      * @return true if seed Term has a valid long value, false otherwise
      */
-    public boolean set_seed_1(Term t) throws PrologError {
+    public boolean set_seed_1(Term t) throws InterpreterError {
         t = t.getTerm();
         if( !(t instanceof Number) ) {
-            throw PrologError.type_error(getEngine().getEngineManager(), 1, "Integer Number", t);
+            throw InterpreterError.type_error(getEngine().getEngineManager(), 1, "Integer Number", t);
         }
         Number seed = (Number)t;
         if( !seed.isInteger() ){
-            throw PrologError.type_error(getEngine().getEngineManager(), 1, "Integer Number", t);
+            throw InterpreterError.type_error(getEngine().getEngineManager(), 1, "Integer Number", t);
         }
         gen.setSeed(seed.longValue());
         return true;
@@ -483,13 +483,13 @@ public class IOLibrary extends JLibrary {
     // Java guards for Prolog predicates
 
     public boolean solve_file_goal_guard_2(Term arg0, Term arg1)
-            throws PrologError {
+            throws InterpreterError {
         arg0 = arg0.getTerm();
         arg1 = arg1.getTerm();
         if (arg1 instanceof Var)
-            throw PrologError.instantiation_error(getEngine().getEngineManager(), 2);
+            throw InterpreterError.instantiation_error(getEngine().getEngineManager(), 2);
         if (!arg1.isAtom() && !arg1.isCompound()) {
-            throw PrologError.type_error(getEngine().getEngineManager(), 2,
+            throw InterpreterError.type_error(getEngine().getEngineManager(), 2,
                     "callable", arg1);
         }
         return true;
@@ -525,18 +525,18 @@ public class IOLibrary extends JLibrary {
     }
 
 
-    public boolean write_base_1(Term arg0) throws PrologError {
+    public boolean write_base_1(Term arg0) throws InterpreterError {
         arg0 = arg0.getTerm();
 
         if (arg0 instanceof Var)
-            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
+            throw InterpreterError.instantiation_error(getEngine().getEngineManager(), 1);
         if (outputStreamName.equals(STDOUT_NAME)) { /* Changed from "stdout" to STDOUT_NAME */
             getEngine().stdOutput(arg0.toString());
         } else {
             try {
                 outputStream.write(arg0.toString().getBytes());
             } catch (IOException e) {
-                throw PrologError.permission_error(getEngine().getEngineManager(),
+                throw InterpreterError.permission_error(getEngine().getEngineManager(),
                         "output", "stream", new Struct(outputStreamName),
                         new Struct(e.getMessage()));
             }

@@ -241,7 +241,7 @@ Since their behavior can be fully understood only in the context of JavaLibrary/
 %
 %Per quel che riguarda il modo in cui \`{e} stato implementato il meccanismo di controllo degli errori, bisogna distinguere i predicati espressi in Java da quelli espressi in Prolog.
 %
-%Nel primo caso le eccezioni (cio\`{e} le opportune istanze di \texttt{PrologError}) vengono lanciate direttamente dai corrispondenti metodi Java ogniqualvolta si verifica un errore, mentre nel secondo caso sono lanciate da metodi ``guardia" (sempre espressi in Java) invocati per controllare i parametri prima dell'esecuzione del predicato Prolog.
+%Nel primo caso le eccezioni (cio\`{e} le opportune istanze di \texttt{InterpreterError}) vengono lanciate direttamente dai corrispondenti metodi Java ogniqualvolta si verifica un errore, mentre nel secondo caso sono lanciate da metodi ``guardia" (sempre espressi in Java) invocati per controllare i parametri prima dell'esecuzione del predicato Prolog.
 %
 %Nell'implementazione si \`{e} cercato di individuare il maggior numero possibile di condizioni di errore, rispettando per\`{o} sempre il requisito fondamentale di correttezza: se una chiamata a un predicato non falliva prima dell'introduzione del meccanismo delle eccezioni, non deve fallire neanche ora---ovvero, il lancio di una eccezione deve avvenire soltanto in circostanze in cui il motore tuProlog originario falliva.
 %

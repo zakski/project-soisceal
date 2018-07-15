@@ -20,7 +20,7 @@ package com.szadowsz.gospel.core.db.libs;
 import com.szadowsz.gospel.core.data.Term;
 import com.szadowsz.gospel.core.data.Var;
 import com.szadowsz.gospel.core.db.JLibrary;
-import com.szadowsz.gospel.core.error.PrologError;
+import com.szadowsz.gospel.core.exception.InterpreterError;
 
 /**
  * Library for managing DCGs.
@@ -56,17 +56,17 @@ public class DCGLibrary extends JLibrary {
 
     // Java guards for Prolog predicates
 
-    public boolean phrase_guard_2(Term arg0, Term arg1) throws PrologError {
+    public boolean phrase_guard_2(Term arg0, Term arg1) throws InterpreterError {
         arg0 = arg0.getTerm();
         if (arg0 instanceof Var)
-            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
+            throw InterpreterError.instantiation_error(getEngine().getEngineManager(), 1);
         return true;
     }
 
-    public boolean phrase_guard_3(Term arg0, Term arg1, Term arg2) throws PrologError {
+    public boolean phrase_guard_3(Term arg0, Term arg1, Term arg2) throws InterpreterError {
         arg0 = arg0.getTerm();
         if (arg0 instanceof Var)
-            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
+            throw InterpreterError.instantiation_error(getEngine().getEngineManager(), 1);
         return true;
     }
 
