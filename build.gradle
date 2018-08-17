@@ -9,7 +9,7 @@ ext {
     slf4jVersion = '1.7.12'
 
     scalaTestVersion = '3.0.5'
-    junitVersion = '4.11'
+    junitVersion = '5.2.0'
 }
 
 allprojects {
