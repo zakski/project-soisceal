@@ -27,4 +27,4 @@ object Operator {
   * @param opType (xf,yf,fx,fy,xfx,xfy,yfy,yfx)
   * @param prio priority
   */
-final case class Operator (name: String, opType: OpType, prio: Int) extends Serializable
+private[operators] final case class Operator (name: String, opType: OpType, prio: Int) extends Serializable

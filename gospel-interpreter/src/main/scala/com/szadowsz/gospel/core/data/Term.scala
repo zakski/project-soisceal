@@ -27,11 +27,22 @@ abstract class Term extends Serializable {
     */
   def resolveTerm() : Unit
 
+  def isAtom: Boolean = false
+
+  /**
+    * Check if this struct is a clause.
+    *
+    * @return true if this is a clause, false otherwise
+    */
+  def isClause: Boolean = false
+
+  def isGround: Boolean
+
   def isEmptyList: Boolean = false
 
-  def isList: Boolean = false
-
   def isEquals(term: Term): Boolean
+
+  def isList: Boolean = false
 
   final override def equals(obj: Any): Boolean = obj.isInstanceOf[Term] && isEquals(obj.asInstanceOf[Term])
 

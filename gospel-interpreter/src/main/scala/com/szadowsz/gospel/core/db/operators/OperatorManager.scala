@@ -78,7 +78,7 @@ object OperatorManager {
   }
 }
 
-class OperatorManager extends Serializable {
+private[core] class OperatorManager extends Serializable {
 
   private val registry : OpRegistry = OperatorManager.defaultReg.copyOf()
 

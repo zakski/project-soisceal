@@ -1,0 +1,18 @@
+ext.versions = [:]
+
+// Languages
+versions.java = '1.8'
+versions.scala_binary = '2.12'
+versions.scala_full = "${versions.scala_binary}.6"
+
+// Third Party Libraries
+versions.classgraph = '4.4.2'
+versions.commons_lang3 = '3.5'
+versions.gson = '2.6.2'
+versions.java_hamcrest = '2.0.0.0'
+versions.slf4j = '1.7.12'
+
+// Third Party Test Libraries
+versions.junit = '5.2.0'
+versions.junit_platform_runner = '1.2.0'
+versions.scalatest = '3.0.5'

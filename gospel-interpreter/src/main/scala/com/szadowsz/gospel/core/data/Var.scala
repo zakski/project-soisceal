@@ -29,6 +29,8 @@ class Var(val name : String) extends Term {
     */
   override def resolveTerm(): Unit = ???
 
+  override def isGround: Boolean = binding.exists(_.isGround)
+
   override def isEmptyList: Boolean = binding.exists(_.isEmptyList)
 
   override def isList: Boolean = binding.exists(_.isList)

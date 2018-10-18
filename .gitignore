@@ -8,7 +8,6 @@
 .gradle/
 
 # Do not add user-specific Gradle Wrapper information
-gradle/
 gradlew
 gradlew.bat
 
@@ -18,3 +17,5 @@ build/
 
 # Do not add complied jvm code to git
 *.class
+
+*.jar

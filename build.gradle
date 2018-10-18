@@ -1,16 +1,7 @@
 group 'com.szadowsz'
 version '2.0.0'
 
-
-ext {
-    scalaVersion = '2.12'
-    scalafullVersion = "${scalaVersion}.4"
-
-    slf4jVersion = '1.7.12'
-
-    scalaTestVersion = '3.0.5'
-    junitVersion = '5.2.0'
-}
+apply from: file("versions.gradle")
 
 allprojects {
     apply plugin: 'idea'
@@ -19,8 +10,15 @@ allprojects {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'scala'
+    apply from: file("../versions.gradle")
 
     repositories {
         mavenCentral()
+    }
+
+    compileScala {
+        scalaCompileOptions.optimize = true
+        scalaCompileOptions.additionalParameters = ["-target:jvm-${versions.java}", '-Jbackend:GenBCode', '-feature',
+                                                    '-language:postfixOps', '-language:implicitConversions']
     }
 }

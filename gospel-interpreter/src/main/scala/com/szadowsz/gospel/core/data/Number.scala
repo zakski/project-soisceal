@@ -24,4 +24,6 @@ abstract class Number extends Term {
     */
   final override def resolveTerm(): Unit = {}
 
+  final def isGround: Boolean = true
+
 }

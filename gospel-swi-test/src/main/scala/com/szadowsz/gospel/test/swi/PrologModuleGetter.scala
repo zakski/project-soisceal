@@ -1,4 +1,4 @@
-package com.szadowsz.gospel.test.swi
+package com.szadowsz.gospel.core.test.swi
 
 import java.io.{BufferedReader, File, IOException, InputStreamReader}
 import java.nio.file.{Files, Path}

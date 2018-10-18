@@ -437,7 +437,22 @@ class Parser(reader: BufferedReader)(implicit opManager: OperatorManager) extend
     *
     * @return the new iterator
     */
-  override def iterator: Iterator[Term] = ???
+  override def iterator: Iterator[Term] = new Iterator[Term] {
+
+    private val parser : Parser = Parser.this
+    private var nextOpt : Option[Term] = None
+
+    override def hasNext: Boolean = {
+      nextOpt = nextOpt.orElse(Option(parser.nextTerm(true)))
+      nextOpt.nonEmpty
+    }
+
+    override def next(): Term = {
+      val result = nextOpt.orElse(Option(parser.nextTerm(true))).get
+      nextOpt = None
+      result
+    }
+  }
 
 
 

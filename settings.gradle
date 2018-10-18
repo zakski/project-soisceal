@@ -1,3 +1,4 @@
 rootProject.name = 'project-soisceal'
 
-include ':gospel-interpreter',':gospel-core'//,':gospel-swi-test'':gospel-core',':gospel-swi-test'//,':gospel-java-ex', ':gospel-runtime'
+include ':gospel-resources', ':gospel-interpreter',':gospel-old'
+//,':gospel-swi-test'':gospel-core',':gospel-swi-test'//,':gospel-java-ex', ':gospel-runtime'

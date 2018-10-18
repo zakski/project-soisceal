@@ -15,9 +15,12 @@
   */
 package com.szadowsz.gospel.core.data
 
+import com.szadowsz.gospel.core.db.primitives.Primitive
 import com.szadowsz.gospel.core.parser.Parser
 
 class Struct(val name: String, val arity: scala.Int, val args: List[Term] = Nil) extends Term {
+
+  private var primitive :Primitive = _
 
   /**
     * Builds a structure representing an empty list
@@ -39,13 +42,6 @@ class Struct(val name: String, val arity: scala.Int, val args: List[Term] = Nil)
     */
   def this(f: String, argSeq: Seq[Term]) {
     this(f, argSeq.length, argSeq.toList)
-    //    for (i <- argList.indices) {
-    //      if (argList(i) == null) {
-    //        throw new InvalidTermException("Arguments of a Struct cannot be null",f)
-    //      } else {
-    //        arg(i) = argList(i)
-    //      }
-    //    }
   }
 
 
@@ -120,6 +116,8 @@ class Struct(val name: String, val arity: scala.Int, val args: List[Term] = Nil)
     this(argList, 0)
   }
 
+  def apply(index : scala.Int): Term = args(index)
+
   /**
     * Resolves variables inside the term
     *
@@ -129,8 +127,13 @@ class Struct(val name: String, val arity: scala.Int, val args: List[Term] = Nil)
 
   }
 
+  override def isClause: Boolean = {
+    name == ":-" && arity > 1 && args.head.getBinding.isInstanceOf[Struct]
+  }
 
   override def isEmptyList: Boolean = name == "[]" && arity == 0
+
+  override def isGround: Boolean = args.forall(_.isGround)
 
   override def isList: Boolean = (name == "." && arity == 2 && args(1).isList) || isEmptyList
 
@@ -142,6 +145,62 @@ class Struct(val name: String, val arity: scala.Int, val args: List[Term] = Nil)
     }
   }
 
+  /**
+    * Gets the functor name of this structure
+    *
+    * @return the name of the struct.
+    */
+  def getName: String = name
+
+  /**
+    * Gets the number of arguments for this structure.
+    *
+    * @return the number of arguments or operands that the struct takes.
+    */
+  def getArity: scala.Int = arity
+
+  /**
+    * Gets the i-th element of this structure
+    *
+    * @note No bound check is done. It is equivalent to <code>getArg(index).getTerm()</code
+    *
+    * @return nth term of the struct
+    */
+  def getTerm(index: scala.Int): Term = args(index).getBinding
+
+  def getTermIterator : Iterator[Term] = {
+    new Iterator[Term] {
+      private var index = 0
+      override def hasNext: Boolean = index < arity
+      override def next(): Term = {
+        val res = Struct.this.getTerm(index)
+        index += 1
+        res
+      }
+    }
+  }
+
+  /**
+    * The reference indicator of the Struct
+    *
+    * @return "name/arity" of the struct
+    */
+  def getPredicateIndicator: String = s"$name/$arity"
+
+  private[core] def getPrimitive: Option[Primitive] = Option(primitive)
+
+    def setPrimitive(primitive: Option[Primitive]): Unit = {
+    primitive match {
+      case None =>
+      case Some(p) => this.primitive = p
+    }
+  }
+
+  /**
+    * Gets the internal string representation of this List
+    *
+    * @return string representation of this List's internals
+    */
   private def internalListString: String = {
     val h = args(0).getBinding
     val t = args(1).getBinding
@@ -158,6 +217,11 @@ class Struct(val name: String, val arity: scala.Int, val args: List[Term] = Nil)
   }
 
 
+  /**
+    * Gets the internal string representation of this DSG
+    *
+    * @return string representation of this DSG's internals
+    */
   private def internalDsgString: String = {
     arity match {
       case 0 => ""

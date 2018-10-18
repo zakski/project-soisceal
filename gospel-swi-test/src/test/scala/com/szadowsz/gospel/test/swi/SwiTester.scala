@@ -1,4 +1,4 @@
-package com.szadowsz.gospel.test.swi
+package com.szadowsz.gospel.core.test.swi
 
 import com.szadowsz.gospel.core.PrologEngine
 import org.junit.runner.RunWith
