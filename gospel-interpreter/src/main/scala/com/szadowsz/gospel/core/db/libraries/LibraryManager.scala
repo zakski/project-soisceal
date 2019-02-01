@@ -17,11 +17,11 @@ package com.szadowsz.gospel.core.db.libraries
 
 import java.util.concurrent.ConcurrentHashMap
 
-import com.szadowsz.gospel.core.PrologEngine
+import com.szadowsz.gospel.core.Interpreter
 import com.szadowsz.gospel.core.db.primitives.PrimitivesManager
 import com.szadowsz.gospel.core.db.theory.TheoryManager
-import com.szadowsz.gospel.core.exception.library.{LibraryInstantiationException, LibraryNotFoundException}
-import com.szadowsz.gospel.core.exception.{InvalidLibraryException, InvalidTheoryException, PrologException}
+import com.szadowsz.gospel.core.exception.library.{InvalidLibraryException, LibraryInstantiationException, LibraryNotFoundException}
+import com.szadowsz.gospel.core.exception.{InvalidTheoryException, PrologException}
 import com.szadowsz.gospel.core.parser.PrologSrcFinder
 import io.github.classgraph.ClassGraph
 import org.slf4j.{Logger, LoggerFactory}
@@ -31,7 +31,7 @@ import scala.collection.concurrent
 import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
 
-private[core] class LibraryManager(private val wam: PrologEngine) {
+private[core] class LibraryManager(private val wam: Interpreter) {
 
   private val logger: Logger = LoggerFactory.getLogger(classOf[LibraryManager])
 
@@ -42,15 +42,14 @@ private[core] class LibraryManager(private val wam: PrologEngine) {
   private val libs: concurrent.Map[String, Library] = new ConcurrentHashMap[String, Library]().asScala
 
   @throws(classOf[LibraryInstantiationException])
-  private def instantiateLibrary(libName : String, func : PrologEngine => Library):Library = {
+  private def instantiateLibrary(libName : String, func : Interpreter => Library):Library = {
     try {
       func(wam)
     } catch {
-       // TODO see if we can engineer a scenario where this actually gets thrown
-      case ie: InstantiationException => throw new LibraryInstantiationException(libName, ie)
+      case ie: InstantiationException => throw new LibraryInstantiationException(libName, s"Library $libName is abstract")
 
       case nsme: NoSuchMethodException =>
-        throw new LibraryInstantiationException(libName, s"Library $libName is abstract or does not have a valid constructor",nsme)
+        throw new LibraryInstantiationException(libName, s"Library $libName does not have a valid constructor",nsme)
 
       case iae: IllegalAccessException =>
         throw new LibraryInstantiationException(libName, s"Failed to access library $libName", iae)
@@ -124,23 +123,25 @@ private[core] class LibraryManager(private val wam: PrologEngine) {
     */
   @throws(classOf[LibraryInstantiationException])
   private def instantiateLibraryFromClass(clazz: Class[_ <: Library]): Library = {
-    instantiateLibrary(clazz.getSimpleName, w => clazz.getDeclaredConstructor(classOf[PrologEngine]).newInstance(w))
+    instantiateLibrary(clazz.getSimpleName, w => clazz.getDeclaredConstructor(classOf[Interpreter]).newInstance(w))
   }
 
   private def instantiateLibraryUsingReflection(identifier: String): Library = {
 
     val result = new ClassGraph().enableClassInfo().scan()
-    val libs = result.getSubclasses(classOf[Library].getName).asScala.filter(!_.isAbstract)
-    libs.find(_.getSimpleName == identifier) match {
-      case Some(ci) => instantiateLibraryFromClass(ci.loadClass().asInstanceOf[Class[Library]])
-      case None =>
-        val it = libs.iterator
-        var lib : Try[Library] = Failure(new InvalidLibraryException(identifier, s"Failed to Find Library $identifier"))
-        while (!lib.toOption.exists(_.getName == identifier) && it.hasNext) {
-          val next = Try(instantiateLibraryFromClass(it.next().loadClass().asInstanceOf[Class[Library]]))
-          lib = if (next.toOption.exists(_.getName == identifier)) next else lib
-        }
-        lib.get
+    val libs = result.getSubclasses(classOf[Library].getName).asScala
+    val namedLib = libs.filter(_.getSimpleName  == identifier)
+
+    if (namedLib.length == 1){
+      instantiateLibraryFromClass(namedLib.head.loadClass().asInstanceOf[Class[Library]])
+    } else {
+      val it = libs.filter(!_.isAbstract).iterator
+      var lib : Try[Library] = Failure(new LibraryNotFoundException(identifier))
+      while (!lib.toOption.exists(_.getName == identifier) && it.hasNext) {
+        val next = Try(instantiateLibraryFromClass(it.next().loadClass().asInstanceOf[Class[Library]]))
+        lib = if (next.toOption.exists(_.getName == identifier)) next else lib
+      }
+      lib.get
     }
   }
 
@@ -247,5 +248,9 @@ private[core] class LibraryManager(private val wam: PrologEngine) {
       case None =>
         logger.warn("Library {} not loaded.", name)
     }
+  }
+
+  private[libraries] def getLibCount: Int ={
+    libs.size
   }
 }

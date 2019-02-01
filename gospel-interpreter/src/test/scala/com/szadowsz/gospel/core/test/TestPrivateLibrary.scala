@@ -13,17 +13,20 @@
   * License along with this library; if not, write to the Free Software
   * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
-package com.szadowsz.gospel.core
+package com.szadowsz.gospel.core.test
 
-import com.szadowsz.gospel.core.db.libraries.inbuilt.BuiltIn
+import com.szadowsz.gospel.core.Interpreter
+import com.szadowsz.gospel.core.db.libraries.Library
+import com.szadowsz.gospel.core.db.theory.Theory
 
-object PrologEngineBuilder {
+private class TestPrivateLibrary(wam : Interpreter) extends Library(wam) {
 
-  def getDefaultEngine : PrologEngine = {
-    new PrologEngine(classOf[BuiltIn])
-  }
-}
+  override def getName: String = "test"
 
-class PrologEngineBuilder {
+  override def getTheory: Option[Theory] = None
 
+  /**
+    * gets the list of primitives defined in the library
+    */
+  override private[core] def getPrimitives = Map()
 }

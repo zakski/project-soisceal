@@ -13,22 +13,14 @@
   * License along with this library; if not, write to the Free Software
   * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
-package com.szadowsz.gospel.core.db.libraries
+package com.szadowsz.gospel.core.engine.state
 
-import com.szadowsz.gospel.core.Interpreter
-import com.szadowsz.gospel.core.db.theory.Theory
-import org.springframework.core.io.Resource
+import com.szadowsz.gospel.core.engine.Executor
 
-private[libraries] class ResourceLibrary(wam : Interpreter, private val res: Resource) extends Library(wam) {
-
-  private val name = Library.extractLibNameFromTheory(new Theory(res))
-
-  override def getName: String = name
-
-  override def getTheory: Option[Theory] = Some(new Theory(res))
-
-  /**
-    * gets the list of primitives defined in the library
-    */
-  override private[core] def getPrimitives = Map()
+class GoalSelectionState extends State {
+ 
+  
+  override protected val stateName: String = "Call"
+  
+  override def doJob(e: Executor): Unit = ???
 }

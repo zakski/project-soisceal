@@ -15,15 +15,51 @@
   */
 package com.szadowsz.gospel.core.data
 
+import java.util
+
 abstract class Number extends Term {
-
+  
+  final override def copy(vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
+    this
+  }
+  
+  final override private[data] def copy(vMap: util.AbstractMap[Var, Var], substMap: util.AbstractMap[Term, Var]) = {
+    this
+  }
+  
+  final override def resolveVars(): Unit = {}
+  
+  final override def isAtomic: Boolean = true
+  
+  final override def isGround: Boolean = true
+  
   /**
-    * Resolves variables inside the term
-    *
-    * If the variables has been already resolved, no renaming is done.
+    * Returns the value of the Double as int
     */
-  final override def resolveTerm(): Unit = {}
-
-  final def isGround: Boolean = true
-
+  def intValue: scala.Int
+  
+  /**
+    * Returns the value of the Double as float
+    */
+  def floatValue: scala.Float
+  
+  /**
+    * Returns the value of the Double as double
+    */
+  def doubleValue: scala.Double
+  
+  /**
+    * Returns the value of the Double as long
+    */
+  def longValue: scala.Long
+  
+  /**
+    * is this term a prolog integer term?
+    */
+  def isInteger: Boolean
+  
+  /**
+    * is this term a prolog real term?
+    */
+  def isReal: Boolean
 }

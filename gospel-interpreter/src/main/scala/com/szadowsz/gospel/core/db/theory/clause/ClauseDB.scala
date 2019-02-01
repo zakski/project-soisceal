@@ -17,9 +17,7 @@ package com.szadowsz.gospel.core.db.theory.clause
 
 import com.szadowsz.gospel.core.data.{Struct, Term}
 
-import scala.collection.mutable
 import scala.collection.concurrent
-import scala.collection.generic.CanBuildFrom
 import scala.collection.immutable.List
 
 private[theory] class ClauseDB extends Iterable[Clause] {
@@ -33,7 +31,7 @@ private[theory] class ClauseDB extends Iterable[Clause] {
   }
 
   def apply(headT : Term) : List[Clause] = get(headT) match {
-    case None => null
+    case None => Nil
     case Some(value) => value
   }
 
@@ -57,6 +55,10 @@ private[theory] class ClauseDB extends Iterable[Clause] {
     val family = internalMap.getOrElseUpdate(kv._1,new ClauseFamily)
     family.addLast(kv._2)
     this
+  }
+
+  def remove(clause: Clause): Unit = {
+    internalMap.get(clause.getHead.getPredicateIndicator).foreach(f => f.remove(clause))
   }
 
   override def iterator: Iterator[Clause] = new Iterator[Clause]() {

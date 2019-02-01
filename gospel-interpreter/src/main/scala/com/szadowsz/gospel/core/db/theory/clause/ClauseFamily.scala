@@ -17,11 +17,13 @@
   */
 package com.szadowsz.gospel.core.db.theory.clause
 
-import com.szadowsz.gospel.core.data.{Number, Struct, Var}
+import com.szadowsz.gospel.core.data.Struct
+
+import scala.collection.mutable.ArrayBuffer
 
 private[theory] class ClauseFamily extends Iterable[Clause] {
 
-  protected var internalList: List[Clause] = List[Clause]()
+  protected var internalList: ArrayBuffer[Clause] = ArrayBuffer[Clause]()
 
   override def iterator: Iterator[Clause] = internalList.iterator
 
@@ -69,12 +71,16 @@ private[theory] class ClauseFamily extends Iterable[Clause] {
   }
 
   def addFirst(clause: Clause): Unit = {
-    internalList = clause +: internalList
+    internalList.prepend(clause)
     register(clause, true)
   }
 
   def addLast(clause: Clause): Unit = {
-    internalList = internalList :+ clause
+    internalList += clause
     register(clause, false)
+  }
+
+  def remove(clause: Clause): Unit = {
+    internalList = internalList - clause
   }
 }

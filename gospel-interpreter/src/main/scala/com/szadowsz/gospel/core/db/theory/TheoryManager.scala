@@ -17,7 +17,7 @@ package com.szadowsz.gospel.core.db.theory
 
 import java.util
 
-import com.szadowsz.gospel.core.PrologEngine
+import com.szadowsz.gospel.core.Interpreter
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.db.operators.OperatorManager
 import com.szadowsz.gospel.core.db.primitives.PrimitivesManager
@@ -42,7 +42,7 @@ import scala.util.control.NonFatal
   * Created on 19/02/2017.
   *
   */
-private[core] class TheoryManager(wam: PrologEngine) {
+private[core] class TheoryManager(wam: Interpreter) {
 
   private val logger: Logger = LoggerFactory.getLogger(classOf[TheoryManager])
 
@@ -96,7 +96,20 @@ private[core] class TheoryManager(wam: PrologEngine) {
     }
   }
 
-  def unloadLibrary(name: String) = ???
+  def unloadLibrary(name: String): Unit =   {
+    synchronized {
+     staticDB.foreach { clause =>
+       clause.getLib match {
+         case Some(libName) if libName == name =>
+           try {
+             staticDB.remove(clause)
+           } catch {
+             case e: Exception => logger.error ("Error during library theory removal", e)
+           }
+       }
+     }
+    }
+  }
 
   def rebindPrimitives(): Unit = {//TODO
     }
@@ -117,7 +130,7 @@ private[core] class TheoryManager(wam: PrologEngine) {
     synchronized {
       headT match {
         case headS: Struct =>
-          var list: List[Clause] = List() // dynamicDB.getPredicates(headt)
+          var list: List[Clause] = dynamicDB (headS)
           if (list.isEmpty) {
             list = staticDB(headS)
           }
@@ -134,7 +147,7 @@ private[core] class TheoryManager(wam: PrologEngine) {
     * @param isDynamic if it is true, then the clauses are marked as dynamic
     * @param libName   if it not null, then the clauses are marked to belong to the specified library
     */
-  def consult(theory: Theory, isDynamic: Boolean = false, libName: Option[String] = None): Unit = {
+  def consult(theory: Theory, isDynamic: Boolean = true, libName: Option[String] = None): Unit = {
     synchronized {
       startGoalStack = new util.Stack[Term]
       var clause: scala.Int = 0

@@ -15,7 +15,7 @@
   */
 package com.szadowsz.gospel.core.db
 
-import com.szadowsz.gospel.core.{PrologEngine, PrologEngineBuilder}
+import com.szadowsz.gospel.core.{Interpreter, InterpreterBuilder}
 import com.szadowsz.gospel.core.data.{Int, Struct}
 import com.szadowsz.gospel.core.db.theory.{Theory, TheoryManager}
 import com.szadowsz.gospel.core.test.TestLogRecorder
@@ -33,7 +33,7 @@ class TheoryManagerSpec extends FlatSpec with Matchers with BeforeAndAfter {
   protected val logger : Logger = Logger.getLogger(classOf[TheoryManager])
   protected val recorder : TestLogRecorder = new TestLogRecorder
 
-  protected var wam : PrologEngine = _
+  protected var wam : Interpreter = _
   protected var theoryManager : TheoryManager = _
 
 
@@ -41,7 +41,7 @@ class TheoryManagerSpec extends FlatSpec with Matchers with BeforeAndAfter {
 
   before {
     logger.addAppender(recorder)
-    wam = PrologEngineBuilder.getDefaultEngine
+    wam = InterpreterBuilder.getDefaultEngine
     theoryManager = wam.getTheoryManager
   }
 

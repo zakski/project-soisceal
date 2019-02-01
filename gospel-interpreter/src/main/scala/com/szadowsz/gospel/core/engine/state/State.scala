@@ -13,22 +13,29 @@
   * License along with this library; if not, write to the Free Software
   * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
-package com.szadowsz.gospel.core.db.libraries
+package com.szadowsz.gospel.core.engine.state
 
-import com.szadowsz.gospel.core.Interpreter
-import com.szadowsz.gospel.core.db.theory.Theory
-import org.springframework.core.io.Resource
+import com.szadowsz.gospel.core.engine.Executor
+import org.slf4j.{Logger, LoggerFactory}
 
-private[libraries] class ResourceLibrary(wam : Interpreter, private val res: Resource) extends Library(wam) {
-
-  private val name = Library.extractLibNameFromTheory(new Theory(res))
-
-  override def getName: String = name
-
-  override def getTheory: Option[Theory] = Some(new Theory(res))
+/**
+  * Template for states of Core Engine. Not for consumption outside of the core engine package.
+  *
+  */
+private[engine] trait State {
 
   /**
-    * gets the list of primitives defined in the library
+    * Use one logger category for all states.
     */
-  override private[core] def getPrimitives = Map()
+  protected lazy val logger : Logger = LoggerFactory.getLogger(classOf[State])
+
+ /**
+    * the name of the engine state.
+    */
+  protected val stateName: String
+
+
+  def doJob(e: Executor) : Unit
+
+  override def toString: String = stateName
 }

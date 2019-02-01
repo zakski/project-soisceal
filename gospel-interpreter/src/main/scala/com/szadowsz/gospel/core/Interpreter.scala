@@ -20,7 +20,7 @@ import com.szadowsz.gospel.core.db.operators.OperatorManager
 import com.szadowsz.gospel.core.db.primitives.PrimitivesManager
 import com.szadowsz.gospel.core.db.theory.TheoryManager
 
-class PrologEngine {
+class Interpreter {
 
   protected lazy val opManager : OperatorManager = new OperatorManager
 

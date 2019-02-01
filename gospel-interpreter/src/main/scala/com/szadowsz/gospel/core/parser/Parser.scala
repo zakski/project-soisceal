@@ -425,7 +425,7 @@ class Parser(reader: BufferedReader)(implicit opManager: OperatorManager) extend
       if (endNeeded && tokenizer.readToken.getType != TermTokenizer.END) {
         throw new InvalidTermException(s"The term '$term' is not ended with a period.", term, lineNo, colNo)
       }
-      term.resolveTerm()
+      term.resolveVars()
       term
     } catch {
       case ex: IOException =>

@@ -41,14 +41,14 @@ private[primitives] final class SPrimitiveN(
   }
 
   override def evalAsDirective(g: Struct): Unit = {
-    evalRec[Any](function,g.getTermIterator)
+    evalRec[Any](function,g.getBindingIterator)
   }
 
   override def evalAsPredicate(g: Struct): Boolean = {
-    evalRec[Boolean](function,g.getTermIterator)
+    evalRec[Boolean](function,g.getBindingIterator)
   }
 
   override def evalAsFunctor(g: Struct): Term = {
-    evalRec[Term](function,g.getTermIterator)
+    evalRec[Term](function,g.getBindingIterator)
   }
 }

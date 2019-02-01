@@ -15,13 +15,12 @@
   */
 package com.szadowsz.gospel.core.db.libraries
 
-import com.szadowsz.gospel.core.PrologEngine
+import com.szadowsz.gospel.core.Interpreter
 import com.szadowsz.gospel.core.data.{Struct, Term}
 import com.szadowsz.gospel.core.db.operators.OperatorManager
 import com.szadowsz.gospel.core.db.primitives.{Primitive, PrimitiveType}
 import com.szadowsz.gospel.core.db.theory.Theory
-import com.szadowsz.gospel.core.exception.InvalidLibraryException
-import com.szadowsz.gospel.core.exception.library.LibraryInstantiationException
+import com.szadowsz.gospel.core.exception.library.{InvalidLibraryException, LibraryInstantiationException}
 
 import scala.reflect.runtime.universe._
 import scala.util.control.NonFatal
@@ -53,7 +52,7 @@ object Library {
   }
 }
 
-abstract class Library(wam: PrologEngine) {
+abstract class Library(wam: Interpreter) {
   protected lazy implicit val opManager: OperatorManager = wam.getOperatorManager
   protected lazy implicit val libManager: LibraryManager = wam.getLibraryManager
 

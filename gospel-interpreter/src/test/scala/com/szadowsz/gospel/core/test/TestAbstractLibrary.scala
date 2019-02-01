@@ -15,11 +15,11 @@
   */
 package com.szadowsz.gospel.core.test
 
-import com.szadowsz.gospel.core.PrologEngine
+import com.szadowsz.gospel.core.Interpreter
 import com.szadowsz.gospel.core.db.libraries.Library
 import com.szadowsz.gospel.core.db.theory.Theory
 
-abstract class TestAbstractLibrary(wam : PrologEngine) extends Library(wam) {
+abstract class TestAbstractLibrary(wam : Interpreter) extends Library(wam) {
 
   override def getName: String = "instatiationtest"
 

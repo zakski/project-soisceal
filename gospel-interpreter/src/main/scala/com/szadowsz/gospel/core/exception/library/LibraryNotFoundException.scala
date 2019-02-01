@@ -16,4 +16,9 @@
 package com.szadowsz.gospel.core.exception.library
 
 class LibraryNotFoundException(errorLib: String, cause: Throwable)
-  extends LibraryException(errorLib, s"Library $errorLib unable to be found", cause)
+  extends LibraryException(errorLib, s"Library $errorLib unable to be found", cause) {
+
+  def this(id : String) {
+    this(id,null)
+  }
+}

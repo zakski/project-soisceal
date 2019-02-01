@@ -13,22 +13,16 @@
   * License along with this library; if not, write to the Free Software
   * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
-package com.szadowsz.gospel.core.db.libraries
+package com.szadowsz.gospel.core.engine.context.goal
 
-import com.szadowsz.gospel.core.Interpreter
-import com.szadowsz.gospel.core.db.theory.Theory
-import org.springframework.core.io.Resource
+import com.szadowsz.gospel.core.engine.context.goal.tree.SubGoalBranch
 
-private[libraries] class ResourceLibrary(wam : Interpreter, private val res: Resource) extends Library(wam) {
-
-  private val name = Library.extractLibNameFromTheory(new Theory(res))
-
-  override def getName: String = name
-
-  override def getTheory: Option[Theory] = Some(new Theory(res))
-
-  /**
-    * gets the list of primitives defined in the library
-    */
-  override private[core] def getPrimitives = Map()
+/**
+  * Identifier for a single sub-Goal during the demonstration.
+  */
+private[core] case class SubGoalId(parent: SubGoalId, root: SubGoalBranch, index: Int){
+ 
+  override def toString: String = {
+    s"[index: $index value: ${if (root.size > index) root.getChild(index) else "At End"}]"
+  }
 }

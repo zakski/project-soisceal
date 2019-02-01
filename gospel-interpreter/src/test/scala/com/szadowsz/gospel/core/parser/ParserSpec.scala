@@ -88,7 +88,7 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
   it should "parse list with tail" in {
     val p = new Parser("[p|Y]")
     val result = new Struct(new Struct("p"), new Var("Y"))
-    result.resolveTerm()
+    result.resolveVars()
 
     p.nextTerm(false) shouldBe result
     p.lineNo shouldBe 1
@@ -132,7 +132,7 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
   it should "parse unary minus operators" in {
     val p = new Parser("n(-100).\n")
     val result = new Struct("n", Int(-100))
-    result.resolveTerm()
+    result.resolveVars()
 
     p.nextTerm(true) shouldBe result
     p.lineNo shouldBe 2
@@ -300,7 +300,7 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
         )
       )
     )
-    result.resolveTerm()
+    result.resolveVars()
     val p = new Parser(input)
 
     p.nextTerm(false) shouldBe result
@@ -632,7 +632,7 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
   it should "parse minimum long value successfully" in {
     val p = new Parser(s"n(${scala.Long.MinValue}).\n")
     val result = new Struct("n", Int(scala.Long.MinValue))
-    result.resolveTerm()
+    result.resolveVars()
 
     p.nextTerm(true) shouldBe result
   }
@@ -649,7 +649,7 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
     val binary = new BigInteger(scala.Long.MinValue.toString).toString(2).substring(1)
     val p = new Parser(s"n(-0b$binary).\n")
     val result = new Struct("n", Int(scala.Long.MinValue))
-    result.resolveTerm()
+    result.resolveVars()
 
     p.nextTerm(true) shouldBe result
   }
@@ -666,7 +666,7 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
     val octal = new BigInteger(scala.Long.MinValue.toString).toString(8).substring(1)
     val p = new Parser(s"n(-0o$octal).\n")
     val result = new Struct("n", Int(scala.Long.MinValue))
-    result.resolveTerm()
+    result.resolveVars()
 
     p.nextTerm(true) shouldBe result
   }
@@ -683,7 +683,7 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
     val hex = new BigInteger(scala.Long.MinValue.toString).toString(16).substring(1)
     val p = new Parser(s"n(-0x$hex).\n")
     val result = new Struct("n", Int(scala.Long.MinValue))
-    result.resolveTerm()
+    result.resolveVars()
 
     p.nextTerm(true) shouldBe result
   }
@@ -699,7 +699,7 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
   it should "parse maximum long value successfully" in {
     val p = new Parser(s"n(${scala.Long.MaxValue}).\n")
     val result = new Struct("n", Int(scala.Long.MaxValue))
-    result.resolveTerm()
+    result.resolveVars()
 
     p.nextTerm(true) shouldBe result
   }
@@ -715,7 +715,7 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
   it should "parse minimum double value successfully" in {
     val p = new Parser(s"n(${scala.Double.MinValue}).\n")
     val result = new Struct("n", Float(scala.Double.MinValue))
-    result.resolveTerm()
+    result.resolveVars()
 
     p.nextTerm(true) shouldBe result
   }
@@ -731,7 +731,7 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
   it should "parse maximum double value successfully" in {
     val p = new Parser(s"n(${scala.Double.MaxValue}).\n")
     val result = new Struct("n", Float(scala.Double.MaxValue))
-    result.resolveTerm()
+    result.resolveVars()
 
     p.nextTerm(true) shouldBe result
   }

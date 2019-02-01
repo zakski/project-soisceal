@@ -15,12 +15,12 @@
   */
 package com.szadowsz.gospel.core.db.libraries.inbuilt
 
-import com.szadowsz.gospel.core.PrologEngine
+import com.szadowsz.gospel.core.Interpreter
 import com.szadowsz.gospel.core.data.{Struct, Term}
 import com.szadowsz.gospel.core.db.libraries.{Library, directive}
-import com.szadowsz.gospel.core.exception.InvalidLibraryException
+import com.szadowsz.gospel.core.exception.library.InvalidLibraryException
 
-class BuiltIn(wam : PrologEngine) extends Library(wam) {
+class BuiltIn(wam : Interpreter) extends Library(wam) {
   // scalastyle:off method.name
 
   /**
@@ -41,5 +41,4 @@ class BuiltIn(wam : PrologEngine) extends Library(wam) {
       libManager.loadLibrary(s.getTerm(0).asInstanceOf[Struct].getName)
     case _ =>
   }
-  use_module_1 _
 }

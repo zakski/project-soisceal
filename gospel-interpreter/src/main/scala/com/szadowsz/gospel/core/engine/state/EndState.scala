@@ -13,22 +13,32 @@
   * License along with this library; if not, write to the Free Software
   * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
-package com.szadowsz.gospel.core.db.libraries
+package com.szadowsz.gospel.core.engine.state
 
-import com.szadowsz.gospel.core.Interpreter
-import com.szadowsz.gospel.core.db.theory.Theory
-import org.springframework.core.io.Resource
+import java.util
+import com.szadowsz.gospel.core.data.{Struct, Var}
+import com.szadowsz.gospel.core.engine.{Executor, Result}
 
-private[libraries] class ResourceLibrary(wam : Interpreter, private val res: Resource) extends Library(wam) {
+/**
+  * Final state of demonstration.
+  */
+final private[engine] case class EndState(endState: Result) extends State {
+  protected override val stateName: String = "End"
 
-  private val name = Library.extractLibNameFromTheory(new Theory(res))
+  private var goal: Struct = _
 
-  override def getName: String = name
+  private var vars: util.List[Var] = _
 
-  override def getTheory: Option[Theory] = Some(new Theory(res))
+  def getResultType: Result = endState
 
-  /**
-    * gets the list of primitives defined in the library
-    */
-  override private[core] def getPrimitives = Map()
+  def getResultGoal: Struct = goal
+
+  def getResultVars: util.List[Var] = vars
+
+  override def toString: String = endState.toString
+
+  def doJob(e: Executor): Unit = {
+    vars = new util.ArrayList[Var]
+    goal = e.startGoal.copyResult(e.goalVars, vars).asInstanceOf[Struct]
+  }
 }

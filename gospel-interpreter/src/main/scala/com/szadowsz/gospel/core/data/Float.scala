@@ -15,9 +15,34 @@
   */
 package com.szadowsz.gospel.core.data
 
-final case class Float(value : Double) extends Number {
+import java.util
 
+final case class Float(value: Double) extends Number {
+  
+  override def intValue: scala.Int = value.toInt
+  
+  override def floatValue: scala.Float = value.toFloat
+  
+  override def doubleValue: scala.Double = value
+  
+  override def longValue: scala.Long = value.toLong
+  
+  override def isInteger: Boolean = false
+  
+  override def isReal: Boolean = true
+  
   override def isEquals(other: Term): Boolean = other.isInstanceOf[Float] && other.asInstanceOf[Float].value == value
-
+  
+  /**
+    * Tries to unify a term with the provided term argument.
+    * This service is to be used in demonstration context.
+    */
+  override def unify(vl1: util.List[Var], vl2: util.List[Var], t: Term, isOccursCheckEnabled: Boolean): Boolean = {
+    t.getBinding match {
+      case v: Var => v.unify(vl2, vl1, this, isOccursCheckEnabled)
+      case term: Term => term.isInstanceOf[Number] && term.asInstanceOf[Number].isReal && value == term.asInstanceOf[Number].doubleValue
+    }
+  }
+  
   override def toString: String = value.toString
 }

@@ -15,7 +15,7 @@
   */
 package com.szadowsz.gospel.core.db.libraries.inbuilt
 
-import com.szadowsz.gospel.core.PrologEngine
+import com.szadowsz.gospel.core.Interpreter
 import com.szadowsz.gospel.core.db.primitives.PrimitiveType
 import org.junit.runner.RunWith
 import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
@@ -24,13 +24,13 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class BuiltInSpec extends FlatSpec with Matchers with BeforeAndAfter {
 
-  protected var wam : PrologEngine = _
+  protected var wam : Interpreter = _
   protected var builtIn : BuiltIn = _
 
   behavior of "Built-In Library"
 
   before {
-    wam = new PrologEngine
+    wam = new Interpreter
     builtIn = new BuiltIn(wam)
   }
 

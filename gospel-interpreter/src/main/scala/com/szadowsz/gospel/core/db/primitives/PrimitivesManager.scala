@@ -17,7 +17,7 @@ package com.szadowsz.gospel.core.db.primitives
 
 import java.lang.reflect.InvocationTargetException
 
-import com.szadowsz.gospel.core.PrologEngine
+import com.szadowsz.gospel.core.Interpreter
 import com.szadowsz.gospel.core.data.{Struct, Term}
 import com.szadowsz.gospel.core.db.libraries.Library
 
@@ -29,7 +29,7 @@ import scala.collection.concurrent
   *
   * Created on 16/02/2017.
   */
-class PrimitivesManager(wam : PrologEngine) extends Serializable {
+class PrimitivesManager(wam : Interpreter) extends Serializable {
   private val libs = mutable.HashMap[Library, List[Primitive]]()
   private val directives = concurrent.TrieMap[String,Primitive]()
   private val predicates = concurrent.TrieMap[String,Primitive]()
@@ -60,7 +60,14 @@ class PrimitivesManager(wam : PrologEngine) extends Serializable {
   }
 
 
-  def unbindLibrary(lib: Library) = ???
+  def unbindLibrary(lib: Library): Unit = {
+    synchronized {
+      libs.remove(lib).foreach(prims => prims.foreach { p =>
+        directives.remove(p.getKey).orElse(predicates.remove(p.getKey)).orElse(functors.remove(p.getKey))
+      })
+    }
+
+  }
 
 
   def bindLibrary(lib: Library):Unit = {
