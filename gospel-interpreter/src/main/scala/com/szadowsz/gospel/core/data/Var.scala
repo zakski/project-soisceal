@@ -315,4 +315,27 @@ class Var(val name: String, id: scala.Int, count: Long) extends Term {
     vl1.add(this)
     true
   }
+  
+  /**
+    * Gets the string representation of this variable.
+    * <p>
+    * For bounded variables, the string is <Var Name>/<bound Term>.
+    */
+  override def toString: String = {
+    binding match {
+      case Some(term) =>
+        // TODO is Cyclic
+        if (name != Var.ANY) {
+          completeName.toString() + " / " + term.toString
+        } else {
+          term.toString
+        }
+      case None =>
+        if (name != Var.ANY) {
+          completeName.toString()
+        } else {
+          Var.ANY + "" + this.fingerPrint
+        }
+    }
+  }
 }

@@ -18,11 +18,21 @@ package com.szadowsz.gospel.core.data
 import java.util
 
 import com.szadowsz.gospel.core.db.primitives.Primitive
+import com.szadowsz.gospel.core.exception.InvalidTermException
 import com.szadowsz.gospel.core.parser.Parser
 
 // scalastyle:off number.of.methods
-class Struct(val name: String, val arity: scala.Int, val args: List[Term] = Nil) extends Term {
+class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
   
+  private var name: String = Option(n).getOrElse(throw new InvalidTermException("The functor of a Struct cannot be null"))
+  
+  private var arity: scala.Int = if (name.length() == 0 && a > 0) {
+    throw new InvalidTermException("The functor of a non-atom Struct cannot be an empty string")
+  } else {
+    a
+  }
+  
+  private var args: List[Term] = validate(ags)
   /**
     * primitive java/scala behaviour
     */
@@ -113,11 +123,13 @@ class Struct(val name: String, val arity: scala.Int, val args: List[Term] = Nil)
   }
   
   def this(argList: Array[Term], index: scala.Int) {
-    this(if (index < argList.length) "." else "[]", if (index < argList.length) 2 else 0)
-    if (index < argList.length) {
-      //      arg(0) = argList(index)
-      //      arg(1) = new Struct(argList, index + 1)
-    } // else build an empty list
+    this(if (index < argList.length) "." else "[]", 
+      if (index < argList.length) 2 else 0, 
+      if (index < argList.length)
+        List(argList(index),new Struct(argList, index + 1))
+      else 
+        Nil
+    )
   }
   
   /**
@@ -128,6 +140,14 @@ class Struct(val name: String, val arity: scala.Int, val args: List[Term] = Nil)
   }
   
   def apply(index: scala.Int): Term = args(index)
+ 
+  def validate(args: List[Term]): List[Term] = {
+    if (!args.contains(null)){
+      args
+    } else {
+      throw new InvalidTermException(s"Arguments of a Struct $name cannot be null")
+    }
+  }
   
   /**
     * Resolves variables inside the term
@@ -137,6 +157,12 @@ class Struct(val name: String, val arity: scala.Int, val args: List[Term] = Nil)
   override def resolveVars(): Unit = {
     
   }
+  
+  override def isAtom: Boolean = arity == 0 || isEmptyList
+  
+  override def isAtomic: Boolean = arity == 0
+ 
+  override def isCompound: Boolean = arity > 0
   
   override def isClause: Boolean = {
     name == ":-" && arity > 1 && args.head.getBinding.isInstanceOf[Struct]
@@ -204,6 +230,78 @@ class Struct(val name: String, val arity: scala.Int, val args: List[Term] = Nil)
         res
       }
     }
+  }
+  
+  def getListIterator: Iterator[Term] = {
+    if (isList) {
+      new Iterator[Term] {
+        private var struct: Struct = Struct.this
+        
+        override def hasNext: Boolean = !struct.isEmptyList
+        
+        override def next(): Term = {
+          val res = struct(0)
+          struct = struct(1).asInstanceOf[Struct]
+          res
+        }
+      }
+    } else {
+      throw new UnsupportedOperationException(s"The structure $this is not a list.")
+    }
+  }
+  
+  def getListHead(): Term = {
+    if (isList) {
+      args.head
+    } else {
+      throw new UnsupportedOperationException(s"The structure $this is not a list.")
+    }
+  }
+  
+  def getListTail(): Struct = {
+    if (isEmptyList) {
+      this
+    } else if (isList) {
+      args(1).asInstanceOf[Struct]
+    } else {
+      throw new UnsupportedOperationException(s"The structure $this is not a list.")
+    }
+  }
+  
+  def getListSize(): scala.Int = {
+    if (isList) {
+      getListIterator.size
+    } else {
+      throw new UnsupportedOperationException(s"The structure $this is not a list.")
+    }
+  }
+  
+  /**
+    * Appends an element to this structure supposed to be a list
+    */
+  def append(t: Term): Unit = {
+    if (isList) {
+      if (isEmptyList) {
+        name = "."
+        arity = 2
+        args = List(t, new Struct)
+      } else {
+        args(1).asInstanceOf[Struct].append(t)
+      }
+    } else {
+      throw new UnsupportedOperationException(s"The structure $this is not a list.")
+    }
+  }
+  
+  /**
+    * Gets a list Struct representation, with the functor as first element.
+    */
+  def toStructList: Struct = {
+    var t = new Struct
+    for (c <- arity - 1 to 0 by -1) {
+      t = new Struct(args(c).getBinding, t)
+    }
+    new Struct(new Struct(name), t)
   }
   
   /**
@@ -303,7 +401,7 @@ class Struct(val name: String, val arity: scala.Int, val args: List[Term] = Nil)
     * @return Copy of Term
     */
   override def copy(vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
-    val t = new Struct(name, arity,args.map(arg => arg.copy(vMap,idExecCtx)))
+    val t = new Struct(name, arity, args.map(arg => arg.copy(vMap, idExecCtx)))
     t.resolved = resolved
     t.primitive = primitive
     t
@@ -313,7 +411,7 @@ class Struct(val name: String, val arity: scala.Int, val args: List[Term] = Nil)
     * gets a copy for result.
     */
   override private[data] def copy(vMap: util.AbstractMap[Var, Var], substMap: util.AbstractMap[Term, Var]) = {
-    val t = new Struct(name, arity,args.map(arg => arg.copy(vMap,substMap)))
+    val t = new Struct(name, arity, args.map(arg => arg.copy(vMap, substMap)))
     t.resolved = false
     t.primitive = null
     t
@@ -333,12 +431,21 @@ class Struct(val name: String, val arity: scala.Int, val args: List[Term] = Nil)
   override def unify(vl1: util.List[Var], vl2: util.List[Var], t: Term, isOccursCheckEnabled: Boolean): Boolean = {
     // During the unification phase it is necessary to note all the variables of the complete struct
     t.getBinding match {
-      case struct : Struct =>
-       arity == struct.arity && name.equals(struct.name) &&
-         getTermIterator.zipWithIndex.forall{case (arg,i) => arg.unify(vl1, vl2,struct.args(i),isOccursCheckEnabled)}
-      case v : Var =>
+      case struct: Struct =>
+        arity == struct.arity && name.equals(struct.name) &&
+          getTermIterator.zipWithIndex.forall { case (arg, i) => arg.unify(vl1, vl2, struct.args(i), isOccursCheckEnabled) }
+      case v: Var =>
         v.unify(vl2, vl1, this, isOccursCheckEnabled)
       case _ => false
+    }
+  }
+  
+  override def iteratedGoalTerm: Term = {
+    if (name == "^" && arity == 2) {
+      val goal = getTerm(1)
+      goal.iteratedGoalTerm
+    } else {
+      super.iteratedGoalTerm
     }
   }
 }

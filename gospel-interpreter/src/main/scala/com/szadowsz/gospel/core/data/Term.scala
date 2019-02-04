@@ -147,5 +147,15 @@ abstract class Term extends Serializable {
     * @return true if the term is unifiable with this one
     */
   def unify(varsUnifiedArg1: util.List[Var], varsUnifiedArg2: util.List[Var], t: Term, isOccursCheckEnabled: Boolean): Boolean
-  
+ 
+  /**
+    * The iterated-goal term G of a term T is a term defined
+    * recursively as follows:
+    * <ul>
+    * <li>if T unifies with ^(_, Goal) then G is the iterated-goal
+    * term of Goal</li>
+    * <li>else G is T</li>
+    * </ul>
+    **/
+  def iteratedGoalTerm: Term = this
 }
