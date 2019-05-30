@@ -49,6 +49,7 @@ object OperatorManager {
     Operator("<", OpType.XFX, 700),
     Operator("=<", OpType.XFX, 700),
     Operator(">=", OpType.XFX, 700),
+    Operator("as", OpType.YFX, 700),
     Operator("is", OpType.XFX, 700),
     Operator("=..", OpType.XFX, 700),
     Operator("+", OpType.YFX, 500),

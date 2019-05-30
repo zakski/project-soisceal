@@ -29,6 +29,11 @@ class Interpreter {
   protected lazy val libManager : LibraryManager = new LibraryManager(this)
 
   protected lazy val thManager : TheoryManager = new TheoryManager(this)
+  
+  def this(libs : Class[_ <: Library]*){
+    this()
+    libs.foreach(l => libManager.loadLibraryFromClass(l))
+  }
 
   private[core] def getPrimitiveManager : PrimitivesManager = primManager
 
@@ -37,9 +42,6 @@ class Interpreter {
   private[core] def getLibraryManager : LibraryManager = libManager
 
   private[core] def getOperatorManager : OperatorManager = opManager
-
-  def this(libs : Class[_ <: Library]*){
-    this()
-    libs.foreach(l => libManager.loadLibraryFromClass(l))
-  }
+  
+  
 }

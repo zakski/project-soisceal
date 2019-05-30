@@ -19,7 +19,7 @@ import java.lang.reflect.InvocationTargetException
 
 import com.szadowsz.gospel.core.Interpreter
 import com.szadowsz.gospel.core.data.{Struct, Term}
-import com.szadowsz.gospel.core.db.libraries.Library
+import com.szadowsz.gospel.core.db.libraries.{Library, LibraryPredicateFilter}
 
 import scala.collection.mutable
 import scala.collection.concurrent
@@ -69,15 +69,22 @@ class PrimitivesManager(wam : Interpreter) extends Serializable {
 
   }
 
+  
 
-  def bindLibrary(lib: Library):Unit = {
+  def bindLibrary(lib: Library, filter : LibraryPredicateFilter):Unit = {
     synchronized {
       val prims = lib.getPrimitives
       val primOfLib = prims.values.flatten.toList
+      val organise = (m : concurrent.TrieMap[String, Primitive], p : Primitive) => {
+        if (filter.retainPredicate(p.getKey)) {
+          m.put(filter.mapKey(p.getKey),p)
+        }
+      }
 
-      prims.get(PrimitiveType.DIRECTIVE).foreach(dirs => dirs.foreach(p => directives.put(p.getKey, p)))
-      prims.get(PrimitiveType.PREDICATE).foreach(preds => preds.foreach(p => predicates.put(p.getKey, p)))
-      prims.get(PrimitiveType.FUNCTOR).foreach(funs => funs.foreach(p => functors.put(p.getKey, p)))
+      prims.get(PrimitiveType.DIRECTIVE).foreach(dirs => dirs.foreach(p => organise(directives,p)))
+      prims.get(PrimitiveType.PREDICATE).foreach(preds => preds.foreach(p => organise(predicates,p)))
+      prims.get(PrimitiveType.FUNCTOR).foreach(funs => funs.foreach(p => organise(functors,p)))
+
       libs += (lib -> primOfLib)
     }
   }

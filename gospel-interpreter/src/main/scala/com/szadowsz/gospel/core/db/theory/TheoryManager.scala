@@ -19,6 +19,7 @@ import java.util
 
 import com.szadowsz.gospel.core.Interpreter
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
+import com.szadowsz.gospel.core.db.libraries.LibraryPredicateFilter
 import com.szadowsz.gospel.core.db.operators.OperatorManager
 import com.szadowsz.gospel.core.db.primitives.PrimitivesManager
 import com.szadowsz.gospel.core.db.theory.clause.{Clause, ClauseDB}
@@ -57,6 +58,10 @@ private[core] class TheoryManager(wam: Interpreter) {
 
   private var startGoalStack: util.Stack[Term] = _
 
+  private[db] def staticDBSize : Long = staticDB.toList.length
+  
+  private[db] def dynamicDBSize : Long = dynamicDB.toList.length
+  
   /**
     * Gets a clause from a generic Term
     *
@@ -147,7 +152,12 @@ private[core] class TheoryManager(wam: Interpreter) {
     * @param isDynamic if it is true, then the clauses are marked as dynamic
     * @param libName   if it not null, then the clauses are marked to belong to the specified library
     */
-  def consult(theory: Theory, isDynamic: Boolean = true, libName: Option[String] = None): Unit = {
+  def consult(theory: Theory,
+              isDynamic: Boolean = true,
+              filter : LibraryPredicateFilter = new LibraryPredicateFilter(new Struct()),
+              libName: Option[String] = None
+             ): Unit = {
+    
     synchronized {
       startGoalStack = new util.Stack[Term]
       var clause: scala.Int = 0
@@ -159,7 +169,9 @@ private[core] class TheoryManager(wam: Interpreter) {
           clause += 1
           val d: Struct = t.asInstanceOf[Struct]
           if (!runDirective(d)) {
-            assertZ(d, isDynamic, libName, true)
+            if (filter.retainPredicate(d.getPredicateIndicator)) {
+              assertZ(filter.mapStruct(d), isDynamic, libName, true)
+            }
           }
         }
       } catch {

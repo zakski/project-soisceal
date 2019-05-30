@@ -18,6 +18,7 @@ package com.szadowsz.gospel.core.db.libraries
 import java.util.concurrent.ConcurrentHashMap
 
 import com.szadowsz.gospel.core.Interpreter
+import com.szadowsz.gospel.core.data.Struct
 import com.szadowsz.gospel.core.db.primitives.PrimitivesManager
 import com.szadowsz.gospel.core.db.theory.TheoryManager
 import com.szadowsz.gospel.core.exception.library.{InvalidLibraryException, LibraryInstantiationException, LibraryNotFoundException}
@@ -32,7 +33,7 @@ import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
 
 private[core] class LibraryManager(private val wam: Interpreter) {
-
+  
   private val logger: Logger = LoggerFactory.getLogger(classOf[LibraryManager])
 
   private lazy implicit val primManager: PrimitivesManager = wam.getPrimitiveManager
@@ -62,18 +63,20 @@ private[core] class LibraryManager(private val wam: Interpreter) {
   /**
     * Binds a library by adding its clauses to the database and carrying out tis directives.
     *
-    * @param lib is library object
+    * @param lib the library object
+    * @param importList the list of predicates to be included or excluded
     * @return the reference to the Library just loaded
     * @throws InvalidLibraryException if the Library instance is incorrectly configured and cannot be bound.
     */
   @throws(classOf[InvalidLibraryException])
-  private def bindLibrary(lib: Library): Unit = {
+  private def bindLibrary(lib: Library, importList : Struct): Unit = {
     try {
       libs += lib.getName -> lib
-      primManager.bindLibrary(lib)
+      val filter = new LibraryPredicateFilter(importList)
+      primManager.bindLibrary(lib, filter)
       lib.getTheory match {
         case Some(th) =>
-          thManager.consult(th, false, Some(lib.getName))
+          thManager.consult(th, false, filter, Some(lib.getName))
           thManager.validateStack()
         case None =>
           logger.debug("No Theory Object Detected for {} Library.", lib.getName)
@@ -93,21 +96,39 @@ private[core] class LibraryManager(private val wam: Interpreter) {
     * If a library of the same class is already present, a warning event is notified. Then, the current instance of that
     * library is discarded, and the new instance gets loaded.
     *
-    * @param lib the (Java class) name of the library to be loaded
+    * @param lib the Java object of the library to be loaded
     * @throws InvalidLibraryException if we cannot bind the library to the engine.
     * @return the library object now loaded in the interpreter
     */
   @throws(classOf[InvalidLibraryException])
   private def loadLibrary(lib: Library): Library = {
+    loadLibrary(lib,new Struct)
+  }
+  
+  /**
+    * Loads a specific instance of a Library Class.
+    *
+    * If a library of the same class is already present, a warning event is notified. Then, the current instance of that
+    * library is discarded, and the new instance gets loaded.
+    *
+    * Allows for a whitelist/blacklist of predicates to be included
+    *
+    * @param lib the Java object of the library to be loaded
+    * @param importList the list of predicates to be included or excluded
+    * @throws InvalidLibraryException if we cannot bind the library to the engine.
+    * @return the library object now loaded in the interpreter
+    */
+  @throws(classOf[InvalidLibraryException])
+  private def loadLibrary(lib: Library, importList : Struct): Library = {
     libs.get(lib.getName) match {
       case Some(oldLib) =>
         logger.warn("{} Library already loaded.", oldLib.getName)
         unloadLibrary(oldLib.getName)
         logger.warn("Old Instance of {} Library removed.", lib.getName)
-
+      
       case None => // nop
     }
-    bindLibrary(lib)
+    bindLibrary(lib,importList)
     logger.info("Loaded Library {}", lib)
     lib
   }
@@ -184,7 +205,7 @@ private[core] class LibraryManager(private val wam: Interpreter) {
     * 2. Attempts to find a file/classpath resource that matches the identifier name / pattern
     * 3. Attempts to find a valid library class name based on it's simplified
     *
-    * @param identifier the name / matching pattern of the library to be loaded.
+    * @param clazz the Java class that defines the library to be loaded.
     * @throws InvalidLibraryException if we cannot find and create a valid library.
     * @return the library object now loaded in the interpreter
     */
@@ -226,6 +247,39 @@ private[core] class LibraryManager(private val wam: Interpreter) {
 
     try {
       loadLibrary(lib.get)
+    } catch {
+      case ile: InvalidLibraryException => throw ile
+      case NonFatal(nf) => throw new InvalidLibraryException(nf, identifier, "Failed to Load Library")
+    }
+  }
+  
+  /**
+    * Method to load a library/module into the Prolog Engine.
+    *
+    * This method attempts to find and instantiate the library based on the identifier from several locations in the
+    * following order:
+    *
+    * 1. Attempts to match the identifier to a valid library class name
+    * 2. Attempts to find a file/classpath resource that matches the identifier name / pattern
+    * 3. Attempts to find a valid library class name based on it's simplified
+    *
+    * After that it will attempt to load the library into the db.
+    *
+    * @param identifier the name / matching pattern of the library to be loaded.
+    * @throws InvalidLibraryException if we cannot find and create a valid library.
+    * @return the library object now loaded in the interpreter
+    */
+  def loadLibrary(identifier: String, importList: Struct): Unit = {
+    def recovery( f: () => Library) : PartialFunction[Throwable, Try[Library]]  = {
+      case x : LibraryNotFoundException => Try(f())
+    }
+  
+    val lib = Try(instantiateLibraryFromClassName(identifier))
+      .recoverWith(recovery(() => instantiateLibraryFromResource(identifier)))
+      .recoverWith(recovery(() => instantiateLibraryUsingReflection(identifier)))
+  
+    try {
+      loadLibrary(lib.get, importList)
     } catch {
       case ile: InvalidLibraryException => throw ile
       case NonFatal(nf) => throw new InvalidLibraryException(nf, identifier, "Failed to Load Library")

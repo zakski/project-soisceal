@@ -116,7 +116,17 @@ class LibraryManagerSpec extends FunSpec with Matchers with BeforeAndAfter {
       cause shouldBe a[LibraryInstantiationException]
       cause.getMessage shouldBe "Library TestNoArgConstructorLibrary does not have a valid constructor"
     }
-
+    
+    it("should throw an LibraryInstantiationException if the Library file has no name") {
+      val exception = intercept[InvalidLibraryException] {
+        libManager.loadLibrary("noModuleName.pl")
+      }
+    
+      val cause = exception.getCause
+      cause shouldBe a[LibraryInstantiationException]
+      cause.getMessage shouldBe "Cannot find library name defined in Theory"
+    }
+    
     it("should throw an LibraryInstantiationException if the Class is not accessible") {
       pendingUntilFixed {
         val exception = intercept[InvalidLibraryException] {
