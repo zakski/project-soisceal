@@ -15,12 +15,61 @@
   */
 package com.szadowsz.gospel.core.engine.state
 
-import com.szadowsz.gospel.core.engine.Executor
+import com.szadowsz.gospel.core.data.{Struct, Term}
+import com.szadowsz.gospel.core.engine.{Executor, Result}
 
 class GoalSelectionState extends State {
  
   
   override protected val stateName: String = "Call"
   
-  override def doJob(e: Executor): Unit = ???
+  /**
+    * Selects a goal for the supplied executor to prepare to resolve
+    * @param e the supplied Executor
+    */
+  override def doJob(e: Executor): Unit = {
+    var curGoal: Option[Term] = None
+    var continue = true
+    while (continue && curGoal.isEmpty) {
+      curGoal = e.currentContext.goalsToEval.fetch()
+      curGoal match {
+        case None =>
+          // Terminate The Demonstration if we can no longer backtrack
+          if (e.currentContext.parent.isEmpty) {
+  
+            // Determine Endstate based on existence of further ChoicePoints
+            e.nextState = if (e.choicePointSelector.findValidChoice.isDefined) {
+              EndState(Result.TRUE_CP)
+            } else {
+              EndState(Result.TRUE)
+            }
+            continue = false
+          } else {
+            e.currentContext = e.currentContext.parent.get // Return to the parent context
+          }
+        case Some(goal) => // Goal Identification Case
+          val goalToProcess: Term = goal.getBinding
+          goalToProcess match {
+            case struct: Struct =>
+  
+              /**
+                * Code inserted to allow evaluation of meta-clause such as p(X) :- X. When evaluating directly terms,
+                * they are converted to execution of a call/1 predicate.
+                *
+                * This enables the dynamic linking of built-ins for terms coming from outside the demonstration context.
+                */
+              if (goal ne goalToProcess) {
+                e.currentContext.currentGoal = Some(new Struct("call", goalToProcess))
+              } else {
+                e.currentContext.currentGoal = Some(struct)
+              }
+              e.nextState = new GoalEvaluationState
+              continue = false
+            case _ =>
+              e.nextState = EndState(Result.FALSE)
+              continue = false
+          }
+      }
+    }
+  }
 }

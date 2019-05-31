@@ -36,7 +36,7 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
   /**
     * primitive java/scala behaviour
     */
-  private var primitive: Primitive = _
+  private var primitive: Option[Primitive] = None
   
   /**
     * it indicates if the struct has it's vars resolved
@@ -170,10 +170,6 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
   
   override def isEmptyList: Boolean = name == "[]" && arity == 0
   
-  override def isGround: Boolean = args.forall(_.isGround)
-  
-  override def isList: Boolean = (name == "." && arity == 2 && args(1).isList) || isEmptyList
-  
   override def isEquals(other: Term): Boolean = {
     other match {
       case s: Struct =>
@@ -181,6 +177,12 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
       case _ => false
     }
   }
+  
+  override def isGround: Boolean = args.forall(_.isGround)
+  
+  override def isList: Boolean = (name == "." && arity == 2 && args(1).isList) || isEmptyList
+  
+  def isPrimitive: Boolean = primitive.isDefined
   
   /**
     * Gets the functor name of this structure
@@ -240,9 +242,13 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
         override def hasNext: Boolean = !struct.isEmptyList
         
         override def next(): Term = {
-          val res = struct(0)
-          struct = struct(1).asInstanceOf[Struct]
-          res
+          if (hasNext) {
+            val res = struct(0)
+            struct = struct(1).asInstanceOf[Struct]
+            res
+          } else {
+            throw new NoSuchElementException
+          }
         }
       }
     } else {
@@ -311,12 +317,16 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
     */
   def getPredicateIndicator: String = s"$name/$arity"
   
-  private[core] def getPrimitive: Option[Primitive] = Option(primitive)
+  private[core] def getPrimitive: Option[Primitive] = primitive
   
   def setPrimitive(primitive: Option[Primitive]): Unit = {
+    this.primitive = primitive
+  }
+  
+  def evalAsPredicate (): Boolean ={
     primitive match {
-      case None =>
-      case Some(p) => this.primitive = p
+      case Some(p) => p.evalAsPredicate(this)
+      case None => false
     }
   }
   
@@ -413,7 +423,7 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
   override private[data] def copy(vMap: util.AbstractMap[Var, Var], substMap: util.AbstractMap[Term, Var]) = {
     val t = new Struct(name, arity, args.map(arg => arg.copy(vMap, substMap)))
     t.resolved = false
-    t.primitive = null
+    t.primitive = None
     t
   }
   

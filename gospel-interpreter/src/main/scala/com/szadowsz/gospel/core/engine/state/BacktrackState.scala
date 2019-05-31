@@ -13,17 +13,14 @@
   * License along with this library; if not, write to the Free Software
   * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
-package com.szadowsz.gospel.core.engine.context
+package com.szadowsz.gospel.core.engine.state
+import com.szadowsz.gospel.core.engine.Executor
 
-import com.szadowsz.gospel.core.data.Struct
-import com.szadowsz.gospel.core.engine.context.goal.SubGoalStore
-
-private[engine] final case class ExecutionContext(id: scala.Int, clause : Struct) {
+class BacktrackState extends State {
+  /**
+    * the name of the engine state.
+    */
+  override protected val stateName: String = "Back"
   
-  var parent: Option[ExecutionContext] = None
-  var depth: scala.Int = 0
-  var haveAlternatives: Boolean = false
-  var goalsToEval : SubGoalStore = new SubGoalStore()
-  var currentGoal: Option[Struct] = None
-  
+  override def doJob(e: Executor): Unit = ???
 }

@@ -17,14 +17,18 @@ package com.szadowsz.gospel.core.engine
 
 import java.util
 
+import com.szadowsz.gospel.core.Interpreter
 import com.szadowsz.gospel.core.data.{Struct, Var}
 import com.szadowsz.gospel.core.engine.context.{ChoicePointContext, ChoicePointStore, ExecutionContext}
 import com.szadowsz.gospel.core.engine.state.{EndState, InitState, State}
+import org.slf4j.{Logger, LoggerFactory}
 
 /**
   * Prolog Interpreter Executor.
   */
 private[engine] class Executor(val query : Struct) {
+  
+  private val logger : Logger = LoggerFactory.getLogger(classOf[Executor])
   
   var startGoal: Struct = _
  
@@ -89,5 +93,9 @@ private[engine] class Executor(val query : Struct) {
     } while (!nextState.isInstanceOf[EndState])
     nextState.doJob(this)
     nextState.asInstanceOf[EndState]
+  }
+  
+  def logException(exception: Exception): Unit ={
+    logger.error("Exception Thrown During Resolution of Goal " + startGoal,exception)
   }
 }

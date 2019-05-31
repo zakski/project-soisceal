@@ -13,17 +13,22 @@
   * License along with this library; if not, write to the Free Software
   * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
-package com.szadowsz.gospel.core.engine.context
+package com.szadowsz.gospel.core
 
-import com.szadowsz.gospel.core.data.Struct
-import com.szadowsz.gospel.core.engine.context.goal.SubGoalStore
+import org.scalatest.{BeforeAndAfterEach, Matchers, Suite}
 
-private[engine] final case class ExecutionContext(id: scala.Int, clause : Struct) {
+/**
+  * Created on 16/02/2017.
+  */
+trait BaseEngineSpec extends Matchers with BeforeAndAfterEach {
+  this: Suite =>
+
+  protected var prolog : Interpreter = _
+
+  protected def init(): Interpreter
   
-  var parent: Option[ExecutionContext] = None
-  var depth: scala.Int = 0
-  var haveAlternatives: Boolean = false
-  var goalsToEval : SubGoalStore = new SubGoalStore()
-  var currentGoal: Option[Struct] = None
   
+  override def beforeEach(): Unit = {
+    prolog = init()
+  }
 }

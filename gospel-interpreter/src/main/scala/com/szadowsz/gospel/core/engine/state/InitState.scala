@@ -27,7 +27,7 @@ private[engine] final class InitState extends State {
   override protected val stateName = "Goal"
   
   /**
-    * Initialises the supplied executor to prepare it for the demo
+    * Initialises the supplied executor to prepare it for the demonstration
     * @param e the supplied Executor
     */
   override def doJob(e: Executor): Unit = {

@@ -15,16 +15,30 @@
   */
 package com.szadowsz.gospel.core.engine
 
-import com.szadowsz.gospel.core.data.{Struct, Var}
-import com.szadowsz.gospel.core.engine.state.{GoalSelectionState, InitState}
+import com.szadowsz.gospel.core.data.{Int, Struct, Var}
+import com.szadowsz.gospel.core.engine.state.{GoalEvaluationState, GoalSelectionState, InitState}
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
+import org.scalatest.OptionValues._
 
+@RunWith(classOf[JUnitRunner])
 class ExecutorSpec extends FlatSpec with Matchers with BeforeAndAfter {
   
   behavior of "Executor"
   
   it should "initialise correctly for a simple query" in {
-    val query = new Struct("test", new Var("A"), new Var("B"))
+    val query = new Struct("is", new Var("A"), Int(0))
+    val exec = new Executor(query)
+    
+    exec.startGoal shouldBe null
+    exec.currentContext shouldBe null
+    exec.goalVars shouldBe empty
+    exec.nextState shouldBe a [InitState]
+   }
+  
+  it should "transition from InitState to GoalSelectionState correctly for a simple query" in {
+    val query = new Struct("is", new Var("A"), Int(0))
     val exec = new Executor(query)
     
     exec.startGoal shouldBe null
@@ -33,11 +47,25 @@ class ExecutorSpec extends FlatSpec with Matchers with BeforeAndAfter {
     exec.nextState shouldBe a [InitState]
     
     exec.nextState.doJob(exec)
-  
+    
     exec.startGoal shouldBe query
     exec.currentContext.id shouldBe 0
-    exec.goalVars should have size 2
+    exec.goalVars should have size 1
+    exec.nextState shouldBe a [GoalSelectionState]
+  }
+  
+  it should "transition from GoalSelectionState to GoalEvaluationState correctly for a simple query" in {
+    val query = new Struct("is", new Var("A"), Int(0))
+    val exec = new Executor(query)
+  
+    exec.nextState.doJob(exec)
+    
+    exec.currentContext.currentGoal shouldBe empty
     exec.nextState shouldBe a [GoalSelectionState]
   
+    exec.nextState.doJob(exec)
+    
+    exec.currentContext.currentGoal.value shouldBe query
+    exec.nextState shouldBe a [GoalEvaluationState]
   }
 }

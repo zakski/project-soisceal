@@ -37,7 +37,7 @@ object Var {
   
 }
 
-class Var(val name: String, id: scala.Int, count: Long) extends Term {
+class Var(private val name: String, id: scala.Int, count: Long) extends Term {
   
   //fingerPrint is a unique id (per run) used for var comparison
   private var fingerPrint = Var.getFingerprint
@@ -82,6 +82,10 @@ class Var(val name: String, id: scala.Int, count: Long) extends Term {
   
   def isAnonymous: Boolean = name == Var.ANY
   
+  def isBindingAnonymous : Boolean = binding.exists(!_.isInstanceOf[Var] || !binding.asInstanceOf[Var].isAnonymous)
+  
+  def isBound : Boolean = binding.isDefined
+  
   override def isCompound: Boolean = binding.exists(_.isCompound)
   
   override def isEmptyList: Boolean = binding.exists(_.isEmptyList)
@@ -107,12 +111,20 @@ class Var(val name: String, id: scala.Int, count: Long) extends Term {
   
   override def getBinding: Term = binding.getOrElse(this)
   
+  def getBindingAsVar : Var = binding.filter(_.isInstanceOf[Var]).map(_.asInstanceOf[Var]).getOrElse(this)
+  
+  def getBindingAsStruct : Struct = binding.filter(_.isInstanceOf[Struct]).map(_.asInstanceOf[Struct]).orNull
+ 
+  def getBindingAsNumber : Number = binding.filter(_.isInstanceOf[Number]).map(_.asInstanceOf[Number]).orNull
+  
   /**
     * Get the term bound directly to the Var.
     *
     * @return the direct term, or null if unbound.
     */
   def getDirectBinding: Term = binding.orNull
+  
+  def getName : String = name
   
   def setBinding(t: Term): Unit = {
     binding = Option(t)
