@@ -13,30 +13,16 @@
   * License along with this library; if not, write to the Free Software
   * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
-package com.szadowsz.gospel.core.engine.state
+package com.szadowsz.gospel.core
 
-import com.szadowsz.gospel.core.Interpreter
-import com.szadowsz.gospel.core.engine.Executor
-import org.slf4j.{Logger, LoggerFactory}
+import com.szadowsz.gospel.core.data.Term
 
-/**
-  * Template for states of Core Engine. Not for consumption outside of the core engine package.
-  *
-  */
-private[engine] trait State {
+object PrologConverters {
+  
+  implicit class StringConverter(stringTerm : String) {
 
-  /**
-    * Use one logger category for all states.
-    */
-  protected lazy val logger : Logger = LoggerFactory.getLogger(classOf[State])
-
- /**
-    * the name of the engine state.
-    */
-  protected val stateName: String
-
-
-  def doJob(implicit e: Executor) : Unit
-
-  override def toString: String = stateName
+    def asPrologTerm(implicit wam : Interpreter): Term = {
+      wam.createTerm(stringTerm)
+    }
+  }
 }

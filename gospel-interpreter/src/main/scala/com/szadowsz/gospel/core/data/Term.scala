@@ -16,6 +16,9 @@
 package com.szadowsz.gospel.core.data
 
 import java.util
+
+import com.szadowsz.gospel.core.engine.Executor
+
 import scala.collection.JavaConverters._
 
 
@@ -147,7 +150,48 @@ abstract class Term extends Serializable {
     * @return true if the term is unifiable with this one
     */
   def unify(varsUnifiedArg1: util.List[Var], varsUnifiedArg2: util.List[Var], t: Term, isOccursCheckEnabled: Boolean): Boolean
- 
+  
+  /**
+    * Try to unify two terms
+    *
+    * @param t1       the term to unify
+    * @return true if the term is unifiable with this one
+    */
+  private[core] def unify(t1: Term)(implicit e : Executor): Boolean = {
+    resolveVars()
+    t1.resolveVars()
+    val v1 = new util.LinkedList[Var]
+    val v2 = new util.LinkedList[Var]
+    val ok = unify(v1, v2, t1, e.isOccursCheckEnabled())
+    if (ok) {
+      val ec = e.currentContext
+      if (ec != null) {
+        var id = /*if (engine.getEnv == null) Var.PROGRESSIVE else */ e.nDemoSteps
+        // Update trailingVars
+        ec.trailingVars = v1 +: ec.trailingVars
+      
+        // Renaming after unify because its utility regards not the engine but the user
+        var count = 0
+        for (v <- v1.asScala) {
+          v.rename(id, count)
+          if (id >= 0) id += 1
+          else count += 1
+        }
+        for (v <- v2.asScala) {
+          v.rename(id, count)
+          if (id >= 0) id += 1
+          else count += 1
+        }
+      }
+      true
+    } else {
+      v1.forEach(_.freeVars())
+      v2.forEach(_.freeVars())
+      false
+    }
+  }
+  
+  
   /**
     * The iterated-goal term G of a term T is a term defined
     * recursively as follows:

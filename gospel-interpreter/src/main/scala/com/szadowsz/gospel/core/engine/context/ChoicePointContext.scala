@@ -27,10 +27,10 @@ case class ChoicePointContext(
                                compatibleGoals : ClauseStore,
                                execContext : ExecutionContext,
                                indexSubGoal : SubGoalId,
-                               varsToDeunify : ListBuffer[List[Var]]
+                               varsToDeunify : List[util.List[Var]]
                              ) {
   
-  var prevContext : ChoicePointContext = _
+  var prevContext : Option[ChoicePointContext] = None
   
   override def toString: String = {
     //"varsToDeunify: "+getVarsToDeunify()+"\n"+
@@ -41,7 +41,7 @@ case class ChoicePointContext(
   
   def getVarsToDeunify: util.List[util.List[Var]] = {
     val l = new util.ArrayList[util.List[Var]]
-    varsToDeunify.foreach(h => l.add(h.asJava))
+    varsToDeunify.foreach(h => l.add(h))
     l
   }
 }

@@ -20,7 +20,9 @@ import java.util
 import com.szadowsz.gospel.core.data.{Term, Var}
 import com.szadowsz.gospel.core.db.theory.clause.Clause
 
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import scala.collection.JavaConverters._
+import scala.collection.mutable
 
 
 /**
@@ -29,9 +31,14 @@ import scala.collection.mutable.ListBuffer
 class ClauseStore(goalTerm: Term, varList: util.List[Var]) {
   private val goal: Term = goalTerm
   private val vars: util.List[Var] = varList
-  private var clauses: ListBuffer[Clause] = ListBuffer()
+  private var clauses: mutable.Buffer[Clause] = ArrayBuffer()
   private var haveAlternatives: Boolean = false
-
+  
+  def this(goal: Term, vars: util.List[Var], familyClauses: List[Clause]) = {
+    this(goal, vars)
+    clauses = familyClauses.toBuffer
+  }
+  
   /**
     * Returns the clause to load
     */
@@ -83,7 +90,7 @@ class ClauseStore(goalTerm: Term, varList: util.List[Var]) {
       var result = false
       do {
         val clause = clauses.head
-        if (goal.isUnifiable(clause.getHead)) {
+        if (goal.isUnifiable(clause.head)) {
           result = true
         } else {
           clauses = clauses.tail

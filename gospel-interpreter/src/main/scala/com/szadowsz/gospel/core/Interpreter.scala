@@ -20,7 +20,8 @@ import com.szadowsz.gospel.core.db.libraries.{Library, LibraryManager}
 import com.szadowsz.gospel.core.db.operators.OperatorManager
 import com.szadowsz.gospel.core.db.primitives.PrimitivesManager
 import com.szadowsz.gospel.core.db.theory.TheoryManager
-import com.szadowsz.gospel.core.exception.InvalidTermException
+import com.szadowsz.gospel.core.engine.flags.FlagManager
+import com.szadowsz.gospel.core.exception.library.InvalidLibraryException
 import com.szadowsz.gospel.core.parser.Parser
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -29,7 +30,9 @@ class Interpreter {
   protected val logger : Logger = LoggerFactory.getLogger(classOf[Interpreter])
 
   protected implicit lazy val opManager : OperatorManager = new OperatorManager
-
+  
+  protected lazy val flagManager = new FlagManager()
+  
   protected lazy val primManager : PrimitivesManager = new PrimitivesManager(this)
 
   protected lazy val libManager : LibraryManager = new LibraryManager(this)
@@ -42,6 +45,8 @@ class Interpreter {
   }
 
   private[core] def getPrimitiveManager : PrimitivesManager = primManager
+ 
+  private[core] def getFlagManager : FlagManager = flagManager
 
   private[core] def getTheoryManager : TheoryManager = thManager
 
@@ -49,7 +54,23 @@ class Interpreter {
 
   private[core] def getOperatorManager : OperatorManager = opManager
   
-//  /**
+  /**
+    * Loads a library.
+    *
+    * If a library with the same name is already present, a warning event is notified and the request is ignored.
+    *
+    * @param identifier the name / matching pattern of the library to be loaded.
+    * @throws InvalidLibraryException if we cannot create a valid library.
+    * @return the reference to the Library just loaded.
+    */
+  @throws(classOf[InvalidLibraryException])
+  def loadLibrary(identifier: String): Library = {
+    libManager.loadLibrary(identifier)
+  }
+  
+  private[core] def createTerm(st: String): Term = new Parser(st).nextTerm(false)
+  
+  //  /**
 //    * Solves a query
 //    *
 //    * @param st the string representing the goal to be demonstrated

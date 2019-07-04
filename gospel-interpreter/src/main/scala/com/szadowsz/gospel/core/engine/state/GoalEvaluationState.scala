@@ -17,7 +17,9 @@ package com.szadowsz.gospel.core.engine.state
 
 import com.szadowsz.gospel.core.data.Struct
 import com.szadowsz.gospel.core.engine.Executor
-import com.szadowsz.gospel.core.exception.{InterpreterError, JvmException}
+
+import scala.util.control.NonFatal
+import com.szadowsz.gospel.core.exception._
 
 class GoalEvaluationState extends State {
   /**
@@ -27,28 +29,29 @@ class GoalEvaluationState extends State {
   
   /**
     * Evaluates whether the current goal is able to be resolved as a primitive or as a prolog rule
+    *
     * @param e the supplied Executor
     */
-  override def doJob(e: Executor): Unit = {
+  override def doJob(implicit e: Executor): Unit = {
     val curGoal = e.currentContext.currentGoal.get
     if (curGoal.isPrimitive) { // Execute JVM-Backed Predicate
-      try {
-        e.nextState = if (curGoal.evalAsPredicate()) {
+      e.nextState = try {
+        if (curGoal.evalAsPredicate()) {
           new GoalSelectionState
         } else {
           new BacktrackState
         }
       } catch {
-        case error: InterpreterError =>
+        case internal: InterpreterError =>
           // Replace the goal in which the error occurred with subgoal throw/1
-          e.currentContext.currentGoal = new Struct("throw", error.getError)
-          e.logException(error)
-          e.nextState = new ExceptionState
-        case exception: JvmException =>
+          e.currentContext.currentGoal = Option(new Struct("throw", internal.getError))
+          e.logException(internal)
+          new ExceptionState
+        case NonFatal(exception) =>
           // Replace the goal in which the error occurred with subgoal java_throw/1
-          e.currentContext.currentGoal = Some(new Struct("java_throw", exception.getException))
+          e.currentContext.currentGoal = Some(new Struct("java_throw", exception.getExceptionStruct))
           e.logException(exception)
-          e.nextState = new ExceptionState
+          new ExceptionState
       }
       e.nDemoSteps += 1 // Increment the demonstration steps counter
     } else {

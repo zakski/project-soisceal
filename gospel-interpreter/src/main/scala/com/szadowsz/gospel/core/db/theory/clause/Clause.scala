@@ -15,8 +15,12 @@
   */
 package com.szadowsz.gospel.core.db.theory.clause
 
-import com.szadowsz.gospel.core.data.{Struct, Term}
-import com.szadowsz.gospel.core.engine.context.goal.tree.SubGoalBranch
+import java.util
+
+import com.szadowsz.gospel.core.data.{Struct, Term, Var}
+import com.szadowsz.gospel.core.engine.context.goal.tree.{SubGoalBranch, SubGoalLeaf}
+
+import scala.collection.JavaConverters._
 
 object Clause {
   
@@ -77,15 +81,29 @@ object Clause {
   * @param head
   * @param libName
   */
-private[core] class Clause protected(clause: Struct, head: Struct, /* TODO body: SubGoalTree,*/ libName: Option[String]) {
+private[core] case class Clause protected(clause: Struct, head: Struct, body: SubGoalBranch, libName: Option[String]) {
 
   def this(clause: Struct, lib: Option[String]) {
-    this(clause, Clause.extractHead(clause),  /* TODO ClauseInfo.extractBody(clause.getArg(1)),*/ lib)
+    this(clause, Clause.extractHead(clause),  Clause.extractBody(clause(1)), lib)
   }
 
-  def getHead: Struct = head
-
-  def getClause: Struct = clause
-
-  def getLib : Option[String] = libName
+ def getLib : Option[String] = libName
+  
+  private[gospel] def performCopy(ExecCtx: Int) = {
+    val vars = new util.IdentityHashMap[Var, Var]
+    copy(clause, head.copy(vars, ExecCtx).asInstanceOf[Struct], bodyCopy(body, new SubGoalBranch, vars, ExecCtx),libName)
+  }
+  
+  private def bodyCopy(source: SubGoalBranch, dest: SubGoalBranch,vars: util.AbstractMap[Var, Var], id: Int): SubGoalBranch = {
+    for (node <- source.iterator.asScala){
+      if (node.isLeaf) {
+        val leaf = node.asInstanceOf[SubGoalLeaf]
+        val leafTerm: Term = leaf.term.copy(vars, id)
+        dest.addLeaf(leafTerm)
+      } else {
+        bodyCopy(node.asInstanceOf[SubGoalBranch], dest.addBranch(), vars, id)
+      }
+    }
+    dest
+  }
 }

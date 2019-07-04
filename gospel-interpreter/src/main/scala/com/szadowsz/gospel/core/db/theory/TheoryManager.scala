@@ -104,7 +104,7 @@ private[core] class TheoryManager(wam: Interpreter) {
   def unloadLibrary(name: String): Unit =   {
     synchronized {
      staticDB.foreach { clause =>
-       clause.getLib match {
+       clause.libName match {
          case Some(libName) if libName == name =>
            try {
              staticDB.remove(clause)
@@ -194,7 +194,7 @@ private[core] class TheoryManager(wam: Interpreter) {
     synchronized {
       val d: Clause = new Clause(toClause(clause), libName)
 
-      val key: String = d.getHead.getPredicateIndicator
+      val key: String = d.head.getPredicateIndicator
       if (isDynamic) {
         dynamicDB :+= (key, d)
         if (staticDB.contains(key)) {
@@ -203,7 +203,7 @@ private[core] class TheoryManager(wam: Interpreter) {
       } else {
       staticDB :+= (key -> d)
       }
-      logger.info("INSERTZ: {}", d.getClause)
+      logger.info("INSERTZ: {}", d.clause)
     }
   }
 
@@ -232,5 +232,15 @@ private[core] class TheoryManager(wam: Interpreter) {
       }
       true
     }
+  }
+  
+  /**
+    * Checks the Theory DBs to see if we have any knowledge of a given predicate
+    *
+    * @param predicateIndicator the predicate identifier
+    * @return true if found, false otherwise
+    */
+  def checkExistence(predicateIndicator: String): Boolean = {
+    dynamicDB.contains(predicateIndicator) || staticDB.contains(predicateIndicator)
   }
 }

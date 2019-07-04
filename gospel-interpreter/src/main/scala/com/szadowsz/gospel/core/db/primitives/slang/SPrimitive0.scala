@@ -18,6 +18,7 @@ package com.szadowsz.gospel.core.db.primitives.slang
 import com.szadowsz.gospel.core.data.{Struct, Term}
 import com.szadowsz.gospel.core.db.libraries.Library
 import com.szadowsz.gospel.core.db.primitives.{Primitive, PrimitiveType}
+import com.szadowsz.gospel.core.engine.Executor
 
 
 private[primitives] final class SPrimitive0(

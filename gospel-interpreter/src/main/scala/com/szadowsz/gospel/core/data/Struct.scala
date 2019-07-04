@@ -18,6 +18,7 @@ package com.szadowsz.gospel.core.data
 import java.util
 
 import com.szadowsz.gospel.core.db.primitives.Primitive
+import com.szadowsz.gospel.core.engine.Executor
 import com.szadowsz.gospel.core.exception.InvalidTermException
 import com.szadowsz.gospel.core.parser.Parser
 
@@ -323,7 +324,7 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
     this.primitive = primitive
   }
   
-  def evalAsPredicate (): Boolean ={
+  def evalAsPredicate(): Boolean ={
     primitive match {
       case Some(p) => p.evalAsPredicate(this)
       case None => false

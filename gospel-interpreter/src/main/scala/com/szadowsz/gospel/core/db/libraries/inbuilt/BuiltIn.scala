@@ -16,11 +16,11 @@
 package com.szadowsz.gospel.core.db.libraries.inbuilt
 
 import com.szadowsz.gospel.core.Interpreter
-import com.szadowsz.gospel.core.data.{Struct, Term}
-import com.szadowsz.gospel.core.db.libraries.{Library, directive}
+import com.szadowsz.gospel.core.data.{Struct, Term, Var}
+import com.szadowsz.gospel.core.db.libraries.{Library, directive, predicate}
 import com.szadowsz.gospel.core.exception.library.InvalidLibraryException
 
-class BuiltIn(wam: Interpreter) extends Library(wam) {
+class BuiltIn(wam: Interpreter) extends Library(wam) with BuiltInArithmetic {
   // scalastyle:off method.name
   
   private val libStructName: String = "library"

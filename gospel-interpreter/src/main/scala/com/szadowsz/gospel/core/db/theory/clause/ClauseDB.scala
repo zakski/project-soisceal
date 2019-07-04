@@ -58,7 +58,7 @@ private[theory] class ClauseDB extends Iterable[Clause] {
   }
 
   def remove(clause: Clause): Unit = {
-    internalMap.get(clause.getHead.getPredicateIndicator).foreach(f => f.remove(clause))
+    internalMap.get(clause.head.getPredicateIndicator).foreach(f => f.remove(clause))
   }
 
   override def iterator: Iterator[Clause] = new Iterator[Clause]() {

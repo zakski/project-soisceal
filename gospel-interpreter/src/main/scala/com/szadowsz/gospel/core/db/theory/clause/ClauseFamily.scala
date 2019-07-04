@@ -35,7 +35,7 @@ private[theory] class ClauseFamily extends Iterable[Clause] {
     */
   private def register(ci: Clause, first: Boolean): Unit = {
     // See FamilyClausesList.get(Term): same concept
-    val clause = ci.getHead
+    val clause = ci.head
     val g: Struct = clause.getBinding.asInstanceOf[Struct]
 //    if (g.getArity == 0) {
 //      return

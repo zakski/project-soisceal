@@ -18,7 +18,9 @@ package com.szadowsz.gospel.core.engine
 import java.util
 
 import com.szadowsz.gospel.core.Interpreter
-import com.szadowsz.gospel.core.data.{Struct, Var}
+import com.szadowsz.gospel.core.data.{Struct, Term, Var}
+import com.szadowsz.gospel.core.db.theory.clause.Clause
+import com.szadowsz.gospel.core.engine.context.goal.tree.SubGoalBranch
 import com.szadowsz.gospel.core.engine.context.{ChoicePointContext, ChoicePointStore, ExecutionContext}
 import com.szadowsz.gospel.core.engine.state.{EndState, InitState, State}
 import org.slf4j.{Logger, LoggerFactory}
@@ -26,7 +28,7 @@ import org.slf4j.{Logger, LoggerFactory}
 /**
   * Prolog Interpreter Executor.
   */
-private[engine] class Executor(val query : Struct) {
+private[core] class Executor(val query : Struct)(implicit val wam : Interpreter) {
   
   private val logger : Logger = LoggerFactory.getLogger(classOf[Executor])
   
@@ -37,7 +39,7 @@ private[engine] class Executor(val query : Struct) {
   /**
     * The context of what state we are currently in
     */
-  var currentContext: ExecutionContext = _
+  var currentContext: ExecutionContext = _ // Todo Convert To Option
   
   /**
     * The Next State of the Finite State Machine to Execute.
@@ -56,13 +58,18 @@ private[engine] class Executor(val query : Struct) {
  
   var nResultAsked: scala.Int = 0
   var hasOpenAlts: Boolean = false
-  var currentAlternative: ChoicePointContext = _
+  var currentAlternative: Option[ChoicePointContext] = None
   var choicePointSelector: ChoicePointStore = _
+  
+  def identifyPredicate(t: Term) {
+    wam.getPrimitiveManager.identifyPredicate(t)
+  }
   
   /**
     * Setup the start goal and extract the variables of the query
     */
   def prepareGoal() {
+    identifyPredicate(query)
     val goalVars: util.LinkedHashMap[Var, Var] = new util.LinkedHashMap[Var, Var]
     startGoal = query.copy(goalVars, 0).asInstanceOf[Struct]
     this.goalVars = goalVars.values
@@ -71,11 +78,15 @@ private[engine] class Executor(val query : Struct) {
   /**
     * Setup the choice point stack for the engine
     */
-  def initialise(context : ExecutionContext): Unit ={
+  def initialise(context : ExecutionContext): Unit = {
     currentContext = context
     choicePointSelector = new ChoicePointStore
     nDemoSteps = 1
-    currentAlternative = null
+    currentAlternative = None
+  }
+  
+  def cut() {
+    choicePointSelector.cut(currentContext.choicePointAfterCut)
   }
   
   /**
@@ -95,7 +106,36 @@ private[engine] class Executor(val query : Struct) {
     nextState.asInstanceOf[EndState]
   }
   
-  def logException(exception: Exception): Unit ={
+  def isOccursCheckEnabled(): Boolean = {
+    wam.getFlagManager.isOccursCheckEnabled
+  }
+  
+  /**
+    * Checks the Theory Manager's DBs to see if we have any knowledge of a given predicate
+    *
+    * @param predicateIndicator the predicate identifier
+    * @return true if found, false otherwise
+    */
+  def checkExistence(predicateIndicator: String) : Boolean = {
+    wam.getTheoryManager.checkExistence(predicateIndicator)
+  }
+  
+  /**
+    * Returns a family of clauses with functor and arity equals to the functor and arity of the term passed as a
+    * parameter.
+    */
+  def findClauses(t: Term): List[Clause] = wam.getTheoryManager.find(t)
+  
+  
+  def pushSubGoal(goal: SubGoalBranch) {
+    currentContext.goalsToEval.pushSubGoal(goal)
+  }
+  
+  def logException(exception: Throwable): Unit ={
     logger.error("Exception Thrown During Resolution of Goal " + startGoal,exception)
+  }
+  
+  def logWarning(msg: String): Unit ={
+    logger.warn(msg)
   }
 }

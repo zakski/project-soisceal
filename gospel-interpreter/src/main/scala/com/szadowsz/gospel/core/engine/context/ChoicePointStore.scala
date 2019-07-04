@@ -20,17 +20,12 @@ class ChoicePointStore() {
   private var pointer : Option[ChoicePointContext] = None
   
   def add(cpc: ChoicePointContext): Unit = {
-    pointer match {
-      case None => pointer = Option(cpc)
-      
-      case Some(parent) =>
-        cpc.prevContext = parent
-        pointer = Option(cpc)
-    }
+    cpc.prevContext = pointer
+    pointer = Option(cpc)
   }
   
-  def cut(pointerAfterCut: ChoicePointContext): Unit = {
-    pointer = Option(pointerAfterCut)
+  def cut(pointerAfterCut: Option[ChoicePointContext]): Unit = {
+    pointer = pointerAfterCut
   }
   
   
@@ -48,7 +43,7 @@ class ChoicePointStore() {
         if (clauses.existCompatibleClause){
           pointer
         } else {
-          pointer = Option(potential.prevContext)
+          pointer = potential.prevContext
           findValidChoice
         }
     }
@@ -59,7 +54,7 @@ class ChoicePointStore() {
     *
     * @return
     */
-  def getPointer: ChoicePointContext = pointer.orNull
+  def getPointer: Option[ChoicePointContext] = pointer
   
   
   /**

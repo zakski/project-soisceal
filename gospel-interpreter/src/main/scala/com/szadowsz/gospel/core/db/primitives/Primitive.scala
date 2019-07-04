@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException
 import com.szadowsz.gospel.core.data.{Struct, Term}
 import com.szadowsz.gospel.core.db.libraries.Library
 import com.szadowsz.gospel.core.db.primitives.slang.{SPrimitive0, SPrimitiveN}
+import com.szadowsz.gospel.core.engine.Executor
 
 
 object Primitive {

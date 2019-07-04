@@ -15,17 +15,20 @@
   */
 package com.szadowsz.gospel.core.engine
 
+import com.szadowsz.gospel.core.Interpreter
 import com.szadowsz.gospel.core.data.{Int, Struct, Var}
-import com.szadowsz.gospel.core.engine.state.{GoalEvaluationState, GoalSelectionState, InitState}
+import com.szadowsz.gospel.core.engine.state.{BacktrackState, EndState, ExceptionState, GoalEvaluationState, GoalSelectionState, InitState, RuleSelectionState}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
+import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers, Pending}
 import org.scalatest.OptionValues._
 
 @RunWith(classOf[JUnitRunner])
 class ExecutorSpec extends FlatSpec with Matchers with BeforeAndAfter {
   
   behavior of "Executor"
+  
+  implicit val wam : Interpreter = new Interpreter()
   
   it should "initialise correctly for a simple query" in {
     val query = new Struct("is", new Var("A"), Int(0))
@@ -67,5 +70,110 @@ class ExecutorSpec extends FlatSpec with Matchers with BeforeAndAfter {
     
     exec.currentContext.currentGoal.value shouldBe query
     exec.nextState shouldBe a [GoalEvaluationState]
+  }
+  
+  it should "transition from GoalEvaluationState to BacktrackState correctly for a simple query" in {
+    val query = new Struct("fail_always", new Var("A"), Int(0))
+    
+    val prolog = new Interpreter()
+    prolog.loadLibrary("TestLibrary")
+    
+    val exec = new Executor(query)(prolog)
+    
+    exec.nextState.doJob(exec)
+    exec.nextState.doJob(exec)
+    
+    exec.currentContext.currentGoal.value shouldBe query
+    exec.nextState shouldBe a [GoalEvaluationState]
+  
+    exec.nextState.doJob(exec)
+    exec.nextState shouldBe a [BacktrackState]
+  }
+  
+  it should "transition from GoalEvaluationState to ExceptionState correctly for a simple query" in {
+    val query = new Struct("throw_always", new Var("A"), Int(0))
+    
+    val prolog = new Interpreter()
+    prolog.loadLibrary("TestLibrary")
+    
+    val exec = new Executor(query)(prolog)
+    
+    exec.nextState.doJob(exec)
+    exec.nextState.doJob(exec)
+    
+    exec.currentContext.currentGoal.value shouldBe query
+    exec.nextState shouldBe a [GoalEvaluationState]
+    
+    exec.nextState.doJob(exec)
+    exec.nextState shouldBe a [ExceptionState]
+  }
+  
+  it should "transition from ExceptionState to Halt State correctly for non-recoverable queries" in {
+    val query = new Struct("throw_always", new Var("A"), Int(0))
+    
+    val prolog = new Interpreter()
+    prolog.loadLibrary("TestLibrary")
+    
+    val exec = new Executor(query)(prolog)
+    
+    exec.nextState.doJob(exec)
+    exec.nextState.doJob(exec)
+    exec.nextState.doJob(exec)
+    
+    exec.nextState shouldBe a [ExceptionState]
+  
+    exec.nextState.doJob(exec)
+    exec.nextState shouldBe EndState(Result.HALT)
+  }
+  
+  it should "transition from ExceptionState to GoalSelectionState correctly for recoverable queries" in (Pending)
+  
+  it should "break from GoalEvaluationState in the case of a \"Fatal\" Exception" in {
+    val query = new Struct("throw_interrupt_always", new Var("A"), Int(0))
+    
+    val prolog = new Interpreter()
+    prolog.loadLibrary("TestLibrary")
+    
+    val exec = new Executor(query)(prolog)
+    
+    exec.nextState.doJob(exec)
+    exec.nextState.doJob(exec)
+    
+    exec.currentContext.currentGoal.value shouldBe query
+    exec.nextState shouldBe a [GoalEvaluationState]
+    
+    
+    intercept[InterruptedException]{
+      exec.nextState.doJob(exec)
+    }
+  }
+  
+  
+  it should "transition from RuleSelectionState to GoalSelectionState correctly for a simple query" in {
+    val query = new Struct("is", new Var("A"), Int(0))
+    val exec = new Executor(query)
+  
+    exec.nextState.doJob(exec)
+    exec.nextState.doJob(exec)
+  
+    exec.nextState.doJob(exec)
+    exec.nextState shouldBe a [RuleSelectionState]
+    
+    exec.nextState.doJob(exec)
+    exec.nextState shouldBe a [GoalSelectionState]
+  }
+  
+  it should "transition from GoalSelectionState to a Successful EndState correctly for a simple query" in {
+    val query = new Struct("is", new Var("A"), Int(0))
+    val exec = new Executor(query)
+    
+    exec.nextState.doJob(exec)
+    exec.nextState.doJob(exec)
+    exec.nextState.doJob(exec)
+    
+    exec.nextState.doJob(exec)
+    exec.nextState shouldBe a [GoalSelectionState]
+    
+    exec.nextState.doJob(exec) shouldBe EndState(Result.TRUE)
   }
 }
