@@ -32,7 +32,7 @@ class GoalEvaluationState extends State {
     *
     * @param e the supplied Executor
     */
-  override def doJob(implicit e: Executor): Unit = {
+  override def doJob(e: Executor): Unit = {
     val curGoal = e.currentContext.currentGoal.get
     if (curGoal.isPrimitive) { // Execute JVM-Backed Predicate
       e.nextState = try {

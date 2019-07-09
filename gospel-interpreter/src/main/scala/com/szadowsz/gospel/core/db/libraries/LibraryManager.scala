@@ -42,6 +42,11 @@ private[core] class LibraryManager(private val wam: Interpreter) {
 
   private val libs: concurrent.Map[String, Library] = new ConcurrentHashMap[String, Library]().asScala
 
+  def this(wam : Interpreter,classes : Class[_ <: Library]*){
+    this(wam)
+    classes.foreach(c => Try(loadLibraryFromClass(c)))
+  }
+  
   @throws(classOf[LibraryInstantiationException])
   private def instantiateLibrary(libName : String, func : Interpreter => Library):Library = {
     try {

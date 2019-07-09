@@ -71,7 +71,7 @@ private[core] class Executor(val query : Struct)(implicit val wam : Interpreter)
   def prepareGoal() {
     identifyPredicate(query)
     val goalVars: util.LinkedHashMap[Var, Var] = new util.LinkedHashMap[Var, Var]
-    startGoal = query.copy(goalVars, 0).asInstanceOf[Struct]
+    startGoal = query.init(this, goalVars,  0).asInstanceOf[Struct]
     this.goalVars = goalVars.values
   }
   

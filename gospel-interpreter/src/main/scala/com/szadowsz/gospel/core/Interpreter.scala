@@ -16,6 +16,7 @@
 package com.szadowsz.gospel.core
 
 import com.szadowsz.gospel.core.data.Term
+import com.szadowsz.gospel.core.db.libraries.inbuilt.BuiltIn
 import com.szadowsz.gospel.core.db.libraries.{Library, LibraryManager}
 import com.szadowsz.gospel.core.db.operators.OperatorManager
 import com.szadowsz.gospel.core.db.primitives.PrimitivesManager
@@ -35,9 +36,10 @@ class Interpreter {
   
   protected lazy val primManager : PrimitivesManager = new PrimitivesManager(this)
 
-  protected lazy val libManager : LibraryManager = new LibraryManager(this)
-
   protected lazy val thManager : TheoryManager = new TheoryManager(this)
+
+  protected val libManager : LibraryManager = new LibraryManager(this, classOf[BuiltIn])
+  
   
   def this(libs : Class[_ <: Library]*){
     this()

@@ -17,7 +17,25 @@ package com.szadowsz.gospel.core.data
 
 import java.util
 
+import com.szadowsz.gospel.core.engine.Executor
+
 abstract class Number extends Term {
+  
+  /**
+    * gets a copy (with renamed variables) of the term.
+    *
+    * The list argument passed contains the list of variables to be renamed (if empty list then no renaming).
+    *
+    * Used By The engine to initialise it's stack
+    *
+    * @param vMap      variables to rename
+    * @param idExecCtx Execution Context identifier
+    * @return Copy of Term
+    */
+  override def init(e: Executor, vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
+    executor = e
+    this // TODO Revisit behaviour
+  }
   
   final override def copy(vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
     this
@@ -27,7 +45,7 @@ abstract class Number extends Term {
     this
   }
   
-  final override def resolveVars(): Unit = {}
+  final override private[data] def resolveVars(count: scala.Long) = count
   
   final override def isAtomic: Boolean = true
   

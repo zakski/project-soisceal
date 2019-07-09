@@ -18,13 +18,14 @@ package com.szadowsz.gospel.core.data
 import java.util
 import java.util.concurrent.atomic.AtomicInteger
 
+import com.szadowsz.gospel.core.engine.Executor
 import com.szadowsz.gospel.core.exception.InvalidTermException
 
 object Var {
   private val ANY = "_"
   /* Identify kind of renaming */
-  private val ORIGINAL = -1
-  private val PROGRESSIVE = -2
+  private[data] val ORIGINAL = -1
+  private[data] val PROGRESSIVE = -2
   
   //static version as global counter
   private val fingerprint = new AtomicInteger
@@ -131,11 +132,26 @@ class Var(private val name: String, id: scala.Int, count: Long) extends Term {
   }
   
   /**
+    * Set the timestamp
+    */
+  private[data] def setInternalTimestamp(t: scala.Long): Unit = {
+    internalTimestamp = t
+  }
+  
+  /**
     * Resolves variables inside the term
     *
     * If the variables has been already resolved, no renaming is done.
     */
-  override def resolveVars(): Unit = ???
+  override def resolveVars(count: scala.Long): scala.Long = {
+    getBinding match {
+      case notBound if notBound eq this =>
+        internalTimestamp = count
+        count + 1
+      case bound =>
+        bound.resolveVars(count)
+    }
+  }
   
   override def freeVars(): Unit = {
     binding = None
@@ -172,6 +188,17 @@ class Var(private val name: String, id: scala.Int, count: Long) extends Term {
         .delete(0, completeName.length())
         .append("_").append(count)
     }
+  }
+  
+  override def init(e: Executor, vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
+    executor = e
+    val tt = getBinding
+    if (tt eq this) {
+      val v = vMap.computeIfAbsent(this, k => this) // No occurrence of v before
+      v
+    } else {
+      tt.init(e, vMap, idExecCtx)
+    }// TODO Revisit behaviour
   }
   
   override def copy(vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {

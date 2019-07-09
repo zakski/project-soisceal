@@ -30,7 +30,7 @@ trait BuiltInArithmetic {
   @throws(classOf[InterpreterError])
   def is_2: (Term, Term) => Boolean = {
     (arg0: Term, arg1: Term) =>
-     val e = implicitly[Executor]
+     val e = arg0.getExecutor
       arg1.getBinding match {
         case v: Var => throw InterpreterError.buildInstantiationError(e, 2)
         case _ =>

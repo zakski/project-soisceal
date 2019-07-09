@@ -26,6 +26,11 @@ import scala.collection.JavaConverters._
 abstract class Term extends Serializable {
   
   /**
+    * Executor of the Struct's demonstration
+    */
+  protected implicit var executor : Executor = _
+  
+  /**
     * gets a copy (with renamed variables) of the term.
     *
     * The list argument passed contains the list of variables to be renamed (if empty list then no renaming).
@@ -33,6 +38,18 @@ abstract class Term extends Serializable {
     * Used By The engine to initialise it's stack
     *
     * @param vMap      variables to rename
+    * @param idExecCtx Execution Context identifier
+    * @return Copy of Term
+    */
+  def init(e : Executor, vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term
+  
+  
+  /**
+    * gets a copy (with renamed variables) of the term.
+    *
+    * The list argument passed contains the list of variables to be renamed (if empty list then no renaming).
+    *
+   * @param vMap      variables to rename
     * @param idExecCtx Execution Context identifier
     * @return Copy of Term
     */
@@ -60,13 +77,23 @@ abstract class Term extends Serializable {
     copy(originals, new util.IdentityHashMap[Term, Var])
   }
   
+  /**
+    * Resolves variables inside the term, starting from a specific time count.
+    * 
+    * If the variables has been already resolved, no renaming is done.
+    *
+    * @param count new starting time count for resolving process
+    * @return the new time count, after resolving process
+    */
+  private[data] def resolveVars(count: scala.Long) : scala.Long
+  
   
   /**
     * Resolves variables inside the term
     *
     * If the variables has been already resolved, no renaming is done.
     */
-  def resolveVars(): Unit
+  final def resolveVars(): Unit = resolveVars(System.currentTimeMillis())// TODO investigate whether timestamp is useful here
   
   /**
     * Unlink variables inside the term
@@ -157,16 +184,16 @@ abstract class Term extends Serializable {
     * @param t1       the term to unify
     * @return true if the term is unifiable with this one
     */
-  private[core] def unify(t1: Term)(implicit e : Executor): Boolean = {
+  private[core] def unify(t1: Term): Boolean = {
     resolveVars()
     t1.resolveVars()
     val v1 = new util.LinkedList[Var]
     val v2 = new util.LinkedList[Var]
-    val ok = unify(v1, v2, t1, e.isOccursCheckEnabled())
+    val ok = unify(v1, v2, t1, executor.isOccursCheckEnabled())
     if (ok) {
-      val ec = e.currentContext
+      val ec = executor.currentContext
       if (ec != null) {
-        var id = /*if (engine.getEnv == null) Var.PROGRESSIVE else */ e.nDemoSteps
+        var id = if (executor == null) Var.PROGRESSIVE else  executor.nDemoSteps
         // Update trailingVars
         ec.trailingVars = v1 +: ec.trailingVars
       
@@ -202,4 +229,7 @@ abstract class Term extends Serializable {
     * </ul>
     **/
   def iteratedGoalTerm: Term = this
+  
+  
+  private[core] final def getExecutor : Executor = executor
 }

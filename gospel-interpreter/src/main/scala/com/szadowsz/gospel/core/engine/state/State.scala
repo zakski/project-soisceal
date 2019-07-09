@@ -36,7 +36,7 @@ private[engine] trait State {
   protected val stateName: String
 
 
-  def doJob(implicit e: Executor) : Unit
+  def doJob(e: Executor) : Unit
 
   override def toString: String = stateName
 }

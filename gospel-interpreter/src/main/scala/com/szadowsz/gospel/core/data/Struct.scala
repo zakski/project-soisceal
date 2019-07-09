@@ -22,6 +22,9 @@ import com.szadowsz.gospel.core.engine.Executor
 import com.szadowsz.gospel.core.exception.InvalidTermException
 import com.szadowsz.gospel.core.parser.Parser
 
+import scala.collection.JavaConverters._
+import scala.collection.mutable.ListBuffer
+
 // scalastyle:off number.of.methods
 class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
   
@@ -33,7 +36,7 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
     a
   }
   
-  private var args: List[Term] = validate(ags)
+  private var args: ListBuffer[Term] = validate(ags)
   /**
     * primitive java/scala behaviour
     */
@@ -124,11 +127,11 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
   }
   
   def this(argList: Array[Term], index: scala.Int) {
-    this(if (index < argList.length) "." else "[]", 
-      if (index < argList.length) 2 else 0, 
+    this(if (index < argList.length) "." else "[]",
+      if (index < argList.length) 2 else 0,
       if (index < argList.length)
-        List(argList(index),new Struct(argList, index + 1))
-      else 
+        List(argList(index), new Struct(argList, index + 1))
+      else
         Nil
     )
   }
@@ -141,28 +144,71 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
   }
   
   def apply(index: scala.Int): Term = args(index)
- 
-  def validate(args: List[Term]): List[Term] = {
-    if (!args.contains(null)){
-      args
+  
+  def validate(args: List[Term]): ListBuffer[Term] = {
+    if (!args.contains(null)) {
+      ListBuffer() ++ args
     } else {
       throw new InvalidTermException(s"Arguments of a Struct $name cannot be null")
     }
   }
   
   /**
-    * Resolves variables inside the term
+    * Resolves variables inside the term, starting from a specific time count.
     *
     * If the variables has been already resolved, no renaming is done.
+    *
+    * @param count new starting time count for resolving process
+    * @return the new time count, after resolving process
     */
-  override def resolveVars(): Unit = {
-    
+  override def resolveVars(count: scala.Long): scala.Long = {
+    if (resolved) {
+      count
+    } else {
+      val vars = new util.LinkedList[Var]
+      resolveVars(vars, count)
+    }
+  }
+  
+  
+  /**
+    * Resolve name of terms
+    *
+    * @param vl    list of variables resolved
+    * @param count start timestamp for variables of this term
+    * @return next timestamp for other terms
+    */
+  private def resolveVars(vl: util.LinkedList[Var], count: scala.Long): scala.Long = {
+    var newcount = count
+    for (c <- 0 until arity) {
+      Option(args(c)) match {
+        case Some(term) =>
+          term.getBinding match {
+            case v: Var =>
+              v.setInternalTimestamp(newcount)
+              newcount += 1
+              if (!v.isAnonymous) {
+                val name = v.getName
+                vl.iterator().asScala.find(vn => name.equals(vn.getName)) match {
+                  case Some(found) => args(c) = found
+                  case None => vl.add(v)
+                }
+              }
+            case s: Struct =>
+              newcount = term.asInstanceOf[Struct].resolveVars(vl, newcount)
+            case _ =>
+          }
+        case None =>
+      }
+    }
+    resolved = true
+    newcount
   }
   
   override def isAtom: Boolean = arity == 0 || isEmptyList
   
   override def isAtomic: Boolean = arity == 0
- 
+  
   override def isCompound: Boolean = arity > 0
   
   override def isClause: Boolean = {
@@ -291,7 +337,7 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
       if (isEmptyList) {
         name = "."
         arity = 2
-        args = List(t, new Struct)
+        args = ListBuffer(t, new Struct)
       } else {
         args(1).asInstanceOf[Struct].append(t)
       }
@@ -324,7 +370,7 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
     this.primitive = primitive
   }
   
-  def evalAsPredicate(): Boolean ={
+  def evalAsPredicate(): Boolean = {
     primitive match {
       case Some(p) => p.evalAsPredicate(this)
       case None => false
@@ -405,16 +451,32 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
     *
     * The list argument passed contains the list of variables to be renamed (if empty list then no renaming).
     *
-    * Used By The engine to initialise it's stack
+    * @param vMap      variables to rename
+    * @param idExecCtx Execution Context identifier
+    * @return Copy of Term
+    */
+  override def init(e: Executor, vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
+    val t = new Struct(name, arity, args.map(arg => arg.init(e, vMap, idExecCtx)).toList)
+    t.resolved = resolved
+    t.primitive = primitive
+    t.executor = e
+    t
+  }
+  
+  /**
+    * gets a copy (with renamed variables) of the term.
+    *
+    * The list argument passed contains the list of variables to be renamed (if empty list then no renaming).
     *
     * @param vMap      variables to rename
     * @param idExecCtx Execution Context identifier
     * @return Copy of Term
     */
   override def copy(vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
-    val t = new Struct(name, arity, args.map(arg => arg.copy(vMap, idExecCtx)))
+    val t = new Struct(name, arity, args.map(arg => arg.copy(vMap, idExecCtx)).toList)
     t.resolved = resolved
     t.primitive = primitive
+    t.executor = executor
     t
   }
   
@@ -422,9 +484,10 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
     * gets a copy for result.
     */
   override private[data] def copy(vMap: util.AbstractMap[Var, Var], substMap: util.AbstractMap[Term, Var]) = {
-    val t = new Struct(name, arity, args.map(arg => arg.copy(vMap, substMap)))
+    val t = new Struct(name, arity, args.map(arg => arg.copy(vMap, substMap)).toList)
     t.resolved = false
     t.primitive = None
+    t.executor = executor
     t
   }
   
