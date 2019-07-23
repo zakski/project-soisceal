@@ -56,9 +56,8 @@ class TheoryManagerSpec extends FlatSpec with Matchers with BeforeAndAfter {
 
     theoryManager.consult(new Theory(theory))
 
-    val result  = recorder.getLogs
+    val result  = recorder.getLogs.filter(e => e.getLevel == Level.WARN)
     result should have length 1
-    result.head.getLevel shouldBe Level.WARN
     result.head.getMessage shouldBe "The directive unidentified_directive/1 is unknown."
   }
 
@@ -66,10 +65,9 @@ class TheoryManagerSpec extends FlatSpec with Matchers with BeforeAndAfter {
     val theory = ":- use_module(library('UnknownLibrary'))."
 
     theoryManager.consult(new Theory(theory))
-
-    val result  = recorder.getLogs
+  
+    val result  = recorder.getLogs.filter(e => e.getLevel == Level.WARN)
     result should have length 1
-    result.head.getLevel shouldBe Level.WARN
     result.head.getMessage shouldBe "Exception thrown during execution of use_module/1 directive."
    }
 

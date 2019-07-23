@@ -60,6 +60,10 @@ private[theory] class ClauseDB extends Iterable[Clause] {
   def remove(clause: Clause): Unit = {
     internalMap.get(clause.head.getPredicateIndicator).foreach(f => f.remove(clause))
   }
+  
+  def clear() : Unit = {
+    internalMap.clear()
+  }
 
   override def iterator: Iterator[Clause] = new Iterator[Clause]() {
     private val values: Iterator[ClauseFamily] = internalMap.values.iterator

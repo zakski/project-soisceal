@@ -109,20 +109,21 @@ private[core] class TheoryManager(wam: Interpreter) {
            try {
              staticDB.remove(clause)
            } catch {
-             case e: Exception => logger.error ("Error during library theory removal", e)
+             case NonFatal(e) => logger.error ("Error during library theory removal", e)
            }
+         case _ =>
        }
      }
     }
   }
 
   def rebindPrimitives(): Unit = {//TODO
-    }
+  }
 
   /**
     * Method solves any goals that have been added during the theory initialisation process.
     */
-  def validateStack(): Unit = {}
+  def validateStack(): Unit = {} // TODO
 
   /**
     * Returns a family of clauses with functor and arity equals
@@ -242,5 +243,14 @@ private[core] class TheoryManager(wam: Interpreter) {
     */
   def checkExistence(predicateIndicator: String): Boolean = {
     dynamicDB.contains(predicateIndicator) || staticDB.contains(predicateIndicator)
+  }
+  
+  /**
+    * Clears the dynamic clause database.
+    */
+  def clear(): Unit = {
+    synchronized {
+      dynamicDB.clear()
+    }
   }
 }

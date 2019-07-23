@@ -96,7 +96,7 @@ class ClauseStore(goalTerm: Term, varList: util.List[Var]) {
           clauses = clauses.tail
         }
       } while (!result && clauses.nonEmpty)
-      false
+      result
     }
   }
 

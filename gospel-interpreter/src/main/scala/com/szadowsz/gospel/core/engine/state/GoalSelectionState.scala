@@ -33,21 +33,7 @@ class GoalSelectionState extends State {
     while (continue && curGoal.isEmpty) {
       curGoal = e.currentContext.goalsToEval.fetch()
       curGoal match {
-        case None =>
-          // Terminate The Demonstration if we can no longer backtrack
-          if (e.currentContext.parent.isEmpty) {
-  
-            // Determine Endstate based on existence of further ChoicePoints
-            e.nextState = if (e.choicePointSelector.findValidChoice.isDefined) {
-              EndState(Result.TRUE_CP)
-            } else {
-              EndState(Result.TRUE)
-            }
-            continue = false
-          } else {
-            e.currentContext = e.currentContext.parent.get // Return to the parent context
-          }
-        case Some(goal) => // Goal Identification Case
+         case Some(goal) => // Goal Identification Case
           val goalToProcess: Term = goal.getBinding
           goalToProcess match {
             case struct: Struct =>
@@ -69,6 +55,20 @@ class GoalSelectionState extends State {
               e.nextState = EndState(Result.FALSE)
               continue = false
           }
+         case None =>
+           // Terminate The Demonstration if we can no longer backtrack
+           if (e.currentContext.parent.isEmpty) {
+    
+             // Determine Endstate based on existence of further ChoicePoints
+             e.nextState = if (e.choicePointSelector.findValidChoice.isDefined) {
+               EndState(Result.TRUE_CP)
+             } else {
+               EndState(Result.TRUE)
+             }
+             continue = false
+           } else {
+             e.currentContext = e.currentContext.parent.get // Return to the parent context
+           }
       }
     }
   }

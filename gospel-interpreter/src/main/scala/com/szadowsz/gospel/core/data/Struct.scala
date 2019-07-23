@@ -145,6 +145,10 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
   
   def apply(index: scala.Int): Term = args(index)
   
+  def update(index: scala.Int, x: Term): Unit = {
+    args(index) = x
+  }
+  
   def validate(args: List[Term]): ListBuffer[Term] = {
     if (!args.contains(null)) {
       ListBuffer() ++ args
@@ -507,7 +511,7 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
     t.getBinding match {
       case struct: Struct =>
         arity == struct.arity && name.equals(struct.name) &&
-          getTermIterator.zipWithIndex.forall { case (arg, i) => arg.unify(vl1, vl2, struct.args(i), isOccursCheckEnabled) }
+          getTermIterator.zipWithIndex.forall { case (arg : Term, i : scala.Int) => arg.unify(vl1, vl2, struct.args(i), isOccursCheckEnabled) }
       case v: Var =>
         v.unify(vl2, vl1, this, isOccursCheckEnabled)
       case _ => false

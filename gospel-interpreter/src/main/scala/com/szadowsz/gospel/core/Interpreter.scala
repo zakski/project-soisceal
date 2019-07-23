@@ -20,8 +20,9 @@ import com.szadowsz.gospel.core.db.libraries.inbuilt.BuiltIn
 import com.szadowsz.gospel.core.db.libraries.{Library, LibraryManager}
 import com.szadowsz.gospel.core.db.operators.OperatorManager
 import com.szadowsz.gospel.core.db.primitives.PrimitivesManager
-import com.szadowsz.gospel.core.db.theory.TheoryManager
+import com.szadowsz.gospel.core.db.theory.{Theory, TheoryManager}
 import com.szadowsz.gospel.core.engine.flags.FlagManager
+import com.szadowsz.gospel.core.exception.InvalidTheoryException
 import com.szadowsz.gospel.core.exception.library.InvalidLibraryException
 import com.szadowsz.gospel.core.parser.Parser
 import org.slf4j.{Logger, LoggerFactory}
@@ -71,6 +72,31 @@ class Interpreter {
   }
   
   private[core] def createTerm(st: String): Term = new Parser(st).nextTerm(false)
+  
+  /**
+    * Sets a new theory
+    *
+    * @param th is the new theory
+    * @throws InvalidTheoryException if the new theory is not valid
+    */
+  @throws(classOf[InvalidTheoryException])
+  def setTheory(th: Theory): Unit = {
+    thManager.clear()
+    addTheory(th)
+  }
+  
+  /**
+    * Adds (appends) a theory
+    *
+    * @param th is the theory to be added
+    * @throws InvalidTheoryException if the new theory is not valid
+    */
+  @throws(classOf[InvalidTheoryException])
+  def addTheory(th: Theory): Unit = {
+    thManager.consult(th, true)
+    thManager.validateStack()
+  }
+  
   
   //  /**
 //    * Solves a query

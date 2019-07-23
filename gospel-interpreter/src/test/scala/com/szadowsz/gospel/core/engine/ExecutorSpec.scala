@@ -17,11 +17,13 @@ package com.szadowsz.gospel.core.engine
 
 import com.szadowsz.gospel.core.Interpreter
 import com.szadowsz.gospel.core.data.{Int, Struct, Var}
-import com.szadowsz.gospel.core.engine.state.{BacktrackState, EndState, ExceptionState, GoalEvaluationState, GoalSelectionState, InitState, RuleSelectionState}
+import com.szadowsz.gospel.core.db.theory.Theory
+import com.szadowsz.gospel.core.engine.state._
+import com.szadowsz.gospel.core.parser.Parser
 import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.{ BeforeAndAfterEach, FlatSpec, Matchers, Pending}
 import org.scalatest.OptionValues._
+import org.scalatest.junit.JUnitRunner
+import org.scalatest.{BeforeAndAfterEach, FlatSpec, Matchers}
 
 @RunWith(classOf[JUnitRunner])
 class ExecutorSpec extends FlatSpec with Matchers with  BeforeAndAfterEach {
@@ -76,8 +78,6 @@ class ExecutorSpec extends FlatSpec with Matchers with  BeforeAndAfterEach {
     exec.nextState shouldBe a [GoalEvaluationState]
   }
   
-  it should "transition from GoalSelectionState to RuleSelectionState correctly for recoverable queries" in (Pending)
-  
   it should "transition from GoalSelectionState to a Successful EndState correctly for a simple query" in {
     val query = new Struct("is", new Var("A"), Int(0))
     val exec = new Executor(query)
@@ -90,6 +90,22 @@ class ExecutorSpec extends FlatSpec with Matchers with  BeforeAndAfterEach {
     exec.nextState.doJob(exec) // GoalSelectionState -> Success End State
     
     exec.nextState shouldBe EndState(Result.TRUE)
+  }
+  
+  it should "transition from GoalEvaluationState to RuleSelectionState correctly for a simple query" in {
+    wam.setTheory(new Theory("validTheory."))
+    
+    val query = new Struct("validTheory")
+    val exec = new Executor(query)
+    
+    exec.nextState.doJob(exec) // InitState -> GoalSelectionState
+  
+    exec.nextState.doJob(exec) // GoalSelectionState -> GoalEvaluationState
+    exec.nextState shouldBe a [GoalEvaluationState]
+    
+    exec.nextState.doJob(exec) // GoalEvaluationState -> RuleSelectionState
+    
+    exec.nextState shouldBe a [RuleSelectionState]
   }
   
   it should "transition from GoalEvaluationState to BacktrackState correctly for a simple query" in {
@@ -138,6 +154,22 @@ class ExecutorSpec extends FlatSpec with Matchers with  BeforeAndAfterEach {
     exec.nextState shouldBe a [GoalSelectionState]
   }
   
+  it should "transition from RuleSelectionState to GoalSelectionState correctly for a simple query" in {
+    wam.setTheory(new Theory("validTheory."))
+    
+    val query = new Struct("validTheory")
+    val exec = new Executor(query)
+    
+    exec.nextState.doJob(exec) // InitState -> GoalSelectionState
+    
+    exec.nextState.doJob(exec) // GoalSelectionState -> GoalEvaluationState
+    exec.nextState.doJob(exec) // GoalEvaluationState -> RuleSelectionState
+    exec.nextState shouldBe a [RuleSelectionState]
+   
+    exec.nextState.doJob(exec) // RuleSelectionState -> GoalSelectionState
+    exec.nextState shouldBe a [GoalSelectionState]
+  }
+  
   it should "transition from BacktrackState to Failed EndState correctly for an unsatisfiable query" in {
     val query = new Struct("fail_always", new Var("A"), Int(0))
     
@@ -174,7 +206,22 @@ class ExecutorSpec extends FlatSpec with Matchers with  BeforeAndAfterEach {
     exec.nextState shouldBe EndState(Result.HALT)
   }
   
-  it should "transition from ExceptionState to GoalSelectionState correctly for recoverable queries" in (Pending)
+  it should "transition from ExceptionState to GoalSelectionState correctly for recoverable queries" in {
+    val query = "catch(X is V, error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
+    val goal = new Parser(query)(wam.getOperatorManager).nextTerm(false).asInstanceOf[Struct]
+
+    val exec = new Executor(goal)
+  
+    
+    while (!exec.nextState.isInstanceOf[ExceptionState]){
+      exec.nextState.doJob(exec)
+    }
+    exec.nextState shouldBe a [ExceptionState]
+  
+    exec.nextState.doJob(exec)  // ExceptionState -> GoalSelectionState
+    exec.nextState shouldBe a [GoalSelectionState]
+  }
+
   
   it should "break from GoalEvaluationState in the case of a \"Fatal\" Exception" in {
     val query = new Struct("throw_interrupt_always", new Var("A"), Int(0))
