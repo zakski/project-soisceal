@@ -89,7 +89,7 @@ private[core] class LibraryManager(private val wam: Interpreter) {
       // in current theory there could be predicates and functors which become built-ins after lib loading.
       thManager.rebindPrimitives()
     } catch {
-      case ite: InvalidTheoryException => new InvalidLibraryException(ite, lib.getName)
+      case ite: InvalidTheoryException => throw new InvalidLibraryException(ite, lib.getName)
       case ile: InvalidLibraryException => throw ile // do not stack InvalidLibraryExceptions for readability
       case NonFatal(ex) => throw new InvalidLibraryException(ex, lib.getName, "Failed to Bind Library")
     }

@@ -37,7 +37,8 @@ private[core] final class FlagManager extends java.io.Serializable {
     val s = new Struct
     s.append(new Struct("on"))
     s.append(new Struct("off"))
-    this.defineFlag("occursCheck", s, new Struct("on"), true, "ScalaBuiltIn")
+    this.defineFlag("occursCheck", s, new Struct("on"), true, "BuiltIn")
+    this.defineFlag("debug", s, new Struct("off"), true, "BuiltIn")
   }
 
 

@@ -476,11 +476,11 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
     * @param idExecCtx Execution Context identifier
     * @return Copy of Term
     */
-  override def copy(vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
-    val t = new Struct(name, arity, args.map(arg => arg.copy(vMap, idExecCtx)).toList)
+  override def copy(e : Executor, vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
+    val t = new Struct(name, arity, args.map(arg => arg.copy(e, vMap, idExecCtx)).toList)
     t.resolved = resolved
     t.primitive = primitive
-    t.executor = executor
+    t.executor = e
     t
   }
   

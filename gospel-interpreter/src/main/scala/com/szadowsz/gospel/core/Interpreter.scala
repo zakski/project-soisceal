@@ -15,47 +15,50 @@
   */
 package com.szadowsz.gospel.core
 
-import com.szadowsz.gospel.core.data.Term
+import com.szadowsz.gospel.core.data.{Struct, Term}
 import com.szadowsz.gospel.core.db.libraries.inbuilt.BuiltIn
 import com.szadowsz.gospel.core.db.libraries.{Library, LibraryManager}
 import com.szadowsz.gospel.core.db.operators.OperatorManager
 import com.szadowsz.gospel.core.db.primitives.PrimitivesManager
 import com.szadowsz.gospel.core.db.theory.{Theory, TheoryManager}
+import com.szadowsz.gospel.core.engine.ExecutorManager
 import com.szadowsz.gospel.core.engine.flags.FlagManager
-import com.szadowsz.gospel.core.exception.InvalidTheoryException
+import com.szadowsz.gospel.core.exception.{InvalidTermException, InvalidTheoryException}
 import com.szadowsz.gospel.core.exception.library.InvalidLibraryException
 import com.szadowsz.gospel.core.parser.Parser
 import org.slf4j.{Logger, LoggerFactory}
 
 class Interpreter {
   
-  protected val logger : Logger = LoggerFactory.getLogger(classOf[Interpreter])
-
-  protected implicit lazy val opManager : OperatorManager = new OperatorManager
+  protected val logger: Logger = LoggerFactory.getLogger(classOf[Interpreter])
+  
+  protected implicit lazy val opManager: OperatorManager = new OperatorManager
   
   protected lazy val flagManager = new FlagManager()
   
-  protected lazy val primManager : PrimitivesManager = new PrimitivesManager(this)
-
-  protected lazy val thManager : TheoryManager = new TheoryManager(this)
-
-  protected val libManager : LibraryManager = new LibraryManager(this, classOf[BuiltIn])
+  protected lazy val primManager: PrimitivesManager = new PrimitivesManager(this)
+  
+  protected lazy val thManager: TheoryManager = new TheoryManager(this)
+  
+  protected lazy val exeManager: ExecutorManager = new ExecutorManager()(this)
+  
+  protected val libManager: LibraryManager = new LibraryManager(this, classOf[BuiltIn])
   
   
-  def this(libs : Class[_ <: Library]*){
+  def this(libs: Class[_ <: Library]*) {
     this()
     libs.foreach(l => libManager.loadLibraryFromClass(l))
   }
-
-  private[core] def getPrimitiveManager : PrimitivesManager = primManager
- 
-  private[core] def getFlagManager : FlagManager = flagManager
-
-  private[core] def getTheoryManager : TheoryManager = thManager
-
-  private[core] def getLibraryManager : LibraryManager = libManager
-
-  private[core] def getOperatorManager : OperatorManager = opManager
+  
+  private[core] def getPrimitiveManager: PrimitivesManager = primManager
+  
+  private[core] def getFlagManager: FlagManager = flagManager
+  
+  private[core] def getTheoryManager: TheoryManager = thManager
+  
+  private[core] def getLibraryManager: LibraryManager = libManager
+  
+  private[core] def getOperatorManager: OperatorManager = opManager
   
   /**
     * Loads a library.
@@ -98,44 +101,39 @@ class Interpreter {
   }
   
   
-  //  /**
-//    * Solves a query
-//    *
-//    * @param st the string representing the goal to be demonstrated
-//    * @return the result of the demonstration
-//    * @see SolveInfo
-//    **/
-//  @throws[InvalidTermException]
-//  def solve(st: String): Solution = {
-//    try {
-//      val p = new Parser(st)
-//      val t = p.nextTerm(true)
-//      solve(t)
-//    } catch {
-//      case ex: InvalidTermException => // TODO don't throw anything back from here
-//        throw new InvalidTermException("Demonstration Goal is Malformed",ex, ex.getTerm, ex.getLine, ex.getCol) 
-//    }
-//  }
+  /**
+    * Solves a query
+    *
+    * @param st the string representing the goal to be demonstrated
+    * @return the result of the demonstration
+    * @see SolveInfo
+    **/
+  @throws[InvalidTermException]
+  def solve(st: String): Solution = {
+    try {
+      val p = new Parser(st)
+      val t = p.nextTerm(true)
+      solve(t)
+    } catch {
+      case ex: InvalidTermException => // TODO don't throw anything back from here
+        throw new InvalidTermException("Demonstration Goal is Malformed", ex, ex.getTerm, ex.getLine, ex.getCol)
+    }
+  }
   
+  /**
+    * Solves a query
+    *
+    * @param goal the term representing the goal to be demonstrated
+    * @return the result of the demonstration
+    * @see SolveInfo
+    **/
+  def solve(goal: Term): Solution = {
+    Option(goal) match {
+      case Some(_) => exeManager.solve(goal.asInstanceOf[Struct])
+      case None => null// TODO remove null
+    }
+  }
 //  /**
-//    * Solves a query
-//    *
-//    * @param goal the term representing the goal to be demonstrated
-//    * @return the result of the demonstration
-//    * @see SolveInfo
-//    **/
-//  def solve(goal: Term): Solution = {
-//    Option(goal) match {
-//      case Some(_) => 
-//        val sinfo: Solution = engManager.solve(goal)
-//        val ev: QueryEvent = new QueryEvent(this, sinfo)
-//        notifyNewQueryResultAvailable(ev)
-//        sinfo
-//      case None => null // TODO remove null
-//    }
-//  }
-//  
-//   /**
 //    * Gets next solution
 //    *
 //    * @return the result of the demonstration

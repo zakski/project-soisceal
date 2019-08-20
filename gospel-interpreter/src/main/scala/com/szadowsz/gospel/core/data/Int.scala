@@ -17,6 +17,8 @@ package com.szadowsz.gospel.core.data
 
 import java.util
 
+import com.szadowsz.gospel.core.engine.Executor
+
 final case class Int(value : Long) extends Number {
   
   override def intValue: scala.Int = value.toInt
@@ -33,6 +35,11 @@ final case class Int(value : Long) extends Number {
 
   override def isEquals(other: Term): Boolean = other.isInstanceOf[Int] && other.asInstanceOf[Int].value == value
   
+  override def copy(e : Executor, vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
+    val i = Int(value)
+    i.executor = e
+    i
+  }
   
   /**
     * Tries to unify a term with the provided term argument.

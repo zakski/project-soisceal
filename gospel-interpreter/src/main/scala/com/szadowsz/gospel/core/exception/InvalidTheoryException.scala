@@ -51,7 +51,15 @@ class InvalidTheoryException(
   def this(cause: InvalidTermException, clause: Int) = {
     this(cause.getMessage, cause, cause.getTerm, clause, cause.getLine, cause.getCol)
   }
-
+  
+  /**
+    * Constructs a new exception with the specified detail message.
+    *
+    * @param message the detail message (which is saved for later retrieval by the { @link #getMessage()} method).
+    */
+  def this(message: String, cause: Throwable, clause: Int) = {
+    this(message, cause, null, clause, -1, -1)
+  }
   def getClause: Int = clause
 
   def getTerm: String = term

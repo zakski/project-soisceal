@@ -19,8 +19,8 @@ import com.szadowsz.gospel.core.Interpreter
 import com.szadowsz.gospel.core.data.{Number, Struct, Term}
 import com.szadowsz.gospel.core.db.operators.OperatorManager
 import com.szadowsz.gospel.core.db.primitives.{Primitive, PrimitiveType, PrimitivesManager}
-import com.szadowsz.gospel.core.db.theory.Theory
-import com.szadowsz.gospel.core.engine.Executor
+import com.szadowsz.gospel.core.db.theory.{Theory, TheoryManager}
+import com.szadowsz.gospel.core.engine.flags.FlagManager
 import com.szadowsz.gospel.core.exception.library.LibraryInstantiationException
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -58,7 +58,9 @@ abstract class Library(wam: Interpreter) {
   protected lazy implicit val opManager: OperatorManager = wam.getOperatorManager
   protected lazy implicit val libManager: LibraryManager = wam.getLibraryManager
   protected lazy implicit val primManager: PrimitivesManager = wam.getPrimitiveManager
- 
+  protected lazy implicit val thManager: TheoryManager = wam.getTheoryManager
+  protected lazy implicit val flagManager : FlagManager = wam.getFlagManager
+  
   protected lazy val logger : Logger = LoggerFactory.getLogger(getClass)
   
   def getName: String = getClass.getSimpleName

@@ -38,7 +38,7 @@ object Var {
   
 }
 
-class Var(private val name: String, id: scala.Int, count: Long) extends Term {
+class Var(private val name: Option[String], id: scala.Int, count: Long) extends Term {
   
   //fingerPrint is a unique id (per run) used for var comparison
   private var fingerPrint = Var.getFingerprint
@@ -57,7 +57,7 @@ class Var(private val name: String, id: scala.Int, count: Long) extends Term {
   private var binding: Option[Term] = None
   
   def this() {
-    this(Var.ANY, Var.ORIGINAL, 0L)
+    this(None, Var.ORIGINAL, 0L)
   }
   
   /**
@@ -70,18 +70,18 @@ class Var(private val name: String, id: scala.Int, count: Long) extends Term {
     * @throws InvalidTermException if n is not a valid Prolog variable name
     */
   def this(n: String) {
-    this(if (n == Var.ANY) null else n, Var.ORIGINAL, 0L)
+    this(if (n == Var.ANY) None else Option(n), Var.ORIGINAL, 0L)
     buildCompleteName()
   }
   
   private def this(id: scala.Int, alias: scala.Int, count: scala.Long /*, boolean isCyclic*/) {
-    this(Var.ANY, if (id < 0) Var.ORIGINAL else id, count)
+    this(None, if (id < 0) Var.ORIGINAL else id, count)
     rename(id, alias)
   }
   
   override def isAtomic: Boolean = binding.exists(_.isAtomic)
   
-  def isAnonymous: Boolean = name == Var.ANY
+  def isAnonymous: Boolean = name.isEmpty
   
   def isBindingAnonymous : Boolean = binding.exists(!_.isInstanceOf[Var] || !binding.asInstanceOf[Var].isAnonymous)
   
@@ -97,16 +97,15 @@ class Var(private val name: String, id: scala.Int, count: Long) extends Term {
   
   override def isEquals(term: Term): Boolean = {
     term match {
-      case v: Var => name == v.name && binding.sameElements(v.binding)
+      case v: Var => getName == v.getName && binding.sameElements(v.binding)
       case _ => false
     }
   }
   
   def getOriginalName: String = {
-    if (name != null) {
-      name
-    } else {
-      Var.ANY + this.fingerPrint
+    name match {
+      case Some(n) => n
+      case None => Var.ANY + this.fingerPrint
     }
   }
   
@@ -125,7 +124,12 @@ class Var(private val name: String, id: scala.Int, count: Long) extends Term {
     */
   def getDirectBinding: Term = binding.orNull
   
-  def getName : String = name
+  def getName : String = {
+    name match {
+      case Some(n) => n
+      case None => Var.ANY
+    }
+  }
   
   def setBinding(t: Term): Unit = {
     binding = Option(t)
@@ -161,12 +165,14 @@ class Var(private val name: String, id: scala.Int, count: Long) extends Term {
     * Rename variable (assign completeName)
     */
   private def buildCompleteName(): Unit = {
-    if (name != null) {
-      if (Character.isUpperCase(name.charAt(0)) || name.startsWith(Var.ANY)) {
-        completeName = new StringBuilder(name)
+    name match {
+      case Some (n) =>
+      if (Character.isUpperCase(n.charAt(0)) || n.startsWith(Var.ANY)) {
+        completeName = new StringBuilder(n)
       } else {
-        throw new InvalidTermException("Illegal variable name", name)
+        throw new InvalidTermException("Illegal variable name", n)
       }
+      case None =>
     }
   }
   
@@ -178,11 +184,11 @@ class Var(private val name: String, id: scala.Int, count: Long) extends Term {
     if (ctxid > Var.ORIGINAL) {
       completeName = completeName
         .delete(0, completeName.length())
-        .append(name).append("_e").append(ctxid)
+        .append(getName).append("_e").append(ctxid)
     } else if (ctxid == Var.ORIGINAL) {
       completeName = completeName
         .delete(0, completeName.length())
-        .append(name)
+        .append(getName)
     } else if (ctxid == Var.PROGRESSIVE) {
       completeName = completeName
         .delete(0, completeName.length())
@@ -201,13 +207,14 @@ class Var(private val name: String, id: scala.Int, count: Long) extends Term {
     }// TODO Revisit behaviour
   }
   
-  override def copy(vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
+  override def copy(e : Executor, vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
     val tt = getBinding
     if (tt eq this) {
-      val v = vMap.computeIfAbsent(this, k => this) // No occurrence of v before
+      val v = vMap.computeIfAbsent(this, k => new Var(name,id,count)) // No occurrence of v before
+      v.executor =e
       v
     } else {
-      tt.copy(vMap, idExecCtx)
+      tt.copy(e, vMap, idExecCtx)
     }
   }
   
@@ -364,13 +371,13 @@ class Var(private val name: String, id: scala.Int, count: Long) extends Term {
     binding match {
       case Some(term) =>
         // TODO is Cyclic
-        if (name != Var.ANY) {
+        if (name.isDefined) {
           completeName.toString() + " / " + term.toString
         } else {
           term.toString
         }
       case None =>
-        if (name != Var.ANY) {
+        if (name.isDefined) {
           completeName.toString()
         } else {
           Var.ANY + "" + this.fingerPrint

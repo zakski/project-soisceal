@@ -49,11 +49,11 @@ abstract class Term extends Serializable {
     *
     * The list argument passed contains the list of variables to be renamed (if empty list then no renaming).
     *
-   * @param vMap      variables to rename
+    * @param vMap      variables to rename
     * @param idExecCtx Execution Context identifier
     * @return Copy of Term
     */
-  def copy(vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term
+  def copy(e : Executor, vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term
   
   /**
     * gets a copy for result.

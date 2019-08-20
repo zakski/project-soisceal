@@ -28,6 +28,7 @@ import org.springframework.core.io.Resource
 
 import scala.collection.JavaConverters._
 import scala.util.Try
+import scala.util.control.NonFatal
 
 object Parser {
 
@@ -430,6 +431,8 @@ class Parser(reader: BufferedReader)(implicit opManager: OperatorManager) extend
     } catch {
       case ex: IOException =>
         throw new InvalidTermException("An I/O error occured.", ex, lineNo, colNo)
+      case npe: NullPointerException =>
+        throw new InvalidTermException("Unable to Parse Term.", npe, lineNo, colNo)
     }
   }
 

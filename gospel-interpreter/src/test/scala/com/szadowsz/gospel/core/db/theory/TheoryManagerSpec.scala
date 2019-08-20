@@ -13,16 +13,15 @@
   * License along with this library; if not, write to the Free Software
   * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
-package com.szadowsz.gospel.core.db
+package com.szadowsz.gospel.core.db.theory
 
-import com.szadowsz.gospel.core.{Interpreter, InterpreterBuilder}
 import com.szadowsz.gospel.core.data.{Int, Struct}
-import com.szadowsz.gospel.core.db.theory.{Theory, TheoryManager}
 import com.szadowsz.gospel.core.test.TestLogRecorder
+import com.szadowsz.gospel.core.{Interpreter, InterpreterBuilder}
 import org.apache.log4j.{Level, Logger}
 import org.junit.runner.RunWith
-import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.{BeforeAndAfter, FlatSpec, Matchers}
 
 /**
   * Created on 18/02/2017.
@@ -85,22 +84,22 @@ class TheoryManagerSpec extends FlatSpec with Matchers with BeforeAndAfter {
       testClauses should have size 0
     }
 
-//  it should "not allow asserts to be backtracked" in {
-//    val solution = prolog.solve("assertz(a(z)).")
-//    solution.isSuccess shouldBe true
-//    solution.hasOpenAlternatives shouldBe false
-//  }
-//
-//
-//  it should "abolish predicates correctly via abolish predicate" in {
-//    prolog.setTheory(new Theory("fact(new).\nfact(other).\n"))
-//
-//    var solution = prolog.solve("abolish(fact/1).")
-//    solution.isSuccess shouldBe true
-//
-//    solution = prolog.solve("fact(V).")
-//    solution.isSuccess shouldBe false
-//  }
+  it should "not allow asserts to be backtracked" in {
+    val solution = wam.solve("assertz(a(z)).")
+    solution.isSuccess shouldBe true
+    solution.hasOpenAlternatives shouldBe false
+  }
+
+
+  it should "abolish predicates correctly via abolish predicate" in {
+    wam.setTheory(new Theory("fact(new).\nfact(other).\n"))
+
+    var solution = wam.solve("abolish(fact/1).")
+    solution.isSuccess shouldBe true
+
+    solution = wam.solve("fact(V).")
+    solution.isSuccess shouldBe false
+  }
 //
 //  it should "retract all predicates correctly" in {
 //    var solution = prolog.solve("assert(takes(s1,c2)), assert(takes(s1,c3)).")

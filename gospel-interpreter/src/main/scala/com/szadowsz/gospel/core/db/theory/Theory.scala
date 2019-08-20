@@ -25,30 +25,40 @@ import org.springframework.core.io.{FileSystemResource, Resource, StringResource
 
 import scala.io.Source
 
-class Theory(private val resource : Resource) {
-
-  def this(s : String){
+class Theory(private val resource: Resource) {
+  
+  def this(s: String) {
     this(new StringResource(s))
   }
-
-  def this(f : File){
+  
+  def this(f: File) {
     this(new FileSystemResource(f))
   }
-
-  def this(u : URI){
+  
+  def this(u: URI) {
     this(new UrlResource(u.toURL))
   }
-
-  def this(u : URL){
+  
+  def this(u: URL) {
     this(new UrlResource(u))
   }
-
-  private[db] def getResourceName : Option[String] = Option(resource.getFilename).map(fn => fn.substring(0,fn.lastIndexOf('.')))
-
+  
+  private[db] def getResourceName: Option[String] = Option(resource.getFilename).map(fn => fn.substring(0, fn.lastIndexOf('.')))
+  
   def iterator()(implicit opManager: OperatorManager): Iterator[Term] = {
-    if (resource != null && resource.isFile){
-      println(Source.fromFile(resource.getFile).getLines().mkString("/n"))
-    }
     new Parser(new BufferedReader(new InputStreamReader(resource.getInputStream))).iterator
+  }
+  
+  override def toString: String = {
+    val in = resource.getInputStream
+    if (in == null) {
+      ""
+    } else {
+      // TODO surround with try-catch
+      val src = Source.fromInputStream(in)
+      val out = src.mkString
+      src.close()
+      out
+    }
   }
 }

@@ -53,7 +53,7 @@ class BuiltInSpec extends FunSpec with Matchers with BeforeAndAfter {
       prims should have size 2
       prims.getOrElse(PrimitiveType.DIRECTIVE, Seq()) should have length 2
       prims.getOrElse(PrimitiveType.FUNCTOR, Seq()) should have length 0
-      prims.getOrElse(PrimitiveType.PREDICATE, Seq()) should have length 3
+      prims.getOrElse(PrimitiveType.PREDICATE, Seq()) should have length 9
     }
     
     // def at_halt TODO http://www.swi-prolog.org/pldoc/doc_for?object=at_halt/1

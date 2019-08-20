@@ -17,6 +17,8 @@ package com.szadowsz.gospel.core.data
 
 import java.util
 
+import com.szadowsz.gospel.core.engine.Executor
+
 final case class Float(value: Double) extends Number {
   
   override def intValue: scala.Int = value.toInt
@@ -32,7 +34,12 @@ final case class Float(value: Double) extends Number {
   override def isReal: Boolean = true
   
   override def isEquals(other: Term): Boolean = other.isInstanceOf[Float] && other.asInstanceOf[Float].value == value
-  
+ 
+  override def copy(e : Executor, vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
+    val f = Float(value)
+    f.executor = e
+    f
+  }
   /**
     * Tries to unify a term with the provided term argument.
     * This service is to be used in demonstration context.

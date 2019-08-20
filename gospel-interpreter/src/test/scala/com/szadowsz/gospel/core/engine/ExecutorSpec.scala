@@ -242,4 +242,21 @@ class ExecutorSpec extends FlatSpec with Matchers with  BeforeAndAfterEach {
       exec.nextState.doJob(exec)  // GoalEvaluationState -> FATAL EXCEPTION
     }
   }
+  
+  it should "transition to A Successful ChoicePoint End State correctly when there are multiple correct answers" in {
+    wam.setTheory(new Theory(
+      """
+        |loves(burgers).
+        |loves(summer).
+      """.stripMargin))
+    
+    val query = new Struct("loves", new Var("X"))
+    val exec = new Executor(query)
+  
+    while (!exec.nextState.isInstanceOf[EndState]){
+      exec.nextState.doJob(exec)
+    }
+    
+    exec.nextState shouldBe EndState(Result.TRUE_CP)
+  }
 }

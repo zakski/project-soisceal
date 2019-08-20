@@ -15,36 +15,35 @@
   */
 package com.szadowsz.gospel.core
 
-import org.scalatest.{BeforeAndAfterEach, Matchers, Suite}
+import org.scalatest.matchers.{MatchResult, Matcher}
 
-/**
-  * Created on 16/02/2017.
-  */
-trait BaseEngineSpec extends Matchers with BeforeAndAfterEach {
-  this: Suite =>
-
-  protected var prolog : Interpreter = _
-
-  protected def init(): Interpreter
+trait SolutionMatchers {
   
-  protected def getInterpreter : Interpreter = {
-    Option(prolog) match {
-      case None =>
-        prolog = init()
-        prolog
-      case Some (_) => prolog
+  class QueryShouldSucceedMatcher() extends Matcher[Solution] {
+    
+    def apply(left: Solution): MatchResult = {
+      val query = left.getQuery
+      MatchResult(
+        left.isSuccess,
+        s"$query was unsuccessful",
+        s"$query was successful"
+      )
     }
   }
   
-  override def beforeEach(): Unit = {
-    Option(prolog) match {
-      case None =>
-        prolog = init()
-      case Some (_) =>
+  def beSuccessful(): Matcher[Solution] = new QueryShouldSucceedMatcher()
+  
+  class QueryShouldFailMatcher() extends Matcher[Solution] {
+    
+    def apply(left: Solution): MatchResult = {
+      val query = left.getQuery
+      MatchResult(
+        !left.isSuccess,
+        s"$query was successful",
+        s"$query was unsuccessful"
+      )
     }
   }
   
-  override def afterEach(): Unit = {
-    prolog = null
-  }
+  def beUnsuccessful(): Matcher[Solution] = new QueryShouldFailMatcher()
 }

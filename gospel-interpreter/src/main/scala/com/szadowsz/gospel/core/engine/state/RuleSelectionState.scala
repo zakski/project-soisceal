@@ -66,7 +66,7 @@ class RuleSelectionState extends State {
       val curCtx: ExecutionContext = e.currentContext
       
       // copy head and body, refreshing variables
-      val clauseCopy = clauseInfo.performCopy(ec.id)
+      val clauseCopy = clauseInfo.performCopy(e,ec.id)
       ec.headClause = Option(clauseCopy.head)
       ec.goalsToEval = new SubGoalStore()
       ec.goalsToEval.load(clauseCopy.body)

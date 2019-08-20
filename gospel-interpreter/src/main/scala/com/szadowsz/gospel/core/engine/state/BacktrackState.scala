@@ -14,6 +14,7 @@
   * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
 package com.szadowsz.gospel.core.engine.state
+
 import java.util
 
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
@@ -35,57 +36,48 @@ class BacktrackState extends State {
         if (!e.checkExistence(goal.getPredicateIndicator)) {
           e.logWarning("The predicate " + goal.getPredicateIndicator + " is unknown.")
         }
+      case Some(curChoice) =>
+        e.currentAlternative = Some(curChoice)
+        //deunify variables and reload old goal
+        e.currentContext = curChoice.execContext
+        var curGoal: Term = e.currentContext.goalsToEval.backTo(curChoice.indexSubGoal).orNull.getBinding
+        if (!curGoal.isInstanceOf[Struct]) {
+          e.nextState = EndState(Result.FALSE)
+        } else {
+          e.currentContext.currentGoal = Some(curGoal.asInstanceOf[Struct])
+          // Rende coerente l'execution_stack
+          var curCtx: ExecutionContext = e.currentContext
+          var pointer = curCtx.trailingVars
+          var stopDeunify = curChoice.varsToDeunify
+          val varsToDeunify: util.List[Var] = stopDeunify.head
+          varsToDeunify.forEach(_.freeVars())
+          varsToDeunify.clear()
+          // bring parent contexts to a previous state in the demonstration
+          var noParent = false
+          do {
+            // deunify variables in sibling contexts
+            while (pointer ne stopDeunify) {
+              pointer.head.forEach(_.freeVars())
+              pointer = pointer.tail
+            }
+            curCtx.trailingVars = pointer
+            if (curCtx.parent == null) {
+              noParent = true //todo: break is not supported
+            } else {
+              stopDeunify = curCtx.parentVarList.get
+              val fatherIndex = curCtx.parentGoalId.get
+              curCtx = curCtx.parent.get
+              curGoal = curCtx.goalsToEval.backTo(fatherIndex).orNull.getBinding
+              if (!curGoal.isInstanceOf[Struct]) {
+                e.nextState = EndState(Result.FALSE)
+                return
+              }
+              curCtx.currentGoal = Some(curGoal.asInstanceOf[Struct])
+              pointer = curCtx.trailingVars
+            }
+          } while (!noParent)
+          e.nextState = new GoalEvaluationState
+        }
     }
   }
-    //  if (curChoice == null) {
-//      e.nextState = runner.END_FALSE
-//      val goal: Struct = e.currentContext.currentGoal
-//      if (!runner.getTheoryManager.checkExistence(goal.getPredicateIndicator)) //Alberto
-//        runner.warn("The predicate " + goal.getPredicateIndicator + " is unknown.")
-//      return
-//    }
-//    e.currentAlternative = curChoice
-//    //deunify variables and reload old goal
-//    e.currentContext = curChoice.getExecutionContext
-//    var curGoal: Term = e.currentContext.goalsToEval.backTo(curChoice.getIndexBack).orNull.getTerm
-//    if (!curGoal.isInstanceOf[Struct]) {
-//      e.nextState = runner.END_FALSE
-//      return
-//    }
-//    e.currentContext.currentGoal = curGoal.asInstanceOf[Struct]
-//    // Rende coerente l'execution_stack
-//    var curCtx: ExecutionContext = e.currentContext
-//    var pointer: OneWayList[util.List[Var]] = curCtx.trailingVars
-//    var stopDeunify: OneWayList[util.List[Var]] = curChoice.varsToDeunify
-//    val varsToDeunify: util.List[Var] = stopDeunify.getHead
-//    Var.free(varsToDeunify)
-//    varsToDeunify.clear()
-//    var fatherIndex: SubGoalId = null
-//    // bring parent contexts to a previous state in the demonstration
-//    var noParent = false
-//    do {
-//      // deunify variables in sibling contexts
-//      while (pointer ne stopDeunify) {
-//        Var.free(pointer.getHead)
-//        pointer = pointer.getTail
-//      }
-//      curCtx.trailingVars = pointer
-//      if (curCtx.fatherCtx == null) {
-//        noParent = true //todo: break is not supported
-//      } else {
-//        stopDeunify = curCtx.fatherVarsList
-//        fatherIndex = curCtx.fatherGoalId
-//        curCtx = curCtx.fatherCtx
-//        curGoal = curCtx.goalsToEval.backTo(fatherIndex).orNull.getTerm
-//        if (!curGoal.isInstanceOf[Struct]) {
-//          e.nextState = runner.END_FALSE
-//          return
-//        }
-//        curCtx.currentGoal = curGoal.asInstanceOf[Struct]
-//        pointer = curCtx.trailingVars
-//      }
-//    } while (!noParent)
-//    //set next state
-//    e.nextState = runner.GOAL_EVALUATION
-//  }
 }

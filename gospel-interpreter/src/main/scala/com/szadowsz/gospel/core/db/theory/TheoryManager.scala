@@ -176,7 +176,8 @@ private[core] class TheoryManager(wam: Interpreter) {
           }
         }
       } catch {
-        case e: InvalidTermException => throw new InvalidTheoryException(e, clause)
+        case ite: InvalidTermException => throw new InvalidTheoryException(ite, clause)
+        case NonFatal(t) => throw new InvalidTheoryException("Unable To Consult Theory", t, clause)
       }
       if (libName == None) {
         lastConsultedTheory = theory

@@ -17,7 +17,7 @@ package com.szadowsz.gospel.core.engine
 
 import java.util
 
-import com.szadowsz.gospel.core.Interpreter
+import com.szadowsz.gospel.core.{Interpreter, Solution}
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.db.theory.clause.Clause
 import com.szadowsz.gospel.core.engine.context.goal.tree.SubGoalBranch
@@ -92,7 +92,7 @@ private[core] class Executor(val query : Struct)(implicit val wam : Interpreter)
   /**
     * Core of engine. Finite State Machine that transitions from an initial state, to an end state.
     */
-  def run(): EndState = {
+  private[engine] def run(): EndState = {
     var action: String = null
     do {
       if (mustStop) {
@@ -104,6 +104,17 @@ private[core] class Executor(val query : Struct)(implicit val wam : Interpreter)
     } while (!nextState.isInstanceOf[EndState])
     nextState.doJob(this)
     nextState.asInstanceOf[EndState]
+  }
+  
+  def solve(): Solution = {
+    try {
+      val result: EndState = run()
+      new Solution(query, result.getResultGoal, result.getResultType, result.getResultVars)
+    } catch {
+      case ex: Exception =>
+        ex.printStackTrace()
+        new Solution(query)
+    }
   }
   
   def isOccursCheckEnabled(): Boolean = {

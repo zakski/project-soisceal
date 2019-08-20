@@ -46,6 +46,15 @@ object InterpreterError {
     val descriptionError = buildDescMsg("Type", argNo, e)
     new InterpreterError(new Struct("error", errorTerm, tuPrologTerm), descriptionError)
   }
+  
+  def buildPermissionError(e : Executor, operation : String, objectType : String, culprit : Term, message : Term): InterpreterError = {
+    val errorTerm = new Struct("permission_error", new Struct(operation), new Struct(objectType), culprit)
+    val tuPrologTerm = new Struct("permission_error", e.currentContext.currentGoal.get, new Struct(operation), new Struct(objectType), culprit, message)
+    
+    val descriptionError =  s"Permission error in  ${e.currentContext.currentGoal.get}"
+    new InterpreterError(new Struct("error", errorTerm, tuPrologTerm), descriptionError)
+    /**/
+  }
 }
 
 /**

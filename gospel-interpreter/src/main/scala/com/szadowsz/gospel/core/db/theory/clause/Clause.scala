@@ -18,6 +18,7 @@ package com.szadowsz.gospel.core.db.theory.clause
 import java.util
 
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
+import com.szadowsz.gospel.core.engine.Executor
 import com.szadowsz.gospel.core.engine.context.goal.tree.{SubGoalBranch, SubGoalLeaf}
 
 import scala.collection.JavaConverters._
@@ -52,7 +53,7 @@ object Clause {
     * Extracts a series of comma separated sub goals from the demonstration's query term, recursively
     *
     * @param parent the root branch of the current tree
-    * @param body the body of the query the demonstration is seeking to answer
+    * @param body   the body of the query the demonstration is seeking to answer
     * @return a tree of all query goals, representing all subgoals as branch and leaf nodes
     */
   private def extractBody(parent: SubGoalBranch, body: Term): SubGoalBranch = {
@@ -65,7 +66,7 @@ object Clause {
           extractBody(if (!isCommaSeparator(t)) parent else parent.addBranch(), t)
           extractBody(parent, struct(1))
         }
-      case default => parent.addLeaf(body)
+      case _ => parent.addLeaf(body)
     }
     parent
   }
@@ -82,26 +83,26 @@ object Clause {
   * @param libName
   */
 private[core] case class Clause protected(clause: Struct, head: Struct, body: SubGoalBranch, libName: Option[String]) {
-
+  
   def this(clause: Struct, lib: Option[String]) {
-    this(clause, Clause.extractHead(clause),  Clause.extractBody(clause(1)), lib)
+    this(clause, Clause.extractHead(clause), Clause.extractBody(clause(1)), lib)
   }
-
- def getLib : Option[String] = libName
   
-  private[gospel] def performCopy(ExecCtx: Int) = {
+  def getLib: Option[String] = libName
+  
+  def performCopy(e : Executor, ExecCtx: Int) : Clause = {
     val vars = new util.IdentityHashMap[Var, Var]
-    copy(clause, head.copy(vars, ExecCtx).asInstanceOf[Struct], bodyCopy(body, new SubGoalBranch, vars, ExecCtx),libName)
+    copy(clause, head.copy(e, vars, ExecCtx).asInstanceOf[Struct], bodyCopy(e, body, new SubGoalBranch, vars, ExecCtx), libName)
   }
   
-  private def bodyCopy(source: SubGoalBranch, dest: SubGoalBranch,vars: util.AbstractMap[Var, Var], id: Int): SubGoalBranch = {
-    for (node <- source.iterator.asScala){
+  private def bodyCopy(e : Executor, source: SubGoalBranch, dest: SubGoalBranch, vars: util.AbstractMap[Var, Var], id: Int): SubGoalBranch = {
+    for (node <- source.iterator.asScala) {
       if (node.isLeaf) {
         val leaf = node.asInstanceOf[SubGoalLeaf]
-        val leafTerm: Term = leaf.term.copy(vars, id)
+        val leafTerm: Term = leaf.term.copy(e, vars, id)
         dest.addLeaf(leafTerm)
       } else {
-        bodyCopy(node.asInstanceOf[SubGoalBranch], dest.addBranch(), vars, id)
+        bodyCopy(e, node.asInstanceOf[SubGoalBranch], dest.addBranch(), vars, id)
       }
     }
     dest

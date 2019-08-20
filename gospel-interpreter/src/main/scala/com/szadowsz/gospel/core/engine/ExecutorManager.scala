@@ -13,38 +13,15 @@
   * License along with this library; if not, write to the Free Software
   * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
   */
-package com.szadowsz.gospel.core
+package com.szadowsz.gospel.core.engine
 
-import org.scalatest.{BeforeAndAfterEach, Matchers, Suite}
+import com.szadowsz.gospel.core.data.Struct
+import com.szadowsz.gospel.core.{Interpreter, Solution}
 
-/**
-  * Created on 16/02/2017.
-  */
-trait BaseEngineSpec extends Matchers with BeforeAndAfterEach {
-  this: Suite =>
-
-  protected var prolog : Interpreter = _
-
-  protected def init(): Interpreter
+class ExecutorManager(implicit val wam : Interpreter) {
   
-  protected def getInterpreter : Interpreter = {
-    Option(prolog) match {
-      case None =>
-        prolog = init()
-        prolog
-      case Some (_) => prolog
-    }
-  }
-  
-  override def beforeEach(): Unit = {
-    Option(prolog) match {
-      case None =>
-        prolog = init()
-      case Some (_) =>
-    }
-  }
-  
-  override def afterEach(): Unit = {
-    prolog = null
+  def solve(query: Struct): Solution = {
+    val executor = new Executor(query)
+    executor.solve()
   }
 }

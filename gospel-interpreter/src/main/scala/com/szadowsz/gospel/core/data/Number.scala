@@ -37,10 +37,6 @@ abstract class Number extends Term {
     this // TODO Revisit behaviour
   }
   
-  final override def copy(vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
-    this
-  }
-  
   final override private[data] def copy(vMap: util.AbstractMap[Var, Var], substMap: util.AbstractMap[Term, Var]) = {
     this
   }
