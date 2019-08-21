@@ -34,12 +34,13 @@ class TheorySpec extends FlatSpec with Matchers {
   }
 
   it should "be able to append clause lists" in {
+    val prolog = new Interpreter()
+  
     val clauseList = Array[Term](new Struct("p"), new Struct("q"), new Struct("r"))
     val otherClauseList = Array[Term](new Struct("a"), new Struct("b"), new Struct("c"))
-    val theory = new Theory(new Struct(clauseList))
-    theory.append(new Theory(new Struct(otherClauseList)))
+    var theory = new Theory(new Struct(clauseList))
+    theory = theory.append(new Theory(new Struct(otherClauseList)))(prolog.getOperatorManager)
 
-    val prolog = new Interpreter()
     prolog.setTheory(theory)
     prolog.solve("p.").isSuccess shouldBe true
     prolog.solve("b.").isSuccess shouldBe true

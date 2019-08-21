@@ -43,9 +43,6 @@ import java.nio.channels.ReadableByteChannel;
  * @see UrlResource
  * @see ClassPathResource
  * @see FileSystemResource
- * @see PathResource
- * @see ByteArrayResource
- * @see InputStreamResource
  */
 public interface Resource extends InputStreamSource {
 

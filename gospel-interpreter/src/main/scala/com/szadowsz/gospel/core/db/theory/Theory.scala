@@ -18,14 +18,22 @@ package com.szadowsz.gospel.core.db.theory
 import java.io.{BufferedReader, File, InputStreamReader}
 import java.net.{URI, URL}
 
-import com.szadowsz.gospel.core.data.Term
+import com.szadowsz.gospel.core.data.{Struct, Term}
 import com.szadowsz.gospel.core.db.operators.OperatorManager
 import com.szadowsz.gospel.core.parser.Parser
 import org.springframework.core.io.{FileSystemResource, Resource, StringResource, UrlResource}
 
 import scala.io.Source
 
-class Theory(private val resource: Resource) {
+class Theory private (private val resource: Option[Resource], private val clauseList : Struct) {
+  
+  def this(resource: Resource) {
+    this(Option(resource), new Struct())
+  }
+  
+  def this(clauseList : Struct) {
+    this(None, clauseList)
+  }
   
   def this(s: String) {
     this(new StringResource(s))
@@ -43,22 +51,30 @@ class Theory(private val resource: Resource) {
     this(new UrlResource(u))
   }
   
-  private[db] def getResourceName: Option[String] = Option(resource.getFilename).map(fn => fn.substring(0, fn.lastIndexOf('.')))
+  private[db] def getResourceName: Option[String] = resource.flatMap(r => Option(r.getFilename)).map(fn => fn.substring(0, fn.lastIndexOf('.')))
   
   def iterator()(implicit opManager: OperatorManager): Iterator[Term] = {
-    new Parser(new BufferedReader(new InputStreamReader(resource.getInputStream))).iterator
+    val it = resource.map(r => new Parser(new BufferedReader(new InputStreamReader(r.getInputStream))).iterator)
+    it.getOrElse(Iterator[Term]()) ++ clauseList.getListIterator
+  }
+  
+  def append(th: Theory)(implicit opManager: OperatorManager) : Theory = {
+    val it = th.iterator() ++ iterator()
+    new Theory(new Struct(it.toArray))
   }
   
   override def toString: String = {
-    val in = resource.getInputStream
-    if (in == null) {
-      ""
-    } else {
-      // TODO surround with try-catch
-      val src = Source.fromInputStream(in)
-      val out = src.mkString
-      src.close()
-      out
+    resource match {
+      case Some(r) =>
+        Option(r.getInputStream)match {
+          case Some (is) =>
+            val src = Source.fromInputStream(is)
+            val out = src.mkString
+            src.close()
+            out
+          case None => ""
+        }
+      case None => ""
     }
   }
 }
