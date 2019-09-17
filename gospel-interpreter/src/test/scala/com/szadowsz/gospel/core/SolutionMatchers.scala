@@ -46,4 +46,18 @@ trait SolutionMatchers {
   }
   
   def beUnsuccessful(): Matcher[Solution] = new QueryShouldFailMatcher()
+  
+  class QueryShouldHaltMatcher() extends Matcher[Solution] {
+    
+    def apply(left: Solution): MatchResult = {
+      val query = left.getQuery
+      MatchResult(
+        left.isHalted,
+        s"$query was halted",
+        s"$query was not halted"
+      )
+    }
+  }
+  
+  def beHalted(): Matcher[Solution] = new QueryShouldHaltMatcher()
 }

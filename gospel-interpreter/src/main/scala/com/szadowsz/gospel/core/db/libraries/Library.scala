@@ -105,8 +105,13 @@ abstract class Library(wam: Interpreter) {
       )
       pClauses.flatMap { case (a, args) =>
         val annotationName = a.tree.tpe.typeSymbol.name.toString
-        val aliases = a.tree.children.tail.collect { case Literal(Constant(aliases: Array[String])) => args }
-        (annotationName, s"$methodName/$args", methodFunction) +: aliases.map(alt => (annotationName, s"$alt/$args", methodFunction))
+        val useAliasesOnly = a.tree.children.tail.collectFirst { case Literal(Constant(useAliasesOnly: Boolean)) => useAliasesOnly }.getOrElse(false)
+        val aliases = a.tree.children.tail.collect { case Literal(Constant(alias: String)) => alias}//s"'$alias'"}
+        if (!useAliasesOnly) {
+          (annotationName, s"$methodName/$args", methodFunction) +: aliases.map(alt => (annotationName, s"$alt/$args", methodFunction))
+        } else {
+         aliases.map(alt => (annotationName, s"$alt/$args", methodFunction))
+        }
       }
     }
     logger.debug(s"Mapped ${funcs.size} Functions")

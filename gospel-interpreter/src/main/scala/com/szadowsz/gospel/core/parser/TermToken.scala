@@ -39,4 +39,30 @@ private[parser] case class TermToken(seq: String, tokenType: Int) extends Serial
   def isEOF: Boolean = getAttribute == TermTokenizer.EOF
 
   def isType(theType: Int): Boolean = getType == theType
+  
+  override def toString: String = {
+    val typeString = tokenType match {
+      case TermTokenizer.LPAR => "Parenthesis '('"
+      case TermTokenizer.RPAR => "Parenthesis ')'"
+      case TermTokenizer.LBRA => "Bracket '['"
+      case TermTokenizer.RBRA => "Bracket ']'"
+      case TermTokenizer.BAR => "Bar '|'"
+      case TermTokenizer.INTEGER => "Integer"
+      case TermTokenizer.FLOAT => "Float"
+      case TermTokenizer.ATOM => "Atom"
+      case TermTokenizer.VARIABLE => "Var"
+      case TermTokenizer.SQ_SEQUENCE => "Single Quote ' "
+      case TermTokenizer.DQ_SEQUENCE => "Double Quote \" "
+      case TermTokenizer.END => "Term End . "
+      case TermTokenizer.LBRA2 => "Bracket '{'"
+      case TermTokenizer.RBRA2 => "Bracket '}'"
+      case TermTokenizer.FUNCTOR => "Functor"
+      case TermTokenizer.OPERATOR => "Operator"
+      case TermTokenizer.EOF => "EOF"
+      case g if TermTokenizer.GRAPHIC_CHARS.contains(g) => s"Graphic Char '$g'"
+      case w if TermTokenizer.WHITESPACE_CHARS.contains(w) => "Whitespace"
+      case _ => s"UNKNOWN - $tokenType"
+    }
+    s"TermToken($seq, $typeString)"
+  }
 }

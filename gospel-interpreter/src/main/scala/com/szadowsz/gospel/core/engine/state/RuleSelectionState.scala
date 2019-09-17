@@ -79,7 +79,9 @@ class RuleSelectionState extends State {
   
       unifyGoal(e, clauseStore, fromBacktracking, ec, curCtx)
       //Alberto
-      if (!ec.tryToPerformTailRecursionOptimization(e)) ec.updateContextAndDepth(e)
+      if (!ec.tryToPerformTailRecursionOptimization(e)) {
+        ec.updateContextAndDepth(e)
+      }
       ec.saveParentState()
       e.currentContext = ec
       e.nextState = new GoalSelectionState

@@ -27,7 +27,14 @@ class ParserSpec extends FlatSpec with BaseEngineSpec {
     val p = new Parser(new OperatorManager, "")
     p.nextTerm(false) shouldBe null
   }
-
+  
+  it should "parse mathematical equations" in {
+    val p = new Parser(new OperatorManager,"3 * 2 =:= 7 - 1.")
+    val result = new Struct("=:=", new Struct("*", Int(3), Int(2)), new Struct("-", Int(7), Int(1)))
+    
+    p.nextTerm(false) shouldBe result
+  }
+  
   it should "not parse unary plus operators" in {
     // SICStus PrologEngine interprets "n(+100)" as "n(100)"
     // GNU PrologEngine interprets "n(+100)" as "n(+(100))"

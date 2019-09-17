@@ -15,6 +15,8 @@
   */
 package com.szadowsz.gospel.core
 
+import com.szadowsz.gospel.core.data.Term
+import com.szadowsz.gospel.core.parser.Parser
 import org.scalatest.{BeforeAndAfterEach, Matchers, Suite}
 
 /**
@@ -34,6 +36,11 @@ trait BaseEngineSpec extends Matchers with BeforeAndAfterEach {
         prolog
       case Some (_) => prolog
     }
+  }
+  
+  protected def parseTerm(prolog: Interpreter, term: String): Term = {
+    val parser = new Parser(term)(prolog.getOperatorManager)
+    parser.nextTerm(false)
   }
   
   override def beforeEach(): Unit = {

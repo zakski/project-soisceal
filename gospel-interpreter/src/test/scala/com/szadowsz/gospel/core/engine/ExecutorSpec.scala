@@ -125,6 +125,21 @@ class ExecutorSpec extends FlatSpec with Matchers with  BeforeAndAfterEach {
     exec.nextState shouldBe a [BacktrackState]
   }
   
+  it should "transition from BacktrackState to GoalEvaluationState correctly for a simple query" in {
+    val query = new Parser("not false.")(wam.getOperatorManager).nextTerm(true).asInstanceOf[Struct]
+  
+    val exec = new Executor(query)
+    
+     while (!exec.nextState.isInstanceOf[BacktrackState]) {
+      exec.nextState.doJob(exec)
+    }
+    exec.nextState shouldBe a [BacktrackState]
+    
+    exec.nextState.doJob(exec) // should reset successfully
+    exec.nextState shouldBe a [GoalEvaluationState]
+  }
+  
+  
   it should "transition from GoalEvaluationState to ExceptionState correctly for a simple query" in {
     val query = new Struct("throw_always", new Var("A"), Int(0))
   

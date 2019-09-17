@@ -224,7 +224,7 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
   override def isEquals(other: Term): Boolean = {
     other match {
       case s: Struct =>
-        name == s.name && arity == s.arity && args.sameElements(s.args)
+        name == s.name && arity == s.arity && args == s.args
       case _ => false
     }
   }

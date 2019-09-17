@@ -15,13 +15,12 @@
   */
 package com.szadowsz.gospel.core.db.libraries.inbuilt
 
-import com.szadowsz.gospel.core.{Interpreter, data}
+import com.szadowsz.gospel.core.Interpreter
 import com.szadowsz.gospel.core.data.{Number, Struct, Term, Var}
-import com.szadowsz.gospel.core.db.libraries.{Library, directive, predicate}
+import com.szadowsz.gospel.core.db.libraries.{Library, predicate}
 import com.szadowsz.gospel.core.db.theory.Theory
 import com.szadowsz.gospel.core.db.theory.clause.Clause
-import com.szadowsz.gospel.core.exception.InterpreterError
-import com.szadowsz.gospel.core.exception.library.InvalidLibraryException
+import com.szadowsz.gospel.core.exception.{CutException, InterpreterError}
 
 class BuiltIn(wam: Interpreter) extends Library(wam) with BuiltInSrcControl with BuiltInArithmetic with BuiltInFlags {
   // scalastyle:off method.name
@@ -77,9 +76,14 @@ class BuiltIn(wam: Interpreter) extends Library(wam) with BuiltInSrcControl with
         |member(E,L) :- member_guard(E,L), member0(E,L).
         |member0(E,[E|_]).
         |member0(E,[_|L]):- member0(E,L).
+        |
+        |% True if Goal cannot be proven. Retained for compatibility only. New code should use \+/1.
+        |not(G) :- G,!,fail.
+        |not(_).
         |                  
     """.stripMargin
         + getFlagTheoryString
+        + getArithmeticTheoryString
     ))
   }
   
@@ -132,6 +136,15 @@ class BuiltIn(wam: Interpreter) extends Library(wam) with BuiltInSrcControl with
     */
   @predicate(0)
   def fail_0: () => Boolean = () => false
+
+  /**
+    * Always fail. The predicate false/0 is translated into a single virtual machine instruction.
+    *
+    * @return always returns false
+    */
+  @predicate(0)
+  def false_0: () => Boolean = () => false
+  
   
   /**
     * Always succeed. The predicate true/0 is translated into a single virtual machine instruction.
@@ -140,4 +153,32 @@ class BuiltIn(wam: Interpreter) extends Library(wam) with BuiltInSrcControl with
     */
   @predicate(0)
   def true_0: () => Boolean = () => true
+  
+  /**
+    * Unify Term1 with Term2. True if the unification succeeds. For behaviour on cyclic terms see the Prolog flag
+    * occurs_check. It acts as if defined by the following fact:
+    *
+    * '='(Term, Term)
+    *
+    * @return true if unification between term1 with term2 succeeds
+    */
+  @predicate(2, "=")
+  def unify_2: (Term, Term) => Boolean = (arg0, arg1) => {
+    arg0.unify(arg1)
+  }
+  
+  
+  /**
+    * Stops the executor from backtracking.
+    *
+    * @return always returns true.
+    */
+  @predicate(0, true, "!")
+  def cut_0: () => Boolean = {
+    /**
+      * Use an Exception to signfy we want to perform a cut. Unfortunate byproduct of how we are separating the executor from the lambda
+      * functions
+      */
+    () => throw new CutException()
+  }
 }

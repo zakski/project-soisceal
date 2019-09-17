@@ -17,12 +17,15 @@
  */
 package com.szadowsz.gospel.core.data
 
+import com.szadowsz.gospel.core.{BaseEngineSpec, Interpreter, SolutionFunSpecBehaviours}
 import org.junit.runner.RunWith
 import org.scalatest.{FunSpec, Matchers}
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class NumberSpec extends FunSpec with Matchers {
+class NumberSpec extends FunSpec with BaseEngineSpec with SolutionFunSpecBehaviours {
+  
+  override protected def init(): Interpreter = new Interpreter()
   
   describe("Int") {
 
@@ -100,5 +103,37 @@ class NumberSpec extends FunSpec with Matchers {
     it("should not be equal to an int of the same value") {
       Float(1) should not be Int(1)
     }
+  }
+  
+  describe("number unification") {
+  
+    it should behave like unsuccessfulQuery(getInterpreter,"0.0 = 0.")
+    
+    it should behave like successfulQuery(getInterpreter,"0 = 0.")
+    
+    it should behave like successfulQuery(getInterpreter,"0.0 = 0.0.")
+  
+    it should behave like unsuccessfulQuery(getInterpreter,"0.9 = 0.")
+    
+    it should behave like unsuccessfulQuery(getInterpreter,"0 = 0.9.")
+  
+    it should behave like successfulQuery(getInterpreter,"0.9 = 0.9.")
+  
+    it should behave like successfulQuery(getInterpreter,"9 = 9.")
+  }
+  
+  describe("number comparison") {
+    
+    it should behave like unsuccessfulQuery(getInterpreter,"0.0 == 0.")
+    
+    it should behave like successfulQuery(getInterpreter,"0 == 0.")
+    
+    it should behave like successfulQuery(getInterpreter,"0.0 == 0.0.")
+  
+    it should behave like unsuccessfulQuery(getInterpreter,"1 == 1.0.")
+   
+    it should behave like successfulQuery(getInterpreter,"1 == 1.")
+   
+    it should behave like successfulQuery(getInterpreter,"1.0 == 1.0.")
   }
 }

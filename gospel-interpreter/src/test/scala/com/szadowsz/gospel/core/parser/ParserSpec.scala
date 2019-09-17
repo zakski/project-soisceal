@@ -155,7 +155,27 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
     p.lineNo shouldBe 1
     p.colNo shouldBe 10
   }
-
+  
+  it should "parse simple mathematical equations" in {
+    val p = new Parser("3 =:= 3).")
+    val result = new Struct("=:=", Int(3),Int(3))
+    
+    p.nextTerm(false) shouldBe result
+  }
+  
+   it should "parse complex mathematical equations with Leading Symbol" in {
+    val p = new Parser("'=:='(3 * 2, 7 - 1).")
+    val result = new Struct("=:=", new Struct("*", Int(3), Int(2)), new Struct("-", Int(7), Int(1)))
+    
+    p.nextTerm(false) shouldBe result
+  }
+  
+  it should "parse complex mathematical equations without Leading Symbol" in {
+    val p = new Parser("3 * 2 =:= 7 - 1.")
+    val result = new Struct("=:=", new Struct("*", Int(3), Int(2)), new Struct("-", Int(7), Int(1)))
+    
+    p.nextTerm(false) shouldBe result
+  }
   /**
     * First Indexes Should be as follows:
     *

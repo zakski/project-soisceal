@@ -16,11 +16,27 @@
 package com.szadowsz.gospel.core.db.libraries
 
 import scala.annotation.StaticAnnotation
+// scalastyle:off class.name
 
-case class clause(args: Int, aliases : String*) extends StaticAnnotation
+case class clause(args: Int, useAliasesOnly: Boolean, aliases : String*) extends StaticAnnotation
 
-class directive(args: Int, aliases : String*) extends clause(args,aliases:_*)
+class directive(args: Int, useAliasesOnly : Boolean, aliases : String*) extends clause(args, useAliasesOnly, aliases:_*){
+  
+  def this(args: Int, aliases : String*){
+    this(args,false,aliases:_*)
+  }
+}
 
-class functor(args: Int, aliases : String*) extends clause(args,aliases:_*)
+class functor(args: Int, useAliasesOnly : Boolean, aliases : String*) extends clause(args, useAliasesOnly, aliases:_*){
+  
+  def this(args: Int, aliases : String*){
+    this(args,false,aliases:_*)
+  }
+}
 
-class predicate(args: Int, aliases : String*) extends clause(args,aliases:_*)
+class predicate(args: Int, useAliasesOnly : Boolean, aliases : String*) extends clause(args, useAliasesOnly, aliases:_*){
+  
+  def this(args: Int, aliases : String*){
+    this(args,false,aliases:_*)
+  }
+}

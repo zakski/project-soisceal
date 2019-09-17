@@ -16,6 +16,7 @@
 package com.szadowsz.gospel.core.engine.state
 
 import com.szadowsz.gospel.core.data.{Struct, Term}
+import com.szadowsz.gospel.core.engine.context.ExecutionContext
 import com.szadowsz.gospel.core.engine.{Executor, Result}
 
 class GoalSelectionState extends State {
@@ -70,6 +71,22 @@ class GoalSelectionState extends State {
              e.currentContext = e.currentContext.parent.get // Return to the parent context
            }
       }
+    }
+    logContextState(e.currentContext)
+  }
+  
+  private def logContextState(context: ExecutionContext) = {
+    var cur = context
+    logger.debug("Goal Stack:")
+    var list : List[String] = Nil
+    while (cur != null){
+      list = list :+ cur.currentGoal.map(_.toString).getOrElse("None")
+      cur = cur.parent.orNull
+    }
+    
+    list.reverse.zipWithIndex.foreach{ case (g, i) =>
+      val spaces : String = Array.fill(i*3)(' ').mkString
+      logger.debug(spaces + g)// + s" :(${cur.haveAlternatives})")
     }
   }
 }

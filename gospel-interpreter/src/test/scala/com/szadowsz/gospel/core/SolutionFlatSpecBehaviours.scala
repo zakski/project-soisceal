@@ -19,11 +19,11 @@ import com.szadowsz.gospel.core.data.Term
 import org.scalatest.{FlatSpec, Matchers}
 
 trait SolutionFlatSpecBehaviours extends Matchers with SolutionMatchers {
-  this: FlatSpec =>
+  this: BaseEngineSpec with FlatSpec =>
   
   def successfulQuery(wam : Interpreter, query : Term) {
   
-    it should "be successful" in {
+    it should s"query $query be successful" in {
       val solution = wam.solve(query)
       solution should beSuccessful
     }
@@ -31,7 +31,7 @@ trait SolutionFlatSpecBehaviours extends Matchers with SolutionMatchers {
   
   def successfulQuery(wam : Interpreter, query : String) {
     
-    it should "be successful" in {
+    it should s"query $query be successful" in {
       val solution = wam.solve(query)
       solution should beSuccessful
     }
@@ -39,7 +39,7 @@ trait SolutionFlatSpecBehaviours extends Matchers with SolutionMatchers {
   
   def unsuccessfulQuery(wam : Interpreter, query : Term) {
     
-    it should "be unsuccessful" in {
+    it should s"query $query be unsuccessful" in {
       val solution = wam.solve(query)
       solution should beUnsuccessful
     }
@@ -47,7 +47,7 @@ trait SolutionFlatSpecBehaviours extends Matchers with SolutionMatchers {
   
   def unsuccessfulQuery(wam : Interpreter, query : String) {
     
-    it should "be unsuccessful" in {
+    it should s"query $query be unsuccessful" in {
       val solution = wam.solve(query)
       solution should beUnsuccessful
     }

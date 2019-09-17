@@ -42,6 +42,9 @@ class GoalEvaluationState extends State {
           new BacktrackState
         }
       } catch {
+        case cut : CutException => // Unfortunate byproduct of how we are separating the executor from the lambda functions
+          e.cut()
+          new GoalSelectionState
         case internal: InterpreterError =>
           // Replace the goal in which the error occurred with subgoal throw/1
           e.currentContext.currentGoal = Option(new Struct("throw", internal.getError))

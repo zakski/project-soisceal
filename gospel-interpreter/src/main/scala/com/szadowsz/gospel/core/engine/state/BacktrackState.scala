@@ -36,48 +36,56 @@ class BacktrackState extends State {
         if (!e.checkExistence(goal.getPredicateIndicator)) {
           e.logWarning("The predicate " + goal.getPredicateIndicator + " is unknown.")
         }
-      case Some(curChoice) =>
-        e.currentAlternative = Some(curChoice)
-        //deunify variables and reload old goal
-        e.currentContext = curChoice.execContext
-        var curGoal: Term = e.currentContext.goalsToEval.backTo(curChoice.indexSubGoal).orNull.getBinding
-        if (!curGoal.isInstanceOf[Struct]) {
-          e.nextState = EndState(Result.FALSE)
-        } else {
-          e.currentContext.currentGoal = Some(curGoal.asInstanceOf[Struct])
-          // Rende coerente l'execution_stack
-          var curCtx: ExecutionContext = e.currentContext
-          var pointer = curCtx.trailingVars
-          var stopDeunify = curChoice.varsToDeunify
-          val varsToDeunify: util.List[Var] = stopDeunify.head
-          varsToDeunify.forEach(_.freeVars())
-          varsToDeunify.clear()
-          // bring parent contexts to a previous state in the demonstration
-          var noParent = false
-          do {
-            // deunify variables in sibling contexts
-            while (pointer ne stopDeunify) {
-              pointer.head.forEach(_.freeVars())
-              pointer = pointer.tail
-            }
-            curCtx.trailingVars = pointer
-            if (curCtx.parent == null) {
-              noParent = true //todo: break is not supported
-            } else {
-              stopDeunify = curCtx.parentVarList.get
-              val fatherIndex = curCtx.parentGoalId.get
-              curCtx = curCtx.parent.get
-              curGoal = curCtx.goalsToEval.backTo(fatherIndex).orNull.getBinding
-              if (!curGoal.isInstanceOf[Struct]) {
-                e.nextState = EndState(Result.FALSE)
-                return
-              }
-              curCtx.currentGoal = Some(curGoal.asInstanceOf[Struct])
-              pointer = curCtx.trailingVars
-            }
-          } while (!noParent)
-          e.nextState = new GoalEvaluationState
-        }
+      case Some(curChoice) => doBacktrack(e,curChoice)
     }
+  }
+  
+  private def doBacktrack(e : Executor, curChoice : ChoicePointContext): Unit = {
+    e.currentAlternative = Some(curChoice)
+    //deunify variables and reload old goal
+    e.currentContext = curChoice.execContext
+    val curGoal: Term = e.currentContext.goalsToEval.backTo(curChoice.indexSubGoal).orNull.getBinding
+    if (!curGoal.isInstanceOf[Struct]) {
+      e.nextState = EndState(Result.FALSE)
+    } else {
+      e.currentContext.currentGoal = Some(curGoal.asInstanceOf[Struct])
+      // Rende coerente l'execution_stack
+       resetParentContexts(e,curChoice)
+    }
+  }
+  
+  private def resetParentContexts(e : Executor, curChoice : ChoicePointContext): Unit ={
+    // bring parent contexts to a previous state in the demonstration
+    var stopDeunify = curChoice.varsToDeunify
+    val varsToDeunify: util.List[Var] = stopDeunify.head
+    varsToDeunify.forEach(_.freeVars())
+    varsToDeunify.clear()
+    var shouldContinue = true
+    var curCtx: ExecutionContext = e.currentContext
+    var pointer = curCtx.trailingVars
+    do {
+      // deunify variables in sibling contexts
+      while (pointer ne stopDeunify) {
+        pointer.head.forEach(_.freeVars())
+        pointer = pointer.tail
+      }
+      curCtx.trailingVars = pointer
+      curCtx.parent match {
+        case None => shouldContinue = false
+        case Some(parent) =>
+          stopDeunify = curCtx.parentVarList.get
+          val fatherIndex = curCtx.parentGoalId.get
+          curCtx = parent
+          val curGoal = curCtx.goalsToEval.backTo(fatherIndex).orNull.getBinding
+          if (!curGoal.isInstanceOf[Struct]) {
+            e.nextState = EndState(Result.FALSE)
+            shouldContinue = false
+          } else {
+            curCtx.currentGoal = Some(curGoal.asInstanceOf[Struct])
+            pointer = curCtx.trailingVars
+          }
+      }
+    } while (shouldContinue)
+    e.nextState = new GoalEvaluationState
   }
 }

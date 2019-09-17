@@ -15,7 +15,7 @@
   */
 package com.szadowsz.gospel.core.db.libraries.inbuilt
 
-import com.szadowsz.gospel.core.Interpreter
+import com.szadowsz.gospel.core.{BaseEngineSpec, Interpreter}
 import com.szadowsz.gospel.core.data.{Struct, Term}
 import com.szadowsz.gospel.core.db.primitives.PrimitiveType
 import com.szadowsz.gospel.core.parser.Parser
@@ -24,20 +24,15 @@ import org.scalatest.{BeforeAndAfter, FlatSpec, FunSpec, Matchers}
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class BuiltInSpec extends FunSpec with Matchers with BeforeAndAfter {
+class BuiltInSpec extends FunSpec with BaseEngineSpec {
   
-  protected var wam: Interpreter = _
   protected var builtIn: BuiltIn = _
   
+  override protected def init(): Interpreter = new Interpreter()
   
-  before {
-    wam = new Interpreter
-    builtIn = new BuiltIn(wam)
-  }
-  
-  def parseTerm(prolog: Interpreter, term: String): Term = {
-    val parser = new Parser(term)(prolog.getOperatorManager)
-    parser.nextTerm(false)
+  override def beforeEach() {
+    super.beforeEach()
+    builtIn = new BuiltIn(prolog)
   }
   
   describe("Built-In Library") {
@@ -50,10 +45,10 @@ class BuiltInSpec extends FunSpec with Matchers with BeforeAndAfter {
     it("should return the current number of annotated methods") {
       val prims = builtIn.getPrimitives
       
-      prims should have size 2
+      prims should have size 3
       prims.getOrElse(PrimitiveType.DIRECTIVE, Seq()) should have length 2
-      prims.getOrElse(PrimitiveType.FUNCTOR, Seq()) should have length 0
-      prims.getOrElse(PrimitiveType.PREDICATE, Seq()) should have length 9
+      prims.getOrElse(PrimitiveType.FUNCTOR, Seq()) should have length 21
+      prims.getOrElse(PrimitiveType.PREDICATE, Seq()) should have length 13
     }
     
     // def at_halt TODO http://www.swi-prolog.org/pldoc/doc_for?object=at_halt/1

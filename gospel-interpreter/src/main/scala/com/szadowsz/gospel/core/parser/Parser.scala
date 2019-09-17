@@ -17,18 +17,16 @@ package com.szadowsz.gospel.core.parser
 
 
 import java.io._
-import java.util
 import java.util.regex.Pattern
 
 import com.szadowsz.gospel.core.data
 import com.szadowsz.gospel.core.data.{Struct, Term, Var}
 import com.szadowsz.gospel.core.db.operators.OperatorManager
 import com.szadowsz.gospel.core.exception.InvalidTermException
+import org.slf4j.{Logger, LoggerFactory}
 import org.springframework.core.io.Resource
 
-import scala.collection.JavaConverters._
 import scala.util.Try
-import scala.util.control.NonFatal
 
 object Parser {
 
@@ -47,7 +45,8 @@ object Parser {
 }
 
 class Parser(reader: BufferedReader)(implicit opManager: OperatorManager) extends Iterable[Term] {
-  private val tokenizer: TermTokenizer = new TermTokenizer(reader)
+  val tokenizer: TermTokenizer = new TermTokenizer(reader)
+  private val logger: Logger = LoggerFactory.getLogger(getClass)
 
 
   def this(in: InputStream)(implicit opManager: OperatorManager) {
@@ -88,6 +87,7 @@ class Parser(reader: BufferedReader)(implicit opManager: OperatorManager) extend
   @throws[InvalidTermException]
   @throws[IOException]
   private def expr0: Term = {
+    logger.debug("Parsing Expr0")
     val t1: TermToken = tokenizer.readToken
     val tempStart: scala.Int = tokenizer.colNo
 
@@ -117,11 +117,12 @@ class Parser(reader: BufferedReader)(implicit opManager: OperatorManager) extend
   }
 
   def parseLBRA2():Term = {
+    logger.debug("Parsing LBRA2")
     var t2: TermToken = tokenizer.readToken
     if (t2.isType(TermTokenizer.RBRA2)) {
       new Struct("{}")
     } else {
-      /**/ tokenizer.unreadToken(t2)
+      tokenizer.unreadToken(t2)
       val arg: Term = expr(false)
       t2 = tokenizer.readToken
       if (t2.isType(TermTokenizer.RBRA2)) {
@@ -139,6 +140,7 @@ class Parser(reader: BufferedReader)(implicit opManager: OperatorManager) extend
 
 
   private def parseLBRA(): Term = {
+    logger.debug("Parsing LBRA")
     val t2: TermToken = tokenizer.readToken
     if (t2.isType(TermTokenizer.RBRA)) {
       new Struct
@@ -159,6 +161,7 @@ class Parser(reader: BufferedReader)(implicit opManager: OperatorManager) extend
   }
 
   private def parseLPAR(): Term = {
+    logger.debug("Parsing LPAR")
     val term: Term = expr(false)
     if (tokenizer.readToken.isType(TermTokenizer.RPAR)) {
       term
@@ -209,6 +212,7 @@ class Parser(reader: BufferedReader)(implicit opManager: OperatorManager) extend
   @throws[InvalidTermException]
   @throws[IOException]
   private def expr0List: Term = {
+    logger.debug("Parsing expr0List")
     val head: Term = expr(true)
     tokenizer.readToken match {
       case TermToken(",", _) => new Struct(head, expr0List)
@@ -230,6 +234,7 @@ class Parser(reader: BufferedReader)(implicit opManager: OperatorManager) extend
   @throws[InvalidTermException]
   @throws[IOException]
   private def expr0ArgList(): List[Term] = {
+    logger.debug("Parsing expr0ArgList")
     val head: Term = expr(true)
     tokenizer.readToken match {
       case TermToken(",", _) => head +: expr0ArgList()
@@ -259,6 +264,7 @@ class Parser(reader: BufferedReader)(implicit opManager: OperatorManager) extend
   @throws[InvalidTermException]
   @throws[IOException]
   private def parseLeftSide(commaIsEndMarker: Boolean, maxPriority: scala.Int): (scala.Int, Term) = {
+    logger.debug("Parsing Left Side")
     //1. prefix expression
     val f: TermToken = tokenizer.readToken
     if (f.isOperator(commaIsEndMarker)) {
@@ -302,9 +308,11 @@ class Parser(reader: BufferedReader)(implicit opManager: OperatorManager) extend
   }
 
   private def exprB(maxPriority: scala.Int, commaIsEndMarker: Boolean): (scala.Int, Term) = {
+    logger.debug("Parsing ExprB")
     //1. op(fx,n) exprA(n-1) | op(fy,n) exprA(n) | expr0
     var left = parseLeftSide(commaIsEndMarker, maxPriority)
 
+    // TODO EXAMINE
     //2.left is followed by either xfx, xfy or xf operators, parse these
     var operator: TermToken = tokenizer.readToken
     var cont = true
@@ -368,6 +376,7 @@ class Parser(reader: BufferedReader)(implicit opManager: OperatorManager) extend
   }
 
   private def exprA(maxPriority: scala.Int, commaIsEndMarker: Boolean): (scala.Int, Term) = {
+    logger.debug("Parsing ExprA")
     var leftSide = exprB(maxPriority, commaIsEndMarker)
     var t: TermToken = tokenizer.readToken
     var cont = true
@@ -403,7 +412,10 @@ class Parser(reader: BufferedReader)(implicit opManager: OperatorManager) extend
     * @param commaIsEndMarker whether a comma ends the expression
     * @return the expression as a Term object.
     */
-  private def expr(commaIsEndMarker: Boolean): Term = exprA(OperatorManager.OP_HIGH, commaIsEndMarker)._2
+  private def expr(commaIsEndMarker: Boolean): Term = {
+    logger.debug("Parsing Term Expression")
+    exprA(OperatorManager.OP_HIGH, commaIsEndMarker)._2
+  }
 
   /**
     * Parses next term from the stream.
@@ -413,17 +425,26 @@ class Parser(reader: BufferedReader)(implicit opManager: OperatorManager) extend
     */
   @throws[InvalidTermException]
   def nextTerm(endNeeded: Boolean): Term = {
+    logger.debug("Parsing Next Term")
+  
     try {
+      // First Check if we have reached the end of the file / stream / string
+      logger.debug("First Check if we have reached the end of the file / stream / string")
       val t: TermToken = tokenizer.readToken
       if (t.isEOF) {
+        logger.debug("Found End Of File, Finishing Parsing Terms")
         return null
       }
+      logger.debug("Continuing")
       tokenizer.unreadToken(t)
+      
+      // Now Determine what the next valid term is
+      logger.debug("Determining Next Term")
       val term: Term = expr(false)
+      
       if (term == null) {
         throw new InvalidTermException("The parser is unable to finish.", lineNo, colNo)
-      }
-      if (endNeeded && tokenizer.readToken.getType != TermTokenizer.END) {
+      } else if (endNeeded && tokenizer.readToken.getType != TermTokenizer.END) {
         throw new InvalidTermException(s"The term '$term' is not ended with a period.", term, lineNo, colNo)
       }
       term.resolveVars()

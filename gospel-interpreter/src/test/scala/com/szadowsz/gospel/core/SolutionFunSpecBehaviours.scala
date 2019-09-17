@@ -16,10 +16,11 @@
 package com.szadowsz.gospel.core
 
 import com.szadowsz.gospel.core.data.Term
+import com.szadowsz.gospel.core.parser.Parser
 import org.scalatest.{FunSpec, Matchers}
 
 trait SolutionFunSpecBehaviours extends Matchers with SolutionMatchers {
-  this: FunSpec =>
+  this: BaseEngineSpec with FunSpec =>
   
   def successfulQuery(wam : Interpreter, query : Term) {
   
@@ -39,6 +40,41 @@ trait SolutionFunSpecBehaviours extends Matchers with SolutionMatchers {
     }
   }
   
+  def successfulQuery(wam : Interpreter, query : String, variable : (String,String)) {
+    
+    it (s"query $query should be successful where ${variable._1} = ${variable._2}") {
+      wam should not be (null)
+      val solution = wam.solve(query)
+      solution should beSuccessful
+      
+      val (varName,value) = variable
+      val result = solution.getVarOpt(varName)
+      result shouldBe defined
+      result should contain (parseTerm(wam,value))
+    }
+  }
+  
+  def successfulQuery(wam : Interpreter, query : String, variable : (String,String), varList : (String,String)*) {
+    
+    it (s"query $query should be successful where ${variable._1} = ${variable._2}${varList.map(kv => kv._1 + " = " + kv._2).mkString(", ",", ","")}") {
+      wam should not be (null)
+      val solution = wam.solve(query)
+      solution should beSuccessful
+      
+      val (varName,value) = variable
+      val result = solution.getVarOpt(varName)
+      result shouldBe defined
+      result should contain (parseTerm(wam,value))
+  
+      varList.foreach(v => {
+        val (vName, vValue) = v
+        val result2 = solution.getVarOpt(vName)
+        result2 shouldBe defined
+        result2 should contain(parseTerm(wam, vValue))
+      })
+    }
+  }
+  
   def unsuccessfulQuery(wam : Interpreter, query : Term) {
   
     it (s"query $query should be unsuccessful") {
@@ -54,6 +90,26 @@ trait SolutionFunSpecBehaviours extends Matchers with SolutionMatchers {
       wam should not be (null)
       val solution = wam.solve(query)
       solution should beUnsuccessful
+    }
+  }
+  
+  def haltedQuery(wam : Interpreter, query : Term) {
+    
+    it (s"query $query should be halted") {
+      wam should not be (null)
+      val solution = wam.solve(query)
+      solution should beUnsuccessful
+      solution should beHalted
+    }
+  }
+  
+  def haltedQuery(wam : Interpreter, query : String) {
+    
+    it (s"query $query should be halted") {
+      wam should not be (null)
+      val solution = wam.solve(query)
+      solution should beUnsuccessful
+      solution should beHalted
     }
   }
 }

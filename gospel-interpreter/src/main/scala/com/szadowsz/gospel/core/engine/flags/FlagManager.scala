@@ -17,9 +17,7 @@
  */
 package com.szadowsz.gospel.core.engine.flags
 
-import java.util
-
-import com.szadowsz.gospel.core.data.{Struct, Term}
+import com.szadowsz.gospel.core.data.{Struct, Int, Term}
 
 /**
   * Administrator of declared flags.
@@ -37,8 +35,17 @@ private[core] final class FlagManager extends java.io.Serializable {
     val s = new Struct
     s.append(new Struct("on"))
     s.append(new Struct("off"))
+  
+    val max = new Struct
+    max.append(Int(Long.MaxValue))
+   
+    val min = new Struct
+    min.append(Int(Long.MinValue))
+  
     this.defineFlag("occursCheck", s, new Struct("on"), true, "BuiltIn")
     this.defineFlag("debug", s, new Struct("off"), true, "BuiltIn")
+    this.defineFlag("max_integer",max ,Int(Long.MaxValue),false, "BuiltIn")
+    this.defineFlag("min_integer", min, Int(Long.MinValue),false, "BuiltIn")
   }
 
 

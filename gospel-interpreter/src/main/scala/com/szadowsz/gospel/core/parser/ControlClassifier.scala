@@ -41,15 +41,15 @@ private[parser] object ControlClassifier {
     * @return true when `t` is '''not''' a fatal exception.
     */
   def classify(typea: Int): TermToken = typea match {
-    case '('=> new TermToken("(", TermTokenizer.LPAR)
-    case ')'=> new TermToken(")", TermTokenizer.RPAR)
-    case '{'=> new TermToken("{", TermTokenizer.LBRA2)
-    case '}'=> new TermToken("}", TermTokenizer.RBRA2)
-    case '['=> new TermToken("[", TermTokenizer.LBRA)
-    case ']'=> new TermToken("]", TermTokenizer.RBRA)
-    case '|'=> new TermToken("|", TermTokenizer.BAR)
-    case '!'=> new TermToken("!", TermTokenizer.ATOM)
-    case ','=> new TermToken(",", TermTokenizer.OPERATOR)
+    case '('=> TermToken("(", TermTokenizer.LPAR)
+    case ')'=> TermToken(")", TermTokenizer.RPAR)
+    case '{'=> TermToken("{", TermTokenizer.LBRA2)
+    case '}'=> TermToken("}", TermTokenizer.RBRA2)
+    case '['=> TermToken("[", TermTokenizer.LBRA)
+    case ']'=> TermToken("]", TermTokenizer.RBRA)
+    case '|'=> TermToken("|", TermTokenizer.BAR)
+    case '!'=> TermToken("!", TermTokenizer.ATOM)
+    case ','=> TermToken(",", TermTokenizer.OPERATOR)
   }
   
   /**

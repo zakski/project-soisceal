@@ -29,9 +29,9 @@ final case class Int(value : Long) extends Number {
   
   override def longValue: scala.Long = value
   
-  override def isInteger: Boolean = false
+  override def isInteger: Boolean = true
   
-  override def isReal: Boolean = true
+  override def isReal: Boolean = false
 
   override def isEquals(other: Term): Boolean = other.isInstanceOf[Int] && other.asInstanceOf[Int].value == value
   
