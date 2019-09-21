@@ -35,7 +35,7 @@ class ParserIteratorSpec extends FlatSpec with Matchers {
 
   it should "throw an exception if there is no next element" in {
     val theory: String = ""
-    val i = new Parser(theory).iterator
+    val i = new NParser().parseTerms(theory).iterator
     i.hasNext shouldBe false
     intercept[NoSuchElementException] {
       i.next
@@ -44,7 +44,7 @@ class ParserIteratorSpec extends FlatSpec with Matchers {
 
   it should "be able to iterate through the correct number of elements" in {
     val theory = "q(1).\nq(2).\nq(3).\nq(5).\nq(7)."
-    val i = new Parser(theory).iterator
+    val i = new NParser().parseTerms(theory).iterator
     var count = 0
 
     while (i.hasNext) {
@@ -57,7 +57,7 @@ class ParserIteratorSpec extends FlatSpec with Matchers {
 
   it should "be able to handle multiple hasNext calls" in {
     val theory = "p. q. r."
-    val i = new Parser(theory).iterator
+    val i = new NParser().parseTerms(theory).iterator
     i.hasNext shouldBe true
     i.hasNext shouldBe true
     i.hasNext shouldBe true
@@ -66,7 +66,7 @@ class ParserIteratorSpec extends FlatSpec with Matchers {
 
   it should "be able to handle multiple next calls" in {
     val theory: String = "p(X):-q(X),X>1.\nq(1).\nq(2).\nq(3).\nq(5).\nq(7)."
-    val i = new Parser(theory).iterator
+    val i = new NParser().parseTerms(theory).iterator
     i.hasNext shouldBe true
     i.next // skip the first term
 
@@ -86,7 +86,7 @@ class ParserIteratorSpec extends FlatSpec with Matchers {
   it should "not support iterating on invalid terms" in {
     val t = "q(1)" // missing the End-Of-Clause!
     intercept[InvalidTermException] {
-      val i = new Parser(t).iterator
+      val i = new NParser().parseTerms(t).iterator
       i.next()
     }
   }
@@ -95,7 +95,7 @@ class ParserIteratorSpec extends FlatSpec with Matchers {
     val theory = "q(1).\nq(2).\nq(3)\nq(5).\nq(7)." // missing the End-Of-Clause!
     val firstTerm = new Struct("q", new Int(1))
     val secondTerm = new Struct("q", new Int(2))
-    val i = new Parser(theory).iterator
+    val i = new NParser().parseTerms(theory).iterator
     i.hasNext shouldBe true
     i.next shouldBe firstTerm
     i.hasNext shouldBe true

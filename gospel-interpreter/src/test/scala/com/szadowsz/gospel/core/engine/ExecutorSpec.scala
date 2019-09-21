@@ -19,7 +19,7 @@ import com.szadowsz.gospel.core.Interpreter
 import com.szadowsz.gospel.core.data.{Int, Struct, Var}
 import com.szadowsz.gospel.core.db.theory.Theory
 import com.szadowsz.gospel.core.engine.state._
-import com.szadowsz.gospel.core.parser.Parser
+import com.szadowsz.gospel.core.parser.NParser
 import org.junit.runner.RunWith
 import org.scalatest.OptionValues._
 import org.scalatest.junit.JUnitRunner
@@ -126,11 +126,11 @@ class ExecutorSpec extends FlatSpec with Matchers with  BeforeAndAfterEach {
   }
   
   it should "transition from BacktrackState to GoalEvaluationState correctly for a simple query" in {
-    val query = new Parser("not false.")(wam.getOperatorManager).nextTerm(true).asInstanceOf[Struct]
+    val query = new NParser().parseTerm("not false.")(wam.getOperatorManager).asInstanceOf[Struct]
   
     val exec = new Executor(query)
     
-     while (!exec.nextState.isInstanceOf[BacktrackState]) {
+     while (!exec.nextState.isInstanceOf[BacktrackState] && !exec.nextState.isInstanceOf[EndState]) {
       exec.nextState.doJob(exec)
     }
     exec.nextState shouldBe a [BacktrackState]
@@ -223,7 +223,7 @@ class ExecutorSpec extends FlatSpec with Matchers with  BeforeAndAfterEach {
   
   it should "transition from ExceptionState to GoalSelectionState correctly for recoverable queries" in {
     val query = "catch(X is V, error(instantiation_error, instantiation_error(Goal, ArgNo)), true)."
-    val goal = new Parser(query)(wam.getOperatorManager).nextTerm(false).asInstanceOf[Struct]
+    val goal = new NParser().parseTerm(query)(wam.getOperatorManager).asInstanceOf[Struct]
 
     val exec = new Executor(goal)
   

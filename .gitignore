@@ -14,6 +14,7 @@ gradlew.bat
 # Do not add local builds to git
 build/
 out/
+2p/
 
 # Do not add complied jvm code to git
 *.class

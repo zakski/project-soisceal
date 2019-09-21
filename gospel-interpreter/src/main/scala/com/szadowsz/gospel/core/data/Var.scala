@@ -49,7 +49,7 @@ class Var(private val name: Option[String], id: scala.Int, count: Long) extends 
   /* id of ExecCtx owners of this var util for renaming*/
   private var ctxid = if (id < 0) Var.ORIGINAL else id
   
-  private var completeName = new StringBuilder()
+  private var completeName = buildCompleteName()
   
   /**
     * term used for unification process
@@ -71,7 +71,6 @@ class Var(private val name: Option[String], id: scala.Int, count: Long) extends 
     */
   def this(n: String) {
     this(if (n == Var.ANY) None else Option(n), Var.ORIGINAL, 0L)
-    buildCompleteName()
   }
   
   private def this(id: scala.Int, alias: scala.Int, count: scala.Long /*, boolean isCyclic*/) {
@@ -164,15 +163,15 @@ class Var(private val name: Option[String], id: scala.Int, count: Long) extends 
   /**
     * Rename variable (assign completeName)
     */
-  private def buildCompleteName(): Unit = {
+  private def buildCompleteName(): StringBuilder = {
     name match {
       case Some (n) =>
       if (Character.isUpperCase(n.charAt(0)) || n.startsWith(Var.ANY)) {
-        completeName = new StringBuilder(n)
-      } else {
+        new StringBuilder(n)
+     } else {
         throw new InvalidTermException("Illegal variable name", n)
       }
-      case None =>
+      case None =>  new StringBuilder()
     }
   }
   

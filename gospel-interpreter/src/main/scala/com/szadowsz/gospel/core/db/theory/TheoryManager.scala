@@ -103,17 +103,13 @@ private[core] class TheoryManager(wam: Interpreter) {
 
   def unloadLibrary(name: String): Unit =   {
     synchronized {
-     staticDB.foreach { clause =>
-       clause.libName match {
-         case Some(libName) if libName == name =>
-           try {
-             staticDB.remove(clause)
-           } catch {
-             case NonFatal(e) => logger.error ("Error during library theory removal", e)
-           }
-         case _ =>
-       }
-     }
+      staticDB.filter(clause => clause.libName.contains(name)).foreach {clause =>
+        try {
+          staticDB.remove(clause)
+        } catch {
+          case NonFatal(e) => logger.error ("Error during library theory removal", e)
+        }
+      }
     }
   }
 

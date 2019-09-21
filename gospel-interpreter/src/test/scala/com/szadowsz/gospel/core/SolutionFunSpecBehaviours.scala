@@ -16,7 +16,6 @@
 package com.szadowsz.gospel.core
 
 import com.szadowsz.gospel.core.data.Term
-import com.szadowsz.gospel.core.parser.Parser
 import org.scalatest.{FunSpec, Matchers}
 
 trait SolutionFunSpecBehaviours extends Matchers with SolutionMatchers {

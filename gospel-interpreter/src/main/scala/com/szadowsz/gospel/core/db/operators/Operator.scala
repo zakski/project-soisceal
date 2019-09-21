@@ -15,10 +15,12 @@
   */
 package com.szadowsz.gospel.core.db.operators
 
+import com.szadowsz.gospel.core.parser.Associativity
+
 
 object Operator {
 
-  def apply(name: String, opType: String, prio: Int): Operator = new Operator(name, OpType.valueOf(opType.toUpperCase), prio)
+  def apply(name: String, opType: String, prio: Int): Operator = new Operator(name, Associativity.valueOf(opType.toUpperCase), prio)
 }
 /**
   * This class defines a Prolog operator, in terms of a name, a type, and a  priority.
@@ -27,4 +29,4 @@ object Operator {
   * @param opType (xf,yf,fx,fy,xfx,xfy,yfy,yfx)
   * @param prio priority
   */
-private[operators] final case class Operator (name: String, opType: OpType, prio: Int) extends Serializable
+private[operators] final case class Operator (name: String, opType: Associativity, prio: Int) extends Serializable

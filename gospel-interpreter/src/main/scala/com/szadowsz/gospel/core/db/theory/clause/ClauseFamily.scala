@@ -81,6 +81,6 @@ private[theory] class ClauseFamily extends Iterable[Clause] {
   }
 
   def remove(clause: Clause): Unit = {
-    internalList = internalList - clause
+    internalList -= clause
   }
 }

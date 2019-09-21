@@ -15,6 +15,8 @@
   */
 package com.szadowsz.gospel.core.db.operators
 
+import com.szadowsz.gospel.core.parser.Associativity
+
 import scala.collection.mutable
 
 /**
@@ -46,7 +48,7 @@ private[operators] case class OpRegistry(private val nameTypeToKey : mutable.Map
     * @param opType the type of operation
     * @return the operator if one one is found, otherwise nothing
     */
-  def getOperator(name: String, opType: OpType): Option[Operator] = nameTypeToKey.get(name + opType)
+  def getOperator(name: String, opType: Associativity): Option[Operator] = nameTypeToKey.get(name + opType)
 
   /**
     * Creates a copy of this Registry preserving ordering

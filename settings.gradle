@@ -1,4 +1,11 @@
 rootProject.name = 'project-soisceal'
 
-include ':gospel-resources', ':gospel-interpreter',':gospel-old'
+include ':gospel-resources', ':gospel-parser', ':gospel-interpreter',':gospel-old' //,':2p'
 //,':gospel-swi-test'':gospel-core',':gospel-swi-test'//,':gospel-java-ex', ':gospel-runtime'
+
+//["core"].each { zkProject ->
+//    def pDir = "2p/$zkProject"
+//    def proj = ":2p-$zkProject"
+//    include proj
+//    project(proj).projectDir = pDir as File
+//}

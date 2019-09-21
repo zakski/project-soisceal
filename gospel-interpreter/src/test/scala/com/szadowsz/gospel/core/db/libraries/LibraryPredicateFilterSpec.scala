@@ -15,26 +15,16 @@
   */
 package com.szadowsz.gospel.core.db.libraries
 
-import com.szadowsz.gospel.core.Interpreter
+import com.szadowsz.gospel.core.{BaseEngineSpec, Interpreter}
 import com.szadowsz.gospel.core.data.{Struct, Term}
-import com.szadowsz.gospel.core.parser.Parser
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{BeforeAndAfter, FunSpec, Matchers}
 
 @RunWith(classOf[JUnitRunner])
-class LibraryPredicateFilterSpec extends FunSpec with Matchers with BeforeAndAfter {
+class LibraryPredicateFilterSpec extends FunSpec with BaseEngineSpec {
   
-  protected var wam: Interpreter = _
-  
-  before {
-    wam = new Interpreter
-  }
-  
-  def parseTerm(term: String): Term = {
-    val parser = new Parser(term)(wam.getOperatorManager)
-    parser.nextTerm(false)
-  }
+  override protected def init(): Interpreter = new Interpreter
   
   describe("LibraryPredicateFilter interpretList Function") {
     

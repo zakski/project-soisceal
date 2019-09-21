@@ -20,7 +20,7 @@ import java.util
 import com.szadowsz.gospel.core.db.primitives.Primitive
 import com.szadowsz.gospel.core.engine.Executor
 import com.szadowsz.gospel.core.exception.InvalidTermException
-import com.szadowsz.gospel.core.parser.Parser
+import com.szadowsz.gospel.core.parser.NParser
 
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
@@ -445,7 +445,7 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
     } else if (name == "{}") {
       "{" + internalDsgString + "}"
     } else {
-      val s = if (Parser.isAtom(name)) name else "'" + name + "'"
+      val s = if (NParser.isAtom(name)) name else "'" + name + "'"
       s + (if (args.nonEmpty) args.map(_.getBinding).mkString("(", ",", ")") else "")
     }
   }

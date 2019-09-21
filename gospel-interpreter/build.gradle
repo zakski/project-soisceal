@@ -4,6 +4,7 @@ sourceSets {
 }
 
 dependencies {
+    compile(project(':gospel-parser'))
     compile(project(':gospel-resources'))
 
     compile group: 'org.scala-lang', name: 'scala-compiler', version: versions.scala_full
@@ -13,7 +14,9 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-api', version: versions.slf4j
 
     compile group: 'com.google.code.gson', name: 'gson', version: versions.gson
-
+   
+    compile group: 'org.scala-lang.modules', name: "scala-java8-compat_${versions.scala_binary}", version: versions.java8Compat
+  
     testCompile group: 'org.scalatest', name: "scalatest_${versions.scala_binary}", version: versions.scalatest
 
     testCompile group: 'org.junit.platform', name:'junit-platform-runner', version: versions.junit_platform_runner

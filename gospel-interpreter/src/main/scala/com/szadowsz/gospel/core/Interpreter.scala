@@ -25,7 +25,7 @@ import com.szadowsz.gospel.core.engine.ExecutorManager
 import com.szadowsz.gospel.core.engine.flags.FlagManager
 import com.szadowsz.gospel.core.exception.{InvalidTermException, InvalidTheoryException}
 import com.szadowsz.gospel.core.exception.library.InvalidLibraryException
-import com.szadowsz.gospel.core.parser.Parser
+import com.szadowsz.gospel.core.parser.NParser
 import org.slf4j.{Logger, LoggerFactory}
 
 class Interpreter {
@@ -74,7 +74,7 @@ class Interpreter {
     libManager.loadLibrary(identifier)
   }
   
-  private[core] def createTerm(st: String): Term = new Parser(st).nextTerm(false)
+  private[core] def createTerm(st: String): Term = new NParser().parseTerm(st)
   
   /**
     * Sets a new theory
@@ -111,8 +111,7 @@ class Interpreter {
   @throws[InvalidTermException]
   def solve(st: String): Solution = {
     try {
-      val p = new Parser(st)
-      val t = p.nextTerm(true)
+      val t = new NParser().parseTerm(st)
       solve(t)
     } catch {
       case ex: InvalidTermException => // TODO don't throw anything back from here

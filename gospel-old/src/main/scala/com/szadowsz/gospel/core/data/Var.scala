@@ -36,6 +36,7 @@ package com.szadowsz.gospel.core.data
 import java.util
 
 import com.szadowsz.gospel.core.exception.InvalidTermException
+import scala.jdk.CollectionConverters._
 
 /**
   * This class represents a variable term.
@@ -65,8 +66,7 @@ object Var {
     * De-unify the variables of list
     */
   def free(varsUnified: util.List[Var]): Unit = {
-    import scala.collection.JavaConversions._
-    for (v <- varsUnified) {
+    for (v <- varsUnified.asScala) {
       v.free()
     }
   }
@@ -136,6 +136,7 @@ class Var private(n: String, id: scala.Int, count: scala.Long) extends Term {
     if (name != null) {
       if (Character.isUpperCase(name.charAt(0)) || name.startsWith(Var.ANY)) {
         completeName = new StringBuilder(name)
+        System.out.println(toString)
       } else {
         throw new InvalidTermException("Illegal variable name", name)
       }

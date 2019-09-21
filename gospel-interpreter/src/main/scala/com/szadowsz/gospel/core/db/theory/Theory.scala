@@ -20,7 +20,7 @@ import java.net.{URI, URL}
 
 import com.szadowsz.gospel.core.data.{Struct, Term}
 import com.szadowsz.gospel.core.db.operators.OperatorManager
-import com.szadowsz.gospel.core.parser.Parser
+import com.szadowsz.gospel.core.parser.NParser
 import org.springframework.core.io.{FileSystemResource, Resource, StringResource, UrlResource}
 
 import scala.io.Source
@@ -54,7 +54,7 @@ class Theory private (private val resource: Option[Resource], private val clause
   private[db] def getResourceName: Option[String] = resource.flatMap(r => Option(r.getFilename)).map(fn => fn.substring(0, fn.lastIndexOf('.')))
   
   def iterator()(implicit opManager: OperatorManager): Iterator[Term] = {
-    val it = resource.map(r => new Parser(new BufferedReader(new InputStreamReader(r.getInputStream))).iterator)
+    val it = resource.map(r => new NParser().parseTerms(r).iterator)
     it.getOrElse(Iterator[Term]()) ++ clauseList.getListIterator
   }
   

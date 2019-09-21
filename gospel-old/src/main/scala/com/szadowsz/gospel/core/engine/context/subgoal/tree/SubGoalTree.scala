@@ -5,11 +5,11 @@ import com.szadowsz.gospel.core.data.Term
 import scala.collection.mutable
 import scala.collection.JavaConverters._
 
-private[core] class SubGoalTree(ts: mutable.MutableList[SubGoalNode]) extends SubGoalNode with java.lang.Iterable[SubGoalNode] {
-  private val terms: mutable.MutableList[SubGoalNode] = ts
+private[core] class SubGoalTree(ts: mutable.ArrayDeque[SubGoalNode]) extends SubGoalNode with java.lang.Iterable[SubGoalNode] {
+  private val terms: mutable.ArrayDeque[SubGoalNode] = ts
 
   def this() {
-    this(new mutable.MutableList[SubGoalNode])
+    this(new mutable.ArrayDeque[SubGoalNode])
   }
 
   def addLeaf(term: Term): SubGoalLeaf = {
