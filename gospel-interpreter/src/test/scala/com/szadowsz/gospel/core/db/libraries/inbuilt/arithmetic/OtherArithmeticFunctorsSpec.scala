@@ -17,6 +17,7 @@ package com.szadowsz.gospel.core.db.libraries.inbuilt.arithmetic
 
 import com.szadowsz.gospel.core.{BaseEngineSpec, Interpreter, SolutionFunSpecBehaviours}
 import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 import org.scalatest.FunSpec
 import org.scalatest.junit.JUnitRunner
 
@@ -24,6 +25,8 @@ import org.scalatest.junit.JUnitRunner
 class OtherArithmeticFunctorsSpec extends FunSpec with BaseEngineSpec with SolutionFunSpecBehaviours {
   
   override protected def init(): Interpreter = new Interpreter()
+  
+  private val epsilon = Math.pow(10,-12)
  
  
   describe("(**)/2 Functor") {
@@ -49,27 +52,27 @@ class OtherArithmeticFunctorsSpec extends FunSpec with BaseEngineSpec with Solut
   }
   
   describe("sin Functor") {
-    it should behave like successfulQuery(getInterpreter,"X is sin(0.0).", ("X","0.0"))
+    it should behave like successfulQuery(getInterpreter,"X is sin(0.0).", ("X",0.0,epsilon))
   
-    it should behave like successfulQuery(getInterpreter,"X is sin(0).", ("X","0.0"))
+    it should behave like successfulQuery(getInterpreter,"X is sin(0).", ("X",0.0,epsilon))
  
-    it should behave like successfulQuery(getInterpreter,"X is sin(pi / 2).", ("X","1.0")) // 90 degrees in radians
+    it should behave like successfulQuery(getInterpreter,"X is sin(pi / 2).", ("X",1.0,epsilon)) // 90 degrees in radians
     
-    it should behave like successfulQuery(getInterpreter,"X is sin(pi).", ("X","0.0")) // 180 degrees in radians
+    it should behave like successfulQuery(getInterpreter,"X is sin(pi).", ("X",0.0,epsilon)) // 180 degrees in radians
   
-    it should behave like successfulQuery(getInterpreter,"X is sin(pi + pi/2).", ("X","-1.0")) // 270 degrees in radians
+    it should behave like successfulQuery(getInterpreter,"X is sin(pi + pi/2).", ("X",-1.0,epsilon)) // 270 degrees in radians
   }
   
   describe("cos Functor") {
-    it should behave like successfulQuery(getInterpreter,"X is cos(0.0).", ("X","1.0"))
+    it should behave like successfulQuery(getInterpreter,"X is cos(0.0).", ("X",1.0,epsilon))
     
-    it should behave like successfulQuery(getInterpreter,"X is cos(0).", ("X","1.0"))
+    it should behave like successfulQuery(getInterpreter,"X is cos(0).", ("X",1.0,epsilon))
     
-    it should behave like successfulQuery(getInterpreter,"X is cos(pi / 2).", ("X","0.0")) // 90 degrees in radians
+    it should behave like successfulQuery(getInterpreter,"X is cos(pi / 2).", ("X",0.0,epsilon)) // 90 degrees in radians
     
-    it should behave like successfulQuery(getInterpreter,"X is cos(pi).", ("X","-1.0")) // 180 degrees in radians
+    it should behave like successfulQuery(getInterpreter,"X is cos(pi).", ("X",-1.0,epsilon)) // 180 degrees in radians
     
-    it should behave like successfulQuery(getInterpreter,"X is cos(pi + pi/2).", ("X","0.0")) // 270 degrees in radians
+    it should behave like successfulQuery(getInterpreter,"X is cos(pi + pi/2).", ("X",0.0,epsilon)) // 270 degrees in radians
   }
   
   describe("atan Functor") {
@@ -79,11 +82,11 @@ class OtherArithmeticFunctorsSpec extends FunSpec with BaseEngineSpec with Solut
   }
 
   describe("exp Functor") {
-    it should behave like successfulQuery(getInterpreter,"X is exp(0.0).", ("X","1.0"))
+    it should behave like successfulQuery(getInterpreter,"X is exp(0.0).", ("X",1.0,epsilon))
   
-    it should behave like successfulQuery(getInterpreter,"X is exp(0).", ("X","1.0"))
+    it should behave like successfulQuery(getInterpreter,"X is exp(0).", ("X",1.0,epsilon))
   
-    it should behave like successfulQuery(getInterpreter,"X is exp(1.00).", ("X","2.718281828459045"))
+    it should behave like successfulQuery(getInterpreter,s"X is exp(1.0).", ("X",Math.E,epsilon))
   }
 
   describe("log Functor") {

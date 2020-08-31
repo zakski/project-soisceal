@@ -36,7 +36,7 @@ class LibraryPredicateFilterSpec extends FunSpec with BaseEngineSpec {
     }
    
     it("should interpret a List as a Whitelist successfully") {
-      val importList = parseTerm("[women/1]).").asInstanceOf[Struct]
+      val importList = parseTerm("[women/1].").asInstanceOf[Struct]
       val filter = new LibraryPredicateFilter(importList)
     
       filter.retainPredicate("women/1") should be (true)
@@ -44,7 +44,7 @@ class LibraryPredicateFilterSpec extends FunSpec with BaseEngineSpec {
     }
    
     it("should interpret a renamed predicate on the Whitelist successfully") {
-      val importList = parseTerm("[women/1 as person]).").asInstanceOf[Struct]
+      val importList = parseTerm("[women/1 as person].").asInstanceOf[Struct]
       val filter = new LibraryPredicateFilter(importList)
     
       filter.retainPredicate("women/1") should be (true)
@@ -54,7 +54,7 @@ class LibraryPredicateFilterSpec extends FunSpec with BaseEngineSpec {
     }
     
     it("should interpret a Blacklist successfully") {
-      val importList = parseTerm("except([women/1])).").asInstanceOf[Struct]
+      val importList = parseTerm("except([women/1]).").asInstanceOf[Struct]
       val filter = new LibraryPredicateFilter(importList)
     
       filter.retainPredicate("women/1") should be (false)

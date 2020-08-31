@@ -47,6 +47,10 @@ abstract class Number extends Term {
   
   final override def isGround: Boolean = true
   
+  final override def isGreater(other: Term): Boolean = {
+    other.isInstanceOf[Number] && doubleValue > other.asInstanceOf[Number].doubleValue
+  }
+  
   /**
     * Returns the value of the Double as int
     */

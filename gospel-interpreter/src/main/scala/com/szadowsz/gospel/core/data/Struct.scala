@@ -25,6 +25,12 @@ import com.szadowsz.gospel.core.parser.NParser
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 
+object Struct {
+  
+  def set(terms: Term*): Struct = new Struct("{}", terms.reduceRight[Term] { case (head, tail) => new Struct(",", head, tail) })
+  
+}
+
 // scalastyle:off number.of.methods
 class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
   
@@ -199,7 +205,7 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
                 }
               }
             case s: Struct =>
-              newcount = term.asInstanceOf[Struct].resolveVars(vl, newcount)
+              newcount = s.asInstanceOf[Struct].resolveVars(vl, newcount)
             case _ =>
           }
         case None =>
@@ -220,6 +226,31 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
   }
   
   override def isEmptyList: Boolean = name == "[]" && arity == 0
+  
+  /**
+    * Test if a term is greater than other
+    */
+  override def isGreater(t: Term): Boolean = {
+    t.getBinding match {
+      case other: Struct =>
+        if (arity > other.arity) {
+          true
+        } else if (arity == other.arity) {
+          if (name.compareTo(other.name) > 0) {
+            true
+          } else if (name.compareTo(other.name) == 0) {
+            val argsWithIndex = args.zipWithIndex
+            val argOpt = argsWithIndex.find { case (a, i) => a.isGreater(other.args(i)) || a != other.args(i) }
+            argOpt.exists { case (a, i) => a.isGreater(other.args(i))}
+          } else {
+            false
+          }
+        } else {
+          false
+        }
+      case _ => true
+    }
+  }
   
   override def isEquals(other: Term): Boolean = {
     other match {
@@ -476,7 +507,7 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
     * @param idExecCtx Execution Context identifier
     * @return Copy of Term
     */
-  override def copy(e : Executor, vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
+  override def copy(e: Executor, vMap: util.AbstractMap[Var, Var], idExecCtx: scala.Int): Term = {
     val t = new Struct(name, arity, args.map(arg => arg.copy(e, vMap, idExecCtx)).toList)
     t.resolved = resolved
     t.primitive = primitive
@@ -511,7 +542,7 @@ class Struct(n: String, a: scala.Int, ags: List[Term] = Nil) extends Term {
     t.getBinding match {
       case struct: Struct =>
         arity == struct.arity && name.equals(struct.name) &&
-          getTermIterator.zipWithIndex.forall { case (arg : Term, i : scala.Int) => arg.unify(vl1, vl2, struct.args(i), isOccursCheckEnabled) }
+          getTermIterator.zipWithIndex.forall { case (arg: Term, i: scala.Int) => arg.unify(vl1, vl2, struct.args(i), isOccursCheckEnabled) }
       case v: Var =>
         v.unify(vl2, vl1, this, isOccursCheckEnabled)
       case _ => false

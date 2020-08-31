@@ -87,7 +87,7 @@ class ArithmeticComparisonSpec extends FunSpec with BaseEngineSpec with Solution
   
   describe("Greater Than Or Equal Predicate") {
     
-    it should behave like successfulQuery(getInterpreter, "'=<'(1, 0).")
+    it should behave like successfulQuery(getInterpreter, "'>='(1, 0).")
     
     it should behave like successfulQuery(getInterpreter, "1 >= 0.")
     

@@ -93,12 +93,10 @@ private[core] class Executor(val query : Struct)(implicit val wam : Interpreter)
     * Core of engine. Finite State Machine that transitions from an initial state, to an end state.
     */
   private[engine] def run(): EndState = {
-    var action: String = null
     do {
       if (mustStop) {
         nextState = EndState(Result.FALSE)
       } else {
-        action = nextState.toString
         nextState.doJob(this)
       }
     } while (!nextState.isInstanceOf[EndState])

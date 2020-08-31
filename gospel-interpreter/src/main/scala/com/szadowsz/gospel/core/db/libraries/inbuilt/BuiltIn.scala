@@ -22,7 +22,11 @@ import com.szadowsz.gospel.core.db.theory.Theory
 import com.szadowsz.gospel.core.db.theory.clause.Clause
 import com.szadowsz.gospel.core.exception.{CutException, InterpreterError}
 
-class BuiltIn(wam: Interpreter) extends Library(wam) with BuiltInSrcControl with BuiltInArithmetic with BuiltInFlags {
+class BuiltIn(wam: Interpreter) extends Library(wam)
+  with BuiltInSrcControl
+  with BuiltInArithmetic
+  with BuiltInTermComparison
+  with BuiltInFlags {
   // scalastyle:off method.name
   
   /**
@@ -84,6 +88,7 @@ class BuiltIn(wam: Interpreter) extends Library(wam) with BuiltInSrcControl with
     """.stripMargin
         + getFlagTheoryString
         + getArithmeticTheoryString
+        + getTermCompareTheoryString
     ))
   }
   

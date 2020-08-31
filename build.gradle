@@ -18,7 +18,7 @@ subprojects {
 
     compileScala {
         scalaCompileOptions.optimize = true
-        scalaCompileOptions.additionalParameters = ["-target:jvm-${versions.java}", '-Jbackend:GenBCode', '-feature',
+        scalaCompileOptions.additionalParameters = ["-target:jvm-${versions.java}".toString(), '-Jbackend:GenBCode', '-feature',
                                                     '-language:postfixOps', '-language:implicitConversions']
     }
 }

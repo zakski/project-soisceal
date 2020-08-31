@@ -132,6 +132,8 @@ abstract class Term extends Serializable {
   
   def isEmptyList: Boolean = false
   
+  def isGreater(term: Term): Boolean
+  
   def isEquals(term: Term): Boolean
   
   def isList: Boolean = false

@@ -15,49 +15,58 @@
   */
 package com.szadowsz.gospel.core
 
+import org.scalatest.Matchers._
+import org.scalatest.OptionValues._
+import com.szadowsz.gospel.core.data.{Number, Term}
 import org.scalatest.matchers.{MatchResult, Matcher}
 
 trait SolutionMatchers {
   
-  class QueryShouldSucceedMatcher() extends Matcher[Solution] {
-    
-    def apply(left: Solution): MatchResult = {
-      val query = left.getQuery
-      MatchResult(
-        left.isSuccess,
-        s"$query was unsuccessful",
-        s"$query was successful"
-      )
-    }
+  val beSuccessful: Matcher[Solution] = Matcher { (s: Solution) =>
+    MatchResult(
+      s.isSuccess,
+      s"${s.getQuery} was unsuccessful",
+      s"${s.getQuery} was successful"
+    )
   }
   
-  def beSuccessful(): Matcher[Solution] = new QueryShouldSucceedMatcher()
-  
-  class QueryShouldFailMatcher() extends Matcher[Solution] {
-    
-    def apply(left: Solution): MatchResult = {
-      val query = left.getQuery
-      MatchResult(
-        !left.isSuccess,
-        s"$query was successful",
-        s"$query was unsuccessful"
-      )
-    }
+  val beUnsuccessful: Matcher[Solution] = Matcher { (s: Solution) =>
+    MatchResult(
+      !s.isSuccess,
+      s"${s.getQuery} was successful",
+      s"${s.getQuery} was unsuccessful"
+    )
+  }
+
+  val beHalted: Matcher[Solution] = Matcher { (s: Solution) =>
+    MatchResult(
+      s.isHalted,
+      s"${s.getQuery} was successful",
+      s"${s.getQuery} was halted"
+    )
   }
   
-  def beUnsuccessful(): Matcher[Solution] = new QueryShouldFailMatcher()
+  def beWithinTolerance(v: Long, tol: Long): Matcher[Long] = be >= v - tol and be <= v + tol
   
-  class QueryShouldHaltMatcher() extends Matcher[Solution] {
-    
-    def apply(left: Solution): MatchResult = {
-      val query = left.getQuery
-      MatchResult(
-        left.isHalted,
-        s"$query was halted",
-        s"$query was not halted"
-      )
-    }
+  def beWithinTolerance(v: Double, tol: Double): Matcher[Double] = be >= v - tol and be <= v + tol
+  
+  def bePrologNumberWithinTolerance(v: Double, tol: Double): Matcher[Number] = {
+    beWithinTolerance(v, tol) compose { (n: Number) => n.doubleValue }
   }
   
-  def beHalted(): Matcher[Solution] = new QueryShouldHaltMatcher()
+  def bePrologNumberWithinTolerance(v: Long, tol: Long): Matcher[Number] = {
+    beWithinTolerance(v, tol) compose { (n: Number) => n.longValue }
+  }
+  
+  def haveVarWithinTolerance(name: String, v: Long, tol: Long): Matcher[Solution] = {
+    bePrologNumberWithinTolerance(v, tol) compose { (s: Solution) => s.getVar(name).asInstanceOf[Number] }
+  }
+  
+  def haveVarWithinTolerance(name: String, v: Double, tol: Double): Matcher[Solution] = {
+    bePrologNumberWithinTolerance(v, tol) compose { (s: Solution) => s.getVar(name).asInstanceOf[Number] }
+  }
+  
+  def haveVar(name : String, value : Term): Matcher[Solution] = {
+    be (value) compose { (s: Solution) => s.getVarOpt(name).value}
+  }
 }

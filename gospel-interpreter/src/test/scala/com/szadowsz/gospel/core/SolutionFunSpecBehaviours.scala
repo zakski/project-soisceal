@@ -45,11 +45,21 @@ trait SolutionFunSpecBehaviours extends Matchers with SolutionMatchers {
       wam should not be (null)
       val solution = wam.solve(query)
       solution should beSuccessful
-      
+  
       val (varName,value) = variable
-      val result = solution.getVarOpt(varName)
-      result shouldBe defined
-      result should contain (parseTerm(wam,value))
+      solution should haveVar(varName,parseTerm(wam,value))
+    }
+  }
+  
+  def successfulQuery(wam : Interpreter, query : String, variable : (String,Double,Double)) {
+    
+    it (s"query $query should be successful where ${variable._1} = ${variable._2}") {
+      wam should not be (null)
+      val solution = wam.solve(query)
+      solution should beSuccessful
+      
+      val (varName,value, tol) = variable
+      solution should haveVarWithinTolerance(varName, value, tol)
     }
   }
   
@@ -59,17 +69,13 @@ trait SolutionFunSpecBehaviours extends Matchers with SolutionMatchers {
       wam should not be (null)
       val solution = wam.solve(query)
       solution should beSuccessful
-      
+  
       val (varName,value) = variable
-      val result = solution.getVarOpt(varName)
-      result shouldBe defined
-      result should contain (parseTerm(wam,value))
+      solution should haveVar(varName,parseTerm(wam,value))
   
       varList.foreach(v => {
         val (vName, vValue) = v
-        val result2 = solution.getVarOpt(vName)
-        result2 shouldBe defined
-        result2 should contain(parseTerm(wam, vValue))
+        solution should haveVar(vName,parseTerm(wam,vValue))
       })
     }
   }

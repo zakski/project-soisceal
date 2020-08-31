@@ -51,11 +51,7 @@ class NVisitor extends PrologParserBaseVisitor[Term] {
   }
   
   override def visitSet(ctx: PrologParser.SetContext): Term = {
-    if (ctx.length == 1) {
-      new Struct("{}",ctx.items.get(0).accept(this))
-    } else {
-      new Struct("{}",ctx.items.stream.map(this.visitExpression).toScala(Seq))
-    }
+    Struct.set(ctx.items.stream.map(this.visitExpression).toScala(Seq):_*)
   }
   
   override def visitVariable(ctx: PrologParser.VariableContext): Term = {

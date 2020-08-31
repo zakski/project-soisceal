@@ -94,9 +94,25 @@ class Var(private val name: Option[String], id: scala.Int, count: Long) extends 
   
   override def isList: Boolean = binding.exists(_.isList)
   
+  override def isGreater(term: Term): Boolean = {
+    getBinding match {
+      case v : Var if v == this =>
+        term.isInstanceOf[Var] && fingerPrint > term.asInstanceOf[Var].fingerPrint
+      case binding : Term => 
+        binding.isGreater(term)
+    }
+  }
+  
   override def isEquals(term: Term): Boolean = {
     term match {
-      case v: Var => getName == v.getName && binding.sameElements(v.binding)
+      case v: Var =>
+         if (name.isDefined) {
+           getName == v.getName && binding.sameElements(v.binding)
+         } else if (binding.isDefined) {
+           binding.sameElements(v.binding)
+         } else {
+           getOriginalName == v.getOriginalName
+         }
       case _ => false
     }
   }
@@ -108,20 +124,14 @@ class Var(private val name: Option[String], id: scala.Int, count: Long) extends 
     }
   }
   
-  override def getBinding: Term = binding.getOrElse(this)
-  
-  def getBindingAsVar : Var = binding.filter(_.isInstanceOf[Var]).map(_.asInstanceOf[Var]).getOrElse(this)
-  
-  def getBindingAsStruct : Struct = binding.filter(_.isInstanceOf[Struct]).map(_.asInstanceOf[Struct]).orNull
- 
-  def getBindingAsNumber : Number = binding.filter(_.isInstanceOf[Number]).map(_.asInstanceOf[Number]).orNull
+  override def getBinding: Term = binding.map(_.getBinding).getOrElse(this)
   
   /**
     * Get the term bound directly to the Var.
     *
     * @return the direct term, or null if unbound.
     */
-  def getDirectBinding: Term = binding.orNull
+  def getDirectBinding: Term = binding.map(_.getBinding).orNull
   
   def getName : String = {
     name match {
@@ -221,13 +231,13 @@ class Var(private val name: Option[String], id: scala.Int, count: Long) extends 
     * gets a copy for result.
     */
   override private[data] def copy(vMap: util.AbstractMap[Var, Var], substMap: util.AbstractMap[Term, Var]) = {
-    var v: Var = null
+     null
     val temp = vMap.get(this)
-    if (temp == null) {
-      v = new Var(Var.PROGRESSIVE, vMap.size(), internalTimestamp)
-      vMap.put(this, v)
+    val v: Var = if (temp == null) {
+      vMap.put(this, new Var(Var.PROGRESSIVE, vMap.size(), internalTimestamp))
+      vMap.get(this)
     } else {
-      v = temp
+      temp
     }
     
     getBinding match {

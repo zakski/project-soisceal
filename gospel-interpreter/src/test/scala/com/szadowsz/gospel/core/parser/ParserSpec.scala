@@ -50,8 +50,10 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
     *
     * Column: 1 - no characters in the text
     */
-  it should "parse end of file" in {
-    new NParser().parseTerm("") shouldBe null
+  it should "not parse end of file" in {
+    intercept[InvalidTermException] {
+      new NParser().parseTerm("")
+    }
   }
 
   /**
@@ -83,6 +85,30 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
     new NParser().parseTerm("[p|Y]") shouldBe result
   }
 
+//  /**
+//    * SICStus PrologEngine interprets "n(+100)" as "n(100)"
+//    * GNU PrologEngine interprets "n(+100)" as "n(+(100))"
+//    * The ISO Standard says + is not a unary operator
+//    *
+//    * Final Indexes Should be as follows:
+//    *
+//    * Line: 1 - no new lines in the text
+//    *
+//    *            1 2 3 4
+//    * Column: 3 - n ( +
+//    */
+//  it should "not parse unary plus operators" in {
+//
+//   val caught = intercept[InvalidTermException] {
+//      new NParser().parseTerm("n(+100).\n")
+//    }
+//
+//    caught.getMessage shouldBe "Unexpected Token '+'"
+//    caught.getTerm shouldBe "+"
+//    caught.getLine shouldBe 1
+//    caught.getCol shouldBe 3
+//  }
+  
   /**
     * SICStus PrologEngine interprets "n(+100)" as "n(100)"
     * GNU PrologEngine interprets "n(+100)" as "n(+(100))"
@@ -95,18 +121,14 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
     *            1 2 3 4
     * Column: 3 - n ( +
     */
-  it should "not parse unary plus operators" in {
-
-   val caught = intercept[InvalidTermException] {
-      new NParser().parseTerm("n(+100).\n")
-    }
-
-    caught.getMessage shouldBe "Unexpected Token '+'"
-    caught.getTerm shouldBe "+"
-    caught.getLine shouldBe 1
-    caught.getCol shouldBe 3
+  it should "parse unary plus operators" in {
+  
+    val result = new Struct("n", Int(100))
+    result.resolveVars()
+  
+    new NParser().parseTerm("n(+100).\n") shouldBe result
   }
-
+  
   /**
     * Final Indexes Should be as follows:
     *
@@ -139,7 +161,7 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
   it should "parse simple mathematical equations" in {
     val result = new Struct("=:=", Int(3),Int(3))
     
-    new NParser().parseTerm("3 =:= 3).") shouldBe result
+    new NParser().parseTerm("3 =:= 3.") shouldBe result
   }
   
    it should "parse complex mathematical equations with Leading Symbol" in {
@@ -359,8 +381,8 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
       new NParser().parseTerm(s)
     }
 
-    caught.getMessage shouldBe "Missing right braces '{1' -> here <-"
-    caught.getTerm shouldBe "1"
+    caught.getMessage shouldBe "mismatched input '@' expecting {'}', ','}"
+    caught.getTerm shouldBe "@"
     caught.getLine shouldBe 1
     caught.getCol shouldBe  4 // TODO should be 3 ideally but not currently smart enough
   }
@@ -380,7 +402,7 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
       new NParser().parseTerm(s)
     }
 
-    caught.getMessage shouldBe "Unexpected Token '}'"
+    caught.getMessage should startWith ("mismatched input '}'")
     caught.getTerm shouldBe "}"
     caught.getLine shouldBe 1
     caught.getCol shouldBe  7
@@ -401,8 +423,8 @@ class ParserSpec extends FlatSpec with Matchers with BeforeAndAfter {
       new NParser().parseTerm(s)
     }
 
-    caught.getMessage shouldBe "Missing right braces '{','(1,2)' -> here <-"
-    caught.getTerm shouldBe "','(1,2)"
+    caught.getMessage shouldBe "extraneous input '<EOF>' expecting {'}', ','}"
+    caught.getTerm shouldBe "<EOF>"
     caught.getLine shouldBe 1
     caught.getCol shouldBe 6
   }

@@ -27,6 +27,7 @@ import org.antlr.v4.runtime._
 import org.springframework.core.io.Resource
 
 import scala.util.{Failure, Try}
+
 object NParser {
   
   private val atom: Pattern = Pattern.compile("(!|[a-z][a-zA-Z_0-9]*)")
@@ -52,13 +53,13 @@ class NParser {
         parser.getInterpreter.setPredictionMode(PredictionMode.LL)
         parser.setErrorHandler(new DefaultErrorStrategy())
         parser.addErrorListener(new ErrorListener(source));
-        parser.optClause()
+        parseClause(parser,source)
       case pce: ParseCancellationException if pce.getCause.isInstanceOf[RecognitionException] => throw pce.getCause
-     
-      case p : ParseException => throw p.toInvalidTermException
-  
+      
+      case p: ParseException => throw p.toInvalidTermException
+      
       case default => throw default
-        
+      
     } finally {
       parser.getTokenStream.release(mark)
     }
@@ -71,8 +72,8 @@ class NParser {
           p.setClauseIndex(index)
           p
         case e: Throwable => e
-      }))
-    }.get
+      })).get
+  }
   
   private def parseClauses(parser: PrologParser, source: Any): Seq[OptClauseContext] = {
     def loop(v: Int): Stream[(Int, OptClauseContext)] = (v, parseClause(v, parser, source)) #:: loop(v + 1)
@@ -84,7 +85,7 @@ class NParser {
     for (op <- opManager.getOperators()) {
       prologParser.addOperator(op._1, op._2, op._3)
     }
-  //  prologParser.addParseListener(DynamicOpListener.of(prologParser, operators.add))
+    //  prologParser.addParseListener(DynamicOpListener.of(prologParser, operators.add))
     prologParser
   }
   
@@ -100,8 +101,8 @@ class NParser {
     parser
   }
   
-  def parseTerms(reader: BufferedReader)(implicit opManager: OperatorManager): Seq[Term] =  {
-    val parser = addOperators(initParser(reader),opManager)
+  def parseTerms(reader: BufferedReader)(implicit opManager: OperatorManager): Seq[Term] = {
+    val parser = addOperators(initParser(reader), opManager)
     parseClauses(parser, reader).map(it => it.accept(new NVisitor))
   }
   
@@ -122,7 +123,7 @@ class NParser {
     parseTerms(new BufferedReader(new StringReader(str)))
   }
   
-  private def parseTerm(parser: PrologParser, source: Any) : SingletonExpressionContext = {
+  private def parseTerm(parser: PrologParser, source: Any): SingletonExpressionContext = {
     try {
       parser.singletonExpression
     } catch {
@@ -133,15 +134,15 @@ class NParser {
         parser.addErrorListener(new ErrorListener(source));
         parseTerm(parser, source)
       case pce: ParseCancellationException if pce.getCause.isInstanceOf[RecognitionException] => throw pce.getCause
-     
-      case p : ParseException => throw p.toInvalidTermException
-     
+      
+      case p: ParseException => throw p.toInvalidTermException
+      
       case default => throw default
     }
   }
   
   def parseTerm(reader: BufferedReader)(implicit opManager: OperatorManager): Term = {
-    val parser = addOperators(initParser(reader),opManager)
+    val parser = addOperators(initParser(reader), opManager)
     parseTerm(parser, reader).accept(new NVisitor())
   }
   

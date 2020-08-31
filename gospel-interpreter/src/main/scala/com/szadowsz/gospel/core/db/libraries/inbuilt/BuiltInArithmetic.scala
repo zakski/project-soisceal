@@ -39,12 +39,6 @@ trait BuiltInArithmetic {
   }
   
   @throws[InterpreterError]
-  @predicate(2, true,"==")
-  def term_equality_2: (Term, Term) => Boolean = {
-    (arg0, arg1) => arg0.getBinding == arg1.getBinding
-  }
-  
-  @throws[InterpreterError]
   @predicate(2, true, "=:=")
   def expression_equality_2: (Term, Term) => Boolean = {
     (arg0, arg1) => {
@@ -132,6 +126,63 @@ trait BuiltInArithmetic {
     }
   }
   
+  @throws[InterpreterError]
+  @predicate(2, true, ">")
+  def expression_greater_than_2: (Term, Term) => Boolean = {
+    (arg0, arg1) => {
+      val e = arg0.getExecutor
+      arg0.getBinding match {
+        case v: Var => throw InterpreterError.buildInstantiationError(e, 1);
+        case _ =>
+          arg1.getBinding match {
+            case v: Var => throw InterpreterError.buildInstantiationError(e, 2);
+            case _ =>
+              val val0 = evalExpression(arg0)
+              val val1 = evalExpression(arg1)
+              val0 match {
+                case Some(n0: Number) =>
+                  val1 match {
+                    case Some(n1: Number) =>
+                      if (n0.isInteger && n1.isInteger) {
+                        n0.longValue > n1.longValue
+                      } else {
+                        n0.doubleValue > n1.doubleValue
+                      }
+                  }
+              }
+          }
+      }
+    }
+  }
+  
+  @predicate(2, true, ">=")
+  def expression_greater_or_equal_than_2: (Term, Term) => Boolean = {
+    (arg0, arg1) => {
+      val e = arg0.getExecutor
+      arg0.getBinding match {
+        case v: Var => throw InterpreterError.buildInstantiationError(e, 1);
+        case _ =>
+          arg1.getBinding match {
+            case v: Var => throw InterpreterError.buildInstantiationError(e, 2);
+            case _ =>
+              val val0 = evalExpression(arg0)
+              val val1 = evalExpression(arg1)
+              val0 match {
+                case Some(n0: Number) =>
+                  val1 match {
+                    case Some(n1: Number) =>
+                      if (n0.isInteger && n1.isInteger) {
+                        n0.longValue >= n1.longValue
+                      } else {
+                        n0.doubleValue >= n1.doubleValue
+                      }
+                  }
+              }
+          }
+      }
+    }
+  }
+  
   @predicate(2)
   @throws(classOf[InterpreterError])
   def is_2: (Term, Term) => Boolean = {
@@ -166,7 +217,7 @@ trait BuiltInArithmetic {
           val1 match {
             case Some(n1: Number) =>
               if (n0.isInteger && n1.isInteger) {
-                Int(n0.longValue + n1.longValue)
+                Int(Math.addExact(n0.longValue,n1.longValue))
               } else {
                 Float(n0.doubleValue + n1.doubleValue)
               }
@@ -188,7 +239,7 @@ trait BuiltInArithmetic {
           val1 match {
             case Some(n1: Number) =>
               if (n0.isInteger && n1.isInteger) {
-                Int(n0.longValue * n1.longValue)
+                Int(Math.multiplyExact(n0.longValue,n1.longValue))
               } else {
                 Float(n0.doubleValue * n1.doubleValue)
               }
@@ -243,7 +294,7 @@ trait BuiltInArithmetic {
           val1 match {
             case Some(n1: Number) =>
               if (n0.isInteger && n1.isInteger) {
-                Int(n0.longValue - n1.longValue)
+                Int(Math.subtractExact(n0.longValue,n1.longValue))
               } else {
                 Float(n0.doubleValue - n1.doubleValue)
               }
